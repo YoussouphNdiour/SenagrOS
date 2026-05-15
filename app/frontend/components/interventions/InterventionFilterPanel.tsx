@@ -13,6 +13,11 @@ const hasActive = (f: InterventionFilters) =>
 export function InterventionFilterPanel({ filters, meta, onChange }: InterventionFilterPanelProps) {
   const [textValue, setTextValue] = useState(filters.q ?? '')
 
+  // Sync local text state quand filters.q change depuis l'extérieur (ex: Réinitialiser)
+  useEffect(() => {
+    setTextValue(filters.q ?? '')
+  }, [filters.q])
+
   // Debounce 300ms sur la recherche texte
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -21,7 +26,7 @@ export function InterventionFilterPanel({ filters, meta, onChange }: Interventio
       }
     }, 300)
     return () => clearTimeout(timer)
-  }, [textValue])
+  }, [textValue, filters.q, onChange])
 
   return (
     <div
