@@ -1,4 +1,4 @@
-import { Sprout, Map as MapIcon, Activity, Cloud } from 'lucide-react'
+import { Sprout, Map as MapIcon, Activity, CalendarClock } from 'lucide-react'
 import { KpiCard } from '../../../components/dashboard/KpiCard'
 import { WeatherWidget } from '../../../components/dashboard/WeatherWidget'
 import { ActivityFeed } from '../../../components/dashboard/ActivityFeed'
@@ -51,10 +51,9 @@ export const Home = ({ kpis, parcelles, recent_activity, weather, farm }: Dashbo
           icon={<Activity size={16} />}
         />
         <KpiCard
-          title="Température"
+          title="Interventions planifiées"
           value={kpis.interventions.scheduled}
-          unit="planifiées"
-          icon={<Cloud size={16} />}
+          icon={<CalendarClock size={16} />}
         />
       </div>
 

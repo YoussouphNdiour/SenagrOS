@@ -61,7 +61,7 @@ export function WeatherWidget({ weather }: WeatherWidgetProps) {
             }}
           >
             <div style={{ fontSize: '11px', color: 'var(--color-text-muted)', fontWeight: 600 }}>{day.day}</div>
-            <img src={`https://openweathermap.org/img/wn/${day.icon}.png`} alt="" width={24} height={24} />
+            <img src={`https://openweathermap.org/img/wn/${day.icon}.png`} alt={day.day} width={24} height={24} />
             <div style={{ fontSize: '12px', color: 'var(--color-text)', fontWeight: 600 }}>{day.temp_max}°</div>
             <div style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>{day.temp_min}°</div>
           </div>

@@ -1,5 +1,4 @@
 import { render, screen } from '@testing-library/react'
-import { describe, it, expect } from 'vitest'
 import { Home } from './Home'
 import type { DashboardHomeProps } from '../../../types/dashboard'
 
@@ -41,7 +40,7 @@ describe('Dashboard Home', () => {
     expect(screen.getByText('Campagne')).toBeInTheDocument()
     expect(screen.getByText('Surfaces cultivées')).toBeInTheDocument()
     expect(screen.getByText('Interventions actives')).toBeInTheDocument()
-    expect(screen.getByText('Température')).toBeInTheDocument()
+    expect(screen.getByText('Interventions planifiées')).toBeInTheDocument()
   })
 
   it('renders KPI values', () => {

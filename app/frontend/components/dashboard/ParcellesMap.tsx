@@ -1,5 +1,22 @@
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet'
+import type { GeoJsonObject } from 'geojson'
 import type { Parcelle } from '../../types/dashboard'
+
+// Leaflet PathOptions do not accept CSS custom properties — values mirror design tokens
+const LAYER_STYLE = {
+  color: '#1B6B3A',      // --color-primary
+  fillColor: '#4CAF72',  // --color-primary-light
+  fillOpacity: 0.3,
+  weight: 2,
+}
+
+function parseGeoJSON(raw: string): GeoJsonObject | null {
+  try {
+    return JSON.parse(raw) as GeoJsonObject
+  } catch {
+    return null
+  }
+}
 
 interface ParcellesMapProps {
   parcelles: Parcelle[]
@@ -48,13 +65,17 @@ export function ParcellesMap({ parcelles }: ParcellesMapProps) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {parcelles.map((parcelle) => (
-          <GeoJSON
-            key={parcelle.id}
-            data={JSON.parse(parcelle.geojson)}
-            style={{ color: '#1B6B3A', fillColor: '#4CAF72', fillOpacity: 0.3, weight: 2 }}
-          />
-        ))}
+        {parcelles.map((parcelle) => {
+          const data = parseGeoJSON(parcelle.geojson)
+          if (!data) return null
+          return (
+            <GeoJSON
+              key={parcelle.id}
+              data={data}
+              style={LAYER_STYLE}
+            />
+          )
+        })}
       </MapContainer>
     </div>
   )

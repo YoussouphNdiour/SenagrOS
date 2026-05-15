@@ -1,9 +1,10 @@
 import '@testing-library/jest-dom'
+import type { ReactNode } from 'react'
 import { vi } from 'vitest'
 
 // Mock react-leaflet — Leaflet requires real DOM with canvas
 vi.mock('react-leaflet', () => ({
-  MapContainer: ({ children }: { children: React.ReactNode }) => (
+  MapContainer: ({ children }: { children: ReactNode }) => (
     <div data-testid="map-container">{children}</div>
   ),
   TileLayer: () => <div data-testid="tile-layer" />,

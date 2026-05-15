@@ -72,15 +72,21 @@ export function ActivityFeed({ interventions }: ActivityFeedProps) {
               borderRadius: '6px',
             }}
           >
-            <span
-              style={{
-                fontSize: '14px',
-                color: 'var(--color-text)',
-                fontWeight: 500,
-              }}
-            >
-              {intervention.name}
-            </span>
+            <div>
+              <span
+                style={{
+                  fontSize: '14px',
+                  color: 'var(--color-text)',
+                  fontWeight: 500,
+                  display: 'block',
+                }}
+              >
+                {intervention.name}
+              </span>
+              <span style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
+                {new Date(intervention.started_at).toLocaleDateString()}
+              </span>
+            </div>
             <span
               style={{
                 fontSize: '11px',

@@ -8,7 +8,7 @@ interface KpiCardProps {
 }
 
 export function KpiCard({ title, value, unit, icon }: KpiCardProps) {
-  const displayValue = value === null || value === undefined ? '—' : String(value)
+  const displayValue = value === null ? '—' : String(value)
   const showUnit = unit !== undefined && value !== null
 
   return (
