@@ -1,0 +1,31 @@
+/* SenagrOS Design Tokens — palette Afrique de l'Ouest */
+@import "tailwindcss";
+
+:root {
+  /* Couleurs */
+  --color-primary:       #1B6B3A;
+  --color-primary-light: #4CAF72;
+  --color-accent:        #E8A020;
+  --color-bg:            #F7F3EE;
+  --color-bg-card:       #FFFFFF;
+  --color-text:          #2C2416;
+  --color-text-muted:    #6B5E4E;
+  --color-border:        #E2D9CE;
+  --color-success:       #2D7A3A;
+  --color-warning:       #D4841A;
+  --color-danger:        #D4420A;
+
+  /* Typographie */
+  --font-ui:      'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-heading: 'Playfair Display', Georgia, serif;
+
+  /* Espacement */
+  --radius-card: 8px;
+  --shadow-card: 0 1px 3px rgba(44, 36, 22, 0.08);
+}
+
+body {
+  font-family: var(--font-ui);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
