@@ -13,7 +13,7 @@ const STATE_LABELS: Record<string, string> = {
   rejected:    'Rejeté',
 }
 
-// Leaflet ne supporte pas les CSS vars — même principe ici pour la cohérence
+// Valeurs miroir des design tokens pour cohérence visuelle avec InterventionMap
 const STATE_COLORS: Record<string, string> = {
   in_progress: '#D4841A',
   done:        '#2D7A3A',
@@ -102,7 +102,7 @@ export function InterventionTable({ rows, meta, onPage }: InterventionTableProps
           color:        'var(--color-text-muted)',
         }}
       >
-        Aucune intervention trouvée
+        Aucune intervention
       </div>
     )
   }
