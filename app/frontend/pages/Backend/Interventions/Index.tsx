@@ -49,9 +49,7 @@ export default function InterventionsIndex({
         Interventions
       </h1>
 
-      {view === 'table' && (
-        <InterventionFilterPanel filters={filters} meta={meta} onChange={applyFilters} />
-      )}
+      <InterventionFilterPanel filters={filters} meta={meta} onChange={applyFilters} />
 
       <div style={{ display: 'flex', gap: '8px', margin: '16px 0' }}>
         <button onClick={() => setView('table')}  style={TOGGLE_STYLE(view === 'table')}>Liste</button>

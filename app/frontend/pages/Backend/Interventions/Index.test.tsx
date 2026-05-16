@@ -31,7 +31,7 @@ describe('InterventionsIndex', () => {
   it('bascule vers la vue kanban au clic sur "Tableau"', () => {
     render(<InterventionsIndex {...defaultProps} />)
     fireEvent.click(screen.getByText('Tableau'))
-    expect(screen.getByText(/planifié/i)).toBeInTheDocument()
+    expect(screen.getByTestId('count-planned')).toBeInTheDocument()
   })
 
   it('affiche la carte au clic sur "Carte"', () => {
