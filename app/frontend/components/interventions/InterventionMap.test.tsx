@@ -31,8 +31,8 @@ describe('InterventionMap', () => {
     expect(screen.getByTestId('map-container')).toBeInTheDocument()
   })
 
-  it('rend un layer GeoJSON par feature', () => {
+  it('rend exactement un layer GeoJSON par feature', () => {
     render(<InterventionMap geojson={oneFeature} />)
-    expect(screen.getByTestId('geojson-layer')).toBeInTheDocument()
+    expect(screen.getAllByTestId('geojson-layer')).toHaveLength(1)
   })
 })

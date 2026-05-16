@@ -1,5 +1,5 @@
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet'
-import type { GeoJsonObject } from 'geojson'
+import type { GeoJsonObject, FeatureCollection } from 'geojson'
 
 // Leaflet ne supporte pas les CSS custom properties — valeurs miroir des tokens
 const ZONE_STYLE = {
@@ -12,7 +12,7 @@ const ZONE_STYLE = {
 const DEFAULT_CENTER: [number, number] = [14.5, -14.5]  // Sénégal
 
 interface InterventionMapProps {
-  geojson: GeoJSON.FeatureCollection
+  geojson: FeatureCollection
 }
 
 export function InterventionMap({ geojson }: InterventionMapProps) {
@@ -53,13 +53,16 @@ export function InterventionMap({ geojson }: InterventionMapProps) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        {geojson.features.map((feature, i) => (
-          <GeoJSON
-            key={i}
-            data={feature as GeoJsonObject}
-            style={ZONE_STYLE}
-          />
-        ))}
+        {geojson.features.map((feature) => {
+          const id = feature.properties?.intervention_id ?? JSON.stringify(feature.geometry)
+          return (
+            <GeoJSON
+              key={String(id)}
+              data={feature as GeoJsonObject}
+              style={ZONE_STYLE}
+            />
+          )
+        })}
       </MapContainer>
     </div>
   )
