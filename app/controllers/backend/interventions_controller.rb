@@ -201,69 +201,62 @@ module Backend
     end
 
     def index
-      per_page = 25
-      current_page = (params[:page] || 1).to_i
+      conditions = list_conditions
 
       scope = Intervention
-        .joins('LEFT OUTER JOIN interventions I ON interventions.id = I.request_intervention_id')
-        .where(
-          "interventions.state != ? AND ((interventions.nature = ? AND I.request_intervention_id IS NULL) OR interventions.nature = ?)",
-          Intervention.state.rejected, 'request', 'record'
-        )
+        .where(conditions)
         .includes(:activities, :targets, :participations, :receptions)
+        .joins('LEFT OUTER JOIN interventions I ON interventions.id = I.request_intervention_id')
         .order(started_at: :desc)
 
-      if params[:state].present?
-        scope = scope.where(state: Array(params[:state]))
-      end
+      paginated = scope.page(params[:page]).per(25)
 
-      if params[:nature].present?
-        scope = scope.where(nature: Array(params[:nature]))
-      end
+      kanban = {
+        'planned'     => scope.where(nature: :request).count,
+        'in_progress' => scope.where(nature: :record, state: :in_progress).count,
+        'done'        => scope.where(nature: :record, state: :done).count,
+        'validated'   => scope.where(nature: :record, state: :validated).count
+      }
 
-      if params[:q].present?
-        q = "%#{params[:q]}%"
-        scope = scope.where('interventions.procedure_name ILIKE ? OR interventions.number ILIKE ?', q, q)
-      end
+      zones = InterventionTarget
+        .joins(:intervention)
+        .where(intervention: paginated)
+        .joins('JOIN products ON products.id = intervention_parameters.product_id')
+        .select('intervention_parameters.intervention_id,
+                 ST_AsGeoJSON(intervention_parameters.working_zone) AS zone_geojson,
+                 products.name AS product_name')
+        .filter_map do |t|
+          next unless t.zone_geojson
+          {
+            'type'       => 'Feature',
+            'geometry'   => JSON.parse(t.zone_geojson),
+            'properties' => {
+              'intervention_id' => t.intervention_id,
+              'name'            => t.product_name
+            }
+          }
+        end
 
-      total_count   = scope.count
-      total_pages   = (total_count.to_f / per_page).ceil
-      paginated     = scope.page(current_page).per(per_page)
-
-      serialized = paginated.map do |intervention|
-        procedure = intervention.procedure
-        {
-          'id'               => intervention.id,
-          'number'           => intervention.number,
-          'procedure_name'   => intervention.procedure_name,
-          'procedure_label'  => procedure ? procedure.human_name : intervention.procedure_name,
-          'state'            => intervention.state,
-          'nature'           => intervention.nature,
-          'started_at'       => intervention.started_at,
-          'stopped_at'       => intervention.stopped_at,
-          'working_duration' => intervention.working_duration,
-          'activities'       => intervention.activities.as_json(only: %i[id name]),
-          'human_target_names' => intervention.human_target_names
+      render inertia: 'Backend/Interventions/Index', props: {
+        interventions: paginated.as_json(
+          only:    %i[id procedure_name nature state started_at stopped_at],
+          methods: %i[name human_activities_names human_target_names
+                      human_working_duration human_working_zone_area]
+        ),
+        kanban:      kanban,
+        map_geojson: { 'type' => 'FeatureCollection', 'features' => zones },
+        filters:     params.permit(:q, :state, :nature, :cultivable_zone_id,
+                                   :procedure_name_id, :activity_id, :target_id,
+                                   :label_id, :worker_id, :equipment_id,
+                                   :period, :period_interval).to_h,
+        meta:        {
+          'total'      => scope.count,
+          'page'       => (params[:page] || 1).to_i,
+          'per_page'   => 25,
+          'procedures' => (Intervention.respond_to?(:used_procedures) ? Intervention.used_procedures
+                            .map { |p| { 'label' => p.human_name, 'value' => p.name.to_s } }
+                            .sort_by { |p| p['label'] } : [])
         }
-      end
-
-      all_activities = Activity.order(:name).as_json(only: %i[id name])
-
-      filters = params.permit(:q, :state, :nature, :cultivable_zone_id,
-                              :procedure_name_id, :activity_id, :target_id,
-                              :label_id, :worker_id, :equipment_id,
-                              :period, :period_interval, :page, state: [], nature: []).to_h
-
-      render inertia: 'Interventions/Index', props: {
-        interventions: serialized,
-        meta:          {
-          'total_count'  => total_count,
-          'current_page' => current_page,
-          'total_pages'  => total_pages,
-          'per_page'     => per_page
-        },
-        filters:    filters,
-        activities: all_activities
       }
     end
 
