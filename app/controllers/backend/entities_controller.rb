@@ -30,7 +30,7 @@ module Backend
     manage_restfully_picture
     respond_to :csv, :ods, :xlsx, :pdf, :odt, :docx, :html, :xml, :json
 
-    layout 'inertia', only: [:index]
+    layout 'inertia', only: [:index, :show]
 
     def index
       scope = Entity
@@ -159,11 +159,31 @@ module Backend
     def show
       return unless @entity = find_and_check
 
-      respond_with(@entity, include: { default_mail_address: { methods: [:mail_coordinate] } }) do |format|
-        format.html do
-          t3e @entity.attributes, nature: @entity.nature.l
-        end
-      end
+      render inertia: 'Backend/Entites/Show', props: {
+        entite: {
+          'id'           => @entity.id,
+          'nature'       => @entity.nature.to_s,
+          'full_name'    => @entity.full_name.to_s,
+          'last_name'    => @entity.last_name.to_s,
+          'first_name'   => @entity.first_name.to_s,
+          'number'       => @entity.number.to_s,
+          'title'        => @entity.title.to_s,
+          'active'       => @entity.active,
+          'born_at'      => @entity.born_at&.iso8601,
+          'dead_at'      => @entity.dead_at&.iso8601,
+          'client'       => @entity.client,
+          'supplier'     => @entity.supplier,
+          'transporter'  => @entity.transporter,
+          'prospect'     => @entity.prospect,
+          'vat_subjected' => @entity.vat_subjected,
+          'description'  => @entity.description.to_s,
+          'language'     => @entity.language.to_s,
+          'country'      => @entity.country.to_s,
+          'currency'     => @entity.currency.to_s,
+          'vat_number'   => @entity.vat_number.to_s,
+          'siret_number' => @entity.siret_number.to_s
+        }
+      }
     end
 
     list(:contracts, conditions: { supplier_id: 'params[:id]'.c }, order: { created_at: :desc }) do |t|

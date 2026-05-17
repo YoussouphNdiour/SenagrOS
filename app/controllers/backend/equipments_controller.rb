@@ -18,7 +18,7 @@
 
 module Backend
   class EquipmentsController < Backend::MattersController
-    layout 'inertia', only: [:index]
+    layout 'inertia', only: [:index, :show]
 
     # params:
     #   :q Text search
@@ -114,6 +114,25 @@ module Backend
       t.column :stopped_at, through: :intervention, datatype: :datetime, hidden: true
       t.column :actions, label_method: :human_actions_names, through: :intervention
       t.column :human_working_duration, through: :intervention
+    end
+
+    def show
+      return unless @equipment = find_and_check
+
+      render inertia: 'Backend/Equipements/Show', props: {
+        equipement: {
+          'id'                    => @equipment.id,
+          'name'                  => @equipment.name.to_s,
+          'work_number'           => @equipment.work_number.to_s,
+          'number'                => @equipment.number.to_s,
+          'identification_number' => @equipment.identification_number.to_s,
+          'description'           => @equipment.description.to_s,
+          'born_at'               => @equipment.born_at&.iso8601,
+          'dead_at'               => @equipment.dead_at&.iso8601,
+          'variant_name'          => @equipment.variant&.name.to_s,
+          'type'                  => @equipment.type.to_s
+        }
+      }
     end
 
     def index
