@@ -25,7 +25,7 @@ module Backend
     manage_restfully t3e: { procedure_name: '(RECORD.procedure ? RECORD.procedure.human_name : nil)'.c },
                      continue: %i[nature procedure_name crop_group_ids]
 
-    layout 'inertia', only: [:index]
+    layout 'inertia', only: [:index, :show]
 
     respond_to :pdf, :odt, :docx, :xml, :json, :html, :csv
 
@@ -266,28 +266,46 @@ module Backend
     def show
       return unless @intervention = find_and_check
 
-      t3e @intervention, procedure_name: @intervention.procedure.human_name, nature: @intervention.request? ? :planning_of.tl : nil
-      dataset_params = {
-        intervention: @intervention,
-      }
-      @has_working_zone_shape = @intervention.targets.pluck(:working_zone).compact.any?
-      respond_to do |format|
-        format.html
-        format.pdf {
-          return unless (template = find_and_check :document_template, params[:template])
-
-          PrinterJob.perform_later('Printers::InterventionSheetPrinter', id: params[:id], template: template, perform_as: current_user)
-          notify_success(:document_in_preparation)
-          redirect_to backend_interventions_path
-        }
-        format.odt do
-          return unless template = DocumentTemplate.find_by_nature(params[:document_nature_name])
-
-          printer = Printers::PhytosanitaryApplicatorSheetPrinter.new(template: template, **dataset_params)
-          g = Ekylibre::DocumentManagement::DocumentGenerator.build
-          send_data g.generate_odt(template: template, printer: printer), filename: "#{printer.document_name}.odt"
-        end
+      targets = @intervention.targets.includes(:product).map do |t|
+        { 'id' => t.id, 'product_name' => t.product&.name.to_s }
       end
+
+      inputs = @intervention.inputs.includes(:product).map do |inp|
+        {
+          'id'             => inp.id,
+          'product_name'   => inp.product&.name.to_s,
+          'quantity_value' => inp.quantity_value.to_f,
+          'quantity_unit'  => inp.quantity_unit.to_s
+        }
+      end
+
+      doers = @intervention.doers.includes(:product).map do |d|
+        { 'id' => d.id, 'product_name' => d.product&.name.to_s }
+      end
+
+      tools = @intervention.tools.includes(:product).map do |tool|
+        { 'id' => tool.id, 'product_name' => tool.product&.name.to_s }
+      end
+
+      render inertia: 'Backend/Interventions/Show', props: {
+        intervention: {
+          'id'               => @intervention.id,
+          'number'           => @intervention.number.to_s,
+          'procedure_name'   => @intervention.procedure_name.to_s,
+          'state'            => @intervention.state.to_s,
+          'nature'           => @intervention.nature.to_s,
+          'started_at'       => @intervention.started_at&.iso8601,
+          'stopped_at'       => @intervention.stopped_at&.iso8601,
+          'description'      => @intervention.description.to_s,
+          'working_duration' => @intervention.working_duration.to_i,
+          'whole_duration'   => @intervention.whole_duration.to_i,
+          'request_compliant' => @intervention.request_compliant
+        },
+        targets: targets,
+        inputs:  inputs,
+        doers:   doers,
+        tools:   tools
+      }
     end
 
     def export

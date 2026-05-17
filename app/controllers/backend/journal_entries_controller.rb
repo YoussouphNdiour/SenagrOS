@@ -20,7 +20,7 @@ module Backend
   class JournalEntriesController < Backend::BaseController
     manage_restfully only: %i[show destroy]
 
-    layout 'inertia', only: [:index]
+    layout 'inertia', only: [:index, :show]
 
     respond_to :pdf, :odt, :docx, :xml, :json, :html, :csv
 
@@ -110,18 +110,38 @@ module Backend
     def show
       return unless @journal_entry = find_and_check
 
-      t3e @journal_entry
-      respond_with(@journal_entry, methods: %i[state_label bank_statement_number],
-                                   include: [
-                                     { financial_year: {} },
-                                     { journal: {} },
-                                     { resource: {} },
-                                     { bank_statements: {} },
-                                     { creator: {} },
-                                     { updater: {} },
-                                     { items: { include: %i[account tax tax_declaration_item] } }
-                                   ],
-                                   procs: proc { |options| options[:builder].tag!(:url, backend_journal_entry_url(@journal_entry)) })
+      items = @journal_entry.items.includes(:account).order(:position).map do |item|
+        {
+          'id'             => item.id,
+          'position'       => item.position,
+          'name'           => item.name.to_s,
+          'account_number' => item.account&.number.to_s,
+          'account_name'   => item.account&.name.to_s,
+          'real_debit'     => item.real_debit.to_f,
+          'real_credit'    => item.real_credit.to_f,
+          'letter'         => item.letter.to_s
+        }
+      end
+
+      render inertia: 'Backend/Comptabilite/Show', props: {
+        entry: {
+          'id'                  => @journal_entry.id,
+          'number'              => @journal_entry.number.to_s,
+          'name'                => @journal_entry.name.to_s,
+          'state'               => @journal_entry.state.to_s,
+          'printed_on'          => @journal_entry.printed_on&.iso8601,
+          'real_debit'          => @journal_entry.real_debit.to_f,
+          'real_credit'         => @journal_entry.real_credit.to_f,
+          'real_currency'       => @journal_entry.real_currency.to_s,
+          'real_currency_rate'  => @journal_entry.real_currency_rate.to_f,
+          'reference_number'    => @journal_entry.reference_number.to_s,
+          'continuous_number'   => @journal_entry.continuous_number.to_s,
+          'validated_at'        => @journal_entry.validated_at&.iso8601,
+          'journal_name'        => @journal_entry.journal&.name.to_s,
+          'financial_year_name' => @journal_entry.financial_year&.name.to_s
+        },
+        items: items
+      }
     end
 
     def new

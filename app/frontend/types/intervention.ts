@@ -48,3 +48,33 @@ export interface InterventionIndexProps {
     procedures: Array<{ label: string; value: string }>
   }
 }
+
+export interface InterventionParticipant {
+  id: number
+  product_name: string
+}
+
+export interface InterventionInputItem extends InterventionParticipant {
+  quantity_value: number
+  quantity_unit: string
+}
+
+export interface InterventionShowProps {
+  intervention: {
+    id: number
+    number: string
+    procedure_name: string
+    state: string
+    nature: string
+    started_at: string | null
+    stopped_at: string | null
+    description: string
+    working_duration: number
+    whole_duration: number
+    request_compliant: boolean | null
+  }
+  targets: InterventionParticipant[]
+  inputs: InterventionInputItem[]
+  doers: InterventionParticipant[]
+  tools: InterventionParticipant[]
+}
