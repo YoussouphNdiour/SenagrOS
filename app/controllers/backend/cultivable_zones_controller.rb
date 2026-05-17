@@ -18,7 +18,7 @@
 
 module Backend
   class CultivableZonesController < Backend::BaseController
-    layout 'inertia', only: [:index]
+    layout 'inertia', only: [:index, :show]
 
     manage_restfully(t3e: { name: :name })
 
@@ -75,19 +75,36 @@ module Backend
     def show
       return unless @cultivable_zone = find_and_check
 
-      t3e @cultivable_zone
-      respond_with(@cultivable_zone, methods: %i[shape_svg cap_number human_shape_area],
-                                     include: [
-                                       { activity_productions: {
-                                         methods: %i[name implanted_at harvested_at],
-                                         include: {
-                                           interventions: {
-                                             methods: %i[started_at stopped_at status name human_working_duration human_working_zone_area human_actions_names human_input_quantity_names],
-                                             include: {}
-                                           }
-                                         }
-                                       } }
-                                     ], procs: proc { |options| options[:builder].tag!(:url, backend_cultivable_zone_url(@cultivable_zone)) })
+      zone_data = CultivableZone
+        .select("id, name, work_number, description, soil_nature, production_system_name, uuid, owner_id, farmer_id, created_at, ROUND((ST_Area(shape::geography)/10000.0)::numeric,2) AS area_ha, ST_AsGeoJSON(shape) AS geojson")
+        .find(@cultivable_zone.id)
+
+      productions = @cultivable_zone.activity_productions.map do |p|
+        {
+          'id'         => p.id,
+          'name'       => p.name.to_s,
+          'state'      => p.state.to_s,
+          'started_on' => p.started_on&.iso8601,
+          'stopped_on' => p.stopped_on&.iso8601
+        }
+      end
+
+      render inertia: 'Backend/Parcelles/Show', props: {
+        parcelle: {
+          'id'                     => zone_data.id,
+          'name'                   => zone_data.name.to_s,
+          'work_number'            => zone_data.work_number.to_s,
+          'description'            => zone_data.description.to_s,
+          'soil_nature'            => zone_data.soil_nature.to_s,
+          'production_system_name' => zone_data.production_system_name.to_s,
+          'area_ha'                => zone_data.area_ha ? zone_data.area_ha.to_f : nil,
+          'geojson'                => zone_data.geojson,
+          'owner_name'             => @cultivable_zone.owner&.full_name.to_s,
+          'farmer_name'            => @cultivable_zone.farmer&.full_name.to_s,
+          'created_at'             => @cultivable_zone.created_at&.iso8601
+        },
+        productions: productions
+      }
     end
   end
 end

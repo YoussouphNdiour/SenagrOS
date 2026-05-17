@@ -20,7 +20,7 @@ module Backend
   class CampaignsController < Backend::BaseController
     manage_restfully except: :show
 
-    layout 'inertia', only: [:index]
+    layout 'inertia', only: [:index, :show]
 
     def index
       scope = Campaign.order(harvest_year: :desc)
@@ -63,15 +63,33 @@ module Backend
     def show
       return unless @campaign = find_and_check(:campaign)
 
-      @currency = Onoma::Currency.find(Preference[:currency])
-      activities_of_campaign = Activity.of_campaign(@campaign)
-      @availables_activities = Activity.availables.where.not(id: activities_of_campaign)
-      @families = activities_of_campaign.order(:family).collect(&:family).uniq
-      @activities = activities_of_campaign
-                    .left_join_working_duration_of_campaign(current_campaign)
-                    .left_join_issues_count_of_campaign(current_campaign)
-                    .left_join_production_costs_of_campaign(current_campaign)
-      t3e(@campaign.attributes)
+      productions = ActivityProduction.includes(:activity, :cultivable_zone)
+        .where(campaign_id: @campaign.id)
+        .order(:started_on)
+        .map do |p|
+          {
+            'id'                   => p.id,
+            'name'                 => p.name.to_s,
+            'state'                => p.state.to_s,
+            'started_on'           => p.started_on&.iso8601,
+            'stopped_on'           => p.stopped_on&.iso8601,
+            'activity_name'        => p.activity&.name.to_s,
+            'cultivable_zone_name' => p.cultivable_zone&.name.to_s
+          }
+        end
+
+      render inertia: 'Backend/Campagnes/Show', props: {
+        campagne: {
+          'id'           => @campaign.id,
+          'name'         => @campaign.name.to_s,
+          'description'  => @campaign.description.to_s,
+          'harvest_year' => @campaign.harvest_year,
+          'closed'       => @campaign.closed,
+          'closed_at'    => @campaign.closed_at&.iso8601,
+          'created_at'   => @campaign.created_at&.iso8601
+        },
+        productions: productions
+      }
     end
 
     def show_by_name
