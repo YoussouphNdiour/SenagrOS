@@ -1,4 +1,6 @@
+import type { ReactNode } from 'react'
 import { Sprout, Map as MapIcon, Activity, CalendarClock } from 'lucide-react'
+import { AppShell } from '../../../components/AppShell'
 import { KpiCard } from '../../../components/dashboard/KpiCard'
 import { WeatherWidget } from '../../../components/dashboard/WeatherWidget'
 import { ActivityFeed } from '../../../components/dashboard/ActivityFeed'
@@ -73,5 +75,7 @@ export const Home = ({ kpis, parcelles, recent_activity, weather, farm }: Dashbo
     </div>
   )
 }
+
+Home.layout = (page: ReactNode) => <AppShell>{page}</AppShell>
 
 export default Home

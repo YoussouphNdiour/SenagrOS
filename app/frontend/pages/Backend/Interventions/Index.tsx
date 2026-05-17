@@ -1,4 +1,6 @@
+import type { ReactNode } from 'react'
 import { useState } from 'react'
+import { AppShell } from '../../../components/AppShell'
 import { InterventionFilterPanel } from '../../../components/interventions/InterventionFilterPanel'
 import { InterventionTable }       from '../../../components/interventions/InterventionTable'
 import { InterventionKanban }      from '../../../components/interventions/InterventionKanban'
@@ -19,7 +21,7 @@ const TOGGLE_STYLE = (active: boolean) => ({
   fontSize:     '13px',
 })
 
-export default function InterventionsIndex({
+function InterventionsIndex({
   interventions,
   kanban,
   map_geojson,
@@ -73,3 +75,7 @@ export default function InterventionsIndex({
     </div>
   )
 }
+
+InterventionsIndex.layout = (page: ReactNode) => <AppShell>{page}</AppShell>
+
+export default InterventionsIndex
