@@ -45,6 +45,7 @@ describe('AppShell', () => {
 
   it('affiche les liens des 5 modules', () => {
     render(<AppShell><div>contenu</div></AppShell>)
+    expect(screen.getByRole('link', { name: /dashboard/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /interventions/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /parcelles/i })).toBeInTheDocument()
     expect(screen.getByRole('link', { name: /productions/i })).toBeInTheDocument()
