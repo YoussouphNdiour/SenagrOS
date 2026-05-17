@@ -43,42 +43,42 @@ module Backend
     def show
       return unless @activity = find_and_check
 
-      IncomingHarvestIndicator.refresh
-      @phytosanitary_document = DocumentTemplate.find_by(nature: :phytosanitary_register)
-      @land_parcel_document = DocumentTemplate.find_by(nature: :land_parcel_register)
-      @intervention_document = DocumentTemplate.find_by(nature: :intervention_register)
-      @activity_cost_document = DocumentTemplate.find_by(nature: :activity_cost)
-      @planned_budget_document = DocumentTemplate.find_by(nature: :planned_budget_sheet)
-      @pfi_interventions = PfiCampaignsActivitiesIntervention.of_activity(@activity).of_campaign(current_campaign)
-      respond_to do |format|
-        format.html do
-
-          activity_crops = Plant
-                             .joins(:inspections)
-                             .where(activity_production_id: @activity.productions.map(&:id),
-                                    dead_at: nil)
-                             .where.not(inspections: { forecast_harvest_week: nil })
-                             .distinct
-
-          @crops = initialize_grid(activity_crops, decorate: true)
-
-          t3e @activity
-        end
-
-        format.pdf do
-          return unless (template = find_and_check :document_template, params[:template])
-
-          PrinterJob.perform_later(tl("activity_printers.show.#{template.nature}", locale: :eng), template: template, campaign: current_campaign, activity: @activity, perform_as: current_user)
-          notify_success(:document_in_preparation)
-          redirect_to backend_activity_path(@activity)
-        end
+      productions = @activity.productions.includes(:cultivable_zone, :campaign).order(started_on: :desc).map do |p|
+        {
+          'id'                   => p.id,
+          'name'                 => p.name.to_s,
+          'state'                => p.state.to_s,
+          'started_on'           => p.started_on&.iso8601,
+          'stopped_on'           => p.stopped_on&.iso8601,
+          'cultivable_zone_name' => p.cultivable_zone&.name.to_s,
+          'campaign_name'        => p.campaign&.name.to_s
+        }
       end
-      @technical_itinerary_id = @activity&.default_tactics&.of_campaign(current_campaign)&.first&.technical_itinerary&.id
+
+      render inertia: 'Backend/Activites/Show', props: {
+        activite: {
+          'id'                     => @activity.id,
+          'name'                   => @activity.name.to_s,
+          'description'            => @activity.description.to_s,
+          'family'                 => @activity.family.to_s,
+          'nature'                 => @activity.nature.to_s,
+          'suspended'              => @activity.suspended,
+          'production_cycle'       => @activity.production_cycle.to_s,
+          'with_supports'          => @activity.with_supports,
+          'with_cultivation'       => @activity.with_cultivation,
+          'support_variety'        => @activity.support_variety.to_s,
+          'cultivation_variety'    => @activity.cultivation_variety.to_s,
+          'production_started_on'  => @activity.production_started_on&.iso8601,
+          'production_stopped_on'  => @activity.production_stopped_on&.iso8601,
+          'productions_count'      => productions.size
+        },
+        productions: productions
+      }
     end
 
     manage_restfully except: %i[index show]
 
-    layout 'inertia', only: [:index]
+    layout 'inertia', only: [:index, :show]
 
     def index
       scope = Activity.order(:family, :name)

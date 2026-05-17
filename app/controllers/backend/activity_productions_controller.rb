@@ -23,7 +23,7 @@ module Backend
     unroll :rank_number, activity: :name, support: :name
 
     layout 'assets_injection_layout' if defined?(Planning)
-    layout 'inertia', only: [:index]
+    layout 'inertia', only: [:index, :show]
 
     def index
       scope = ActivityProduction
@@ -88,12 +88,32 @@ module Backend
     end
 
     def show
-      super
+      return unless @activity_production = find_and_check
 
-      if @activity_production.present?
-        harvest_advisor = ::Interventions::Phytosanitary::PhytoHarvestAdvisor.new
-        @reentry_possible = harvest_advisor.reentry_possible?(@activity_production.support, Time.zone.now)
-      end
+      render inertia: 'Backend/Productions/Show', props: {
+        production: {
+          'id'                   => @activity_production.id,
+          'name'                 => @activity_production.name.to_s,
+          'custom_name'          => @activity_production.custom_name.to_s,
+          'state'                => @activity_production.state.to_s,
+          'started_on'           => @activity_production.started_on&.iso8601,
+          'stopped_on'           => @activity_production.stopped_on&.iso8601,
+          'usage'                => @activity_production.usage.to_s,
+          'size_value'           => @activity_production.size_value.to_f,
+          'size_indicator_name'  => @activity_production.size_indicator_name.to_s,
+          'size_unit_name'       => @activity_production.size_unit_name.to_s,
+          'irrigated'            => @activity_production.irrigated,
+          'nitrate_fixing'       => @activity_production.nitrate_fixing,
+          'rank_number'          => @activity_production.rank_number,
+          'activity_id'          => @activity_production.activity_id,
+          'activity_name'        => @activity_production.activity&.name.to_s,
+          'activity_family'      => @activity_production.activity&.family.to_s,
+          'cultivable_zone_id'   => @activity_production.cultivable_zone_id,
+          'cultivable_zone_name' => @activity_production.cultivable_zone&.name.to_s,
+          'campaign_id'          => @activity_production.campaign_id,
+          'campaign_name'        => @activity_production.campaign&.name.to_s
+        }
+      }
     end
 
     def new
