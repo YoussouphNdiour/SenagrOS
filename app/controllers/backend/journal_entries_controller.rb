@@ -72,7 +72,7 @@ module Backend
 
     def index
       scope = JournalEntry
-        .includes(:journal, :items)
+        .includes(:journal, items: :account)
         .order(printed_on: :desc)
         .page(params[:page]).per(50)
 
