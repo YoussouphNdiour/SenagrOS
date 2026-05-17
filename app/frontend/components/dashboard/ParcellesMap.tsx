@@ -37,7 +37,7 @@ export function ParcellesMap({ parcelles }: ParcellesMapProps) {
       >
         <p style={{ margin: '0 0 12px 0', fontSize: '14px' }}>Aucune parcelle enregistrée</p>
         <a
-          href="/backend/cultivable_zones/new"
+          href="/backend/cultivable-zones/new"
           style={{
             fontSize: '13px',
             fontWeight: 600,
