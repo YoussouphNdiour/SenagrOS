@@ -45,7 +45,7 @@ module ViteHelper
 
   # Detect the actual file extension from the source directory.
   def vite_entry_extension(source_dir, entry_dir, name)
-    base = File.join(Rails.root, "app", source_dir, entry_dir, name)
+    base = File.join(Rails.root, source_dir, entry_dir, name)
     %w[.tsx .ts .jsx .js].each do |ext|
       return ext if File.exist?("#{base}#{ext}")
     end
