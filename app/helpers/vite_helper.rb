@@ -15,6 +15,25 @@ module ViteHelper
     tag.script(src: src, type: "module", **options)
   end
 
+  # Renders the @vitejs/plugin-react Fast Refresh preamble in development.
+  # Must appear before vite_client_tag and any module scripts.
+  # Uses the proxied path /vite-dev/@react-refresh (not /@react-refresh directly,
+  # which is outside the Rails proxy prefix and would 404).
+  def vite_react_refresh_tag
+    return unless ViteRuby.instance.manifest.dev_server_running?
+
+    public_dir = ViteRuby.instance.config.public_output_dir
+    tag.script(type: "module") do
+      raw(<<~JS)
+        import RefreshRuntime from '/#{public_dir}/@react-refresh'
+        RefreshRuntime.injectIntoGlobalHook(window)
+        window.$RefreshReg$ = () => {}
+        window.$RefreshSig$ = () => (type) => type
+        window.__vite_plugin_react_preamble_installed__ = true
+      JS
+    end
+  end
+
   # Renders a <script type="module"> tag for the given Vite entry point.
   # In dev: points directly at the Vite dev server via the proxy path.
   # In production: reads the compiled path from the manifest JSON.
