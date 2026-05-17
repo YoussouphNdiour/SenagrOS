@@ -39,13 +39,13 @@ function EntryRow({ entry }: { entry: JournalEntry }) {
         <td className="px-3 py-2.5" style={{ color: 'var(--color-text-muted)' }}>{entry.journal_name}</td>
         <td className="px-3 py-2.5 text-right" style={{ color: 'var(--color-text)' }}>{formatAmount(entry.real_debit)}</td>
         <td className="px-3 py-2.5 text-right" style={{ color: 'var(--color-text)' }}>{formatAmount(entry.real_credit)}</td>
-        <td className="px-3 py-2.5 text-xs font-semibold" style={{ color: '#1B6B3A' }}>
+        <td className="px-3 py-2.5 text-xs font-semibold" style={{ color: 'var(--color-primary)' }}>
           {STATE_LABELS[entry.state] ?? entry.state}
         </td>
       </tr>
 
       {expanded && entry.items.map((item) => (
-        <tr key={item.id} className="border-b" style={{ background: '#f9f7f4', borderColor: 'var(--color-border)' }}>
+        <tr key={item.id} className="border-b" style={{ background: 'var(--color-bg-subtle)', borderColor: 'var(--color-border)' }}>
           <td className="px-3 py-1.5" />
           <td className="px-3 py-1.5 pl-6 text-xs" style={{ color: 'var(--color-text-muted)' }} colSpan={2}>
             {item.name}
