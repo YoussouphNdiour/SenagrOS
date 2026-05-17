@@ -18,7 +18,7 @@ interface AppShellComponentProps {
 }
 
 export const AppShell = ({ children }: AppShellComponentProps) => {
-  const { props, url } = usePage<InertiaSharedProps>()
+  const { props, url } = usePage() as unknown as { props: InertiaSharedProps; url: string }
   const { appShell } = props
   const campaign = appShell?.campaign
   const user = appShell?.user
@@ -103,7 +103,7 @@ export const AppShell = ({ children }: AppShellComponentProps) => {
           {NAV_LINKS.map(({ href, label, icon: Icon }) => {
             const isActive = href === '/backend'
               ? url === '/backend' || url === '/backend/'
-              : url.startsWith(href)
+              : url === href || url.startsWith(href + '/') || url.startsWith(href + '?')
 
             return (
               <a
