@@ -201,14 +201,9 @@ module Backend
     end
 
     def index
-      conditions = list_conditions
-
-      scope = Intervention
-        .where(conditions)
-        .includes(:activities, :targets, :participations, :receptions)
-        .joins('LEFT OUTER JOIN interventions I ON interventions.id = I.request_intervention_id')
-        .order(started_at: :desc)
-
+      # Build scope directly — list_conditions returns an eval string for the
+      # Ekylibre DSL and cannot be called as a plain instance method.
+      scope = build_interventions_scope
       paginated = scope.page(params[:page]).per(25)
 
       kanban = {
@@ -218,6 +213,7 @@ module Backend
         'validated'   => scope.where(nature: :record, state: :validated).count
       }
 
+      # Ruby 2.6: filter_map does not exist — use select+map instead
       zones = InterventionTarget
         .joins(:intervention)
         .where(intervention: paginated)
@@ -225,8 +221,8 @@ module Backend
         .select('intervention_parameters.intervention_id,
                  ST_AsGeoJSON(intervention_parameters.working_zone) AS zone_geojson,
                  products.name AS product_name')
-        .filter_map do |t|
-          next unless t.zone_geojson
+        .select { |t| t.zone_geojson.present? }
+        .map do |t|
           {
             'type'       => 'Feature',
             'geometry'   => JSON.parse(t.zone_geojson),
@@ -236,6 +232,14 @@ module Backend
             }
           }
         end
+
+      procedures = if Intervention.respond_to?(:used_procedures)
+                     Intervention.used_procedures
+                       .map { |p| { 'label' => p.human_name, 'value' => p.name.to_s } }
+                       .sort_by { |p| p['label'] }
+                   else
+                     []
+                   end
 
       render inertia: 'Backend/Interventions/Index', props: {
         interventions: paginated.as_json(
@@ -253,9 +257,7 @@ module Backend
           'total'      => scope.count,
           'page'       => (params[:page] || 1).to_i,
           'per_page'   => 25,
-          'procedures' => (Intervention.respond_to?(:used_procedures) ? Intervention.used_procedures
-                            .map { |p| { 'label' => p.human_name, 'value' => p.name.to_s } }
-                            .sort_by { |p| p['label'] } : [])
+          'procedures' => procedures
         }
       }
     end
@@ -734,6 +736,65 @@ module Backend
     end
 
     private
+
+      # Builds the Intervention scope for the Inertia index action.
+      # Replaces list_conditions (Ekylibre eval-based DSL, not callable as instance method).
+      def build_interventions_scope
+        scope = Intervention
+          .joins('LEFT OUTER JOIN interventions I ON interventions.id = I.request_intervention_id')
+          .where.not(state: :rejected)
+          .where('(interventions.nature = ? AND I.request_intervention_id IS NULL) OR interventions.nature = ?',
+                 'request', 'record')
+          .includes(:activities, :targets, :participations, :receptions)
+          .order(started_at: :desc)
+
+        if params[:q].present?
+          q = "%#{params[:q]}%"
+          scope = scope.where('interventions.number ILIKE ? OR interventions.procedure_name ILIKE ?', q, q)
+        end
+
+        scope = scope.where(state: params[:state])                  if params[:state].present?
+        scope = scope.where(nature: params[:nature])                if params[:nature].present?
+        scope = scope.where(procedure_name: params[:procedure_name_id]) if params[:procedure_name_id].present?
+
+        if params[:cultivable_zone_id].present?
+          cz_id = params[:cultivable_zone_id].to_i
+          scope = scope.where(id:
+            InterventionTarget
+              .joins(product: :activity_production)
+              .where(activity_productions: { cultivable_zone_id: cz_id })
+              .select(:intervention_id))
+        end
+
+        if params[:activity_id].present?
+          scope = scope.where(id:
+            Intervention.joins(:activities)
+              .where(activities: { id: params[:activity_id].to_i })
+              .select('interventions.id'))
+        end
+
+        if params[:target_id].present?
+          scope = scope.where(id:
+            InterventionTarget.where(product_id: params[:target_id].to_i).select(:intervention_id))
+        end
+
+        if params[:label_id].present?
+          scope = scope.where(id:
+            InterventionLabelling.where(label_id: params[:label_id].to_i).select(:intervention_id))
+        end
+
+        if params[:worker_id].present?
+          scope = scope.where(id:
+            InterventionDoer.where(product_id: params[:worker_id].to_i).select(:intervention_id))
+        end
+
+        if params[:equipment_id].present?
+          scope = scope.where(id:
+            InterventionParameter.where(product_id: params[:equipment_id].to_i).select(:intervention_id))
+        end
+
+        scope
+      end
 
       def find_interventions
         intervention_ids = params[:id].split(',')
