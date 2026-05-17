@@ -7,7 +7,7 @@ module Backend
     # Nom de la société — jamais nil, ne crashe pas si aucune entity of_company.
     def safe_company_name(fallback: 'SenagrOS')
       Entity.of_company&.full_name || fallback
-    rescue StandardError
+    rescue ActiveRecord::StatementInvalid, PG::Error
       fallback
     end
 
@@ -20,7 +20,7 @@ module Backend
         active:    base.where(state: 'in_progress').count,
         scheduled: base.where(nature: 'request').count
       }
-    rescue StandardError
+    rescue ActiveRecord::StatementInvalid, PG::Error
       { active: 0, scheduled: 0 }
     end
 
@@ -29,11 +29,12 @@ module Backend
       CultivableZone
         .sum("ROUND((ST_Area(shape::geography) / 10000.0)::numeric, 2)")
         .to_f
-    rescue StandardError
+    rescue ActiveRecord::StatementInvalid, PG::Error
       0.0
     end
 
     # Campagne courante sérialisée pour les props Inertia.
+    # Pas de rescue : as_json ne peut pas lever d'erreur DB, nil est retourné si pas de campagne.
     def safe_campaign_json
       current_campaign&.as_json(only: %i[name started_on stopped_on])
     end

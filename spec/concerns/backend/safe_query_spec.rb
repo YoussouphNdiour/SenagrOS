@@ -39,8 +39,15 @@ RSpec.describe Backend::SafeQuery, type: :concern do
 
   describe '#safe_area_ha' do
     it 'retourne 0.0 si CultivableZone.sum lève une erreur' do
-      allow(CultivableZone).to receive(:sum).and_raise(StandardError)
+      allow(CultivableZone).to receive(:sum).and_raise(ActiveRecord::StatementInvalid)
       expect(controller.safe_area_ha).to eq(0.0)
+    end
+
+    context 'quand des zones existent' do
+      it 'retourne un Float' do
+        allow(CultivableZone).to receive(:sum).and_return(12.5)
+        expect(controller.safe_area_ha).to eq(12.5)
+      end
     end
   end
 
