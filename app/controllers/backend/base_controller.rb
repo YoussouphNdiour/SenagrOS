@@ -34,7 +34,19 @@ module Backend
     before_action :set_current_period_interval
     before_action :set_current_period
     before_action :publish_backend_action
-    before_action :share_app_shell_props
+
+    inertia_share do
+      {
+        appShell: {
+          farm:     { name: safe_company_name },
+          campaign: safe_campaign_json,
+          user:     {
+            name:     current_user&.name.to_s,
+            initials: current_user&.name.to_s.split(' ').map { |w| w[0].to_s }.join
+          }
+        }
+      }
+    end
 
     include Userstamp
 
@@ -205,19 +217,6 @@ module Backend
       end
 
     private
-
-      def share_app_shell_props
-        inertia_share(
-          appShell: {
-            farm:     { name: safe_company_name },
-            campaign: safe_campaign_json,
-            user:     {
-              name:     current_user&.name.to_s,
-              initials: current_user&.name.to_s.split(' ').map { |w| w[0].to_s }.join
-            }
-          }
-        )
-      end
 
       def set_interval_preference(attribute, controller, action)
         if preference = current_user.preferences.find_by(name: "#{controller}##{action}.#{attribute}")
