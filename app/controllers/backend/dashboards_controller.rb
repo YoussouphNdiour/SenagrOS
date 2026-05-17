@@ -51,20 +51,17 @@ module Backend
 
       render inertia: 'Backend/Dashboard/Home', props: {
         kpis: {
-          campaign: current_campaign&.as_json(only: %i[name started_on stopped_on]),
-          area_ha: CultivableZone.sum("ROUND((ST_Area(shape::geography) / 10000.0)::numeric, 2)").to_f,
-          interventions: {
-            active: Intervention.of_campaign(current_campaign).in_progress.count,
-            scheduled: Intervention.of_campaign(current_campaign).planned.count
-          },
-          expenses_xof: nil
+          campaign:      safe_campaign_json,
+          area_ha:       safe_area_ha,
+          interventions: safe_intervention_counts,
+          expenses_xof:  nil
         },
-        parcelles: parcelles,
+        parcelles:       parcelles,
         recent_activity: recent,
-        weather: weather_data,
+        weather:         weather_data,
         farm: {
-          name: Entity.of_company.full_name,
-          locale: I18n.locale.to_s,
+          name:     safe_company_name,
+          locale:   I18n.locale.to_s,
           timezone: Time.zone.name
         }
       }
