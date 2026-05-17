@@ -10,25 +10,26 @@ function ParcellesIndex({ parcelles, meta }: ParcellesIndexProps) {
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '22px', fontWeight: 700, color: 'var(--color-text)' }}>
+      <div className="flex justify-between items-center mb-5">
+        <h1 className="text-[22px] font-bold" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>
           Parcelles
         </h1>
         <a
           href="/backend/cultivable-zones/new"
-          style={{ background: 'var(--color-primary)', color: '#fff', padding: '8px 16px', borderRadius: '6px', textDecoration: 'none', fontSize: '13px', fontWeight: 600 }}
+          className="px-4 py-2 rounded-md text-sm font-semibold text-white no-underline"
+          style={{ background: 'var(--color-primary)' }}
         >
           + Nouvelle parcelle
         </a>
       </div>
 
-      <p style={{ color: 'var(--color-text-muted)', fontSize: '13px', marginBottom: '16px' }}>
+      <p className="text-sm mb-4" style={{ color: 'var(--color-text-muted)' }}>
         {meta.total} parcelle{meta.total !== 1 ? 's' : ''} enregistrée{meta.total !== 1 ? 's' : ''}
       </p>
 
       <ParcellesMap parcelles={parcelles} highlightId={highlightId} />
 
-      <div style={{ marginTop: '16px', background: 'var(--color-bg-card)', borderRadius: '8px', border: '1px solid var(--color-border)', overflow: 'hidden' }}>
+      <div className="mt-4 rounded-lg overflow-hidden" style={{ background: 'var(--color-bg-card)', border: '1px solid var(--color-border)' }}>
         <ParcellesTable parcelles={parcelles} highlightId={highlightId} onRowClick={setHighlightId} />
       </div>
     </>

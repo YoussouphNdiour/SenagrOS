@@ -30,7 +30,7 @@ module Backend
 
       parcelles = zones.map do |z|
         z.as_json(only: %i[id name]).merge(
-          'area_ha' => z.area_ha.to_f,
+          'area_ha' => z.area_ha&.to_f,
           'geojson' => z.geojson
         )
       end

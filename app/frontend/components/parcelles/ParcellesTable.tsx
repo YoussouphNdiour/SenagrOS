@@ -9,7 +9,7 @@ interface ParcellesTableProps {
 export function ParcellesTable({ parcelles, highlightId, onRowClick }: ParcellesTableProps) {
   if (parcelles.length === 0) {
     return (
-      <p style={{ color: 'var(--color-text-muted)', textAlign: 'center', padding: '24px' }}>
+      <p className="text-center p-6" style={{ color: 'var(--color-text-muted)' }}>
         Aucune parcelle enregistrée.{' '}
         <a href="/backend/cultivable-zones/new" style={{ color: 'var(--color-primary)' }}>
           Créer une parcelle
@@ -19,12 +19,12 @@ export function ParcellesTable({ parcelles, highlightId, onRowClick }: Parcelles
   }
 
   return (
-    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+    <table className="w-full border-collapse text-sm">
       <thead>
         <tr style={{ background: 'var(--color-bg)', borderBottom: '2px solid var(--color-border)' }}>
-          <th style={{ padding: '10px 12px', textAlign: 'left', color: 'var(--color-text-muted)', fontWeight: 600, fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Nom</th>
-          <th style={{ padding: '10px 12px', textAlign: 'right', color: 'var(--color-text-muted)', fontWeight: 600, fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Surface</th>
-          <th style={{ padding: '10px 12px', textAlign: 'center', color: 'var(--color-text-muted)', fontWeight: 600, fontSize: '11px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Actions</th>
+          <th className="px-3 py-2.5 text-left font-semibold text-[11px] uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>Nom</th>
+          <th className="px-3 py-2.5 text-right font-semibold text-[11px] uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>Surface</th>
+          <th className="px-3 py-2.5 text-center font-semibold text-[11px] uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -32,16 +32,16 @@ export function ParcellesTable({ parcelles, highlightId, onRowClick }: Parcelles
           <tr
             key={p.id}
             onClick={() => onRowClick?.(p.id)}
+            className={onRowClick ? 'cursor-pointer' : 'cursor-default'}
             style={{
               borderBottom: '1px solid var(--color-border)',
               background: highlightId === p.id ? '#f0f7ec' : 'var(--color-bg-card)',
-              cursor: onRowClick ? 'pointer' : 'default',
             }}
           >
-            <td style={{ padding: '10px 12px', color: 'var(--color-text)', fontWeight: 500 }}>{p.name}</td>
-            <td style={{ padding: '10px 12px', textAlign: 'right', color: 'var(--color-text-muted)' }}>{p.area_ha} ha</td>
-            <td style={{ padding: '10px 12px', textAlign: 'center' }}>
-              <a href={`/backend/cultivable-zones/${p.id}`} style={{ color: 'var(--color-primary)', fontSize: '12px', fontWeight: 600 }}>
+            <td className="px-3 py-2.5 font-medium" style={{ color: 'var(--color-text)' }}>{p.name}</td>
+            <td className="px-3 py-2.5 text-right" style={{ color: 'var(--color-text-muted)' }}>{p.area_ha != null ? `${p.area_ha} ha` : '—'}</td>
+            <td className="px-3 py-2.5 text-center">
+              <a href={`/backend/cultivable-zones/${p.id}`} className="text-xs font-semibold" style={{ color: 'var(--color-primary)' }}>
                 Voir
               </a>
             </td>

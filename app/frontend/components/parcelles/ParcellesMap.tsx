@@ -10,7 +10,7 @@ export function ParcellesMap({ parcelles, highlightId }: ParcellesMapProps) {
   const withGeo = parcelles.filter((p) => p.geojson !== null)
 
   return (
-    <div style={{ height: '55vh', borderRadius: '8px', overflow: 'hidden', border: '1px solid var(--color-border)' }}>
+    <div className="h-[55vh] rounded-lg overflow-hidden" style={{ border: '1px solid var(--color-border)' }}>
       <MapContainer
         center={[14.5, -14.5]}
         zoom={7}

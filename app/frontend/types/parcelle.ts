@@ -1,7 +1,7 @@
 export interface Parcelle {
   id: number
   name: string
-  area_ha: number
+  area_ha: number | null
   geojson: string | null
 }
 
