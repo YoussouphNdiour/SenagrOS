@@ -12,6 +12,7 @@ const NAV_LINKS = [
   { href: '/backend/activity_productions', label: 'Productions',  icon: Sprout },
   { href: '/backend/journal_entries',      label: 'Comptabilité', icon: BookOpen },
   { href: '/backend/campaigns',            label: 'Campagnes',    icon: Calendar },
+  { href: '/backend/activities',           label: 'Activités',    icon: Sprout },
 ]
 
 interface AppShellComponentProps {
