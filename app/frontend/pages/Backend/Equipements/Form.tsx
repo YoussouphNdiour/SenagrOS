@@ -3,13 +3,19 @@ import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { ArrowLeft, Save, Tractor } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
-import type { EquipementFormData, EquipementFormProps } from '../../../types/equipement'
+import type { EquipementFormProps } from '../../../types/equipement'
 
 /**
  * Note: Inline style attributes with CSS variables (e.g., style={{ color: 'var(--color-text)' }})
  * are used consistently across the SenagrOS frontend. This is an intentional project pattern
  * for applying design tokens defined in app/frontend/styles/tokens.css.
  */
+
+const errorStyle = {
+  fontSize: '11px',
+  color: 'var(--color-danger)',
+  marginTop: '4px',
+}
 
 const EquipementsForm = ({ equipement, errors }: EquipementFormProps) => {
   const isEdit = equipement !== null
@@ -19,22 +25,24 @@ const EquipementsForm = ({ equipement, errors }: EquipementFormProps) => {
   const [description, setDescription] = useState<string>(equipement?.description ?? '')
   const [bornAt, setBornAt] = useState<string>(equipement?.born_at ?? '')
   const [deadAt, setDeadAt] = useState<string>(equipement?.dead_at ?? '')
+  const [submitting, setSubmitting] = useState(false)
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    setSubmitting(true)
     const data = {
       equipement: {
         name,
         work_number: workNumber,
         description,
-        born_at: bornAt !== '' ? bornAt : null,
-        dead_at: deadAt !== '' ? deadAt : null,
+        born_at: bornAt || null,
+        dead_at: deadAt || null,
       },
     }
-    if (isEdit) {
-      router.patch(`/backend/equipments/${equipement.id}`, data)
+    if (equipement !== null) {
+      router.patch(`/backend/equipments/${equipement.id}`, data, { onFinish: () => setSubmitting(false) })
     } else {
-      router.post('/backend/equipments', data)
+      router.post('/backend/equipments', data, { onFinish: () => setSubmitting(false) })
     }
   }
 
@@ -96,18 +104,20 @@ const EquipementsForm = ({ equipement, errors }: EquipementFormProps) => {
             {/* Nom */}
             <div>
               <label
-                htmlFor="equipement-name"
+                htmlFor="eq-name"
                 className="block text-sm font-medium mb-1"
                 style={{ color: 'var(--color-text)' }}
               >
-                Nom <span style={{ color: '#dc2626' }}>*</span>
+                Nom <span style={{ color: 'var(--color-danger)' }}>*</span>
               </label>
               <input
-                id="equipement-name"
+                id="eq-name"
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 required
+                aria-invalid={!!errors.name || undefined}
+                aria-describedby={errors.name ? 'eq-name-error' : undefined}
                 className="w-full rounded px-3 py-2 text-sm"
                 style={{
                   border: '1px solid var(--color-border)',
@@ -118,7 +128,7 @@ const EquipementsForm = ({ equipement, errors }: EquipementFormProps) => {
                 placeholder="ex. Tracteur John Deere 5055E"
               />
               {errors.name && (
-                <p className="mt-1 text-xs" style={{ color: '#dc2626' }}>
+                <p id="eq-name-error" style={errorStyle}>
                   {errors.name}
                 </p>
               )}
@@ -127,17 +137,19 @@ const EquipementsForm = ({ equipement, errors }: EquipementFormProps) => {
             {/* Numéro de travail */}
             <div>
               <label
-                htmlFor="equipement-work-number"
+                htmlFor="eq-work"
                 className="block text-sm font-medium mb-1"
                 style={{ color: 'var(--color-text)' }}
               >
                 Numéro de travail
               </label>
               <input
-                id="equipement-work-number"
+                id="eq-work"
                 type="text"
                 value={workNumber}
                 onChange={(e) => setWorkNumber(e.target.value)}
+                aria-invalid={!!errors.work_number || undefined}
+                aria-describedby={errors.work_number ? 'eq-work-error' : undefined}
                 className="w-full rounded px-3 py-2 text-sm"
                 style={{
                   border: '1px solid var(--color-border)',
@@ -148,7 +160,7 @@ const EquipementsForm = ({ equipement, errors }: EquipementFormProps) => {
                 placeholder="ex. EQ-001"
               />
               {errors.work_number && (
-                <p className="mt-1 text-xs" style={{ color: '#dc2626' }}>
+                <p id="eq-work-error" style={errorStyle}>
                   {errors.work_number}
                 </p>
               )}
@@ -158,17 +170,19 @@ const EquipementsForm = ({ equipement, errors }: EquipementFormProps) => {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <label
-                  htmlFor="equipement-born-at"
+                  htmlFor="eq-born"
                   className="block text-sm font-medium mb-1"
                   style={{ color: 'var(--color-text)' }}
                 >
                   Date d'acquisition
                 </label>
                 <input
-                  id="equipement-born-at"
+                  id="eq-born"
                   type="date"
                   value={bornAt}
                   onChange={(e) => setBornAt(e.target.value)}
+                  aria-invalid={!!errors.born_at || undefined}
+                  aria-describedby={errors.born_at ? 'eq-born-error' : undefined}
                   className="w-full rounded px-3 py-2 text-sm"
                   style={{
                     border: '1px solid var(--color-border)',
@@ -178,7 +192,7 @@ const EquipementsForm = ({ equipement, errors }: EquipementFormProps) => {
                   }}
                 />
                 {errors.born_at && (
-                  <p className="mt-1 text-xs" style={{ color: '#dc2626' }}>
+                  <p id="eq-born-error" style={errorStyle}>
                     {errors.born_at}
                   </p>
                 )}
@@ -186,17 +200,19 @@ const EquipementsForm = ({ equipement, errors }: EquipementFormProps) => {
 
               <div>
                 <label
-                  htmlFor="equipement-dead-at"
+                  htmlFor="eq-dead"
                   className="block text-sm font-medium mb-1"
                   style={{ color: 'var(--color-text)' }}
                 >
                   Date de retrait
                 </label>
                 <input
-                  id="equipement-dead-at"
+                  id="eq-dead"
                   type="date"
                   value={deadAt}
                   onChange={(e) => setDeadAt(e.target.value)}
+                  aria-invalid={!!errors.dead_at || undefined}
+                  aria-describedby={errors.dead_at ? 'eq-dead-error' : undefined}
                   className="w-full rounded px-3 py-2 text-sm"
                   style={{
                     border: '1px solid var(--color-border)',
@@ -206,7 +222,7 @@ const EquipementsForm = ({ equipement, errors }: EquipementFormProps) => {
                   }}
                 />
                 {errors.dead_at && (
-                  <p className="mt-1 text-xs" style={{ color: '#dc2626' }}>
+                  <p id="eq-dead-error" style={errorStyle}>
                     {errors.dead_at}
                   </p>
                 )}
@@ -216,17 +232,19 @@ const EquipementsForm = ({ equipement, errors }: EquipementFormProps) => {
             {/* Description */}
             <div>
               <label
-                htmlFor="equipement-description"
+                htmlFor="eq-desc"
                 className="block text-sm font-medium mb-1"
                 style={{ color: 'var(--color-text)' }}
               >
                 Description
               </label>
               <textarea
-                id="equipement-description"
+                id="eq-desc"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 rows={3}
+                aria-invalid={!!errors.description || undefined}
+                aria-describedby={errors.description ? 'eq-desc-error' : undefined}
                 className="w-full rounded px-3 py-2 text-sm"
                 style={{
                   border: '1px solid var(--color-border)',
@@ -238,7 +256,7 @@ const EquipementsForm = ({ equipement, errors }: EquipementFormProps) => {
                 placeholder="Description facultative de l'équipement…"
               />
               {errors.description && (
-                <p className="mt-1 text-xs" style={{ color: '#dc2626' }}>
+                <p id="eq-desc-error" style={errorStyle}>
                   {errors.description}
                 </p>
               )}
@@ -252,12 +270,14 @@ const EquipementsForm = ({ equipement, errors }: EquipementFormProps) => {
           >
             <button
               type="submit"
+              disabled={submitting}
               className="flex items-center gap-2 px-4 py-2 rounded text-sm font-medium"
               style={{
                 background: 'var(--color-primary)',
                 color: '#fff',
                 border: 'none',
-                cursor: 'pointer',
+                cursor: submitting ? 'not-allowed' : 'pointer',
+                opacity: submitting ? 0.7 : 1,
               }}
             >
               <Save size={15} />
