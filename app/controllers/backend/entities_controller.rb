@@ -18,6 +18,8 @@
 
 module Backend
   class EntitiesController < Backend::BaseController
+    layout 'inertia', only: [:index, :show, :new, :edit]
+
     def new
       render inertia: 'Backend/Entites/Form', props: {
         entite: nil,
@@ -40,6 +42,7 @@ module Backend
 
     def edit
       return unless @entity = find_and_check
+      @entity = Entity.includes(:emails, :phones, :mails).find(@entity.id)
       render inertia: 'Backend/Entites/Form', props: {
         entite: entity_form_props(@entity),
         errors: {}
@@ -52,6 +55,7 @@ module Backend
       if @entity.update(permitted_entity_params)
         redirect_to backend_entity_path(@entity), notice: 'Entité mise à jour.'
       else
+        @entity = Entity.includes(:emails, :phones, :mails).find(@entity.id)
         render inertia: 'Backend/Entites/Form', props: {
           entite: entity_form_props(@entity),
           errors: entity_errors(@entity)
@@ -70,8 +74,6 @@ module Backend
     )
     manage_restfully_picture
     respond_to :csv, :ods, :xlsx, :pdf, :odt, :docx, :html, :xml, :json
-
-    layout 'inertia', only: [:index, :show, :new, :edit]
 
     def index
       scope = Entity
