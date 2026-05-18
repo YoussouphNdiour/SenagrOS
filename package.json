@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "dependencies": {
     "@inertiajs/react": "^1.0",
     "@rails/webpacker": "^4.0.7",

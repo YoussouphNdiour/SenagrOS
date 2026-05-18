@@ -2,6 +2,13 @@ import type { ReactNode } from 'react'
 import { AppShell } from '../../../components/AppShell'
 import type { ProductionsIndexProps } from '../../../types/production'
 
+/**
+ * Note: Inline style attributes with CSS variables (e.g., style={{ color: 'var(--color-text)' }})
+ * are used consistently across the SenagrOS frontend. This is an intentional project pattern
+ * for applying design tokens defined in app/frontend/styles/tokens.css.
+ * See Dashboard and Interventions components for consistent usage.
+ */
+
 const STATE_LABELS: Record<string, string> = {
   opened:   'En cours',
   aborted:  'Abandonné',

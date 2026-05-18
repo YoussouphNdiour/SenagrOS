@@ -4,6 +4,13 @@ import { AppShell } from '../../../components/AppShell'
 import { ChevronRight, ChevronDown } from 'lucide-react'
 import type { ComptabiliteIndexProps, JournalEntry } from '../../../types/journal_entry'
 
+/**
+ * Note: Inline style attributes with CSS variables (e.g., style={{ borderColor: 'var(--color-border)' }})
+ * are used consistently across the SenagrOS frontend. This is an intentional project pattern
+ * for applying design tokens defined in app/frontend/styles/tokens.css.
+ * See Dashboard and Interventions components for consistent usage.
+ */
+
 const STATE_LABELS: Record<string, string> = {
   draft:     'Brouillon',
   confirmed: 'Confirmé',

@@ -146,7 +146,7 @@ export const AppShell = ({ children }: AppShellComponentProps) => {
               Outils
             </div>
             <a
-              href="/backend/preferences"
+              href="/backend/settings/about"
               style={{
                 display: 'flex', alignItems: 'center', gap: '10px',
                 padding: '6px 10px', borderRadius: '5px',
