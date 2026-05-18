@@ -72,8 +72,8 @@ const EntitesForm = ({ entite, errors }: EntiteFormProps) => {
     fd.append('entity[title]', title)
     fd.append('entity[first_name]', firstName)
     fd.append('entity[last_name]', lastName)
-    fd.append('entity[born_at]', bornAt)
-    fd.append('entity[dead_at]', deadAt)
+    if (bornAt) fd.append('entity[born_at]', bornAt)
+    if (deadAt) fd.append('entity[dead_at]', deadAt)
     fd.append('entity[language]', language)
     fd.append('entity[description]', description)
     emails.forEach((em, i) => {
