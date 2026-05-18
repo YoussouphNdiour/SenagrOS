@@ -38,9 +38,14 @@ interface ParamRowProps {
 }
 
 function ParamRow({ groupKey, param, hasQuantity }: ParamRowProps) {
+  const productId = `${groupKey}-${param.name}-product`
+  const quantityValueId = `${groupKey}-${param.name}-qty-value`
+  const quantityUnitId = `${groupKey}-${param.name}-qty-unit`
+
   return (
     <div style={{ marginBottom: '12px' }}>
       <label
+        htmlFor={productId}
         style={{
           display: 'block',
           fontSize: '13px',
@@ -52,6 +57,7 @@ function ParamRow({ groupKey, param, hasQuantity }: ParamRowProps) {
         {param.label}
       </label>
       <input
+        id={productId}
         type="text"
         name={`intervention[${groupKey}_participants][${param.name}][product_name]`}
         placeholder="Nom du produit…"
@@ -61,6 +67,7 @@ function ParamRow({ groupKey, param, hasQuantity }: ParamRowProps) {
       {hasQuantity && (
         <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
           <input
+            id={quantityValueId}
             type="number"
             name={`intervention[${groupKey}_participants][${param.name}][quantity_value]`}
             min="0"
@@ -69,6 +76,7 @@ function ParamRow({ groupKey, param, hasQuantity }: ParamRowProps) {
             className="rounded px-3 py-2 text-sm"
           />
           <input
+            id={quantityUnitId}
             type="text"
             name={`intervention[${groupKey}_participants][${param.name}][quantity_unit]`}
             placeholder="unité (kg, L…)"
