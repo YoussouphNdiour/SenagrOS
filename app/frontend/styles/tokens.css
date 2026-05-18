@@ -19,6 +19,8 @@
   --color-danger:        #D4420A;
   --color-danger-bg:     #fee2e2;
   --color-danger-text:   #991b1b;
+  --color-warning-bg:    #fef3c7;
+  --color-warning-text:  #92400e;
 
   /* Typographie */
   --font-ui:      'Plus Jakarta Sans', system-ui, sans-serif;

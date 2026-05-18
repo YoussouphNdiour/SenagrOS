@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
-import { ArrowLeft, BookOpen, FileText, Plus, Save, X } from 'lucide-react'
+import { ArrowLeft, BookOpen, Check, FileText, Plus, Save, X } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
 import type { ComptabiliteFormProps, JournalEntryFormItem } from '../../../types/journal_entry'
 
@@ -347,14 +347,14 @@ const ComptabiliteForm = ({ entry, journals, errors }: ComptabiliteFormProps) =>
                       {isBalanced ? (
                         <span
                           className="inline-block px-2 py-0.5 rounded-full text-xs font-semibold"
-                          style={{ background: '#d1fae5', color: '#065f46' }}
+                          style={{ background: 'var(--color-success-bg)', color: 'var(--color-success-text)' }}
                         >
-                          Équilibrée ✓
+                          Équilibrée <Check size={12} />
                         </span>
                       ) : (
                         <span
                           className="inline-block px-2 py-0.5 rounded-full text-xs font-semibold"
-                          style={{ background: '#fef3c7', color: '#92400e' }}
+                          style={{ background: 'var(--color-warning-bg)', color: 'var(--color-warning-text)' }}
                         >
                           Déséquilibre : {Math.abs(totalDebit - totalCredit).toFixed(2)}
                         </span>
