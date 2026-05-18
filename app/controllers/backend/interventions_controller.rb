@@ -25,7 +25,7 @@ module Backend
     manage_restfully t3e: { procedure_name: '(RECORD.procedure ? RECORD.procedure.human_name : nil)'.c },
                      continue: %i[nature procedure_name crop_group_ids]
 
-    layout 'inertia', only: [:index, :show]
+    layout 'inertia', only: [:index, :show, :new, :edit]
 
     respond_to :pdf, :odt, :docx, :xml, :json, :html, :csv
 
@@ -332,168 +332,61 @@ module Backend
 
     end
 
-    # TODO: Reimplement this with correct use of permitted params
     def new
-      # The use of unsafe_params is a crutch to have this code working fast.
-      # However, this whole method should be implemented using REAL permitted_params.
-      unsafe_params = params.to_unsafe_h
-
-      options = {}
-      %i[actions custom_fields description event_id issue_id
-         nature number prescription_id procedure_name
-         request_intervention_id started_at state
-         stopped_at trouble_description trouble_encountered
-         whole_duration working_duration].each do |param|
-        options[param] = unsafe_params[param]
+      procedures = Procedo.selection.map { |label, name| { 'label' => label.to_s, 'name' => name.to_s } }
+      procedure_schema = nil
+      if params[:procedure_name].present?
+        proc = Procedo.find(params[:procedure_name].to_s)
+        procedure_schema = build_procedure_schema(proc) if proc
       end
-
-      attributes_have_only_product_id = params[:targets_attributes] && params[:targets_attributes].all?{ |target_attributes| target_attributes.keys.length == 1 && target_attributes[:product_id].present? }
-      if params['procedure_name'].present? && attributes_have_only_product_id
-        procedure = Procedo::Procedure.find(params['procedure_name'])
-        target_parameter = procedure.parameters_of_type(:target, true).first if procedure
-        notify_warning_now(:no_target_exist_on_procedure) if target_parameter.nil?
-
-        if target_parameter
-          products = Product.where(id: unsafe_params.delete('targets_attributes').map{ |ta| ta[:product_id] }.compact)
-          targets_attributes_builder = ::Interventions::TargetsAttributesBuilder.new(target_parameter, products, at: Time.zone.now - 1.hour)
-
-          if targets_attributes_builder.products_matching_to_filter.blank?
-            notify_warning_now(:no_availables_product_matching_current_filter)
-          end
-
-          if targets_attributes_builder.available_products.blank?
-            notify_warning_now(:no_availables_product_on_current_campaign)
-          end
-
-          options.deep_merge!(targets_attributes_builder.attributes)
-        end
-      end
-
-      if params[:procedure_name].present? && params[:crop_group_ids].present?
-        crop_group_params_computation = ::Interventions::CropGroupParamsComputation.new(params[:procedure_name], params[:crop_group_ids])
-        options.merge!(crop_group_params_computation.options)
-        options[:intervention_crop_groups_attributes] = params[:crop_group_ids].map{ |id| { crop_group_id: id } }
-        if crop_group_params_computation.rejected_crops.any?
-          notify_warning_now(:intervention_crops_rejected,
-                             crops: helpers.as_unordered_list(crop_group_params_computation.rejected_crops.map(&:name)),
-                             html: true)
-        end
-      end
-
-      if params[:procedure_name].present? && params[:ride_ids].present?
-        rides = Ride.find(params[:ride_ids])
-        ::Interventions::CreateFromRidesJob.perform_later(options, rides, perform_as: current_user)
-        notify_success(:intervention_in_preparation)
-        redirect_to backend_ride_set_path(rides.first.ride_set)
-        return
-      end
-
-      %i[doers inputs outputs tools participations working_periods intervention_crop_groups].each do |param|
-        next unless params.include? :intervention
-
-        options[:"#{param}_attributes"] = permitted_params["#{param}_attributes"] || []
-      end
-      # consume preference and erase
-      if params[:keeper_id] && (p = current_user.preferences.get(params[:keeper_id])) && p.value.present?
-
-        options[:targets_attributes] = p.value.split(',').collect do |v|
-          hash = {}
-
-          hash[:product_id] = v if Product.find_by(id: v)
-
-          if params[:reference_name]
-            next unless params[:reference_name] == 'animal'
-
-            hash[:reference_name] = params[:reference_name]
-          end
-
-          if params[:new_group] && (g = Product.find_by(id: params[:new_group]))
-            hash[:new_group_id] = g.id
-          end
-
-          if params[:new_container] && (c = Product.find_by(id: params[:new_container]))
-            hash[:new_container_id] = c.id
-          end
-
-          hash
-        end.compact
-
-        p.set! nil
-      end
-
-      if options[:warning]
-        notify_warning_now(options[:warning], html: true)
-      end
-
-      @intervention = Intervention.new(options)
-      from_request = Intervention.find_by(id: params[:request_intervention_id])
-      @intervention = from_request.initialize_record if from_request
-
-      map_is_shown = user_preference_value(User::PREFERENCE_SHOW_MAP_INTERVENTION_FORM, true)
-      if @intervention.using_phytosanitary? && !map_is_shown
-        notify_warning(:phyto_intervention_alert_if_map_disabled.tl)
-      end
-
-      render(locals: { cancel_url: { action: :index }, with_continue: true })
+      render inertia: 'Backend/Interventions/Form', props: {
+        intervention:     nil,
+        procedures:       procedures,
+        procedure_schema: procedure_schema,
+        errors:           {}
+      }
     end
 
     def edit
       return unless @intervention = find_and_check(:intervention)
-
-      map_is_shown = user_preference_value(User::PREFERENCE_SHOW_MAP_INTERVENTION_FORM, true)
-      if @intervention && @intervention.using_phytosanitary? && !map_is_shown
-        notify_warning(:phyto_intervention_alert_if_map_disabled.tl)
-      end
-
-      super
+      procedures = Procedo.selection.map { |label, name| { 'label' => label.to_s, 'name' => name.to_s } }
+      proc = Procedo.find(@intervention.procedure_name.to_s)
+      procedure_schema = proc ? build_procedure_schema(proc) : nil
+      render inertia: 'Backend/Interventions/Form', props: {
+        intervention:     intervention_form_props(@intervention),
+        procedures:       procedures,
+        procedure_schema: procedure_schema,
+        errors:           {}
+      }
     end
 
     def create
-      unless permitted_params[:participations_attributes].nil?
-        participations = permitted_params[:participations_attributes]
-
-        participations.each_pair do |key, value|
-          participations[key] = JSON.parse(value)
-        end
-
-        permitted_params[:participations_attributes] = participations
+      @intervention = Intervention.new(permitted_intervention_params)
+      if @intervention.save
+        redirect_to backend_intervention_path(@intervention), notice: 'Intervention créée avec succès.'
+      else
+        procedures = Procedo.selection.map { |label, name| { 'label' => label.to_s, 'name' => name.to_s } }
+        render inertia: 'Backend/Interventions/Form', props: {
+          intervention:     intervention_form_props(@intervention),
+          procedures:       procedures,
+          procedure_schema: nil,
+          errors:           intervention_errors(@intervention)
+        }, status: :unprocessable_entity
       end
-
-      @intervention = Intervention.new(permitted_params)
-      url = if params[:create_and_continue]
-              { action: :new, continue: true }
-            elsif URI(request.referer).path == '/planning/schedulings/new_detailed_intervention' && defined?(Planning)
-              planning_schedulings_path
-            elsif URI(request.referer).path == '/backend/schedulings/new_detailed_intervention'
-              backend_schedulings_path
-            else
-              params[:redirect] || { action: :show, id: 'id'.c }
-            end
-
-      notify = params[:intervention_proposal] ? :record_x_planned : :record_x_created
-
-      return if save_and_redirect(@intervention, url: url, notify: notify, identifier: :number)
-
-      render(locals: { cancel_url: { action: :index }, with_continue: true })
     end
 
     def update
-      @intervention = find_and_check
-
-      unless permitted_params[:participations_attributes].nil?
-        participations = permitted_params[:participations_attributes]
-        participations.each_pair do |key, value|
-          participations[key] = JSON.parse(value)
-        end
-
-        permitted_params[:participations_attributes] = participations
-
-        delete_working_periods(participations)
-      end
-      if @intervention.update(permitted_params)
-        redirect_to action: :show
+      return unless @intervention = find_and_check(:intervention)
+      if @intervention.update(permitted_intervention_params)
+        redirect_to backend_intervention_path(@intervention), notice: 'Intervention mise à jour.'
       else
-        render :edit
+        procedures = Procedo.selection.map { |label, name| { 'label' => label.to_s, 'name' => name.to_s } }
+        render inertia: 'Backend/Interventions/Form', props: {
+          intervention:     intervention_form_props(@intervention),
+          procedures:       procedures,
+          procedure_schema: nil,
+          errors:           intervention_errors(@intervention)
+        }, status: :unprocessable_entity
       end
     end
 
@@ -956,6 +849,40 @@ module Backend
           end
         end
         duplicate_parameter
+      end
+
+      def intervention_form_props(intervention)
+        {
+          'id'             => intervention.id,
+          'procedure_name' => intervention.procedure_name.to_s,
+          'nature'         => intervention.nature.to_s,
+          'state'          => intervention.state.to_s,
+          'started_at'     => intervention.started_at&.iso8601,
+          'stopped_at'     => intervention.stopped_at&.iso8601,
+          'description'    => intervention.description.to_s,
+          'number'         => intervention.number.to_s
+        }
+      end
+
+      def intervention_errors(intervention)
+        intervention.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v.first.to_s }
+      end
+
+      def permitted_intervention_params
+        params.require(:intervention).permit(
+          :procedure_name, :nature, :state, :started_at, :stopped_at, :description, :number
+        )
+      end
+
+      def build_procedure_schema(proc)
+        groups = {}
+        %w[target tool doer input output].each do |type|
+          params_of_type = proc.parameters.select { |p| p.respond_to?(:type) && p.type.to_s == type }
+          groups[type] = params_of_type.map do |p|
+            { 'name' => p.name.to_s, 'label' => p.human_name.to_s }
+          end
+        end
+        { 'procedure_name' => proc.name.to_s, 'label' => proc.human_name.to_s, 'groups' => groups }
       end
   end
 end
