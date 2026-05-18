@@ -24,7 +24,7 @@ module Backend
 
     unroll
 
-    after_action :open_activity, only: :create, unless: -> { @activity.new_record? || params[:campaign].blank? }
+    after_action :open_activity, only: :create, unless: -> { @activity.new_record? || params.dig(:campaign, :name).blank? }
 
     list line_class: '(:success if RECORD.of_campaign?(current_campaign))'.c do |t|
       # t.action :show, url: {format: :pdf}, image: :print
@@ -93,7 +93,7 @@ module Backend
         render inertia: 'Backend/Activites/Form', props: {
           activite:  activite_form_props(@activity),
           families:  activity_families,
-          errors:    @activity.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v.first.to_s }
+          errors:    activity_errors(@activity)
         }, status: :unprocessable_entity
       end
     end
@@ -115,7 +115,7 @@ module Backend
         render inertia: 'Backend/Activites/Form', props: {
           activite:  activite_form_props(@activity),
           families:  activity_families,
-          errors:    @activity.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v.first.to_s }
+          errors:    activity_errors(@activity)
         }, status: :unprocessable_entity
       end
     end
@@ -283,6 +283,10 @@ module Backend
 
       def activity_families
         Activity.family.values.map { |v| { 'value' => v.to_s, 'label' => v.to_s.humanize } }
+      end
+
+      def activity_errors(activity)
+        activity.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v.first.to_s }
       end
 
       def permitted_activite_params
