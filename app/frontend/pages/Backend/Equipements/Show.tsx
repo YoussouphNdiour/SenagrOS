@@ -1,9 +1,15 @@
 import type { ReactNode } from 'react'
-import { ArrowLeft, Tractor, Settings, Hash } from 'lucide-react'
+import { ArrowLeft, Tractor, Settings, Hash, Wrench, Shield, Link2 } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
 import type { EquipementShowProps } from '../../../types/equipement'
 
-function EquipementShow({ equipement }: EquipementShowProps) {
+const STATE_LABELS: Record<string, string> = {
+  in_progress: 'En cours',
+  done: 'Terminée',
+  validated: 'Validée',
+}
+
+function EquipementShow({ equipement, interventions, maintenances, links }: EquipementShowProps) {
   const isActive = !equipement.dead_at
 
   return (
@@ -113,6 +119,130 @@ function EquipementShow({ equipement }: EquipementShowProps) {
           )}
         </div>
       </div>
+
+      {/* Interventions */}
+      <div className="mt-6 rounded-lg" style={{ background: 'var(--color-bg-card)', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-card)' }}>
+        <div className="flex items-center gap-2 px-5 py-4" style={{ borderBottom: '1px solid var(--color-border)' }}>
+          <Wrench size={16} style={{ color: 'var(--color-text-muted)' }} />
+          <h2 className="text-sm font-semibold" style={{ color: 'var(--color-text)' }}>
+            Interventions ({interventions.length})
+          </h2>
+        </div>
+        {interventions.length === 0 ? (
+          <p className="px-5 py-4 text-sm" style={{ color: 'var(--color-text-muted)' }}>
+            Aucune intervention enregistrée.
+          </p>
+        ) : (
+          <table className="w-full text-sm">
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
+                <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>Intervention</th>
+                <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>Date</th>
+                <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>État</th>
+              </tr>
+            </thead>
+            <tbody>
+              {interventions.map((intervention) => (
+                <tr key={intervention.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                  <td className="px-5 py-3">
+                    <a
+                      href={`/backend/interventions/${intervention.id}`}
+                      className="no-underline font-medium"
+                      style={{ color: 'var(--color-primary)' }}
+                    >
+                      {intervention.name}
+                    </a>
+                  </td>
+                  <td className="px-5 py-3" style={{ color: 'var(--color-text-muted)' }}>
+                    {intervention.started_at
+                      ? new Date(intervention.started_at).toLocaleDateString('fr-FR')
+                      : '—'}
+                  </td>
+                  <td className="px-5 py-3" style={{ color: 'var(--color-text)' }}>
+                    {STATE_LABELS[intervention.state] ?? intervention.state}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      {/* Maintenances */}
+      <div className="mt-4 rounded-lg" style={{ background: 'var(--color-bg-card)', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-card)' }}>
+        <div className="flex items-center gap-2 px-5 py-4" style={{ borderBottom: '1px solid var(--color-border)' }}>
+          <Shield size={16} style={{ color: 'var(--color-text-muted)' }} />
+          <h2 className="text-sm font-semibold" style={{ color: 'var(--color-text)' }}>
+            Maintenances ({maintenances.length})
+          </h2>
+        </div>
+        {maintenances.length === 0 ? (
+          <p className="px-5 py-4 text-sm" style={{ color: 'var(--color-text-muted)' }}>
+            Aucune maintenance enregistrée.
+          </p>
+        ) : (
+          <table className="w-full text-sm">
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
+                <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>Intervention</th>
+                <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {maintenances.map((m) => (
+                <tr key={m.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                  <td className="px-5 py-3">
+                    <a
+                      href={`/backend/interventions/${m.id}`}
+                      className="no-underline font-medium"
+                      style={{ color: 'var(--color-primary)' }}
+                    >
+                      {m.description || `Maintenance #${m.id}`}
+                    </a>
+                  </td>
+                  <td className="px-5 py-3" style={{ color: 'var(--color-text-muted)' }}>
+                    {m.started_at
+                      ? new Date(m.started_at).toLocaleDateString('fr-FR')
+                      : '—'}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      {/* Liens — only when non-empty */}
+      {links.length > 0 && (
+        <div className="mt-4 rounded-lg" style={{ background: 'var(--color-bg-card)', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-card)' }}>
+          <div className="flex items-center gap-2 px-5 py-4" style={{ borderBottom: '1px solid var(--color-border)' }}>
+            <Link2 size={16} style={{ color: 'var(--color-text-muted)' }} />
+            <h2 className="text-sm font-semibold" style={{ color: 'var(--color-text)' }}>
+              Liens ({links.length})
+            </h2>
+          </div>
+          <table className="w-full text-sm">
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
+                <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>Nature</th>
+                <th className="px-5 py-3 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>Lié à</th>
+              </tr>
+            </thead>
+            <tbody>
+              {links.map((link) => (
+                <tr key={link.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                  <td className="px-5 py-3 font-medium" style={{ color: 'var(--color-text)' }}>
+                    {link.nature}
+                  </td>
+                  <td className="px-5 py-3" style={{ color: 'var(--color-text)' }}>
+                    {link.linked_name}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </>
   )
 }

@@ -65,3 +65,37 @@ describe('EquipementShow', () => {
     expect(screen.getByText('JD5055E-2020')).toBeInTheDocument()
   })
 })
+
+describe('EquipementShow — sous-sections', () => {
+  it('affiche la section Interventions avec les données', () => {
+    const interventions = [{ id: 10, name: 'Pulvérisation', started_at: '2024-03-01T08:00:00Z', state: 'done' }]
+    render(<EquipementShow equipement={mockEquipement} interventions={interventions} maintenances={[]} links={[]} />)
+    expect(screen.getByText('Interventions (1)')).toBeInTheDocument()
+    expect(screen.getByText('Pulvérisation')).toBeInTheDocument()
+    expect(screen.getByText('Terminée')).toBeInTheDocument()
+  })
+
+  it('affiche le message vide pour les interventions', () => {
+    render(<EquipementShow equipement={mockEquipement} interventions={[]} maintenances={[]} links={[]} />)
+    expect(screen.getByText('Aucune intervention enregistrée.')).toBeInTheDocument()
+  })
+
+  it('affiche la section Maintenances', () => {
+    const maintenances = [{ id: 5, description: 'Vidange moteur', started_at: '2024-02-10T09:00:00Z' }]
+    render(<EquipementShow equipement={mockEquipement} interventions={[]} maintenances={maintenances} links={[]} />)
+    expect(screen.getByText('Maintenances (1)')).toBeInTheDocument()
+    expect(screen.getByText('Vidange moteur')).toBeInTheDocument()
+  })
+
+  it('affiche la section Liens quand elle a du contenu', () => {
+    const links = [{ id: 2, nature: 'part_of', linked_name: 'Ensemble de traction' }]
+    render(<EquipementShow equipement={mockEquipement} interventions={[]} maintenances={[]} links={links} />)
+    expect(screen.getByText('Liens (1)')).toBeInTheDocument()
+    expect(screen.getByText('Ensemble de traction')).toBeInTheDocument()
+  })
+
+  it("n'affiche pas la section Liens quand elle est vide", () => {
+    render(<EquipementShow equipement={mockEquipement} interventions={[]} maintenances={[]} links={[]} />)
+    expect(screen.queryByText(/^Liens/)).not.toBeInTheDocument()
+  })
+})
