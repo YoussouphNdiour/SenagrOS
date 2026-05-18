@@ -169,7 +169,7 @@ module Backend
 
     def edit
       return unless @journal_entry = find_and_check
-      unless @journal_entry.updateable?
+      unless @journal_entry.editable?
         redirect_to backend_journal_entry_path(@journal_entry)
         return
       end
@@ -182,7 +182,7 @@ module Backend
 
     def update
       return unless @journal_entry = find_and_check
-      unless @journal_entry.updateable?
+      unless @journal_entry.editable?
         redirect_to backend_journal_entry_path(@journal_entry)
         return
       end
@@ -283,7 +283,7 @@ module Backend
       def find_and_check_updateability
         return false unless (@journal_entry = find_and_check)
 
-        unless @journal_entry.updateable?
+        unless @journal_entry.editable?
           notify_error(:journal_entry_already_validated)
           redirect_to_back
           return
