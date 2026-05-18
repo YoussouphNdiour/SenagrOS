@@ -38,3 +38,55 @@ export interface EntiteShowProps {
     siret_number: string
   }
 }
+
+export interface EntiteEmail {
+  id: number | null
+  coordinate: string
+}
+
+export interface EntitePhone {
+  id: number | null
+  coordinate: string
+}
+
+export interface EntiteMail {
+  id: number | null
+  mail_line_4: string
+  mail_line_6: string
+  mail_country: string
+}
+
+export interface EntiteFormData {
+  id: number
+  nature: string
+  title: string
+  first_name: string
+  last_name: string
+  born_at: string | null
+  dead_at: string | null
+  language: string
+  description: string
+  emails: EntiteEmail[]
+  phones: EntitePhone[]
+  mails: EntiteMail[]
+}
+
+export interface EntiteFormProps {
+  entite: EntiteFormData | null
+  errors: Record<string, string>
+}
+
+export interface AddressFormData {
+  id: number | null
+  canal: string
+  coordinate: string
+  mail_line_4: string
+  mail_line_6: string
+  mail_country: string
+}
+
+export interface AddressFormProps {
+  address: AddressFormData | null
+  entity_id: number
+  errors: Record<string, string>
+}
