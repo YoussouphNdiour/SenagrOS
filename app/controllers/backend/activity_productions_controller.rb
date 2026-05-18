@@ -23,7 +23,7 @@ module Backend
     unroll :rank_number, activity: :name, support: :name
 
     layout 'assets_injection_layout' if defined?(Planning)
-    layout 'inertia', only: [:index, :show]
+    layout 'inertia', only: [:index, :show, :new, :edit]
 
     def index
       scope = ActivityProduction
@@ -53,10 +53,6 @@ module Backend
           'per_page' => 25
         }
       }
-    end
-
-    before_action only: :new do
-      redirect_to backend_activity_productions_path if params[:activity_id].nil? || params[:campaign_id].nil?
     end
 
     before_action only: %i[new edit update create] do
@@ -90,6 +86,21 @@ module Backend
     def show
       return unless @activity_production = find_and_check
 
+      interventions = Intervention
+        .joins(:activity_production_interventions)
+        .where(activity_production_interventions: { activity_production_id: @activity_production.id })
+        .where(nature: 'record')
+        .order(started_at: :desc)
+        .limit(20)
+        .map do |iv|
+          {
+            'id'         => iv.id,
+            'name'       => iv.name.to_s,
+            'started_at' => iv.started_at&.iso8601,
+            'state'      => iv.state.to_s
+          }
+        end
+
       render inertia: 'Backend/Productions/Show', props: {
         production: {
           'id'                   => @activity_production.id,
@@ -112,44 +123,61 @@ module Backend
           'cultivable_zone_name' => @activity_production.cultivable_zone&.name.to_s,
           'campaign_id'          => @activity_production.campaign_id,
           'campaign_name'        => @activity_production.campaign&.name.to_s
-        }
+        },
+        interventions: interventions
       }
     end
 
     def new
-      # params.keys == %i[cultivable_zone_id, activity_id, campaign_id]
-      if params[:cultivable_zone_id].present?
-        cultivable_zone_shape = CultivableZone.find_by(id: params[:cultivable_zone_id]).shape
+      @activity_production = ActivityProduction.new
+      render inertia: 'Backend/Productions/Form', props: {
+        production:       nil,
+        activities:       activity_production_activities,
+        campaigns:        activity_production_campaigns,
+        cultivable_zones: activity_production_cultivable_zones,
+        errors:           {}
+      }
+    end
+
+    def create
+      @activity_production = ActivityProduction.new(permitted_production_params)
+      if @activity_production.save
+        redirect_to backend_activity_production_path(@activity_production), notice: 'Production créée avec succès.'
+      else
+        render inertia: 'Backend/Productions/Form', props: {
+          production:       production_form_props(@activity_production),
+          activities:       activity_production_activities,
+          campaigns:        activity_production_campaigns,
+          cultivable_zones: activity_production_cultivable_zones,
+          errors:           production_errors(@activity_production)
+        }, status: :unprocessable_entity
       end
+    end
 
-      @activity_production = resource_model.new(
-        activity_id: params[:activity_id],
-        campaign_id: params[:campaign_id],
-        cultivable_zone_id: params[:cultivable_zone_id],
-        custom_fields: params[:custom_fields],
-        irrigated: params[:irrigated],
-        nitrate_fixing: params[:nitrate_fixing],
-        rank_number: params[:rank_number],
-        season_id: params[:season_id],
-        size_indicator_name: params[:size_indicator_name],
-        size_unit_name: params[:size_unit_name],
-        size_value: params[:size_value],
-        started_on: params[:started_on],
-        state: params[:state],
-        stopped_on: params[:stopped_on],
-        support_id: params[:support_id],
-        support_nature: params[:support_nature],
-        support_shape: params.fetch(:support_shape, cultivable_zone_shape),
-        tactic_id: params[:tactic_id],
-        usage: params[:usage]
-      )
+    def edit
+      return unless @activity_production = find_and_check
+      render inertia: 'Backend/Productions/Form', props: {
+        production:       production_form_props(@activity_production),
+        activities:       activity_production_activities,
+        campaigns:        activity_production_campaigns,
+        cultivable_zones: activity_production_cultivable_zones,
+        errors:           {}
+      }
+    end
 
-      if params[:activity_id] && activity = Activity.find(params[:activity_id])
-        @activity_production.attributes = ActivityProductions::DefaultAttributesValueBuilder.build(activity, current_campaign)
+    def update
+      return unless @activity_production = find_and_check
+      if @activity_production.update(permitted_production_params)
+        redirect_to backend_activity_production_path(@activity_production), notice: 'Production mise à jour.'
+      else
+        render inertia: 'Backend/Productions/Form', props: {
+          production:       production_form_props(@activity_production),
+          activities:       activity_production_activities,
+          campaigns:        activity_production_campaigns,
+          cultivable_zones: activity_production_cultivable_zones,
+          errors:           production_errors(@activity_production)
+        }, status: :unprocessable_entity
       end
-
-      t3e(@activity_production.attributes.merge(name: @activity_production.name))
-      render(locals: { cancel_url: :back, with_continue: false })
     end
 
     def traceability_xslx_export
@@ -159,13 +187,6 @@ module Backend
       InterventionExportJob.perform_later(activity_id: @activity_production.activity.id, activity_production_id: @activity_production.id, campaign_ids: campaigns.pluck(:id), user: current_user)
       notify_success(:document_in_preparation)
       redirect_to backend_activity_production_path(@activity_production)
-    end
-
-    def create
-      super
-    rescue ActiveRecord::RecordInvalid
-      notify_error_now(:empty_shape.tl)
-      render :new
     end
 
     def create_plants
@@ -186,6 +207,42 @@ module Backend
         notify_error_now(:no_production_defined_for_current_campaign)
       end
       redirect_to redirect
+    end
+
+    private
+
+    def production_form_props(prod)
+      {
+        'id'                  => prod.id,
+        'activity_id'         => prod.activity_id,
+        'campaign_id'         => prod.campaign_id,
+        'cultivable_zone_id'  => prod.cultivable_zone_id,
+        'started_on'          => prod.started_on&.iso8601,
+        'stopped_on'          => prod.stopped_on&.iso8601,
+        'irrigated'           => prod.irrigated,
+        'nitrate_fixing'      => prod.nitrate_fixing,
+        'state'               => prod.state.to_s
+      }
+    end
+
+    def activity_production_activities
+      Activity.order(:name).map { |a| { 'id' => a.id, 'name' => a.name.to_s } }
+    end
+
+    def activity_production_campaigns
+      Campaign.order(harvest_year: :desc).map { |c| { 'id' => c.id, 'name' => c.name.to_s } }
+    end
+
+    def activity_production_cultivable_zones
+      CultivableZone.order(:name).map { |z| { 'id' => z.id, 'name' => z.name.to_s } }
+    end
+
+    def production_errors(prod)
+      prod.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v.first.to_s }
+    end
+
+    def permitted_production_params
+      params.require(:production).permit(:activity_id, :campaign_id, :cultivable_zone_id, :started_on, :stopped_on, :irrigated, :nitrate_fixing, :state)
     end
 
   end
