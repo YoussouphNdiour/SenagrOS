@@ -18,6 +18,47 @@
 
 module Backend
   class EntitiesController < Backend::BaseController
+    def new
+      render inertia: 'Backend/Entites/Form', props: {
+        entite: nil,
+        errors: {}
+      }
+    end
+
+    def create
+      @entity = Entity.new(permitted_entity_params)
+      assign_nested_addresses(@entity)
+      if @entity.save
+        redirect_to backend_entity_path(@entity), notice: 'Entité créée avec succès.'
+      else
+        render inertia: 'Backend/Entites/Form', props: {
+          entite: entity_form_props(@entity),
+          errors: entity_errors(@entity)
+        }, status: :unprocessable_entity
+      end
+    end
+
+    def edit
+      return unless @entity = find_and_check
+      render inertia: 'Backend/Entites/Form', props: {
+        entite: entity_form_props(@entity),
+        errors: {}
+      }
+    end
+
+    def update
+      return unless @entity = find_and_check
+      assign_nested_addresses(@entity)
+      if @entity.update(permitted_entity_params)
+        redirect_to backend_entity_path(@entity), notice: 'Entité mise à jour.'
+      else
+        render inertia: 'Backend/Entites/Form', props: {
+          entite: entity_form_props(@entity),
+          errors: entity_errors(@entity)
+        }, status: :unprocessable_entity
+      end
+    end
+
     manage_restfully(
       nature: "(params[:nature] == 'contact' ? :contact : :organization)".c,
       language: 'Preference[:language]'.c,
@@ -30,7 +71,7 @@ module Backend
     manage_restfully_picture
     respond_to :csv, :ods, :xlsx, :pdf, :odt, :docx, :html, :xml, :json
 
-    layout 'inertia', only: [:index, :show]
+    layout 'inertia', only: [:index, :show, :new, :edit]
 
     def index
       scope = Entity
@@ -501,5 +542,80 @@ module Backend
       current_user.prefer!(preference_name, params[:masked].to_s == 'true', :boolean)
       head :ok
     end
+
+    private
+
+      def entity_form_props(entity)
+        {
+          'id'          => entity.id,
+          'nature'      => entity.nature.to_s,
+          'title'       => entity.title.to_s,
+          'first_name'  => entity.first_name.to_s,
+          'last_name'   => entity.last_name.to_s,
+          'born_at'     => entity.born_at&.iso8601,
+          'dead_at'     => entity.dead_at&.iso8601,
+          'language'    => entity.language.to_s,
+          'description' => entity.description.to_s,
+          'emails'      => entity.emails.map { |e| { 'id' => e.id, 'coordinate' => e.coordinate.to_s } },
+          'phones'      => entity.phones.map { |e| { 'id' => e.id, 'coordinate' => e.coordinate.to_s } },
+          'mails'       => entity.mails.map { |e|
+            {
+              'id'          => e.id,
+              'mail_line_4' => e.mail_line_4.to_s,
+              'mail_line_6' => e.mail_line_6.to_s,
+              'mail_country' => e.mail_country.to_s
+            }
+          }
+        }
+      end
+
+      def entity_errors(entity)
+        entity.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v.first.to_s }
+      end
+
+      def permitted_entity_params
+        params.require(:entity).permit(
+          :nature, :title, :first_name, :last_name, :language,
+          :born_at, :dead_at, :description, :country, :active,
+          :client, :supplier
+        )
+      end
+
+      def assign_nested_addresses(entity)
+        raw_emails = params.dig(:entity, :emails_attributes) || []
+        raw_phones = params.dig(:entity, :phones_attributes) || []
+        raw_mails  = params.dig(:entity, :mails_attributes) || []
+
+        emails = (raw_emails.respond_to?(:values) ? raw_emails.values : Array(raw_emails)).map do |e|
+          r = { 'canal' => 'email', 'coordinate' => e[:coordinate].to_s.strip }
+          r['id'] = e[:id] if e[:id].present?
+          r['_destroy'] = e[:_destroy] if e[:_destroy].present?
+          r
+        end
+
+        phones = (raw_phones.respond_to?(:values) ? raw_phones.values : Array(raw_phones)).map do |e|
+          r = { 'canal' => 'phone', 'coordinate' => e[:coordinate].to_s.strip }
+          r['id'] = e[:id] if e[:id].present?
+          r['_destroy'] = e[:_destroy] if e[:_destroy].present?
+          r
+        end
+
+        mails = (raw_mails.respond_to?(:values) ? raw_mails.values : Array(raw_mails)).map do |e|
+          r = {
+            'canal'        => 'mail',
+            'coordinate'   => [e[:mail_line_4], e[:mail_line_6]].select(&:present?).join(', '),
+            'mail_line_4'  => e[:mail_line_4].to_s,
+            'mail_line_6'  => e[:mail_line_6].to_s,
+            'mail_country' => e[:mail_country].to_s
+          }
+          r['id'] = e[:id] if e[:id].present?
+          r['_destroy'] = e[:_destroy] if e[:_destroy].present?
+          r
+        end
+
+        entity.emails_attributes  = emails  unless emails.empty?
+        entity.phones_attributes  = phones  unless phones.empty?
+        entity.mails_attributes   = mails   unless mails.empty?
+      end
   end
 end
