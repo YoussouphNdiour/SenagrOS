@@ -20,7 +20,7 @@ module Backend
   class JournalEntriesController < Backend::BaseController
     manage_restfully only: %i[show destroy]
 
-    layout 'inertia', only: [:index, :show]
+    layout 'inertia', only: [:index, :show, :new, :edit]
 
     respond_to :pdf, :odt, :docx, :xml, :json, :html, :csv
 
@@ -145,111 +145,58 @@ module Backend
     end
 
     def new
-      if params[:duplicate_of]
-        @journal_entry = JournalEntry.find_by(id: params[:duplicate_of])
-                                     .deep_clone(include: :items, except: :number)
-      else
-        journal = Journal.find_by(id: params[:journal_id])
-        @journal_entry = JournalEntry.new(journal: journal, real_currency: Maybe(journal).currency.or_else(nil))
-        @journal_entry.printed_on = params[:printed_on] || Time.zone.today
-        # Check if the method is called from "account/:id/mark" view
-        if params[:journal_entry_items_ids]
-          journal_entry_items_ids = params[:journal_entry_items_ids].split(',')
-          journal_entry_items = JournalEntryItem.where(id: journal_entry_items_ids)
-
-          balance = journal_entry_items.sum('real_debit - real_credit')
-          balanced_credit = 0
-          balanced_debit = 0
-          if balance > 0
-            balanced_debit = balance
-          else
-            balanced_credit = -balance
-          end
-          # Create a line which will the one used to balance the credit and
-          # debit sum amounts of lines selected in "account/:id/mark" view
-          @journal_entry.items.new(
-            account: journal_entry_items.first.account,
-            real_debit: balanced_credit,
-            real_credit: balanced_debit
-          )
-          # Create a line to balance the previous line
-          @journal_entry.items.new(
-            real_debit: balanced_debit,
-            real_credit: balanced_credit
-          )
-        end
-      end
-      @journal_entry.real_currency_rate = if @journal_entry.need_currency_change?
-                                            if params[:exchange_rate]
-                                              params[:exchange_rate].to_f
-                                            else
-                                              I18n.currency_rate(@journal_entry.real_currency, FinancialYear.on(@journal_entry.printed_on).currency) || 1
-                                            end
-                                          else
-                                            1
-                                          end
-      t3e Maybe(@journal_entry.journal).attributes.or_else({})
+      render inertia: 'Backend/Comptabilite/Form', props: {
+        entry:    nil,
+        journals: entry_form_journals,
+        errors:   {}
+      }
     end
 
     def create
-      @journal_entry = JournalEntry.new(permitted_params)
+      items = prepare_items_attributes(params.dig(:journal_entry, :items_attributes) || [])
+      @journal_entry = JournalEntry.new(permitted_entry_params)
+      @journal_entry.items_attributes = items
       if @journal_entry.save
-        if params[:affair_id]
-          affair = Affair.find_by(id: params[:affair_id])
-          if affair
-            Regularization.create!(affair: affair, journal_entry: @journal_entry)
-          end
-        end
-        if @journal_entry.number == params[:theoretical_number]
-          notify_success(:journal_entry_has_been_saved, number: @journal_entry.number)
-        else
-          notify_success(:journal_entry_has_been_saved_with_a_new_number, number: @journal_entry.number)
-        end
-        check_fec_compliance if JournalEntry.fec_compliance_preference
-
-        # TODO: Extract this somewhere else, this isn't SRP
-        # Check if the method is called from "account/:id/mark" view
-        if params[:journal_entry_items_ids].present?
-          # Get all journal_entry_items id selected from the view
-          journal_entry_items_ids = params[:journal_entry_items_ids].split(',').map(&:to_i)
-          journal_entry_items = JournalEntryItem.where(id: journal_entry_items_ids)
-          if journal_entry_items.any?
-            account = journal_entry_items.first.account
-            # Get the journal_entry_item id created to balance the previous ones
-            journal_entry_items_ids.push(@journal_entry.items.where(account: account).first.id)
-            # Mark the journal_entry_items
-            account.mark(journal_entry_items_ids)
-          end
-        end
-        redirect_to params[:redirect] || {
-          controller: :journal_entries,
-          action: :new,
-          journal_id: @journal_entry.journal_id,
-          exchange_rate: @journal_entry.real_currency_rate,
-          printed_on: @journal_entry.printed_on
-        }
-        return
+        redirect_to backend_journal_entry_path(@journal_entry), notice: 'Écriture créée avec succès.'
+      else
+        render inertia: 'Backend/Comptabilite/Form', props: {
+          entry:    entry_form_props(@journal_entry),
+          journals: entry_form_journals,
+          errors:   entry_errors(@journal_entry)
+        }, status: :unprocessable_entity
       end
-      notify_global_errors
-      t3e @journal_entry.journal.attributes if @journal_entry.journal
     end
 
     def edit
-      return unless find_and_check_updateability
-
-      t3e @journal_entry.attributes
+      return unless @journal_entry = find_and_check
+      unless @journal_entry.updateable?
+        redirect_to backend_journal_entry_path(@journal_entry)
+        return
+      end
+      render inertia: 'Backend/Comptabilite/Form', props: {
+        entry:    entry_form_props(@journal_entry),
+        journals: entry_form_journals,
+        errors:   {}
+      }
     end
 
     def update
-      return unless find_and_check_updateability
-
-      if @journal_entry.update_attributes(permitted_params)
-        check_fec_compliance if JournalEntry.fec_compliance_preference
-        redirect_to params[:redirect] || { action: :show, id: @journal_entry.id }
+      return unless @journal_entry = find_and_check
+      unless @journal_entry.updateable?
+        redirect_to backend_journal_entry_path(@journal_entry)
         return
       end
-      notify_global_errors
-      t3e @journal_entry.attributes
+      items = prepare_items_attributes(params.dig(:journal_entry, :items_attributes) || [])
+      @journal_entry.items_attributes = items
+      if @journal_entry.update(permitted_entry_params)
+        redirect_to backend_journal_entry_path(@journal_entry), notice: 'Écriture mise à jour.'
+      else
+        render inertia: 'Backend/Comptabilite/Form', props: {
+          entry:    entry_form_props(@journal_entry),
+          journals: entry_form_journals,
+          errors:   entry_errors(@journal_entry)
+        }, status: :unprocessable_entity
+      end
     end
 
     def currency_state
@@ -279,8 +226,50 @@ module Backend
 
     protected
 
-      def permitted_params
-        params.require(:journal_entry).permit(:printed_on, :journal_id, :number, :reference_number, :real_currency_rate, items_attributes: %i[id name variant_id account_id real_debit real_credit activity_budget_id project_budget_id tax_id team_id equipment_id _destroy])
+      def entry_form_props(entry)
+        {
+          'id'               => entry.id,
+          'journal_id'       => entry.journal_id,
+          'printed_on'       => entry.printed_on&.iso8601,
+          'reference_number' => entry.reference_number.to_s,
+          'items'            => entry.items.includes(:account).map { |item|
+            {
+              'id'             => item.id,
+              'name'           => item.name.to_s,
+              'account_number' => item.account&.number.to_s,
+              'real_debit'     => item.real_debit.to_f,
+              'real_credit'    => item.real_credit.to_f
+            }
+          }
+        }
+      end
+
+      def entry_form_journals
+        Journal.order(:name).map { |j| { 'id' => j.id, 'name' => j.name.to_s } }
+      end
+
+      def entry_errors(entry)
+        entry.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v.first.to_s }
+      end
+
+      def permitted_entry_params
+        params.require(:journal_entry).permit(:printed_on, :journal_id, :reference_number)
+      end
+
+      def prepare_items_attributes(raw_items)
+        raw = raw_items.respond_to?(:values) ? raw_items.values : Array(raw_items)
+        raw.map do |item|
+          account = Account.find_by(number: item[:account_number].to_s.strip)
+          result = {
+            'name'        => item[:name].to_s,
+            'account_id'  => account&.id,
+            'real_debit'  => item[:real_debit].to_f,
+            'real_credit' => item[:real_credit].to_f
+          }
+          result['id'] = item[:id] if item[:id].present?
+          result['_destroy'] = item[:_destroy] if item[:_destroy].present?
+          result
+        end
       end
 
       def notify_global_errors
