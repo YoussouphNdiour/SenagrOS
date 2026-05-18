@@ -1,6 +1,9 @@
+import { useState } from 'react'
 import type { ReactNode } from 'react'
+import { List, BarChart2 } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
 import type { ProductionsIndexProps } from '../../../types/production'
+import { GanttView } from '../../../components/productions/GanttView'
 
 /**
  * Note: Inline style attributes with CSS variables (e.g., style={{ color: 'var(--color-text)' }})
@@ -27,17 +30,47 @@ function formatDate(iso: string | null): string {
 }
 
 function ProductionsIndex({ productions, meta }: ProductionsIndexProps) {
+  const [view, setView] = useState<'table' | 'gantt'>('table')
+
   return (
     <>
-      <h1 className="text-2xl font-bold mb-5" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>
-        Productions
-      </h1>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+        <h1 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>
+          Productions
+        </h1>
+        <div style={{ display: 'flex', gap: '4px' }}>
+          <button
+            aria-label="Vue tableau"
+            onClick={() => setView('table')}
+            style={{
+              padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--color-border)',
+              background: view === 'table' ? 'var(--color-primary, #6B9E3F)' : 'var(--color-bg-card)',
+              color: view === 'table' ? '#fff' : 'var(--color-text-muted)',
+              cursor: 'pointer',
+            }}
+          >
+            <List size={14} />
+          </button>
+          <button
+            aria-label="Vue Gantt"
+            onClick={() => setView('gantt')}
+            style={{
+              padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--color-border)',
+              background: view === 'gantt' ? 'var(--color-primary, #6B9E3F)' : 'var(--color-bg-card)',
+              color: view === 'gantt' ? '#fff' : 'var(--color-text-muted)',
+              cursor: 'pointer',
+            }}
+          >
+            <BarChart2 size={14} />
+          </button>
+        </div>
+      </div>
 
       {productions.length === 0 ? (
         <p className="text-center py-12" style={{ color: 'var(--color-text-muted)' }}>
           Aucune production enregistrée.
         </p>
-      ) : (
+      ) : view === 'table' ? (
         <div className="rounded-lg overflow-hidden border" style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
           <table className="w-full border-collapse text-sm">
             <thead>
@@ -70,6 +103,8 @@ function ProductionsIndex({ productions, meta }: ProductionsIndexProps) {
             </tbody>
           </table>
         </div>
+      ) : (
+        <GanttView productions={productions} />
       )}
 
       <p className="mt-3 text-xs" style={{ color: 'var(--color-text-muted)' }}>
