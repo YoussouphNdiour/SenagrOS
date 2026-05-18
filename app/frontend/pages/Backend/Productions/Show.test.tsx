@@ -42,28 +42,42 @@ const mockProduction = {
 
 describe('ProductionShow', () => {
   it('renders production name', () => {
-    render(<ProductionShow production={mockProduction} />)
+    render(<ProductionShow production={mockProduction} interventions={[]} />)
     expect(screen.getByText('Champ Nord - Culture du mil 2024')).toBeInTheDocument()
   })
 
   it('shows state badge', () => {
-    render(<ProductionShow production={mockProduction} />)
+    render(<ProductionShow production={mockProduction} interventions={[]} />)
     expect(screen.getByText('Ouverte')).toBeInTheDocument()
   })
 
   it('shows activity family badge', () => {
-    render(<ProductionShow production={mockProduction} />)
+    render(<ProductionShow production={mockProduction} interventions={[]} />)
     expect(screen.getByText('Culture')).toBeInTheDocument()
   })
 
   it('shows size value with unit', () => {
-    render(<ProductionShow production={mockProduction} />)
+    render(<ProductionShow production={mockProduction} interventions={[]} />)
     expect(screen.getByText('12.5 ha')).toBeInTheDocument()
   })
 
   it('shows nitrate fixing yes', () => {
-    render(<ProductionShow production={mockProduction} />)
+    render(<ProductionShow production={mockProduction} interventions={[]} />)
     const allOui = screen.getAllByText('Oui')
     expect(allOui.length).toBeGreaterThan(0)
+  })
+})
+
+describe('ProductionShow — sous-sections', () => {
+  it('affiche la section Interventions avec données', () => {
+    const interventions = [{ id: 20, name: 'Traitement fongicide', started_at: '2024-07-15T08:00:00Z', state: 'done' }]
+    render(<ProductionShow production={mockProduction} interventions={interventions} />)
+    expect(screen.getByText(/interventions \(1\)/i)).toBeInTheDocument()
+    expect(screen.getByText('Traitement fongicide')).toBeInTheDocument()
+  })
+
+  it('affiche le message vide pour les interventions', () => {
+    render(<ProductionShow production={mockProduction} interventions={[]} />)
+    expect(screen.getByText('Aucune intervention enregistrée.')).toBeInTheDocument()
   })
 })

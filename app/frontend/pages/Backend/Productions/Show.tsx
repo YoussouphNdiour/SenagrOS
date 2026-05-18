@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { ArrowLeft, Info, Droplets } from 'lucide-react'
+import { ArrowLeft, Info, Droplets, Wrench } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
 import type { ProductionShowProps } from '../../../types/production'
 
@@ -17,7 +17,13 @@ const STATE_COLORS: Record<string, { bg: string; color: string; label: string }>
   aborted: { bg: '#fef3c7', color: '#92400e', label: 'Abandonnée' },
 }
 
-const ProductionShow = ({ production }: ProductionShowProps) => {
+const INTERVENTION_STATE_LABELS: Record<string, string> = {
+  in_progress: 'En cours',
+  done:        'Terminée',
+  validated:   'Validée',
+}
+
+const ProductionShow = ({ production, interventions }: ProductionShowProps) => {
   const state = STATE_COLORS[production.state] ?? { bg: '#f3f4f6', color: '#374151', label: production.state }
   const family = FAMILY_COLORS[production.activity_family] ?? { bg: '#f3f4f6', color: '#374151', label: production.activity_family }
 
@@ -220,6 +226,59 @@ const ProductionShow = ({ production }: ProductionShowProps) => {
             )}
           </dl>
         </div>
+      </div>
+
+      {/* Interventions */}
+      <div
+        className="rounded-lg p-5 mt-4"
+        style={{
+          background: 'var(--color-bg-card)',
+          border: '1px solid var(--color-border)',
+          boxShadow: 'var(--shadow-card)',
+        }}
+      >
+        <h2
+          className="text-sm font-semibold uppercase tracking-wide mb-4 flex items-center gap-2"
+          style={{ color: 'var(--color-text-muted)' }}
+        >
+          <Wrench size={14} /> Interventions ({interventions.length})
+        </h2>
+        {interventions.length === 0 ? (
+          <p className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+            Aucune intervention enregistrée.
+          </p>
+        ) : (
+          <table className="w-full text-sm" style={{ borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
+                <th className="text-left pb-2 font-medium" style={{ color: 'var(--color-text-muted)' }}>Intervention</th>
+                <th className="text-left pb-2 font-medium" style={{ color: 'var(--color-text-muted)' }}>Date</th>
+                <th className="text-left pb-2 font-medium" style={{ color: 'var(--color-text-muted)' }}>État</th>
+              </tr>
+            </thead>
+            <tbody>
+              {interventions.map(iv => (
+                <tr key={iv.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                  <td className="py-2 pr-4">
+                    <a
+                      href={`/backend/interventions/${iv.id}`}
+                      className="no-underline hover:underline"
+                      style={{ color: 'var(--color-primary)' }}
+                    >
+                      {iv.name}
+                    </a>
+                  </td>
+                  <td className="py-2 pr-4" style={{ color: 'var(--color-text)' }}>
+                    {iv.started_at ? iv.started_at.slice(0, 10) : '—'}
+                  </td>
+                  <td className="py-2" style={{ color: 'var(--color-text)' }}>
+                    {INTERVENTION_STATE_LABELS[iv.state] ?? iv.state}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
       </div>
     </>
   )
