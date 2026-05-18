@@ -9,6 +9,8 @@ export interface KpiData {
   area_ha: number
   interventions: { active: number; scheduled: number }
   expenses_xof: number | null
+  workers_count: number
+  productions_count: number
 }
 
 export interface Parcelle {

@@ -51,10 +51,12 @@ module Backend
 
       render inertia: 'Backend/Dashboard/Home', props: {
         kpis: {
-          campaign:      safe_campaign_json,
-          area_ha:       safe_area_ha,
-          interventions: safe_intervention_counts,
-          expenses_xof:  nil
+          campaign:          safe_campaign_json,
+          area_ha:           safe_area_ha,
+          interventions:     safe_intervention_counts,
+          expenses_xof:      nil,
+          workers_count:     (Worker.where(dead_at: nil).count rescue 0),
+          productions_count: (ActivityProduction.of_campaign(current_campaign).count rescue 0)
         },
         parcelles:       parcelles,
         recent_activity: recent,

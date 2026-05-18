@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Sprout, Map as MapIcon, Activity, CalendarClock } from 'lucide-react'
+import { Sprout, Map as MapIcon, Activity, CalendarClock, UserCog, Layers } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
 import { KpiCard } from '../../../components/dashboard/KpiCard'
 import { WeatherWidget } from '../../../components/dashboard/WeatherWidget'
@@ -31,7 +31,7 @@ export const Home = ({ kpis, parcelles, recent_activity, weather, farm }: Dashbo
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
+          gridTemplateColumns: 'repeat(3, 1fr)',
           gap: '16px',
           marginBottom: '24px',
         }}
@@ -56,6 +56,16 @@ export const Home = ({ kpis, parcelles, recent_activity, weather, farm }: Dashbo
           title="Interventions planifiées"
           value={kpis.interventions.scheduled}
           icon={<CalendarClock size={16} />}
+        />
+        <KpiCard
+          title="Travailleurs actifs"
+          value={kpis.workers_count}
+          icon={<UserCog size={16} />}
+        />
+        <KpiCard
+          title="Productions"
+          value={kpis.productions_count}
+          icon={<Layers size={16} />}
         />
       </div>
 
