@@ -202,7 +202,7 @@ const ActiviteShow = ({ activite, productions }: ActiviteShowProps) => {
           <table className="w-full text-sm">
             <thead>
               <tr style={{ background: 'var(--color-bg-subtle)' }}>
-                {['Production', 'Campagne', 'Parcelle', 'Début', 'Fin', 'État'].map((h) => (
+                {['Production', 'Campagne', 'Parcelle', 'Début', 'État'].map((h) => (
                   <th
                     key={h}
                     className="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide"
@@ -238,9 +238,6 @@ const ActiviteShow = ({ activite, productions }: ActiviteShowProps) => {
                     </td>
                     <td className="px-4 py-3" style={{ color: 'var(--color-text-muted)' }}>
                       {p.started_on ?? '—'}
-                    </td>
-                    <td className="px-4 py-3" style={{ color: 'var(--color-text-muted)' }}>
-                      {p.stopped_on ?? '—'}
                     </td>
                     <td className="px-4 py-3">
                       <span
