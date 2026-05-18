@@ -18,7 +18,7 @@
 
 module Backend
   class CultivableZonesController < Backend::BaseController
-    layout 'inertia', only: [:index, :show]
+    layout 'inertia', only: [:index, :show, :new, :edit]
 
     manage_restfully(t3e: { name: :name })
 
@@ -106,5 +106,61 @@ module Backend
         productions: productions
       }
     end
+
+    def new
+      @cultivable_zone = CultivableZone.new
+      render inertia: 'Backend/Parcelles/Form', props: {
+        parcelle: nil,
+        errors: {}
+      }
+    end
+
+    def create
+      @cultivable_zone = CultivableZone.new(permitted_cultivable_zone_params)
+      if @cultivable_zone.save
+        redirect_to backend_cultivable_zone_path(@cultivable_zone), notice: 'Parcelle créée avec succès.'
+      else
+        render inertia: 'Backend/Parcelles/Form', props: {
+          parcelle: nil,
+          errors: @cultivable_zone.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v.first.to_s }
+        }, status: :unprocessable_entity
+      end
+    end
+
+    def edit
+      return unless @cultivable_zone = find_and_check
+      render inertia: 'Backend/Parcelles/Form', props: {
+        parcelle: {
+          'id'          => @cultivable_zone.id,
+          'name'        => @cultivable_zone.name.to_s,
+          'description' => @cultivable_zone.description.to_s,
+          'work_number' => @cultivable_zone.work_number.to_s
+        },
+        errors: {}
+      }
+    end
+
+    def update
+      return unless @cultivable_zone = find_and_check
+      if @cultivable_zone.update(permitted_cultivable_zone_params)
+        redirect_to backend_cultivable_zone_path(@cultivable_zone), notice: 'Parcelle mise à jour.'
+      else
+        render inertia: 'Backend/Parcelles/Form', props: {
+          parcelle: {
+            'id'          => @cultivable_zone.id,
+            'name'        => @cultivable_zone.name.to_s,
+            'description' => @cultivable_zone.description.to_s,
+            'work_number' => @cultivable_zone.work_number.to_s
+          },
+          errors: @cultivable_zone.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v.first.to_s }
+        }, status: :unprocessable_entity
+      end
+    end
+
+    private
+
+      def permitted_cultivable_zone_params
+        params.require(:parcelle).permit(:name, :description, :work_number)
+      end
   end
 end
