@@ -19,9 +19,9 @@ const STATE_LABELS: Record<string, string> = {
 }
 
 const STATE_COLORS: Record<string, string> = {
-  opened:   '#1B6B3A',
-  aborted:  '#D4420A',
-  finished: '#6B5E4E',
+  opened:   'var(--color-success-text, #1B6B3A)',
+  aborted:  'var(--color-danger-text, #D4420A)',
+  finished: 'var(--color-text-muted)',
 }
 
 function formatDate(iso: string | null): string {
@@ -34,7 +34,7 @@ function ProductionsIndex({ productions, meta }: ProductionsIndexProps) {
 
   return (
     <>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
+      <div className="flex items-center justify-between mb-5">
         <h1 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>
           Productions
         </h1>
@@ -87,7 +87,7 @@ function ProductionsIndex({ productions, meta }: ProductionsIndexProps) {
                 <tr key={p.id} className="border-b" style={{ borderColor: 'var(--color-border)' }}>
                   <td className="px-3 py-2.5 font-medium" style={{ color: 'var(--color-text)' }}>{p.name}</td>
                   <td className="px-3 py-2.5">
-                    <span className="px-2 py-0.5 rounded-full text-xs font-semibold" style={{ background: '#e8f4ec', color: '#1B6B3A' }}>
+                    <span className="px-2 py-0.5 rounded-full text-xs font-semibold" style={{ background: 'var(--color-success-bg, #e8f4ec)', color: 'var(--color-success-text, #1B6B3A)' }}>
                       {p.activity.name}
                     </span>
                   </td>
@@ -95,7 +95,7 @@ function ProductionsIndex({ productions, meta }: ProductionsIndexProps) {
                   <td className="px-3 py-2.5" style={{ color: 'var(--color-text-muted)' }}>{p.campaign.name}</td>
                   <td className="px-3 py-2.5" style={{ color: 'var(--color-text-muted)' }}>{formatDate(p.started_on)}</td>
                   <td className="px-3 py-2.5" style={{ color: 'var(--color-text-muted)' }}>{formatDate(p.stopped_on)}</td>
-                  <td className="px-3 py-2.5 text-xs font-semibold" style={{ color: STATE_COLORS[p.state] ?? '#6B5E4E' }}>
+                  <td className="px-3 py-2.5 text-xs font-semibold" style={{ color: STATE_COLORS[p.state] ?? 'var(--color-text-muted)' }}>
                     {STATE_LABELS[p.state] ?? p.state}
                   </td>
                 </tr>

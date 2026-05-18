@@ -76,7 +76,7 @@ export function GanttView({ productions }: GanttViewProps) {
                   width: widthPct,
                   top: '50%',
                   transform: 'translateY(-50%)',
-                  background: '#6B9E3F',
+                  background: 'var(--color-primary, #6B9E3F)',
                   height: '20px',
                   borderRadius: '3px',
                   minWidth: '4px',

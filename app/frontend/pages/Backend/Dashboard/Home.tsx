@@ -7,7 +7,7 @@ import { ActivityFeed } from '../../../components/dashboard/ActivityFeed'
 import { ParcellesMap } from '../../../components/dashboard/ParcellesMap'
 import type { DashboardHomeProps } from '../../../types/dashboard'
 
-export const Home = ({ kpis, parcelles, recent_activity, weather, farm }: DashboardHomeProps) => {
+function Home({ kpis, parcelles, recent_activity, weather, farm }: DashboardHomeProps) {
   return (
     <div
       style={{
@@ -87,5 +87,4 @@ export const Home = ({ kpis, parcelles, recent_activity, weather, farm }: Dashbo
 }
 
 Home.layout = (page: ReactNode) => <AppShell>{page}</AppShell>
-
 export default Home

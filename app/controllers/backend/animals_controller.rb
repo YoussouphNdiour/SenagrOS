@@ -18,7 +18,7 @@
 
 module Backend
   class AnimalsController < Backend::MattersController
-    respond_to :json
+    respond_to :html, :json
     # params:
     #   :q Text search
     #   :s State search
@@ -89,7 +89,7 @@ module Backend
     end
 
     def load_animals
-      @read_at = params[:scope] == 'now' ? { at: Time.zone.now } : @read_at = { at: false }
+      @read_at = params[:scope] == 'now' ? { at: Time.zone.now } : { at: false }
 
       @animal_groups = AnimalGroup.availables(@read_at).order(:name)
       @animals = Animal.availables(@read_at).order(:name)

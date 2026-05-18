@@ -55,8 +55,8 @@ module Backend
           area_ha:           safe_area_ha,
           interventions:     safe_intervention_counts,
           expenses_xof:      nil,
-          workers_count:     (Worker.where(dead_at: nil).count rescue 0),
-          productions_count: (ActivityProduction.of_campaign(current_campaign).count rescue 0)
+          workers_count:     safe_workers_count,
+          productions_count: safe_productions_count
         },
         parcelles:       parcelles,
         recent_activity: recent,
@@ -158,6 +158,18 @@ module Backend
     end
 
     private
+
+      def safe_workers_count
+        Worker.where(dead_at: nil).count
+      rescue ActiveRecord::StatementInvalid, PG::Error
+        0
+      end
+
+      def safe_productions_count
+        ActivityProduction.of_campaign(current_campaign).count
+      rescue ActiveRecord::StatementInvalid, PG::Error, NoMethodError
+        0
+      end
 
       def self.build_centralizing_query
         excluded = %i[account_balance cash_session custom_field_choice deposit_item fixed_asset_depreciation inventory_item listing_node_item preference ride ride_set]

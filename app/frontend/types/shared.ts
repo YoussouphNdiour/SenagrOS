@@ -18,4 +18,5 @@ export interface AppShellProps {
 export interface InertiaSharedProps {
   appShell: AppShellProps
   errors: Record<string, string>
+  [key: string]: unknown
 }

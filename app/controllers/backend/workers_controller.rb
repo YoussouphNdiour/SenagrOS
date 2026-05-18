@@ -80,6 +80,7 @@ module Backend
       t.column :stopped_at
     end
 
+    respond_to :html, :json
     layout 'inertia', only: [:index, :show]
 
     def index
