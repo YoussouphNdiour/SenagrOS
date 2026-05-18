@@ -194,4 +194,20 @@ describe('ComptabiliteForm', () => {
     expect(formData.get('journal_entry[printed_on]')).toBe('2024-03-15')
     expect(formData.get('journal_entry[reference_number]')).toBe('REF-001')
   })
+
+  // Test 16
+  it('balance indicator updates reactively when user changes a numeric input', async () => {
+    render(<ComptabiliteForm entry={null} journals={journals} errors={{}} />)
+    // Two empty rows, both 0 — both totals are 0, so balanced
+    expect(screen.getByText(/Équilibrée/i)).toBeInTheDocument()
+
+    // Change the debit of the first row to 500
+    const debitInputs = screen.getAllByLabelText(/Débit ligne/i)
+    await userEvent.clear(debitInputs[0])
+    await userEvent.type(debitInputs[0], '500')
+
+    // Now debit=500, credit=0 — unbalanced, should show difference
+    expect(screen.queryByText(/Équilibrée/i)).not.toBeInTheDocument()
+    expect(screen.getByText(/Déséquilibre/i)).toBeInTheDocument()
+  })
 })
