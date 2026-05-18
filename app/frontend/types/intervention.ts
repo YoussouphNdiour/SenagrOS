@@ -78,3 +78,38 @@ export interface InterventionShowProps {
   doers: InterventionParticipant[]
   tools: InterventionParticipant[]
 }
+
+export interface ProcedureParameter {
+  name: string
+  label: string
+}
+
+export interface ProcedureSchema {
+  procedure_name: string
+  label: string
+  groups: {
+    target: ProcedureParameter[]
+    tool: ProcedureParameter[]
+    doer: ProcedureParameter[]
+    input: ProcedureParameter[]
+    output: ProcedureParameter[]
+  }
+}
+
+export interface InterventionFormData {
+  id: number
+  procedure_name: string
+  nature: string
+  state: string
+  started_at: string | null
+  stopped_at: string | null
+  description: string
+  number: string
+}
+
+export interface InterventionFormProps {
+  intervention: InterventionFormData | null
+  procedures: Array<{ label: string; name: string }>
+  procedure_schema: ProcedureSchema | null
+  errors: Record<string, string>
+}
