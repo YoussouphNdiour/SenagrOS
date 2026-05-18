@@ -52,3 +52,25 @@ export interface JournalEntryShowProps {
   }
   items: JournalEntryItemDetail[]
 }
+
+export interface JournalEntryFormItem {
+  id: number | null
+  name: string
+  account_number: string
+  real_debit: number
+  real_credit: number
+}
+
+export interface JournalEntryFormData {
+  id: number
+  journal_id: number | null
+  printed_on: string | null
+  reference_number: string
+  items: JournalEntryFormItem[]
+}
+
+export interface ComptabiliteFormProps {
+  entry: JournalEntryFormData | null
+  journals: Array<{ id: number; name: string }>
+  errors: Record<string, string>
+}
