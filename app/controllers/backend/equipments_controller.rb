@@ -18,7 +18,7 @@
 
 module Backend
   class EquipmentsController < Backend::MattersController
-    layout 'inertia', only: [:index, :show]
+    layout 'inertia', only: [:index, :show, :new, :edit]
 
     # params:
     #   :q Text search
@@ -119,6 +119,45 @@ module Backend
     def show
       return unless @equipment = find_and_check
 
+      interventions = InterventionParameter
+        .joins(:intervention)
+        .where(product_id: @equipment.id)
+        .where("interventions.nature = ? AND interventions.procedure_name != ?",
+               'record', Procedo::Procedure.find(:equipment_maintenance).name)
+        .order('interventions.started_at DESC')
+        .limit(20)
+        .map do |ip|
+          {
+            'id'         => ip.intervention.id,
+            'name'       => ip.intervention.name.to_s,
+            'started_at' => ip.intervention.started_at&.iso8601,
+            'state'      => ip.intervention.state.to_s
+          }
+        end
+
+      maintenances = InterventionParameter
+        .joins(:intervention)
+        .where(product_id: @equipment.id, type: 'InterventionTarget')
+        .where("interventions.nature = ? AND interventions.procedure_name = ?",
+               'record', Procedo::Procedure.find(:equipment_maintenance).name)
+        .order('interventions.started_at DESC')
+        .limit(10)
+        .map do |ip|
+          {
+            'id'          => ip.intervention.id,
+            'description' => ip.intervention.description.to_s,
+            'started_at'  => ip.intervention.started_at&.iso8601
+          }
+        end
+
+      links = ProductLink.where(product_id: @equipment.id).map do |l|
+        {
+          'id'          => l.id,
+          'nature'      => l.nature.to_s,
+          'linked_name' => l.linked&.name.to_s
+        }
+      end
+
       render inertia: 'Backend/Equipements/Show', props: {
         equipement: {
           'id'                    => @equipment.id,
@@ -130,9 +169,66 @@ module Backend
           'born_at'               => @equipment.born_at&.iso8601,
           'dead_at'               => @equipment.dead_at&.iso8601,
           'variant_name'          => @equipment.variant&.name.to_s,
-          'type'                  => @equipment.type.to_s
-        }
+          'type'                  => @equipment.class.name.to_s
+        },
+        interventions: interventions,
+        maintenances:  maintenances,
+        links:         links
       }
+    end
+
+    def new
+      @equipment = Equipment.new
+      render inertia: 'Backend/Equipements/Form', props: {
+        equipement: nil,
+        errors:     {}
+      }
+    end
+
+    def create
+      @equipment = Equipment.new(permitted_equipement_params)
+      if @equipment.save
+        redirect_to backend_equipment_path(@equipment), notice: 'Équipement créé avec succès.'
+      else
+        render inertia: 'Backend/Equipements/Form', props: {
+          equipement: nil,
+          errors:     @equipment.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v.first.to_s }
+        }, status: :unprocessable_entity
+      end
+    end
+
+    def edit
+      return unless @equipment = find_and_check
+      render inertia: 'Backend/Equipements/Form', props: {
+        equipement: {
+          'id'          => @equipment.id,
+          'name'        => @equipment.name.to_s,
+          'work_number' => @equipment.work_number.to_s,
+          'description' => @equipment.description.to_s,
+          'born_at'     => @equipment.born_at&.strftime('%Y-%m-%d'),
+          'dead_at'     => @equipment.dead_at&.strftime('%Y-%m-%d')
+        },
+        errors: {}
+      }
+    end
+
+    def update
+      return unless @equipment = find_and_check
+      if @equipment.update(permitted_equipement_params)
+        redirect_to backend_equipment_path(@equipment), notice: 'Équipement mis à jour.'
+      else
+        render inertia: 'Backend/Equipements/Form', props: {
+          equipement: {
+            'id'          => @equipment.id,
+            'name'        => @equipment.name.to_s,
+            'work_number' => @equipment.work_number.to_s,
+            'description' => @equipment.description.to_s,
+            'born_at'     => @equipment.born_at&.strftime('%Y-%m-%d'),
+            'dead_at'     => @equipment.dead_at&.strftime('%Y-%m-%d')
+          },
+          errors: @equipment.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v.first.to_s }
+        }, status: :unprocessable_entity
+      end
     end
 
     def index
@@ -168,6 +264,12 @@ module Backend
       notify_success(:document_in_preparation)
       redirect_to action: :show
     end
+
+    private
+
+      def permitted_equipement_params
+        params.require(:equipement).permit(:name, :work_number, :description, :born_at, :dead_at)
+      end
 
   end
 end
