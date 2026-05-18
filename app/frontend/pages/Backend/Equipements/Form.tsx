@@ -39,8 +39,8 @@ const EquipementsForm = ({ equipement, errors }: EquipementFormProps) => {
         dead_at: deadAt || null,
       },
     }
-    if (equipement !== null) {
-      router.patch(`/backend/equipments/${equipement.id}`, data, { onFinish: () => setSubmitting(false) })
+    if (isEdit) {
+      router.patch(`/backend/equipments/${equipement!.id}`, data, { onFinish: () => setSubmitting(false) })
     } else {
       router.post('/backend/equipments', data, { onFinish: () => setSubmitting(false) })
     }
