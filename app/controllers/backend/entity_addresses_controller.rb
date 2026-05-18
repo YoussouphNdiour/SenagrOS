@@ -68,13 +68,14 @@ module Backend
     def update
       return unless @entity_address = find_and_check
       @entity = @entity_address.entity
-      if @entity_address.update(permitted_address_params)
+      begin
+        @entity_address.update(permitted_address_params)
         redirect_to backend_entity_path(@entity), notice: 'Adresse mise à jour.'
-      else
+      rescue ActiveRecord::RecordInvalid => e
         render inertia: 'Backend/Entites/AddressForm', props: {
-          address:   address_form_props(@entity_address),
+          address:   address_form_props(e.record),
           entity_id: @entity.id,
-          errors:    address_errors(@entity_address)
+          errors:    address_errors(e.record)
         }, status: :unprocessable_entity
       end
     end
