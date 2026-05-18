@@ -13,8 +13,12 @@
   --color-text-muted:    #6B5E4E;
   --color-border:        #E2D9CE;
   --color-success:       #2D7A3A;
+  --color-success-bg:    #d1fae5;
+  --color-success-text:  #065f46;
   --color-warning:       #D4841A;
   --color-danger:        #D4420A;
+  --color-danger-bg:     #fee2e2;
+  --color-danger-text:   #991b1b;
 
   /* Typographie */
   --font-ui:      'Plus Jakarta Sans', system-ui, sans-serif;

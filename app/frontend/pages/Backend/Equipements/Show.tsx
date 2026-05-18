@@ -32,9 +32,9 @@ function EquipementShow({ equipement, interventions, maintenances, links }: Equi
           <div className="flex items-center gap-3 mb-2">
             <div
               className="flex items-center justify-center rounded-lg"
-              style={{ width: '48px', height: '48px', background: '#d1fae5', flexShrink: 0 }}
+              style={{ width: '48px', height: '48px', background: 'var(--color-success-bg)', flexShrink: 0 }}
             >
-              <Tractor size={22} style={{ color: '#065f46' }} />
+              <Tractor size={22} style={{ color: 'var(--color-success-text)' }} />
             </div>
             <div>
               <h1 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>
@@ -52,8 +52,8 @@ function EquipementShow({ equipement, interventions, maintenances, links }: Equi
                 <span
                   className="inline-block px-2 py-0.5 rounded-full text-xs font-semibold"
                   style={isActive
-                    ? { background: '#d1fae5', color: '#065f46' }
-                    : { background: '#fee2e2', color: '#991b1b' }
+                    ? { background: 'var(--color-success-bg)', color: 'var(--color-success-text)' }
+                    : { background: 'var(--color-danger-bg)', color: 'var(--color-danger-text)' }
                   }
                 >
                   {isActive ? 'Actif' : 'Retiré du service'}

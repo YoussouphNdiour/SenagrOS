@@ -64,9 +64,9 @@ const EquipementsForm = ({ equipement, errors }: EquipementFormProps) => {
       <div className="flex items-center gap-4 mb-6">
         <div
           className="flex items-center justify-center rounded-lg w-12 h-12 shrink-0"
-          style={{ background: '#d1fae5' }}
+          style={{ background: 'var(--color-success-bg)' }}
         >
-          <Tractor size={22} style={{ color: '#065f46' }} />
+          <Tractor size={22} style={{ color: 'var(--color-success-text)' }} />
         </div>
         <div>
           <h1
