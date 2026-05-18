@@ -24,7 +24,7 @@ module Backend
 
     unroll
 
-    after_action :open_activity, only: :create, unless: -> { @activity.new_record? }
+    after_action :open_activity, only: :create, unless: -> { @activity.new_record? || params[:campaign].blank? }
 
     list line_class: '(:success if RECORD.of_campaign?(current_campaign))'.c do |t|
       # t.action :show, url: {format: :pdf}, image: :print
@@ -76,9 +76,53 @@ module Backend
       }
     end
 
+    def new
+      @activity = Activity.new
+      render inertia: 'Backend/Activites/Form', props: {
+        activite:  nil,
+        families:  activity_families,
+        errors:    {}
+      }
+    end
+
+    def create
+      @activity = Activity.new(permitted_activite_params)
+      if @activity.save
+        redirect_to backend_activity_path(@activity), notice: 'Activité créée avec succès.'
+      else
+        render inertia: 'Backend/Activites/Form', props: {
+          activite:  activite_form_props(@activity),
+          families:  activity_families,
+          errors:    @activity.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v.first.to_s }
+        }, status: :unprocessable_entity
+      end
+    end
+
+    def edit
+      return unless @activity = find_and_check
+      render inertia: 'Backend/Activites/Form', props: {
+        activite:  activite_form_props(@activity),
+        families:  activity_families,
+        errors:    {}
+      }
+    end
+
+    def update
+      return unless @activity = find_and_check
+      if @activity.update(permitted_activite_params)
+        redirect_to backend_activity_path(@activity), notice: 'Activité mise à jour.'
+      else
+        render inertia: 'Backend/Activites/Form', props: {
+          activite:  activite_form_props(@activity),
+          families:  activity_families,
+          errors:    @activity.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v.first.to_s }
+        }, status: :unprocessable_entity
+      end
+    end
+
     manage_restfully except: %i[index show]
 
-    layout 'inertia', only: [:index, :show]
+    layout 'inertia', only: [:index, :show, :new, :edit]
 
     def index
       scope = Activity.order(:family, :name)
@@ -222,6 +266,27 @@ module Backend
         current_user.current_campaign = @campaign
         current_user.current_period = Date.new(@campaign.harvest_year).to_s
         @activity.budgets.find_or_create_by!(campaign: @campaign)
+      end
+
+      def activite_form_props(activity)
+        {
+          'id'               => activity.id,
+          'family'           => activity.family.to_s,
+          'name'             => activity.name.to_s,
+          'nature'           => activity.nature.to_s,
+          'production_cycle' => activity.production_cycle.to_s,
+          'with_supports'    => activity.with_supports,
+          'suspended'        => activity.suspended,
+          'description'      => activity.description.to_s
+        }
+      end
+
+      def activity_families
+        Activity.family.values.map { |v| { 'value' => v.to_s, 'label' => v.to_s.humanize } }
+      end
+
+      def permitted_activite_params
+        params.require(:activite).permit(:family, :name, :nature, :production_cycle, :with_supports, :suspended, :description)
       end
   end
 end
