@@ -70,3 +70,33 @@ it('calls router.patch on edit form submit', () => {
   fireEvent.submit(form)
   expect(mockRouter.patch).toHaveBeenCalledWith('/backend/interventions/42', expect.any(Object), expect.any(Object))
 })
+
+it('calls router.get with procedure_name when procedure select changes', () => {
+  render(<InterventionsForm intervention={null} procedures={procedures} procedure_schema={null} errors={{}} />)
+  const select = screen.getByRole('combobox', { name: /procédure/i })
+  fireEvent.change(select, { target: { value: 'irrigation' } })
+  expect(mockRouter.get).toHaveBeenCalledWith('/backend/interventions/new', { procedure_name: 'irrigation' })
+})
+
+it('slices datetime strings to [0,16] for datetime-local input', () => {
+  const intervention = {
+    id: 1,
+    procedure_name: 'sowing',
+    nature: 'record',
+    state: 'in_progress',
+    started_at: '2024-05-18T14:30:00',
+    stopped_at: null,
+    description: '',
+    number: 'I-001',
+  }
+  render(<InterventionsForm intervention={intervention} procedures={procedures} procedure_schema={null} errors={{}} />)
+  expect(screen.getByDisplayValue('2024-05-18T14:30')).toBeInTheDocument()
+})
+
+it('disables submit button while submitting', async () => {
+  render(<InterventionsForm intervention={null} procedures={procedures} procedure_schema={null} errors={{}} />)
+  const button = screen.getByRole('button', { name: /créer/i })
+  expect(button).not.toBeDisabled()
+  fireEvent.submit(button.closest('form')!)
+  expect(button).toBeDisabled()
+})
