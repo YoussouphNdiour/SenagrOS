@@ -8,7 +8,7 @@ export interface Activite {
 
 export interface ActivitesIndexProps {
   activites: Activite[]
-  meta: { total: number }
+  meta: { total: number; page: number; per_page: number }
 }
 
 export interface ActiviteProduction {
@@ -16,27 +16,45 @@ export interface ActiviteProduction {
   name: string
   state: string
   started_on: string | null
-  stopped_on: string | null
-  cultivable_zone_name: string
   campaign_name: string
+  cultivable_zone_name: string
+}
+
+export interface ActiviteDetail {
+  id: number
+  family: string
+  name: string
+  nature: string
+  production_cycle: string
+  with_supports: boolean
+  suspended: boolean
+  description: string
+  with_cultivation: boolean
+  support_variety: string
+  cultivation_variety: string
+  production_started_on: string | null
+  production_stopped_on: string | null
+  productions_count: number
 }
 
 export interface ActiviteShowProps {
-  activite: {
-    id: number
-    name: string
-    description: string
-    family: string
-    nature: string
-    suspended: boolean
-    production_cycle: string
-    with_supports: boolean
-    with_cultivation: boolean
-    support_variety: string
-    cultivation_variety: string
-    production_started_on: string | null
-    production_stopped_on: string | null
-    productions_count: number
-  }
+  activite: ActiviteDetail
   productions: ActiviteProduction[]
+}
+
+export interface ActiviteFormData {
+  id: number
+  name: string
+  nature: string
+  family: string
+  production_cycle: string
+  with_supports: boolean
+  suspended: boolean
+  description: string
+}
+
+export interface ActiviteFormProps {
+  activite: ActiviteFormData | null
+  families: Array<{ value: string; label: string }>
+  errors: Record<string, string>
 }
