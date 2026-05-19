@@ -328,39 +328,174 @@ module Backend
     end
 
     def new
-      unless nature = SaleNature.find_by(id: params[:nature_id]) || SaleNature.by_default
-        notify_error :need_a_valid_sale_nature_to_start_new_sale
-        redirect_to action: :index
-        return
+      @sale = Sale.new(nature_id: params[:sale]&.dig(:nature_id))
+      begin
+        @sale.responsible = current_user.person
+      rescue StandardError
+        nil
       end
-      @sale = if params[:intervention_ids]
-                Intervention.convert_to_sale(params[:intervention_ids])
-              else
-                Sale.new(nature: nature)
-              end
-      @sale.currency = @sale.nature.currency
-      if client = Entity.find_by(id: @sale.client_id || params[:client_id] || params[:entity_id] || session[:current_entity_id])
-        if client.default_mail_address
-          cid = client.default_mail_address.id
-          @sale.attributes = { address_id: cid, delivery_address_id: cid, invoice_address_id: cid }
-        end
+
+      render inertia: 'Backend/Ventes/Form', props: {
+        sale: {
+          id: nil, number: nil, state: nil,
+          nature_id:        @sale.nature_id,
+          client_id:        nil,
+          client_name:      nil,
+          invoiced_at:      nil,
+          reference_number: nil,
+          responsible_id:   @sale.responsible_id,
+          responsible_name: @sale.responsible&.full_name,
+          payment_delay:    @sale.nature&.payment_delay,
+          description:      nil,
+          currency:         @sale.currency || 'XOF',
+          items:            [],
+        },
+        natures: SaleNature.actives.reorder(:name).map { |n|
+          { id: n.id, name: n.name, currency: n.currency, payment_delay: n.payment_delay }
+        },
+        taxes: Tax.current.map { |t|
+          { id: t.id, name: t.name, short_label: t.short_label, amount: t.usable_amount.to_f / 100.0 }
+        },
+        errors: {},
+      }
+    end
+
+    def edit
+      return unless @sale = find_and_check
+      render inertia: 'Backend/Ventes/Form', props: {
+        sale: {
+          id:               @sale.id,
+          number:           @sale.number,
+          state:            @sale.state,
+          nature_id:        @sale.nature_id,
+          client_id:        @sale.client_id,
+          client_name:      @sale.client&.full_name,
+          invoiced_at:      @sale.invoiced_at&.iso8601,
+          reference_number: @sale.reference_number,
+          responsible_id:   @sale.responsible_id,
+          responsible_name: @sale.responsible&.full_name,
+          payment_delay:    @sale.nature&.payment_delay,
+          description:      @sale.description,
+          currency:         @sale.currency,
+          items: @sale.items.order(:id).map { |item|
+            {
+              id:                    item.id,
+              variant_id:            item.variant_id,
+              variant_name:          item.variant&.name,
+              conditioning_unit_id:  item.conditioning_unit_id,
+              conditioning_unit_name: item.conditioning_unit&.name,
+              conditioning_quantity: item.conditioning_quantity.to_f,
+              unit_pretax_amount:    item.unit_pretax_amount.to_f,
+              tax_id:                item.tax_id,
+              tax_rate:              item.tax ? (item.tax.usable_amount.to_f / 100.0) : 0.0,
+              reduction_percentage:  item.reduction_percentage.to_f,
+              pretax_amount:         item.pretax_amount.to_f,
+              amount:                item.amount.to_f,
+              label:                 item.label,
+              annotation:            nil,
+            }
+          },
+        },
+        natures: SaleNature.actives.reorder(:name).map { |n|
+          { id: n.id, name: n.name, currency: n.currency, payment_delay: n.payment_delay }
+        },
+        taxes: Tax.current.map { |t|
+          { id: t.id, name: t.name, short_label: t.short_label, amount: t.usable_amount.to_f / 100.0 }
+        },
+        errors: {},
+      }
+    end
+
+    def create
+      @sale = Sale.new(sale_params)
+      if @sale.save
+        redirect_to backend_sale_path(@sale), notice: 'Vente créée avec succès.'
+      else
+        errors = @sale.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v }
+        render inertia: 'Backend/Ventes/Form', props: {
+          sale: {
+            id: nil, number: nil, state: nil,
+            nature_id:        @sale.nature_id,
+            client_id:        @sale.client_id,
+            client_name:      @sale.client&.full_name,
+            invoiced_at:      @sale.invoiced_at&.iso8601,
+            reference_number: @sale.reference_number,
+            responsible_id:   @sale.responsible_id,
+            responsible_name: @sale.responsible&.full_name,
+            payment_delay:    @sale.nature&.payment_delay,
+            description:      @sale.description,
+            currency:         @sale.currency || 'XOF',
+            items: @sale.items.map { |item|
+              {
+                id: item.id, variant_id: item.variant_id, variant_name: item.variant&.name,
+                conditioning_unit_id: item.conditioning_unit_id,
+                conditioning_unit_name: item.conditioning_unit&.name,
+                conditioning_quantity: item.conditioning_quantity.to_f,
+                unit_pretax_amount: item.unit_pretax_amount.to_f,
+                tax_id: item.tax_id,
+                tax_rate: item.tax ? (item.tax.usable_amount.to_f / 100.0) : 0.0,
+                reduction_percentage: item.reduction_percentage.to_f,
+                pretax_amount: item.pretax_amount.to_f, amount: item.amount.to_f,
+                label: item.label, annotation: nil,
+              }
+            },
+          },
+          natures: SaleNature.actives.reorder(:name).map { |n|
+            { id: n.id, name: n.name, currency: n.currency, payment_delay: n.payment_delay }
+          },
+          taxes: Tax.current.map { |t|
+            { id: t.id, name: t.name, short_label: t.short_label, amount: t.usable_amount.to_f / 100.0 }
+          },
+          errors:,
+        }, status: :unprocessable_entity
       end
-      session[:current_entity_id] = (client ? client.id : nil)
-      @sale.responsible = current_user.person
-      @sale.client_id = session[:current_entity_id]
-      @sale.letter_format = false
-      @sale.function_title = :default_letter_function_title.tl
-      @sale.introduction = :default_letter_introduction.tl
-      @sale.conclusion = :default_letter_conclusion.tl
-      @sale.items_attributes = params[:items_attributes] if params[:items_attributes]
-      @sale.payment_delay = nature.payment_delay
-      if params[:fixed_asset_id]
-        fixed_asset = FixedAsset.find(params[:fixed_asset_id])
-        product = fixed_asset.product
-        item_properties = product ? { variant: product.variant, quantity: 1 } : {}
-        @sale.items.build({ fixed: true, preexisting_asset: true, fixed_asset: fixed_asset }.merge(item_properties))
+    end
+
+    def update
+      return unless @sale = find_and_check
+      if @sale.update(sale_params)
+        redirect_to backend_sale_path(@sale), notice: 'Vente mise à jour.'
+      else
+        errors = @sale.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v }
+        render inertia: 'Backend/Ventes/Form', props: {
+          sale: {
+            id:               @sale.id,
+            number:           @sale.number,
+            state:            @sale.state,
+            nature_id:        @sale.nature_id,
+            client_id:        @sale.client_id,
+            client_name:      @sale.client&.full_name,
+            invoiced_at:      @sale.invoiced_at&.iso8601,
+            reference_number: @sale.reference_number,
+            responsible_id:   @sale.responsible_id,
+            responsible_name: @sale.responsible&.full_name,
+            payment_delay:    @sale.nature&.payment_delay,
+            description:      @sale.description,
+            currency:         @sale.currency,
+            items: @sale.items.map { |item|
+              {
+                id: item.id, variant_id: item.variant_id, variant_name: item.variant&.name,
+                conditioning_unit_id: item.conditioning_unit_id,
+                conditioning_unit_name: item.conditioning_unit&.name,
+                conditioning_quantity: item.conditioning_quantity.to_f,
+                unit_pretax_amount: item.unit_pretax_amount.to_f,
+                tax_id: item.tax_id,
+                tax_rate: item.tax ? (item.tax.usable_amount.to_f / 100.0) : 0.0,
+                reduction_percentage: item.reduction_percentage.to_f,
+                pretax_amount: item.pretax_amount.to_f, amount: item.amount.to_f,
+                label: item.label, annotation: nil,
+              }
+            },
+          },
+          natures: SaleNature.actives.reorder(:name).map { |n|
+            { id: n.id, name: n.name, currency: n.currency, payment_delay: n.payment_delay }
+          },
+          taxes: Tax.current.map { |t|
+            { id: t.id, name: t.name, short_label: t.short_label, amount: t.usable_amount.to_f / 100.0 }
+          },
+          errors:,
+        }, status: :unprocessable_entity
       end
-      render locals: { with_continue: true }
     end
 
     def duplicate
@@ -577,6 +712,17 @@ module Backend
         when 'sales_estimate' then Printers::Sale::SalesEstimatePrinter
         else nil
         end
+      end
+
+      def sale_params
+        params.require(:sale).permit(
+          :nature_id, :client_id, :invoiced_at, :reference_number,
+          :responsible_id, :description,
+          items_attributes: [
+            :id, :variant_name, :conditioning_quantity, :unit_pretax_amount,
+            :tax_id, :reduction_percentage, :_destroy, :position
+          ]
+        )
       end
 
       def create_response
