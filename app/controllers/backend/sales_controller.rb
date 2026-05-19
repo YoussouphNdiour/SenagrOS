@@ -242,28 +242,88 @@ module Backend
     # Displays details of one sale selected with +params[:id]+
     def show
       return unless @sale = find_and_check
-
-      @sale.other_deals
+      t3e @sale.attributes, client: @sale.client.full_name, state: @sale.state_label, label: @sale.label
 
       respond_to do |format|
-        format.pdf do
-          document_template = DocumentTemplate.find(params[:template])
-
-          if document_template.file_extension.odt?
-            generate_n_send_pdf_for(@sale, document_template) || redirect_to_back(fallback_location: backend_sale_path(@sale))
-          else
-            create_response
-          end
-        end
-
-        format.xml do
-          create_response
-        end
-
         format.html do
-          t3e @sale.attributes, client: @sale.client.full_name, state: @sale.state_label, label: @sale.label
-          create_response
+          render inertia: 'Backend/Ventes/Show', props: {
+            sale: {
+              id:               @sale.id,
+              number:           @sale.number,
+              reference_number: @sale.reference_number,
+              initial_number:   @sale.initial_number,
+              state:            @sale.state,
+              state_label:      @sale.state_label,
+              currency:         @sale.currency,
+              pretax_amount:    @sale.pretax_amount.to_f,
+              amount:           @sale.amount.to_f,
+              affair_balance:   @sale.affair&.balance&.to_f,
+              affair_closed:    @sale.affair&.closed,
+              invoiced_at:      @sale.invoiced_at&.iso8601,
+              confirmed_at:     @sale.confirmed_at&.iso8601,
+              created_at:       @sale.created_at.iso8601,
+              payment_delay:    @sale.payment_delay,
+              description:      @sale.description,
+              client: {
+                id:                     @sale.client.id,
+                full_name:              @sale.client.full_name,
+                number:                 @sale.client.number,
+                default_mail_address_id: @sale.client.default_mail_address&.id,
+              },
+              client_number:    @sale.client.number,
+              responsible_id:   @sale.responsible_id,
+              responsible_name: @sale.responsible&.full_name,
+              nature_id:        @sale.nature_id,
+              nature_name:      @sale.nature&.name,
+              address:         (@sale.address ? { id: @sale.address.id, mail_coordinate: @sale.address.mail_coordinate } : nil),
+              invoice_address: (@sale.invoice_address ? { id: @sale.invoice_address.id, mail_coordinate: @sale.invoice_address.mail_coordinate } : nil),
+              items: @sale.items.order(:id).map { |item|
+                {
+                  id:                    item.id,
+                  variant_id:            item.variant_id,
+                  variant_name:          item.variant&.name,
+                  conditioning_unit_id:  item.conditioning_unit_id,
+                  conditioning_unit_name: item.conditioning_unit&.name,
+                  conditioning_quantity: item.conditioning_quantity.to_f,
+                  unit_pretax_amount:    item.unit_pretax_amount.to_f,
+                  tax_id:                item.tax_id,
+                  tax_rate:              item.tax ? (item.tax.usable_amount.to_f / 100.0) : 0.0,
+                  reduction_percentage:  item.reduction_percentage.to_f,
+                  pretax_amount:         item.pretax_amount.to_f,
+                  amount:                item.amount.to_f,
+                  label:                 item.label,
+                  annotation:            item.annotation,
+                }
+              },
+              affair: @sale.affair ? {
+                balance: @sale.affair.balance.to_f,
+                closed:  @sale.affair.closed,
+                incoming_payments: @sale.affair.incoming_payments.map { |p|
+                  { id: p.id, amount: p.amount.to_f, paid_at: p.paid_at&.iso8601, mode_name: p.mode&.name }
+                }
+              } : nil,
+              shipments: @sale.parcels.map { |p|
+                {
+                  id:               p.id,
+                  number:           p.number,
+                  state:            p.state,
+                  human_state_name: p.human_state_name,
+                  delivery_mode:    p.delivery_mode,
+                  address_coordinate: p.address&.coordinate,
+                }
+              },
+              credits: @sale.credits.map { |c|
+                { id: c.id, number: c.number, amount: c.amount.to_f, pretax_amount: c.pretax_amount.to_f, currency: c.currency, created_at: c.created_at.iso8601 }
+              },
+              updateable:          @sale.updateable?,
+              destroyable:         @sale.destroyable?,
+              cancellable:         @sale.cancellable?,
+              can_generate_parcel: @sale.can_generate_parcel?,
+            }
+          }
         end
+        format.pdf  { render pdf: @sale, with: params[:template] }
+        format.json { render json: @sale }
       end
     end
 
