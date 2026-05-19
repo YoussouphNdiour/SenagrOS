@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { router } from '@inertiajs/react'
 import type { FormDataConvertible } from '@inertiajs/core'
 import { ShoppingCart, Plus, Search, Trash2, Edit } from 'lucide-react'
@@ -33,6 +33,8 @@ function formatAmount(amount: number, currency: string) {
 
 function VentesIndex({ sales, meta, filters, natures }: VentesIndexProps) {
   const [q, setQ] = useState(filters.q ?? '')
+
+  useEffect(() => { setQ(filters.q ?? '') }, [filters.q])
 
   function applyFilter(overrides: Record<string, FormDataConvertible>) {
     const params: Record<string, FormDataConvertible> = { ...filters, q, ...overrides }
@@ -208,6 +210,7 @@ function VentesIndex({ sales, meta, filters, natures }: VentesIndexProps) {
                       )}
                       {sale.destroyable && (
                         <button
+                          type="button"
                           onClick={() => handleDestroy(sale.id)}
                           title="Supprimer"
                           style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626', padding: 0 }}

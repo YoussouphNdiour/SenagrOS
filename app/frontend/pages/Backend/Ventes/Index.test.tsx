@@ -1,5 +1,6 @@
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import { vi } from 'vitest'
+import { router } from '@inertiajs/react'
 import Index from './Index'
 import type { VentesIndexProps } from '../../../types/vente'
 
@@ -83,5 +84,15 @@ describe('Ventes Index', () => {
   it('renders total count', () => {
     render(<Index {...defaultProps} />)
     expect(screen.getByText(/2 vente/i)).toBeInTheDocument()
+  })
+
+  it('calls router.delete when destroy button clicked and confirmed', () => {
+    window.confirm = vi.fn(() => true)
+    render(<Index {...{ ...defaultProps, sales: [{ ...defaultProps.sales[1] }] }} />)
+    // sale[1] has destroyable: true
+    const destroyBtn = screen.getByTitle('Supprimer')
+    fireEvent.click(destroyBtn)
+    expect(window.confirm).toHaveBeenCalled()
+    expect(router.delete).toHaveBeenCalledWith('/backend/sales/2')
   })
 })
