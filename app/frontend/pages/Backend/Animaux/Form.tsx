@@ -5,12 +5,6 @@ import { ArrowLeft, Save, Beef } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
 import type { AnimalFormProps } from '../../../types/animal'
 
-const errorStyle = {
-  fontSize: '11px',
-  color: 'var(--color-danger)',
-  marginTop: '4px',
-}
-
 const AnimauxForm = ({ animal, errors }: AnimalFormProps) => {
   const isEdit = animal !== null && animal.id !== undefined
 
@@ -126,7 +120,7 @@ const AnimauxForm = ({ animal, errors }: AnimalFormProps) => {
                 placeholder="ex. Bœuf Alpha"
               />
               {errors.name && (
-                <p id="animal-name-error" style={errorStyle}>
+                <p id="animal-name-error" className="text-sm mt-1" style={{ color: 'var(--color-danger)' }}>
                   {errors.name}
                 </p>
               )}
@@ -158,7 +152,7 @@ const AnimauxForm = ({ animal, errors }: AnimalFormProps) => {
                 placeholder="ex. W-001"
               />
               {errors.work_number && (
-                <p id="animal-work-number-error" style={errorStyle}>
+                <p id="animal-work-number-error" className="text-sm mt-1" style={{ color: 'var(--color-danger)' }}>
                   {errors.work_number}
                 </p>
               )}
@@ -190,7 +184,7 @@ const AnimauxForm = ({ animal, errors }: AnimalFormProps) => {
                 placeholder="ex. Ndama"
               />
               {errors.variety && (
-                <p id="animal-variety-error" style={errorStyle}>
+                <p id="animal-variety-error" className="text-sm mt-1" style={{ color: 'var(--color-danger)' }}>
                   {errors.variety}
                 </p>
               )}
@@ -224,7 +218,7 @@ const AnimauxForm = ({ animal, errors }: AnimalFormProps) => {
                 placeholder="ex. ID-001"
               />
               {errors.identification_number && (
-                <p id="animal-identification-error" style={errorStyle}>
+                <p id="animal-identification-error" className="text-sm mt-1" style={{ color: 'var(--color-danger)' }}>
                   {errors.identification_number}
                 </p>
               )}
@@ -256,7 +250,7 @@ const AnimauxForm = ({ animal, errors }: AnimalFormProps) => {
                   }}
                 />
                 {errors.born_at && (
-                  <p id="animal-born-at-error" style={errorStyle}>
+                  <p id="animal-born-at-error" className="text-sm mt-1" style={{ color: 'var(--color-danger)' }}>
                     {errors.born_at}
                   </p>
                 )}
@@ -286,7 +280,7 @@ const AnimauxForm = ({ animal, errors }: AnimalFormProps) => {
                   }}
                 />
                 {errors.dead_at && (
-                  <p id="animal-dead-at-error" style={errorStyle}>
+                  <p id="animal-dead-at-error" className="text-sm mt-1" style={{ color: 'var(--color-danger)' }}>
                     {errors.dead_at}
                   </p>
                 )}
@@ -320,7 +314,7 @@ const AnimauxForm = ({ animal, errors }: AnimalFormProps) => {
                 placeholder="Description facultative de l'animal…"
               />
               {errors.description && (
-                <p id="animal-description-error" style={errorStyle}>
+                <p id="animal-description-error" className="text-sm mt-1" style={{ color: 'var(--color-danger)' }}>
                   {errors.description}
                 </p>
               )}
