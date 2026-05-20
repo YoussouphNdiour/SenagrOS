@@ -181,18 +181,14 @@ export default function FacturesShow({ facture }: FacturesShowProps) {
             <dt style={dtStyle}>Date facture</dt>
             <dd style={ddStyle}>{facture.invoiced_at}</dd>
           </div>
-          {facture.reference_number && (
-            <div>
-              <dt style={dtStyle}>Référence</dt>
-              <dd style={ddStyle}>{facture.reference_number}</dd>
-            </div>
-          )}
-          {facture.payment_delay && (
-            <div>
-              <dt style={dtStyle}>Délai paiement</dt>
-              <dd style={ddStyle}>{facture.payment_delay}</dd>
-            </div>
-          )}
+          <div>
+            <dt style={dtStyle}>Référence</dt>
+            <dd style={ddStyle}>{facture.reference_number ?? '—'}</dd>
+          </div>
+          <div>
+            <dt style={dtStyle}>Délai paiement</dt>
+            <dd style={ddStyle}>{facture.payment_delay ?? '—'}</dd>
+          </div>
           {facture.responsible_name && (
             <div>
               <dt style={dtStyle}>Responsable</dt>
@@ -213,7 +209,7 @@ export default function FacturesShow({ facture }: FacturesShowProps) {
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr>
-              {['Désignation', 'Qté', 'PU HT', 'Réd. %', 'HT', 'TTC'].map(h => (
+              {['Désignation', 'Qté', 'Prix unitaire HT', 'Réduction', 'HT', 'TTC'].map(h => (
                 <th
                   key={h}
                   style={{ ...thStyle, textAlign: h === 'HT' || h === 'TTC' ? 'right' : 'left' }}
