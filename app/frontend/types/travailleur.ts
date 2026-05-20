@@ -34,3 +34,8 @@ export interface TravailleurShowProps {
   travailleur: TravailleurDetail
   interventions: TravailleurIntervention[]
 }
+
+export interface TravailleurFormProps {
+  travailleur: (TravailleurDetail & { id?: number }) | null
+  errors: Record<string, string[]>
+}

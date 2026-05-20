@@ -81,7 +81,7 @@ module Backend
     end
 
     respond_to :html, :json
-    layout 'inertia', only: [:index, :show]
+    layout 'inertia', only: %i[index show new edit]
 
     def index
       scope = Worker.includes(:variant).order(:name).page(params[:page]).per(50)
@@ -138,5 +138,67 @@ module Backend
         interventions: interventions
       }
     end
+
+    def new
+      render inertia: 'Backend/Travailleurs/Form', props: {
+        travailleur: nil,
+        errors: {}
+      }
+    end
+
+    def edit
+      return unless @worker = find_and_check(:worker)
+
+      render inertia: 'Backend/Travailleurs/Form', props: {
+        travailleur: worker_json(@worker),
+        errors: {}
+      }
+    end
+
+    def create
+      @worker = Worker.new(worker_params)
+      if @worker.save
+        redirect_to backend_worker_path(@worker)
+      else
+        render inertia: 'Backend/Travailleurs/Form', props: {
+          travailleur: nil,
+          errors: @worker.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v }
+        }, status: :unprocessable_entity
+      end
+    end
+
+    def update
+      return unless @worker = find_and_check(:worker)
+
+      if @worker.update(worker_params)
+        redirect_to backend_worker_path(@worker)
+      else
+        render inertia: 'Backend/Travailleurs/Form', props: {
+          travailleur: worker_json(@worker),
+          errors: @worker.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v }
+        }, status: :unprocessable_entity
+      end
+    end
+
+    private
+
+      def worker_json(worker)
+        {
+          id: worker.id,
+          name: worker.name,
+          work_number: worker.work_number,
+          identification_number: worker.identification_number,
+          born_at: worker.born_at&.to_date&.iso8601,
+          dead_at: worker.dead_at&.to_date&.iso8601,
+          description: worker.description
+        }
+      end
+
+      def worker_params
+        params.require(:worker).permit(
+          :name, :work_number, :identification_number,
+          :born_at, :dead_at, :description
+        )
+      end
   end
 end
