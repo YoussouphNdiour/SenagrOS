@@ -269,13 +269,12 @@ const TravailleursForm = ({ travailleur, errors }: TravailleurFormProps) => {
                 rows={3}
                 aria-invalid={!!errors.description || undefined}
                 aria-describedby={errors.description ? 'worker-description-error' : undefined}
-                className="w-full rounded px-3 py-2 text-sm"
+                className="w-full rounded px-3 py-2 text-sm resize-y"
                 style={{
                   border: '1px solid var(--color-border)',
                   background: 'var(--color-bg)',
                   color: 'var(--color-text)',
                   outline: 'none',
-                  resize: 'vertical',
                 }}
                 placeholder="Description facultative du travailleur…"
               />
@@ -295,13 +294,11 @@ const TravailleursForm = ({ travailleur, errors }: TravailleurFormProps) => {
             <button
               type="submit"
               disabled={submitting}
-              className="flex items-center gap-2 px-4 py-2 rounded text-sm font-medium"
+              className="flex items-center gap-2 px-4 py-2 rounded text-sm font-medium text-white disabled:opacity-50"
               style={{
                 background: 'var(--color-primary)',
-                color: '#fff',
                 border: 'none',
                 cursor: submitting ? 'not-allowed' : 'pointer',
-                opacity: submitting ? 0.7 : 1,
               }}
             >
               <Save size={15} />
