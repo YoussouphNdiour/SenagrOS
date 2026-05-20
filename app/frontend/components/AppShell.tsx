@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { usePage } from '@inertiajs/react'
 import {
-  LayoutDashboard, Wrench, Map, Sprout, BookOpen, Settings, Calendar, Users, Tractor, UserCog, PawPrint, Activity, ShoppingCart, ShoppingBag,
+  LayoutDashboard, Wrench, Map, Sprout, BookOpen, Settings, Calendar, Users, Tractor, UserCog, PawPrint, Activity, ShoppingCart, ShoppingBag, Package,
 } from 'lucide-react'
 import type { InertiaSharedProps } from '../types/shared'
 
@@ -19,6 +19,7 @@ const NAV_LINKS = [
   { href: '/backend/equipments',           label: 'Équipements',  icon: Tractor },
   { href: '/backend/workers',              label: 'Travailleurs', icon: UserCog },
   { href: '/backend/animals',              label: 'Animaux',      icon: PawPrint },
+  { href: '/backend/products',             label: 'Catalogue',    icon: Package },
 ]
 
 interface AppShellComponentProps {
