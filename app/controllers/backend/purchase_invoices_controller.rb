@@ -238,7 +238,25 @@ module Backend
       nature = PurchaseNature.find_by(id: params[:nature_id]) || PurchaseNature.by_default
       items_data = []
 
-      if params[:reception_id]
+      if params[:reception_ids].present?
+        receptions = Reception.where(id: params[:reception_ids])
+                              .select { |r| r.reconciliation_state == 'to_reconcile' && r.given? }
+        if receptions.any?
+          raw_items = InvoiceableItemsFilter.new.filter(receptions)
+          items_data = raw_items.map { |i|
+            {
+              id: nil,
+              variant_name: i.variant&.name,
+              conditioning_quantity: i.conditioning_quantity.to_f,
+              unit_pretax_amount: i.unit_pretax_amount.to_f,
+              tax_id: i.tax_id,
+              reduction_percentage: 0,
+              pretax_amount: i.pretax_amount.to_f,
+              amount: i.amount.to_f
+            }
+          }
+        end
+      elsif params[:reception_id]
         reception = Reception.find_by(id: params[:reception_id])
         if reception && reception.reconciliation_state == 'to_reconcile'
           raw_items = InvoiceableItemsFilter.new.filter([reception])
