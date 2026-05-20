@@ -1,35 +1,16 @@
 // app/frontend/pages/Backend/Achats/CommandesForm.tsx
 import { type ReactNode, useState } from 'react'
-import { router, usePage } from '@inertiajs/react'
+import { router } from '@inertiajs/react'
 import type { FormDataConvertible } from '@inertiajs/core'
 import { AppShell } from '../../../components/AppShell'
 import AchatItemsEditor from '../../../components/achats/AchatItemsEditor'
+import AchatsTabs from '../../../components/achats/AchatsTabs'
 import type { CommandesFormProps, AchatItem } from '../../../types/achat'
 
 function FieldError({ errors, field }: { errors: Record<string, string[]>; field: string }) {
   const messages = errors[field]
   if (!messages?.length) return null
   return <p style={{ color: '#dc2626', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>{messages[0]}</p>
-}
-
-function AchatsTabs() {
-  const { url } = usePage()
-  const tabs = [
-    { href: '/backend/purchase_orders',   label: 'Commandes' },
-    { href: '/backend/purchase_invoices', label: 'Factures' },
-  ]
-  return (
-    <div style={{ display: 'flex', gap: '0', marginBottom: '1.5rem', borderBottom: '2px solid var(--color-border)' }}>
-      {tabs.map(tab => {
-        const active = url.startsWith(tab.href)
-        return (
-          <a key={tab.href} href={tab.href} style={{ padding: '0.5rem 1.25rem', fontWeight: active ? 600 : 400, borderBottom: active ? '2px solid var(--color-primary)' : '2px solid transparent', marginBottom: '-2px', color: active ? 'var(--color-primary)' : 'var(--color-text-muted)', textDecoration: 'none', fontSize: '0.9375rem' }}>
-            {tab.label}
-          </a>
-        )
-      })}
-    </div>
-  )
 }
 
 export default function CommandesForm({ commande, natures, taxes, errors }: CommandesFormProps) {

@@ -1,45 +1,14 @@
 import { type ReactNode } from 'react'
-import { router, usePage } from '@inertiajs/react'
+import { router } from '@inertiajs/react'
 import { ArrowLeft, Pencil, Copy, Trash2 } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
+import AchatsTabs from '../../../components/achats/AchatsTabs'
 import type { FacturesShowProps, ReconciliationState } from '../../../types/achat'
 
 const RECONCILIATION_CONFIG: Record<ReconciliationState, { label: string; bg: string; color: string }> = {
   to_reconcile: { label: 'À réconcilier', bg: '#fef3c7', color: '#92400e' },
   reconcile:    { label: 'Réconciliée',   bg: '#dcfce7', color: '#166534' },
   accepted:     { label: 'Acceptée',      bg: '#dbeafe', color: '#1e40af' },
-}
-
-function AchatsTabs() {
-  const { url } = usePage()
-  const tabs = [
-    { href: '/backend/purchase_orders',   label: 'Commandes' },
-    { href: '/backend/purchase_invoices', label: 'Factures' },
-  ]
-  return (
-    <div style={{ display: 'flex', gap: '0', marginBottom: '1.5rem', borderBottom: '2px solid var(--color-border)' }}>
-      {tabs.map(tab => {
-        const active = url.startsWith(tab.href)
-        return (
-          <a
-            key={tab.href}
-            href={tab.href}
-            style={{
-              padding: '0.5rem 1.25rem',
-              fontWeight: active ? 600 : 400,
-              borderBottom: active ? '2px solid var(--color-primary)' : '2px solid transparent',
-              marginBottom: '-2px',
-              color: active ? 'var(--color-primary)' : 'var(--color-text-muted)',
-              textDecoration: 'none',
-              fontSize: '0.9375rem',
-            }}
-          >
-            {tab.label}
-          </a>
-        )
-      })}
-    </div>
-  )
 }
 
 export default function FacturesShow({ facture }: FacturesShowProps) {

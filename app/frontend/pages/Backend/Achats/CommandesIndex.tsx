@@ -1,45 +1,14 @@
 // app/frontend/pages/Backend/Achats/CommandesIndex.tsx
 import { type ReactNode, useState, useEffect } from 'react'
-import { router, usePage } from '@inertiajs/react'
+import { router } from '@inertiajs/react'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
+import AchatsTabs from '../../../components/achats/AchatsTabs'
 import type { CommandesIndexProps, CommandeState } from '../../../types/achat'
 
 const STATE_CONFIG: Record<CommandeState, { label: string; bg: string; color: string }> = {
   opened: { label: 'En cours',  bg: '#dcfce7', color: '#166534' },
   closed: { label: 'Clôturée',  bg: '#f1f5f9', color: '#475569' },
-}
-
-function AchatsTabs() {
-  const { url } = usePage()
-  const tabs = [
-    { href: '/backend/purchase_orders',   label: 'Commandes' },
-    { href: '/backend/purchase_invoices', label: 'Factures' },
-  ]
-  return (
-    <div style={{ display: 'flex', gap: '0', marginBottom: '1.5rem', borderBottom: '2px solid var(--color-border)' }}>
-      {tabs.map(tab => {
-        const active = url.startsWith(tab.href)
-        return (
-          <a
-            key={tab.href}
-            href={tab.href}
-            style={{
-              padding: '0.5rem 1.25rem',
-              fontWeight: active ? 600 : 400,
-              borderBottom: active ? '2px solid var(--color-primary)' : '2px solid transparent',
-              marginBottom: '-2px',
-              color: active ? 'var(--color-primary)' : 'var(--color-text-muted)',
-              textDecoration: 'none',
-              fontSize: '0.9375rem',
-            }}
-          >
-            {tab.label}
-          </a>
-        )
-      })}
-    </div>
-  )
 }
 
 export default function CommandesIndex({ commandes, filters, meta }: CommandesIndexProps) {
