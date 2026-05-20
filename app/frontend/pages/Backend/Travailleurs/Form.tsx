@@ -292,7 +292,6 @@ const TravailleursForm = ({ travailleur, errors }: TravailleurFormProps) => {
               style={{
                 background: 'var(--color-primary)',
                 border: 'none',
-                cursor: submitting ? 'not-allowed' : 'pointer',
               }}
             >
               <Save size={15} />
