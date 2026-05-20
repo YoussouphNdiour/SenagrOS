@@ -14,11 +14,11 @@ const TYPE_CONFIG: Record<ProduitType, { label: string; bg: string; color: strin
 
 const TYPE_FILTERS: { value: ProduitType | ''; label: string }[] = [
   { value: '',          label: 'Tous' },
-  { value: 'Matter',    label: 'Matières' },
-  { value: 'Animal',    label: 'Animaux' },
-  { value: 'Equipment', label: 'Équipements' },
-  { value: 'Plant',     label: 'Plantes' },
-  { value: 'Other',     label: 'Autres' },
+  { value: 'Matter',    label: 'Matière' },
+  { value: 'Animal',    label: 'Animal' },
+  { value: 'Equipment', label: 'Équipement' },
+  { value: 'Plant',     label: 'Plante' },
+  { value: 'Other',     label: 'Autre' },
 ]
 
 export default function CatalogueIndex({ produits, filters, meta }: CatalogueIndexProps) {

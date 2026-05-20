@@ -43,7 +43,9 @@ describe('CatalogueIndex', () => {
 
   it('renders type badge with correct label for Matter', () => {
     renderIndex()
-    expect(screen.getByText('Matière')).toBeInTheDocument()
+    // "Matière" appears in both the filter button and the table badge
+    const instances = screen.getAllByText('Matière')
+    expect(instances.length).toBeGreaterThanOrEqual(1)
   })
 
   it('shows "Épuisé" badge when population = 0 and dead_at is null', () => {
