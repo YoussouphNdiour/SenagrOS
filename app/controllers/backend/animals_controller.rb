@@ -161,7 +161,7 @@ module Backend
       end
     end
 
-    layout 'inertia', only: [:index, :show]
+    layout 'inertia', only: %i[index show new edit]
 
     # Show a list of animal groups
     def index
@@ -230,6 +230,47 @@ module Backend
       }
     end
 
+    def new
+      render inertia: 'Backend/Animaux/Form', props: {
+        animal: nil,
+        errors: {}
+      }
+    end
+
+    def edit
+      return unless @animal = find_and_check(:animal)
+
+      render inertia: 'Backend/Animaux/Form', props: {
+        animal: animal_json(@animal),
+        errors: {}
+      }
+    end
+
+    def create
+      @animal = Animal.new(animal_params)
+      if @animal.save
+        redirect_to backend_animal_path(@animal)
+      else
+        render inertia: 'Backend/Animaux/Form', props: {
+          animal: nil,
+          errors: @animal.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v }
+        }, status: :unprocessable_entity
+      end
+    end
+
+    def update
+      return unless @animal = find_and_check(:animal)
+
+      if @animal.update(animal_params)
+        redirect_to backend_animal_path(@animal)
+      else
+        render inertia: 'Backend/Animaux/Form', props: {
+          animal: animal_json(@animal),
+          errors: @animal.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v }
+        }, status: :unprocessable_entity
+      end
+    end
+
     def keep
       return head :unprocessable_entity unless params[:id].nil? || (params[:id] && find_all)
 
@@ -293,6 +334,26 @@ module Backend
     end
 
     protected
+
+      def animal_json(animal)
+        {
+          id: animal.id,
+          name: animal.name,
+          work_number: animal.work_number,
+          variety: animal.variety,
+          identification_number: animal.identification_number,
+          born_at: animal.born_at&.to_date&.iso8601,
+          dead_at: animal.dead_at&.to_date&.iso8601,
+          description: animal.description
+        }
+      end
+
+      def animal_params
+        params.require(:animal).permit(
+          :name, :work_number, :variety, :identification_number,
+          :born_at, :dead_at, :description
+        )
+      end
 
       def find_all
         @ids = []

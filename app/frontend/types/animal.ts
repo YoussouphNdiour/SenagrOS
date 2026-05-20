@@ -36,3 +36,8 @@ export interface AnimalShowProps {
   animal: AnimalDetail
   interventions: AnimalIntervention[]
 }
+
+export interface AnimalFormProps {
+  animal: (AnimalDetail & { id?: number }) | null
+  errors: Record<string, string[]>
+}
