@@ -42,12 +42,6 @@ export default function FacturesIndex({ factures, filters, meta }: FacturesIndex
     router.get('/backend/purchase_invoices', { q, reconciliation_state: selectedStates, unpaid }, { preserveState: true })
   }
 
-  function toggleState(state: ReconciliationState) {
-    setSelectedStates(prev =>
-      prev.includes(state) ? prev.filter(s => s !== state) : [...prev, state]
-    )
-  }
-
   function handleDelete(id: number, number: string) {
     if (window.confirm(`Supprimer la facture ${number} ?`)) {
       router.delete(`/backend/purchase_invoices/${id}`)
