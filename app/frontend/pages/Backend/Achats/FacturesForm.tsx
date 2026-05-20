@@ -45,7 +45,7 @@ function AchatsTabs() {
 
 export default function FacturesForm({ facture, natures, taxes, errors }: FacturesFormProps) {
   const isEdit = Boolean(facture.id)
-  const [natureId, setNatureId] = useState(String(natures[0]?.id ?? ''))
+  const [natureId, setNatureId] = useState(String(facture.nature_id ?? natures[0]?.id ?? ''))
   const [supplierName, setSupplierName] = useState(facture.supplier?.full_name ?? '')
   const [supplierId, setSupplierId] = useState(String(facture.supplier?.id ?? ''))
   const [invoicedAt, setInvoicedAt] = useState(facture.invoiced_at ?? '')
@@ -132,7 +132,7 @@ export default function FacturesForm({ facture, natures, taxes, errors }: Factur
                 <select value={natureId} onChange={e => setNatureId(e.target.value)} style={inp}>
                   {natures.map(n => <option key={n.id} value={n.id}>{n.name}</option>)}
                 </select>
-                <FieldError errors={errors} field="nature" />
+                <FieldError errors={errors} field="nature_id" />
               </div>
             )}
 
@@ -150,7 +150,7 @@ export default function FacturesForm({ facture, natures, taxes, errors }: Factur
                 value={supplierId}
                 onChange={e => setSupplierId(e.target.value)}
               />
-              <FieldError errors={errors} field="supplier" />
+              <FieldError errors={errors} field="supplier_id" />
             </div>
 
             <div style={fieldStyle}>

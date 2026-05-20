@@ -80,6 +80,7 @@ export interface Facture {
   invoiced_at: string
   supplier: AchatSupplier
   nature_name: string | null
+  nature_id?: number | null
   pretax_amount: number
   amount: number
   currency: string

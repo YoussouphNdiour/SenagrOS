@@ -317,6 +317,7 @@ module Backend
               invoiced_at: @purchase_invoice.invoiced_at&.to_date&.iso8601,
               supplier: { id: @purchase_invoice.supplier.id, full_name: @purchase_invoice.supplier.full_name },
               nature_name: @purchase_invoice.nature&.name,
+              nature_id: @purchase_invoice.nature_id,
               pretax_amount: @purchase_invoice.pretax_amount.to_f,
               amount: @purchase_invoice.amount.to_f,
               currency: @purchase_invoice.currency,
