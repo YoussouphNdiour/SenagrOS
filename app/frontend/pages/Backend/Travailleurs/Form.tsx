@@ -108,12 +108,11 @@ const TravailleursForm = ({ travailleur, errors }: TravailleurFormProps) => {
                 required
                 aria-invalid={!!errors.name || undefined}
                 aria-describedby={errors.name ? 'worker-name-error' : undefined}
-                className="w-full rounded px-3 py-2 text-sm"
+                className="w-full rounded px-3 py-2 text-sm outline-none"
                 style={{
                   border: '1px solid var(--color-border)',
                   background: 'var(--color-bg)',
                   color: 'var(--color-text)',
-                  outline: 'none',
                 }}
                 placeholder="ex. Mamadou Diallo"
               />
@@ -140,12 +139,11 @@ const TravailleursForm = ({ travailleur, errors }: TravailleurFormProps) => {
                 onChange={(e) => setWorkNumber(e.target.value)}
                 aria-invalid={!!errors.work_number || undefined}
                 aria-describedby={errors.work_number ? 'worker-work-number-error' : undefined}
-                className="w-full rounded px-3 py-2 text-sm"
+                className="w-full rounded px-3 py-2 text-sm outline-none"
                 style={{
                   border: '1px solid var(--color-border)',
                   background: 'var(--color-bg)',
                   color: 'var(--color-text)',
-                  outline: 'none',
                 }}
                 placeholder="ex. W-001"
               />
@@ -174,12 +172,11 @@ const TravailleursForm = ({ travailleur, errors }: TravailleurFormProps) => {
                 aria-describedby={
                   errors.identification_number ? 'worker-identification-error' : undefined
                 }
-                className="w-full rounded px-3 py-2 text-sm"
+                className="w-full rounded px-3 py-2 text-sm outline-none"
                 style={{
                   border: '1px solid var(--color-border)',
                   background: 'var(--color-bg)',
                   color: 'var(--color-text)',
-                  outline: 'none',
                 }}
                 placeholder="ex. ID-001"
               />
@@ -207,12 +204,11 @@ const TravailleursForm = ({ travailleur, errors }: TravailleurFormProps) => {
                   onChange={(e) => setBornAt(e.target.value)}
                   aria-invalid={!!errors.born_at || undefined}
                   aria-describedby={errors.born_at ? 'worker-born-at-error' : undefined}
-                  className="w-full rounded px-3 py-2 text-sm"
+                  className="w-full rounded px-3 py-2 text-sm outline-none"
                   style={{
                     border: '1px solid var(--color-border)',
                     background: 'var(--color-bg)',
                     color: 'var(--color-text)',
-                    outline: 'none',
                   }}
                 />
                 {errors.born_at && (
@@ -237,12 +233,11 @@ const TravailleursForm = ({ travailleur, errors }: TravailleurFormProps) => {
                   onChange={(e) => setDeadAt(e.target.value)}
                   aria-invalid={!!errors.dead_at || undefined}
                   aria-describedby={errors.dead_at ? 'worker-dead-at-error' : undefined}
-                  className="w-full rounded px-3 py-2 text-sm"
+                  className="w-full rounded px-3 py-2 text-sm outline-none"
                   style={{
                     border: '1px solid var(--color-border)',
                     background: 'var(--color-bg)',
                     color: 'var(--color-text)',
-                    outline: 'none',
                   }}
                 />
                 {errors.dead_at && (
@@ -269,12 +264,11 @@ const TravailleursForm = ({ travailleur, errors }: TravailleurFormProps) => {
                 rows={3}
                 aria-invalid={!!errors.description || undefined}
                 aria-describedby={errors.description ? 'worker-description-error' : undefined}
-                className="w-full rounded px-3 py-2 text-sm resize-y"
+                className="w-full rounded px-3 py-2 text-sm resize-y outline-none"
                 style={{
                   border: '1px solid var(--color-border)',
                   background: 'var(--color-bg)',
                   color: 'var(--color-text)',
-                  outline: 'none',
                 }}
                 placeholder="Description facultative du travailleur…"
               />
