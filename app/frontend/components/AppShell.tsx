@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { usePage } from '@inertiajs/react'
 import {
-  LayoutDashboard, Wrench, Map, Sprout, BookOpen, Settings, Calendar, Users, Tractor, UserCog, PawPrint, Activity, ShoppingCart,
+  LayoutDashboard, Wrench, Map, Sprout, BookOpen, Settings, Calendar, Users, Tractor, UserCog, PawPrint, Activity, ShoppingCart, ShoppingBag,
 } from 'lucide-react'
 import type { InertiaSharedProps } from '../types/shared'
 
@@ -13,6 +13,7 @@ const NAV_LINKS = [
   { href: '/backend/journal_entries',      label: 'Comptabilité', icon: BookOpen },
   { href: '/backend/campaigns',            label: 'Campagnes',    icon: Calendar },
   { href: '/backend/sales',                label: 'Ventes',       icon: ShoppingCart },
+  { href: '/backend/purchase_orders',      label: 'Achats',       icon: ShoppingBag },
   { href: '/backend/activities',           label: 'Activités',    icon: Activity },
   { href: '/backend/entities',             label: 'Entités',      icon: Users },
   { href: '/backend/equipments',           label: 'Équipements',  icon: Tractor },
