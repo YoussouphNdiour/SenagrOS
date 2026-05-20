@@ -202,54 +202,93 @@ module Backend
     def new
       nature = PurchaseNature.by_default
       @purchase_order = PurchaseOrder.new(nature: nature)
-      @purchase_order.currency = @purchase_order.nature.currency
+      @purchase_order.currency = @purchase_order.nature&.currency
       @purchase_order.responsible ||= current_user
-      @purchase_order.planned_at = Time.zone.now
       @purchase_order.ordered_at = Time.zone.now
-      @purchase_order.supplier_id ||= params[:supplier_id] if params[:supplier_id]
 
-      if (address = Entity.of_company.default_mail_address)
-        @purchase_order.delivery_address = address
+      respond_to do |format|
+        format.html do
+          render inertia: 'Backend/Achats/CommandesForm', props: {
+            commande: { ordered_at: Time.zone.today.iso8601, currency: @purchase_order.currency, items: [] },
+            natures: PurchaseNature.all.as_json(only: %i[id name currency payment_delay]),
+            taxes: Tax.all.as_json(only: %i[id name short_label amount]),
+            errors: {}
+          }
+        end
       end
+    end
 
-      if (items_attributes = params[:items_attributes])
-        items_attributes.each { |item| @purchase_order.items.build(variant_id: item[:variant_id], role: item[:role])}
+    def edit
+      return unless @purchase_order = find_and_check(:purchase_order)
+
+      respond_to do |format|
+        format.html do
+          render inertia: 'Backend/Achats/CommandesForm', props: {
+            commande: {
+              id: @purchase_order.id,
+              number: @purchase_order.number,
+              reference_number: @purchase_order.reference_number,
+              state: @purchase_order.state,
+              ordered_at: @purchase_order.ordered_at&.to_date&.iso8601,
+              supplier: { id: @purchase_order.supplier.id, full_name: @purchase_order.supplier.full_name },
+              nature_name: @purchase_order.nature&.name,
+              pretax_amount: @purchase_order.pretax_amount.to_f,
+              amount: @purchase_order.amount.to_f,
+              currency: @purchase_order.currency,
+              description: @purchase_order.description,
+              responsible_name: @purchase_order.responsible&.full_name,
+              items: @purchase_order.items.map { |i|
+                { id: i.id, variant_name: i.variant&.name, conditioning_quantity: i.conditioning_quantity.to_f,
+                  unit_pretax_amount: i.unit_pretax_amount.to_f, tax_id: i.tax_id,
+                  reduction_percentage: i.reduction_percentage.to_f, pretax_amount: i.pretax_amount.to_f, amount: i.amount.to_f }
+              },
+              receptions_count: @purchase_order.receptions.count,
+              destroyable: @purchase_order.destroyable?
+            },
+            natures: PurchaseNature.all.as_json(only: %i[id name currency payment_delay]),
+            taxes: Tax.all.as_json(only: %i[id name short_label amount]),
+            errors: {}
+          }
+        end
       end
-
-      @display_items_form = true if params[:display_items_form]
-
-      render locals: { with_continue: true }
     end
 
     def create
-      @purchase_order = PurchaseOrder.new(permitted_params)
+      @purchase_order = PurchaseOrder.new(purchase_order_params)
 
-      if @purchase_order.items.blank?
-        @purchase_order.validate(:perform_validations)
-        notify_error_now :purchase_order_need_at_least_one_item
+      if @purchase_order.save
+        redirect_to backend_purchase_order_path(@purchase_order)
       else
-        return if save_and_redirect(@purchase_order,
-                                    url: (params[:create_and_continue] ? { action: :new, continue: true, nature_id: @purchase_order.nature_id } : (params[:redirect] || { action: :show, id: "id".c })),
-                                    notify: :record_x_created, identifier: :number)
+        respond_to do |format|
+          format.html do
+            render inertia: 'Backend/Achats/CommandesForm', props: {
+              commande: purchase_order_params.merge(items: []),
+              natures: PurchaseNature.all.as_json(only: %i[id name currency payment_delay]),
+              taxes: Tax.all.as_json(only: %i[id name short_label amount]),
+              errors: @purchase_order.errors.to_hash
+            }, status: :unprocessable_entity
+          end
+        end
       end
-      render(locals: { cancel_url: { action: :index }, with_continue: true })
     end
 
     def update
       return unless @purchase_order = find_and_check(:purchase_order)
 
-      t3e(@purchase_order.attributes)
-
-      @purchase_order.assign_attributes(permitted_params)
-
-      if @purchase_order.items.all?(&:marked_for_destruction?)
-        notify_error_now :purchase_order_need_at_least_one_item
-      elsif @purchase_order.save
-        return redirect_to(params[:redirect] || { action: :show, id: @purchase_order.id },
-                           notify: :record_x_updated,
-                           identifier: :number)
+      if @purchase_order.update(purchase_order_params)
+        redirect_to backend_purchase_order_path(@purchase_order)
+      else
+        respond_to do |format|
+          format.html do
+            render inertia: 'Backend/Achats/CommandesForm', props: {
+              commande: { id: @purchase_order.id, number: @purchase_order.number }.merge(purchase_order_params).merge(items: []),
+              natures: PurchaseNature.all.as_json(only: %i[id name currency payment_delay]),
+              taxes: Tax.all.as_json(only: %i[id name short_label amount]),
+              errors: @purchase_order.errors.to_hash
+            }, status: :unprocessable_entity
+          end
+        end
       end
-      render :edit
     end
 
     def open
@@ -300,5 +339,15 @@ module Backend
       { data: data, name: printer.document_name, document: document }
     end
 
+    private
+
+    def purchase_order_params
+      params.require(:purchase_order).permit(
+        :nature_id, :supplier_id, :ordered_at, :reference_number,
+        :responsible_id, :description,
+        items_attributes: %i[id variant_name conditioning_quantity unit_pretax_amount
+                             tax_id reduction_percentage _destroy position]
+      )
+    end
   end
 end
