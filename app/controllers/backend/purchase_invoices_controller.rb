@@ -235,104 +235,110 @@ module Backend
     end
 
     def new
-      nature = PurchaseNature.find_by(id: params[:nature_id])
-      nature ||= PurchaseNature.by_default
+      nature = PurchaseNature.find_by(id: params[:nature_id]) || PurchaseNature.by_default
 
-      @purchase_invoice = if params[:duplicate_of]
-                            PurchaseInvoice.find_by(id: params[:duplicate_of])
-                              .deep_clone(include: :items, except: %i[state number affair_id reference_number payment_delay])
-                          elsif params[:reception_ids]
-                            receptions = Reception.where(id: params[:reception_ids].split(','))
-                            supplier_ids = receptions.pluck(:sender_id)
-                            supplier_id = supplier_ids.uniq.first
-                            invoice_attributes = {
-                              nature: nature,
-                              supplier_id: supplier_id,
-                              reconciliation_state: 'reconcile',
-                              items: InvoiceableItemsFilter.new.filter(receptions)
-                            }
-                            PurchaseInvoice.new(invoice_attributes)
-                          else
-                            PurchaseInvoice.new(nature: nature)
-                          end
-
-      @purchase_invoice.currency = @purchase_invoice.nature.currency
-      @purchase_invoice.responsible ||= current_user
-      @purchase_invoice.planned_at = Time.zone.now
-      @purchase_invoice.supplier_id ||= params[:supplier_id] if params[:supplier_id]
-
-      if (address = Entity.of_company.default_mail_address)
-        @purchase_invoice.delivery_address = address
-      end
-
-      render locals: { with_continue: true }
-    end
-
-    def create
-      if permitted_params[:items_attributes].present?
-        permitted_params[:items_attributes].each do |_key, item_attribute|
-          ids = item_attribute[:parcels_purchase_invoice_items]
-          parcel_item_ids = ids.blank? ? [] : JSON.parse(ids)
-          unreconciled_parcel_items = ParcelItem.where(id: parcel_item_ids, purchase_invoice_item_id: nil)
-          item_attribute[:parcels_purchase_invoice_items] = unreconciled_parcel_items
+      items_data = []
+      if params[:duplicate_of]
+        source = PurchaseInvoice.find_by(id: params[:duplicate_of])
+        if source
+          items_data = source.items.map { |i|
+            { id: nil, variant_name: i.variant&.name, conditioning_quantity: i.conditioning_quantity.to_f,
+              unit_pretax_amount: i.unit_pretax_amount.to_f, tax_id: i.tax_id,
+              reduction_percentage: i.reduction_percentage.to_f, pretax_amount: i.pretax_amount.to_f, amount: i.amount.to_f }
+          }
         end
       end
 
-      @purchase_invoice = PurchaseInvoice.new(permitted_params)
-
-      url = if params[:create_and_continue]
-              { action: :new, continue: true }
-            else
-              { action: :show, id: 'id'.c }
-            end
-
-      if @purchase_invoice.items.blank?
-        notify_error_now :purchase_invoice_need_at_least_one_item
-      else
-        return if save_and_redirect(@purchase_invoice, url: url, notify: :record_x_created, identifier: :number)
+      respond_to do |format|
+        format.html do
+          render inertia: 'Backend/Achats/FacturesForm', props: {
+            facture: { invoiced_at: Time.zone.today.iso8601, currency: nature&.currency || 'XOF', items: items_data },
+            natures: PurchaseNature.all.as_json(only: %i[id name currency payment_delay]),
+            taxes: Tax.all.as_json(only: %i[id name short_label amount]),
+            errors: {}
+          }
+        end
       end
-      render(locals: { cancel_url: { action: :index }, with_continue: true })
+    end
+
+    def create
+      @purchase_invoice = PurchaseInvoice.new(purchase_invoice_params)
+
+      if @purchase_invoice.save
+        redirect_to backend_purchase_invoice_path(@purchase_invoice)
+      else
+        respond_to do |format|
+          format.html do
+            render inertia: 'Backend/Achats/FacturesForm', props: {
+              facture: { items: [] },
+              natures: PurchaseNature.all.as_json(only: %i[id name currency payment_delay]),
+              taxes: Tax.all.as_json(only: %i[id name short_label amount]),
+              errors: @purchase_invoice.errors.to_hash
+            }, status: :unprocessable_entity
+          end
+        end
+      end
     end
 
     def update
       return unless (@purchase_invoice = find_and_check)
 
       if @purchase_invoice.linked_to_tax_declaration?
-        notify_error(:unable_to_modify_purchase_invoice_link_to_tax_declaration)
-        return redirect_to_back fallback_location: { action: :show, id: @purchase_invoice.id }
+        redirect_to backend_purchase_invoice_path(@purchase_invoice), alert: 'Facture liée à une déclaration fiscale'
+        return
       end
 
-      if permitted_params[:items_attributes].present?
-        permitted_params[:items_attributes].each do |_key, item_attribute|
-          ids = item_attribute[:parcels_purchase_invoice_items]
-          parcel_item_ids = ids.blank? ? [] : JSON.parse(ids)
-          item_attribute[:parcels_purchase_invoice_items] = ParcelItem.find(parcel_item_ids)
+      if @purchase_invoice.update(purchase_invoice_params)
+        redirect_to backend_purchase_invoice_path(@purchase_invoice)
+      else
+        respond_to do |format|
+          format.html do
+            render inertia: 'Backend/Achats/FacturesForm', props: {
+              facture: { id: @purchase_invoice.id, number: @purchase_invoice.number, items: [] },
+              natures: PurchaseNature.all.as_json(only: %i[id name currency payment_delay]),
+              taxes: Tax.all.as_json(only: %i[id name short_label amount]),
+              errors: @purchase_invoice.errors.to_hash
+            }, status: :unprocessable_entity
+          end
         end
       end
-
-      @purchase_invoice.assign_attributes(permitted_params)
-
-      if @purchase_invoice.items.all?(&:marked_for_destruction?)
-        notify_error_now :purchase_invoice_need_at_least_one_item
-      elsif @purchase_invoice.save
-        return redirect_to(params[:redirect] || { action: :show, id: @purchase_invoice.id },
-                           notify: :record_x_updated,
-                           identifier: :number)
-      end
-
-      t3e(@purchase_invoice.attributes)
-
-      render :edit
     end
 
     def edit
       return unless (@purchase_invoice = find_and_check)
 
-      if @purchase_invoice.updateable? && @purchase_invoice.linked_to_tax_declaration?
-        notify_warning_now(:unable_to_modify_purchase_invoice_link_to_tax_declaration)
+      respond_to do |format|
+        format.html do
+          render inertia: 'Backend/Achats/FacturesForm', props: {
+            facture: {
+              id: @purchase_invoice.id,
+              number: @purchase_invoice.number,
+              reference_number: @purchase_invoice.reference_number,
+              invoiced_at: @purchase_invoice.invoiced_at&.to_date&.iso8601,
+              supplier: { id: @purchase_invoice.supplier.id, full_name: @purchase_invoice.supplier.full_name },
+              nature_name: @purchase_invoice.nature&.name,
+              pretax_amount: @purchase_invoice.pretax_amount.to_f,
+              amount: @purchase_invoice.amount.to_f,
+              currency: @purchase_invoice.currency,
+              reconciliation_state: @purchase_invoice.reconciliation_state,
+              unpaid: @purchase_invoice.unpaid?,
+              description: @purchase_invoice.description,
+              payment_delay: @purchase_invoice.payment_delay,
+              responsible_name: @purchase_invoice.responsible&.full_name,
+              items: @purchase_invoice.items.map { |i|
+                { id: i.id, variant_name: i.variant&.name, conditioning_quantity: i.conditioning_quantity.to_f,
+                  unit_pretax_amount: i.unit_pretax_amount.to_f, tax_id: i.tax_id,
+                  reduction_percentage: i.reduction_percentage.to_f, pretax_amount: i.pretax_amount.to_f, amount: i.amount.to_f }
+              },
+              destroyable: @purchase_invoice.destroyable?,
+              updatable: !@purchase_invoice.linked_to_tax_declaration?
+            },
+            natures: PurchaseNature.all.as_json(only: %i[id name currency payment_delay]),
+            taxes: Tax.all.as_json(only: %i[id name short_label amount]),
+            errors: {}
+          }
+        end
       end
-
-      super
     end
 
     def destroy
@@ -398,6 +404,17 @@ module Backend
           return nil
         end
         purchases
+      end
+
+    private
+
+      def purchase_invoice_params
+        params.require(:purchase_invoice).permit(
+          :nature_id, :supplier_id, :invoiced_at, :reference_number,
+          :payment_delay, :responsible_id, :description,
+          items_attributes: %i[id variant_name conditioning_quantity unit_pretax_amount
+                               tax_id reduction_percentage _destroy position]
+        )
       end
   end
 end
