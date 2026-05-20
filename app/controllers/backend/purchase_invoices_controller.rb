@@ -236,9 +236,26 @@ module Backend
 
     def new
       nature = PurchaseNature.find_by(id: params[:nature_id]) || PurchaseNature.by_default
-
       items_data = []
-      if params[:duplicate_of]
+
+      if params[:reception_id]
+        reception = Reception.find_by(id: params[:reception_id])
+        if reception && reception.reconciliation_state == 'to_reconcile'
+          raw_items = InvoiceableItemsFilter.new.filter([reception])
+          items_data = raw_items.map { |i|
+            {
+              id: nil,
+              variant_name: i.variant&.name,
+              conditioning_quantity: i.conditioning_quantity.to_f,
+              unit_pretax_amount: i.unit_pretax_amount.to_f,
+              tax_id: i.tax_id,
+              reduction_percentage: 0,
+              pretax_amount: i.pretax_amount.to_f,
+              amount: i.amount.to_f
+            }
+          }
+        end
+      elsif params[:duplicate_of]
         source = PurchaseInvoice.find_by(id: params[:duplicate_of])
         if source
           items_data = source.items.map { |i|
