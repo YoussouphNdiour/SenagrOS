@@ -221,13 +221,13 @@ export default function FacturesShow({ facture }: FacturesShowProps) {
           </thead>
           <tbody>
             {facture.items.filter(i => !i._destroy).map((item, idx) => (
-              <tr key={idx}>
+              <tr key={item.id ?? `new-${idx}`}>
                 <td style={tdStyle}>{item.variant_name ?? '—'}</td>
                 <td style={tdStyle}>{item.conditioning_quantity}</td>
-                <td style={tdStyle}>{item.unit_pretax_amount}</td>
+                <td style={tdStyle}>{fmt(item.unit_pretax_amount)}</td>
                 <td style={tdStyle}>{item.reduction_percentage}%</td>
-                <td style={{ ...tdStyle, textAlign: 'right' }}>{item.pretax_amount}</td>
-                <td style={{ ...tdStyle, textAlign: 'right' }}>{item.amount}</td>
+                <td style={{ ...tdStyle, textAlign: 'right' }}>{fmt(item.pretax_amount)}</td>
+                <td style={{ ...tdStyle, textAlign: 'right' }}>{fmt(item.amount)}</td>
               </tr>
             ))}
           </tbody>

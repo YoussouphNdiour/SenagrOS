@@ -5,7 +5,6 @@ import type { FacturesShowProps } from '../../../types/achat'
 vi.mock('@inertiajs/react', () => ({
   router: { delete: vi.fn() },
   usePage: () => ({ url: '/backend/purchase_invoices/1' }),
-  Link: ({ href, children }: { href: string; children: React.ReactNode }) => <a href={href}>{children}</a>,
 }))
 
 const baseFacture: FacturesShowProps['facture'] = {
@@ -50,5 +49,13 @@ describe('FacturesShow', () => {
   it('always shows Dupliquer button', () => {
     render(<FacturesShow facture={{ ...baseFacture, updatable: false }} />)
     expect(screen.getByText('Dupliquer')).toBeInTheDocument()
+  })
+
+  it('calls router.delete on Supprimer click after confirm', async () => {
+    const { router } = await import('@inertiajs/react')
+    vi.spyOn(window, 'confirm').mockReturnValue(true)
+    render(<FacturesShow facture={{ ...baseFacture, destroyable: true }} />)
+    fireEvent.click(screen.getByRole('button', { name: /supprimer/i }))
+    expect(router.delete).toHaveBeenCalledWith('/backend/purchase_invoices/1')
   })
 })
