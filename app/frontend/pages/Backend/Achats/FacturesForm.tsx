@@ -120,7 +120,7 @@ export default function FacturesForm({ facture, natures, taxes, errors }: Factur
     <div style={{ padding: '2rem', maxWidth: '860px' }}>
       <AchatsTabs />
       <h1 style={{ fontSize: '1.375rem', fontWeight: 700, color: 'var(--color-text)', marginBottom: '1.5rem' }}>
-        {isEdit ? `Modifier la facture ${facture.number}` : 'Nouvelle facture'}
+        {isEdit ? `Modifier la facture N° ${facture.number}` : 'Nouvelle facture'}
       </h1>
 
       <form aria-label="Formulaire facture" onSubmit={handleSubmit}>

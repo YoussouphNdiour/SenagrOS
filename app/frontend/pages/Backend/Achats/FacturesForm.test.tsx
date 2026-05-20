@@ -43,8 +43,7 @@ describe('FacturesForm', () => {
 
   it('renders "Modifier" heading with number for edit form', () => {
     render(<FacturesForm {...editProps} />)
-    expect(screen.getByText(/Modifier la facture/)).toBeInTheDocument()
-    expect(screen.getByText(/FAC-001/)).toBeInTheDocument()
+    expect(screen.getByText(/Modifier la facture N° FAC-001/)).toBeInTheDocument()
   })
 
   it('renders supplier input', () => {
