@@ -56,10 +56,8 @@ export default function FacturesIndex({ factures, filters, meta }: FacturesIndex
     <div style={{ padding: '2rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
         <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-text)', margin: 0 }}>Achats</h1>
-        <a href="/backend/purchase_invoices/new" style={{ textDecoration: 'none' }}>
-          <button type="button" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: '0.5rem', padding: '0.5rem 1rem', cursor: 'pointer', fontWeight: 500 }}>
-            <Plus size={16} /> Nouvelle facture
-          </button>
+        <a href="/backend/purchase_invoices/new" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'var(--color-primary)', color: '#fff', borderRadius: '0.5rem', padding: '0.5rem 1rem', cursor: 'pointer', fontWeight: 500, textDecoration: 'none' }}>
+          <Plus size={16} /> Nouvelle facture
         </a>
       </div>
 
@@ -110,6 +108,7 @@ export default function FacturesIndex({ factures, filters, meta }: FacturesIndex
           <tbody>
             {factures.map(f => {
               const badge = RECONCILIATION_CONFIG[f.reconciliation_state]
+                ?? { label: f.reconciliation_state, bg: '#f3f4f6', color: '#6b7280' }
               return (
                 <tr key={f.id}>
                   <td style={td}>
@@ -128,10 +127,8 @@ export default function FacturesIndex({ factures, filters, meta }: FacturesIndex
                   <td style={td}>
                     <div style={{ display: 'flex', gap: '0.375rem' }}>
                       {f.updatable && (
-                        <a href={`/backend/purchase_invoices/${f.id}/edit`}>
-                          <button type="button" title="Modifier" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', padding: '0.25rem' }}>
-                            <Pencil size={15} />
-                          </button>
+                        <a href={`/backend/purchase_invoices/${f.id}/edit`} title="Modifier" style={{ display: 'inline-flex', alignItems: 'center', background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', padding: '0.25rem', textDecoration: 'none' }}>
+                          <Pencil size={15} />
                         </a>
                       )}
                       {f.destroyable && (
@@ -160,12 +157,12 @@ export default function FacturesIndex({ factures, filters, meta }: FacturesIndex
         </span>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           {meta.current_page > 1 && (
-            <button type="button" onClick={() => router.get('/backend/purchase_invoices', { ...filters, page: meta.current_page - 1 })} style={{ padding: '0.25rem 0.75rem', border: '1px solid var(--color-border)', borderRadius: '0.375rem', cursor: 'pointer', background: 'var(--color-bg-card)' }}>
+            <button type="button" onClick={() => router.get('/backend/purchase_invoices', { q, reconciliation_state: selectedStates, unpaid, page: meta.current_page - 1 }, { preserveState: true })} style={{ padding: '0.25rem 0.75rem', border: '1px solid var(--color-border)', borderRadius: '0.375rem', cursor: 'pointer', background: 'var(--color-bg-card)' }}>
               Précédent
             </button>
           )}
           {meta.current_page < meta.total_pages && (
-            <button type="button" onClick={() => router.get('/backend/purchase_invoices', { ...filters, page: meta.current_page + 1 })} style={{ padding: '0.25rem 0.75rem', border: '1px solid var(--color-border)', borderRadius: '0.375rem', cursor: 'pointer', background: 'var(--color-bg-card)' }}>
+            <button type="button" onClick={() => router.get('/backend/purchase_invoices', { q, reconciliation_state: selectedStates, unpaid, page: meta.current_page + 1 }, { preserveState: true })} style={{ padding: '0.25rem 0.75rem', border: '1px solid var(--color-border)', borderRadius: '0.375rem', cursor: 'pointer', background: 'var(--color-bg-card)' }}>
               Suivant
             </button>
           )}
