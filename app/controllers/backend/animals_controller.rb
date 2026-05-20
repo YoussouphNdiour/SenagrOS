@@ -333,7 +333,7 @@ module Backend
       end
     end
 
-    protected
+    private
 
       def animal_json(animal)
         {
