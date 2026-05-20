@@ -239,8 +239,9 @@ module Backend
       items_data = []
 
       if params[:reception_ids].present?
-        receptions = Reception.where(id: params[:reception_ids])
-                              .select { |r| r.reconciliation_state == 'to_reconcile' && r.given? }
+        reception_ids = Array.wrap(params[:reception_ids])
+        receptions = Reception.where(id: reception_ids, reconciliation_state: 'to_reconcile')
+                              .select(&:given?)
         if receptions.any?
           raw_items = InvoiceableItemsFilter.new.filter(receptions)
           items_data = raw_items.map { |i|
