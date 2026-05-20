@@ -88,7 +88,7 @@ export default function AchatItemsEditor({ items, taxes, currency, onChange }: P
           {items.map((item, index) => {
             if (item._destroy) return null
             return (
-              <tr key={index}>
+              <tr key={item.id !== null ? `persisted-${item.id}` : `new-${index}`}>
                 <td style={cell}>
                   <input
                     style={input}
