@@ -110,12 +110,11 @@ const AnimauxForm = ({ animal, errors }: AnimalFormProps) => {
                 required
                 aria-invalid={!!errors.name || undefined}
                 aria-describedby={errors.name ? 'animal-name-error' : undefined}
-                className="w-full rounded px-3 py-2 text-sm"
+                className="w-full rounded px-3 py-2 text-sm outline-none"
                 style={{
                   border: '1px solid var(--color-border)',
                   background: 'var(--color-bg)',
                   color: 'var(--color-text)',
-                  outline: 'none',
                 }}
                 placeholder="ex. Bœuf Alpha"
               />
@@ -142,12 +141,11 @@ const AnimauxForm = ({ animal, errors }: AnimalFormProps) => {
                 onChange={(e) => setWorkNumber(e.target.value)}
                 aria-invalid={!!errors.work_number || undefined}
                 aria-describedby={errors.work_number ? 'animal-work-number-error' : undefined}
-                className="w-full rounded px-3 py-2 text-sm"
+                className="w-full rounded px-3 py-2 text-sm outline-none"
                 style={{
                   border: '1px solid var(--color-border)',
                   background: 'var(--color-bg)',
                   color: 'var(--color-text)',
-                  outline: 'none',
                 }}
                 placeholder="ex. W-001"
               />
@@ -174,12 +172,11 @@ const AnimauxForm = ({ animal, errors }: AnimalFormProps) => {
                 onChange={(e) => setVariety(e.target.value)}
                 aria-invalid={!!errors.variety || undefined}
                 aria-describedby={errors.variety ? 'animal-variety-error' : undefined}
-                className="w-full rounded px-3 py-2 text-sm"
+                className="w-full rounded px-3 py-2 text-sm outline-none"
                 style={{
                   border: '1px solid var(--color-border)',
                   background: 'var(--color-bg)',
                   color: 'var(--color-text)',
-                  outline: 'none',
                 }}
                 placeholder="ex. Ndama"
               />
@@ -208,12 +205,11 @@ const AnimauxForm = ({ animal, errors }: AnimalFormProps) => {
                 aria-describedby={
                   errors.identification_number ? 'animal-identification-error' : undefined
                 }
-                className="w-full rounded px-3 py-2 text-sm"
+                className="w-full rounded px-3 py-2 text-sm outline-none"
                 style={{
                   border: '1px solid var(--color-border)',
                   background: 'var(--color-bg)',
                   color: 'var(--color-text)',
-                  outline: 'none',
                 }}
                 placeholder="ex. ID-001"
               />
@@ -241,12 +237,11 @@ const AnimauxForm = ({ animal, errors }: AnimalFormProps) => {
                   onChange={(e) => setBornAt(e.target.value)}
                   aria-invalid={!!errors.born_at || undefined}
                   aria-describedby={errors.born_at ? 'animal-born-at-error' : undefined}
-                  className="w-full rounded px-3 py-2 text-sm"
+                  className="w-full rounded px-3 py-2 text-sm outline-none"
                   style={{
                     border: '1px solid var(--color-border)',
                     background: 'var(--color-bg)',
                     color: 'var(--color-text)',
-                    outline: 'none',
                   }}
                 />
                 {errors.born_at && (
@@ -271,12 +266,11 @@ const AnimauxForm = ({ animal, errors }: AnimalFormProps) => {
                   onChange={(e) => setDeadAt(e.target.value)}
                   aria-invalid={!!errors.dead_at || undefined}
                   aria-describedby={errors.dead_at ? 'animal-dead-at-error' : undefined}
-                  className="w-full rounded px-3 py-2 text-sm"
+                  className="w-full rounded px-3 py-2 text-sm outline-none"
                   style={{
                     border: '1px solid var(--color-border)',
                     background: 'var(--color-bg)',
                     color: 'var(--color-text)',
-                    outline: 'none',
                   }}
                 />
                 {errors.dead_at && (
@@ -303,13 +297,11 @@ const AnimauxForm = ({ animal, errors }: AnimalFormProps) => {
                 rows={3}
                 aria-invalid={!!errors.description || undefined}
                 aria-describedby={errors.description ? 'animal-description-error' : undefined}
-                className="w-full rounded px-3 py-2 text-sm"
+                className="w-full rounded px-3 py-2 text-sm outline-none resize-y"
                 style={{
                   border: '1px solid var(--color-border)',
                   background: 'var(--color-bg)',
                   color: 'var(--color-text)',
-                  outline: 'none',
-                  resize: 'vertical',
                 }}
                 placeholder="Description facultative de l'animal…"
               />
@@ -329,13 +321,10 @@ const AnimauxForm = ({ animal, errors }: AnimalFormProps) => {
             <button
               type="submit"
               disabled={submitting}
-              className="flex items-center gap-2 px-4 py-2 rounded text-sm font-medium"
+              className="flex items-center gap-2 rounded px-4 py-2 text-sm font-medium text-white disabled:opacity-50"
               style={{
                 background: 'var(--color-primary)',
-                color: '#fff',
                 border: 'none',
-                cursor: submitting ? 'not-allowed' : 'pointer',
-                opacity: submitting ? 0.7 : 1,
               }}
             >
               <Save size={15} />
