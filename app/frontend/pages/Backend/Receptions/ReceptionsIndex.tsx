@@ -19,6 +19,7 @@ const RECONCILIATION_CONFIG: Record<ReceptionReconciliationState, { label: strin
 export default function ReceptionsIndex({ receptions, filters, meta }: ReceptionsIndexProps) {
   const [q, setQ] = useState(filters.q ?? '')
   const [selectedStates, setSelectedStates] = useState<ReceptionState[]>(filters.state ?? [])
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set())
 
   useEffect(() => { setQ(filters.q ?? '') }, [filters.q])
 
@@ -32,11 +33,21 @@ export default function ReceptionsIndex({ receptions, filters, meta }: Reception
     )
   }
 
+  function toggleSelect(id: number) {
+    setSelectedIds(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) { next.delete(id) } else { next.add(id) }
+      return next
+    })
+  }
+
   function handleDelete(id: number, number: string) {
     if (window.confirm(`Supprimer la réception ${number} ?`)) {
       router.delete(`/backend/receptions/${id}`)
     }
   }
+
+  const groupedInvoiceHref = `/backend/purchase_invoices/new?${[...selectedIds].map(id => `reception_ids[]=${id}`).join('&')}`
 
   const card: React.CSSProperties = { background: 'var(--color-bg-card)', borderRadius: '0.5rem', border: '1px solid var(--color-border)' }
   const th: React.CSSProperties = { padding: '0.75rem 1rem', textAlign: 'left', fontSize: '0.8125rem', color: 'var(--color-text-muted)', fontWeight: 600, borderBottom: '1px solid var(--color-border)' }
@@ -85,11 +96,26 @@ export default function ReceptionsIndex({ receptions, filters, meta }: Reception
         </button>
       </div>
 
+      {/* Action bar — visible only when ≥2 invoiceable receptions are checked */}
+      {selectedIds.size >= 2 && (
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.75rem 1rem', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '0.5rem', marginBottom: '1rem' }}>
+          <span style={{ fontSize: '0.9375rem', color: '#1e40af' }}>
+            {selectedIds.size} réception(s) sélectionnée(s)
+          </span>
+          <a href={groupedInvoiceHref} style={{ textDecoration: 'none' }}>
+            <button type="button" style={{ background: '#166534', color: '#fff', border: 'none', borderRadius: '0.5rem', padding: '0.5rem 1rem', cursor: 'pointer', fontWeight: 500, fontSize: '0.9rem' }}>
+              Créer une facture groupée
+            </button>
+          </a>
+        </div>
+      )}
+
       {/* Table */}
       <div style={{ ...card, overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
             <tr>
+              <th style={{ ...th, width: '2.5rem' }}>Sélectionner</th>
               {['N° réception', 'Fournisseur', 'N° commande', 'État', 'Date prévue', 'Date réception', 'HT', 'Facturation', 'Actions'].map(h => (
                 <th key={h} style={th}>{h}</th>
               ))}
@@ -101,6 +127,15 @@ export default function ReceptionsIndex({ receptions, filters, meta }: Reception
               const reconcBadge = RECONCILIATION_CONFIG[r.reconciliation_state] ?? { label: r.reconciliation_state, bg: '#f3f4f6', color: '#6b7280' }
               return (
                 <tr key={r.id}>
+                  <td style={{ ...td, textAlign: 'center' }}>
+                    <input
+                      type="checkbox"
+                      aria-label={`Sélectionner la réception ${r.number}`}
+                      checked={selectedIds.has(r.id)}
+                      onChange={() => toggleSelect(r.id)}
+                      disabled={!r.invoiceable}
+                    />
+                  </td>
                   <td style={td}>
                     <a href={`/backend/receptions/${r.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'none', fontWeight: 500 }}>{r.number}</a>
                   </td>

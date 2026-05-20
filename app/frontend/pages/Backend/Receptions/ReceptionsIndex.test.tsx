@@ -33,6 +33,31 @@ const defaultProps: ReceptionsIndexProps = {
   meta: { current_page: 1, total_pages: 1, total_count: 2 },
 }
 
+const invoiceableProps: ReceptionsIndexProps = {
+  receptions: [
+    {
+      id: 10, number: 'REC-010', reference_number: null, state: 'given',
+      planned_at: '2025-06-01', given_at: '2025-06-02',
+      supplier: { id: 20, full_name: 'Fournisseur A' },
+      purchase_order: null,
+      reconciliation_state: 'to_reconcile',
+      pretax_amount: 80000, currency: 'XOF',
+      items: [], destroyable: false, invoiceable: true,
+    },
+    {
+      id: 11, number: 'REC-011', reference_number: null, state: 'given',
+      planned_at: '2025-06-03', given_at: '2025-06-04',
+      supplier: { id: 21, full_name: 'Fournisseur B' },
+      purchase_order: null,
+      reconciliation_state: 'to_reconcile',
+      pretax_amount: 60000, currency: 'XOF',
+      items: [], destroyable: false, invoiceable: true,
+    },
+  ],
+  filters: { q: '', state: [] },
+  meta: { current_page: 1, total_pages: 1, total_count: 2 },
+}
+
 describe('ReceptionsIndex', () => {
   it('renders reception numbers', () => {
     render(<ReceptionsIndex {...defaultProps} />)
@@ -68,5 +93,35 @@ describe('ReceptionsIndex', () => {
     render(<ReceptionsIndex {...defaultProps} />)
     fireEvent.click(screen.getAllByRole('button', { name: /supprimer/i })[0])
     expect(router.delete).toHaveBeenCalledWith('/backend/receptions/1')
+  })
+
+  it('renders enabled checkbox for invoiceable reception', () => {
+    render(<ReceptionsIndex {...invoiceableProps} />)
+    const checkboxes = screen.getAllByRole('checkbox', { name: /Sélectionner la réception REC-01/ })
+    expect(checkboxes[0]).toBeEnabled()
+  })
+
+  it('renders disabled checkbox for non-invoiceable reception', () => {
+    render(<ReceptionsIndex {...defaultProps} />)
+    const checkboxes = screen.getAllByRole('checkbox', { name: /Sélectionner la réception/ })
+    checkboxes.forEach(cb => expect(cb).toBeDisabled())
+  })
+
+  it('hides action bar when fewer than 2 receptions selected', () => {
+    render(<ReceptionsIndex {...invoiceableProps} />)
+    const checkboxes = screen.getAllByRole('checkbox', { name: /Sélectionner la réception/ })
+    fireEvent.click(checkboxes[0])
+    expect(screen.queryByText(/Créer une facture groupée/)).not.toBeInTheDocument()
+  })
+
+  it('shows action bar with correct href when 2 invoiceable selected', () => {
+    render(<ReceptionsIndex {...invoiceableProps} />)
+    const checkboxes = screen.getAllByRole('checkbox', { name: /Sélectionner la réception/ })
+    fireEvent.click(checkboxes[0])
+    fireEvent.click(checkboxes[1])
+    const link = screen.getByRole('link', { name: /Créer une facture groupée/ })
+    const href = link.getAttribute('href') ?? ''
+    expect(href).toContain('reception_ids[]=10')
+    expect(href).toContain('reception_ids[]=11')
   })
 })
