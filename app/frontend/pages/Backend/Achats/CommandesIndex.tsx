@@ -2,7 +2,7 @@
 import { type ReactNode, useState, useEffect } from 'react'
 import { router, usePage } from '@inertiajs/react'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
-import AppShell from '../../../components/AppShell'
+import { AppShell } from '../../../components/AppShell'
 import type { CommandesIndexProps, CommandeState } from '../../../types/achat'
 
 const STATE_CONFIG: Record<CommandeState, { label: string; bg: string; color: string }> = {

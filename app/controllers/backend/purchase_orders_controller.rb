@@ -153,7 +153,36 @@ module Backend
 
       respond_to do |format|
         format.html do
-          t3e @purchase_order.attributes, supplier: @purchase_order.supplier.full_name, state: @purchase_order.state_label, label: @purchase_order.label
+          render inertia: 'Backend/Achats/CommandesShow', props: {
+            commande: {
+              id: @purchase_order.id,
+              number: @purchase_order.number,
+              reference_number: @purchase_order.reference_number,
+              state: @purchase_order.state,
+              ordered_at: @purchase_order.ordered_at&.to_date&.iso8601,
+              supplier: { id: @purchase_order.supplier.id, full_name: @purchase_order.supplier.full_name },
+              nature_name: @purchase_order.nature&.name,
+              pretax_amount: @purchase_order.pretax_amount.to_f,
+              amount: @purchase_order.amount.to_f,
+              currency: @purchase_order.currency,
+              description: @purchase_order.description,
+              responsible_name: @purchase_order.responsible&.full_name,
+              items: @purchase_order.items.map { |i|
+                {
+                  id: i.id,
+                  variant_name: i.variant&.name,
+                  conditioning_quantity: i.conditioning_quantity.to_f,
+                  unit_pretax_amount: i.unit_pretax_amount.to_f,
+                  tax_id: i.tax_id,
+                  reduction_percentage: i.reduction_percentage.to_f,
+                  pretax_amount: i.pretax_amount.to_f,
+                  amount: i.amount.to_f
+                }
+              },
+              receptions_count: @purchase_order.receptions.count,
+              destroyable: @purchase_order.destroyable?
+            }
+          }
         end
         format.odt do
           return unless template = DocumentTemplate.find_active_template(:purchases_order, 'odt')
