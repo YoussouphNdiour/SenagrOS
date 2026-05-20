@@ -196,17 +196,40 @@ module Backend
     def show
       return unless @purchase_invoice = find_and_check
 
-      if @purchase_invoice.versions.find_by(event: :create).nil?
-        Version.create!(event: :create, item: @purchase_invoice, created_at: @purchase_invoice.created_at, creator_id: @purchase_invoice.creator_id)
-      end
-      respond_with(@purchase_invoice, methods: %i[taxes_amount affair_closed],
-                   include: { delivery_address: { methods: [:mail_coordinate] },
-                              supplier: { methods: [:picture_path], include: { default_mail_address: { methods: [:mail_coordinate] } } },
-                              parcels: { include: :items },
-                              affair: { methods: [:balance], include: [purchase_payments: { include: :mode }] },
-                              items: { methods: %i[taxes_amount tax_name tax_short_label], include: [:variant] } }) do |format|
+      respond_to do |format|
         format.html do
-          t3e @purchase_invoice.attributes, supplier: @purchase_invoice.supplier.full_name, state: @purchase_invoice.state_label, label: @purchase_invoice.label
+          render inertia: 'Backend/Achats/FacturesShow', props: {
+            facture: {
+              id: @purchase_invoice.id,
+              number: @purchase_invoice.number,
+              reference_number: @purchase_invoice.reference_number,
+              invoiced_at: @purchase_invoice.invoiced_at&.to_date&.iso8601,
+              supplier: { id: @purchase_invoice.supplier.id, full_name: @purchase_invoice.supplier.full_name },
+              nature_name: @purchase_invoice.nature&.name,
+              pretax_amount: @purchase_invoice.pretax_amount.to_f,
+              amount: @purchase_invoice.amount.to_f,
+              currency: @purchase_invoice.currency,
+              reconciliation_state: @purchase_invoice.reconciliation_state,
+              unpaid: @purchase_invoice.unpaid?,
+              description: @purchase_invoice.description,
+              payment_delay: @purchase_invoice.payment_delay,
+              responsible_name: @purchase_invoice.responsible&.full_name,
+              items: @purchase_invoice.items.map { |i|
+                {
+                  id: i.id,
+                  variant_name: i.variant&.name,
+                  conditioning_quantity: i.conditioning_quantity.to_f,
+                  unit_pretax_amount: i.unit_pretax_amount.to_f,
+                  tax_id: i.tax_id,
+                  reduction_percentage: i.reduction_percentage.to_f,
+                  pretax_amount: i.pretax_amount.to_f,
+                  amount: i.amount.to_f
+                }
+              },
+              destroyable: @purchase_invoice.destroyable?,
+              updatable: !@purchase_invoice.linked_to_tax_declaration?
+            }
+          }
         end
       end
     end
