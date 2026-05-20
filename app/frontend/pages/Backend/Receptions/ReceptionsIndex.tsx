@@ -24,6 +24,7 @@ export default function ReceptionsIndex({ receptions, filters, meta }: Reception
   useEffect(() => { setQ(filters.q ?? '') }, [filters.q])
 
   function search() {
+    setSelectedIds(new Set())
     router.get('/backend/receptions', { q, state: selectedStates }, { preserveState: true })
   }
 
@@ -47,7 +48,9 @@ export default function ReceptionsIndex({ receptions, filters, meta }: Reception
     }
   }
 
-  const groupedInvoiceHref = `/backend/purchase_invoices/new?${[...selectedIds].map(id => `reception_ids[]=${id}`).join('&')}`
+  const groupedInvoiceHref = selectedIds.size >= 2
+    ? `/backend/purchase_invoices/new?${[...selectedIds].map(id => `reception_ids[]=${id}`).join('&')}`
+    : '#'
 
   const card: React.CSSProperties = { background: 'var(--color-bg-card)', borderRadius: '0.5rem', border: '1px solid var(--color-border)' }
   const th: React.CSSProperties = { padding: '0.75rem 1rem', textAlign: 'left', fontSize: '0.8125rem', color: 'var(--color-text-muted)', fontWeight: 600, borderBottom: '1px solid var(--color-border)' }
@@ -97,18 +100,20 @@ export default function ReceptionsIndex({ receptions, filters, meta }: Reception
       </div>
 
       {/* Action bar — visible only when ≥2 invoiceable receptions are checked */}
-      {selectedIds.size >= 2 && (
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.75rem 1rem', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '0.5rem', marginBottom: '1rem' }}>
-          <span style={{ fontSize: '0.9375rem', color: '#1e40af' }}>
-            {selectedIds.size} réception(s) sélectionnée(s)
-          </span>
-          <a href={groupedInvoiceHref} style={{ textDecoration: 'none' }}>
-            <button type="button" style={{ background: '#166534', color: '#fff', border: 'none', borderRadius: '0.5rem', padding: '0.5rem 1rem', cursor: 'pointer', fontWeight: 500, fontSize: '0.9rem' }}>
-              Créer une facture groupée
-            </button>
-          </a>
-        </div>
-      )}
+      <div role="status" aria-live="polite" aria-atomic="true">
+        {selectedIds.size >= 2 && (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.75rem 1rem', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '0.5rem', marginBottom: '1rem' }}>
+            <span style={{ fontSize: '0.9375rem', color: '#1e40af' }}>
+              {selectedIds.size} réception(s) sélectionnée(s)
+            </span>
+            <a href={groupedInvoiceHref} style={{ textDecoration: 'none' }}>
+              <button type="button" style={{ background: '#166534', color: '#fff', border: 'none', borderRadius: '0.5rem', padding: '0.5rem 1rem', cursor: 'pointer', fontWeight: 500, fontSize: '0.9rem' }}>
+                Créer une facture groupée
+              </button>
+            </a>
+          </div>
+        )}
+      </div>
 
       {/* Table */}
       <div style={{ ...card, overflowX: 'auto' }}>
@@ -193,12 +198,12 @@ export default function ReceptionsIndex({ receptions, filters, meta }: Reception
         </span>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           {meta.current_page > 1 && (
-            <button type="button" onClick={() => router.get('/backend/receptions', { q, state: selectedStates, page: meta.current_page - 1 })} style={{ padding: '0.25rem 0.75rem', border: '1px solid var(--color-border)', borderRadius: '0.375rem', cursor: 'pointer', background: 'var(--color-bg-card)' }}>
+            <button type="button" onClick={() => { setSelectedIds(new Set()); router.get('/backend/receptions', { q, state: selectedStates, page: meta.current_page - 1 }) }} style={{ padding: '0.25rem 0.75rem', border: '1px solid var(--color-border)', borderRadius: '0.375rem', cursor: 'pointer', background: 'var(--color-bg-card)' }}>
               Précédent
             </button>
           )}
           {meta.current_page < meta.total_pages && (
-            <button type="button" onClick={() => router.get('/backend/receptions', { q, state: selectedStates, page: meta.current_page + 1 })} style={{ padding: '0.25rem 0.75rem', border: '1px solid var(--color-border)', borderRadius: '0.375rem', cursor: 'pointer', background: 'var(--color-bg-card)' }}>
+            <button type="button" onClick={() => { setSelectedIds(new Set()); router.get('/backend/receptions', { q, state: selectedStates, page: meta.current_page + 1 }) }} style={{ padding: '0.25rem 0.75rem', border: '1px solid var(--color-border)', borderRadius: '0.375rem', cursor: 'pointer', background: 'var(--color-bg-card)' }}>
               Suivant
             </button>
           )}

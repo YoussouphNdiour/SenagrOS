@@ -101,10 +101,20 @@ describe('ReceptionsIndex', () => {
     expect(checkboxes[0]).toBeEnabled()
   })
 
-  it('renders disabled checkbox for non-invoiceable reception', () => {
-    render(<ReceptionsIndex {...defaultProps} />)
-    const checkboxes = screen.getAllByRole('checkbox', { name: /Sélectionner la réception/ })
-    checkboxes.forEach(cb => expect(cb).toBeDisabled())
+  it('renders disabled checkbox for non-invoiceable and enabled for invoiceable', () => {
+    const mixedProps: ReceptionsIndexProps = {
+      receptions: [
+        { ...invoiceableProps.receptions[0] },           // invoiceable: true  (id: 10, REC-010)
+        { ...defaultProps.receptions[0], id: 99, number: 'REC-099', invoiceable: false },  // invoiceable: false
+      ],
+      filters: { q: '', state: [] },
+      meta: { current_page: 1, total_pages: 1, total_count: 2 },
+    }
+    render(<ReceptionsIndex {...mixedProps} />)
+    const invoiceableCb = screen.getByRole('checkbox', { name: /Sélectionner la réception REC-010/ })
+    const nonInvoiceableCb = screen.getByRole('checkbox', { name: /Sélectionner la réception REC-099/ })
+    expect(invoiceableCb).toBeEnabled()
+    expect(nonInvoiceableCb).toBeDisabled()
   })
 
   it('hides action bar when fewer than 2 receptions selected', () => {
