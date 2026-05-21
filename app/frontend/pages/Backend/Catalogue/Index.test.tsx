@@ -18,6 +18,7 @@ const mockProduit = {
   unit_name: 'kg',
   description: null,
   dead_at: null,
+  born_at: null,
 }
 
 function renderIndex(overrides: Partial<CatalogueIndexProps> = {}) {

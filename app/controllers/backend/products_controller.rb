@@ -488,7 +488,8 @@ module Backend
           population: (product.population.to_f rescue 0.0),
           unit_name: product.conditioning_unit&.name || product.variant&.default_unit&.name || '',
           description: product.description,
-          dead_at: product.dead_at&.to_date&.iso8601
+          dead_at: product.dead_at&.to_date&.iso8601,
+          born_at: product.born_at&.to_date&.iso8601
         }
       end
   end

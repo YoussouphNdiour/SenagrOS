@@ -17,6 +17,19 @@ function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })
 }
 
+function computeAge(bornAtIso: string): string {
+  const born = new Date(bornAtIso)
+  const now = new Date()
+  const months = (now.getFullYear() - born.getFullYear()) * 12 + (now.getMonth() - born.getMonth())
+  if (months < 1) return "Moins d'1 mois"
+  if (months < 12) return `${months} mois`
+  const years = Math.floor(months / 12)
+  const rem = months % 12
+  return rem > 0
+    ? `${years} an${years > 1 ? 's' : ''} ${rem} mois`
+    : `${years} an${years > 1 ? 's' : ''}`
+}
+
 export default function CatalogueShow({ produit, movements, movement_errors }: CatalogueShowProps) {
   const typeCfg = TYPE_CONFIG[produit.produit_type]
   const [delta, setDelta] = useState('')
@@ -83,6 +96,17 @@ export default function CatalogueShow({ produit, movements, movement_errors }: C
           </p>
           <p className="text-sm" style={{ color: 'var(--color-text)' }}>{produit.number}</p>
         </div>
+
+        {(produit.produit_type === 'Animal' || produit.produit_type === 'Plant') && produit.born_at && (
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: 'var(--color-text-muted)' }}>
+              Âge
+            </p>
+            <p className="text-sm font-medium" style={{ color: 'var(--color-text)' }}>
+              {computeAge(produit.born_at)}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Movements */}

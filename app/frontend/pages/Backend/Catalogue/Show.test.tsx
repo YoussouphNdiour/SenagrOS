@@ -17,6 +17,7 @@ const mockProduit = {
   unit_name: 'kg',
   description: null,
   dead_at: null,
+  born_at: null,
 }
 
 const mockMovement = {
@@ -91,5 +92,19 @@ describe('CatalogueShow', () => {
       expect.objectContaining({ delta: '5' }),
       expect.any(Object)
     )
+  })
+
+  it('shows age in header for Animal type when born_at is set', () => {
+    renderShow({
+      produit: { ...mockProduit, produit_type: 'Animal' as const, born_at: '2023-01-15T00:00:00Z' },
+    })
+    expect(screen.getByText(/Âge/)).toBeInTheDocument()
+  })
+
+  it('does not show Âge label for Matter type even with born_at set', () => {
+    renderShow({
+      produit: { ...mockProduit, produit_type: 'Matter' as const, born_at: '2023-01-15T00:00:00Z' },
+    })
+    expect(screen.queryByText(/Âge/)).not.toBeInTheDocument()
   })
 })

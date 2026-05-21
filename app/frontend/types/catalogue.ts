@@ -14,6 +14,7 @@ export interface Produit {
   unit_name: string
   description: string | null
   dead_at: string | null
+  born_at: string | null
 }
 
 export interface ProduitMovement {
