@@ -29,7 +29,33 @@ export interface CatalogueIndexProps {
   meta: { total_count: number; current_page: number; total_pages: number }
 }
 
+export interface MovementFormErrors {
+  delta?: string[]
+  mouvement_type?: string[]
+  started_at?: string[]
+}
+
 export interface CatalogueShowProps {
   produit: Produit
   movements: ProduitMovement[]
+  movement_errors?: MovementFormErrors
+}
+
+export type MouvementType =
+  | 'purchase'
+  | 'sale'
+  | 'consumption'
+  | 'birth'
+  | 'death'
+  | 'butchery'
+  | 'loan'
+
+export const MOUVEMENT_LABELS: Record<MouvementType, string> = {
+  purchase:    'Achat',
+  sale:        'Vente',
+  consumption: 'Consommation',
+  birth:       'Naissance',
+  death:       'Décès',
+  butchery:    'Abattage',
+  loan:        'Prêt',
 }
