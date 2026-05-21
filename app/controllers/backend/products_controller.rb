@@ -78,6 +78,46 @@ module Backend
       }
     end
 
+    def create_movement
+      return unless @product = find_and_check(:product)
+
+      delta       = params[:delta].to_f
+      description = params[:mouvement_type].to_s
+      started_at  = params[:started_at].present? ? Time.zone.parse(params[:started_at]) : Time.zone.now
+
+      # Validate description against allowed enum values
+      allowed = %w[birth purchase loan butchery consumption sale death]
+      description = 'purchase' unless allowed.include?(description)
+
+      movement = ProductMovement.new(
+        product_id: @product.id,
+        delta:       delta,
+        started_at:  started_at,
+        description: description
+      )
+
+      if movement.save
+        redirect_to backend_product_path(@product)
+      else
+        movements = ProductMovement.where(product_id: @product.id)
+                                   .order(started_at: :desc)
+                                   .limit(20)
+                                   .map { |mv|
+                                     {
+                                       delta:       mv.delta.to_f,
+                                       population:  mv.population.to_f,
+                                       started_at:  mv.started_at.iso8601,
+                                       description: mv.description
+                                     }
+                                   }
+        render inertia: 'Backend/Catalogue/Show', props: {
+          produit:         produit_json(@product),
+          movements:       movements,
+          movement_errors: movement.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v }
+        }, status: :unprocessable_entity
+      end
+    end
+
     manage_restfully t3e: { nature: :nature_name }, subclass_inheritance: true, multipart: true
     manage_restfully_picture
 
