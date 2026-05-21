@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { Sprout, Map as MapIcon, Activity, CalendarClock, UserCog, Layers, PawPrint, AlertTriangle } from 'lucide-react'
+import { Sprout, Map as MapIcon, Activity, CalendarClock, UserCog, Layers, PawPrint, AlertTriangle, Wallet } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
 import { KpiCard } from '../../../components/dashboard/KpiCard'
 import { WeatherWidget } from '../../../components/dashboard/WeatherWidget'
@@ -37,6 +37,7 @@ function Home({ kpis, parcelles, recent_activity, weather, farm, alerts }: Dashb
         <KpiCard title="Travailleurs actifs"     value={kpis.workers_count}          icon={<UserCog size={16} />} />
         <KpiCard title="Productions"             value={kpis.productions_count}      icon={<Layers size={16} />} />
         <KpiCard title="Animaux vivants"         value={kpis.animals_count}          icon={<PawPrint size={16} />} />
+        <KpiCard title="Dépenses campagne"           value={kpis.expenses_xof}           unit="XOF" icon={<Wallet size={16} />} />
       </div>
 
       {alerts.length > 0 && (

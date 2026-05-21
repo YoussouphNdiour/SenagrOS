@@ -54,7 +54,7 @@ module Backend
           campaign:          safe_campaign_json,
           area_ha:           safe_area_ha,
           interventions:     safe_intervention_counts,
-          expenses_xof:      nil,
+          expenses_xof:      safe_expenses_xof,
           workers_count:     safe_workers_count,
           productions_count: safe_productions_count,
           animals_count:     safe_animals_count
@@ -171,6 +171,19 @@ module Backend
         ActivityProduction.of_campaign(current_campaign).count
       rescue ActiveRecord::StatementInvalid, PG::Error, NoMethodError
         0
+      end
+
+      def safe_expenses_xof
+        started = current_campaign&.started_on
+        return nil unless started
+
+        stopped = current_campaign&.stopped_on || Time.zone.today
+        PurchaseItem.joins(:purchase)
+                    .where('purchases.invoiced_at::date BETWEEN ? AND ?', started, stopped)
+                    .sum(:pretax_amount)
+                    .to_f
+      rescue ActiveRecord::StatementInvalid, PG::Error, NoMethodError
+        nil
       end
 
       def self.build_centralizing_query

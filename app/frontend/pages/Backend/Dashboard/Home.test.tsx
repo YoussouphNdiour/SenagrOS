@@ -109,4 +109,17 @@ describe('Dashboard Home', () => {
     expect(screen.getByText('Retard')).toBeInTheDocument()
     expect(screen.getByText('Traitement herbicide')).toBeInTheDocument()
   })
+
+  it('renders Dépenses KPI card when expenses_xof is a number', () => {
+    render(<Home {...defaultProps} kpis={{ ...defaultProps.kpis, expenses_xof: 125000 }} />)
+    expect(screen.getByText('Dépenses campagne')).toBeInTheDocument()
+    expect(screen.getByText('125000')).toBeInTheDocument()
+  })
+
+  it('renders Dépenses KPI card with dash when expenses_xof is null', () => {
+    render(<Home {...defaultProps} kpis={{ ...defaultProps.kpis, expenses_xof: null }} />)
+    expect(screen.getByText('Dépenses campagne')).toBeInTheDocument()
+    // KpiCard renders '—' for null values
+    expect(screen.getByText('—')).toBeInTheDocument()
+  })
 })
