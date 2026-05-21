@@ -171,6 +171,8 @@ Rails.application.routes.draw do
       end
     end
 
+    get 'alerts', to: 'alerts#index', as: :backend_alerts_page
+
     resources :debt_transfers, path: 'debt-transfers', only: %i[create destroy]
 
     resources :helps, only: %i[index show] do
