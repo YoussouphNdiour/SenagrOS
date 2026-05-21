@@ -11,13 +11,14 @@ export interface KpiData {
   expenses_xof: number | null
   workers_count: number
   productions_count: number
+  animals_count: number
 }
 
 export interface Parcelle {
   id: number
   name: string
   area_ha: number
-  geojson: string // Raw GeoJSON string — parse with JSON.parse() in component
+  geojson: string
 }
 
 export interface RecentIntervention {
@@ -47,10 +48,18 @@ export interface FarmInfo {
   timezone: string
 }
 
+export interface DashboardAlert {
+  type: 'intervention_overdue' | 'animal_dead'
+  label: string
+  href: string
+  detail: string
+}
+
 export interface DashboardHomeProps {
   kpis: KpiData
   parcelles: Parcelle[]
   recent_activity: RecentIntervention[]
   weather: WeatherData | null
   farm: FarmInfo
+  alerts: DashboardAlert[]
 }

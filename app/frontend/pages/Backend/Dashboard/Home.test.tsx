@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import Home from './Home'
-import type { DashboardHomeProps } from '../../../types/dashboard'
+import type { DashboardHomeProps, DashboardAlert } from '../../../types/dashboard'
 
 const defaultProps: DashboardHomeProps = {
   kpis: {
@@ -10,6 +10,7 @@ const defaultProps: DashboardHomeProps = {
     expenses_xof: null,
     workers_count: 5,
     productions_count: 3,
+    animals_count: 8,
   },
   parcelles: [
     {
@@ -29,6 +30,7 @@ const defaultProps: DashboardHomeProps = {
     forecast: [{ day: 'Jeu', temp_max: 36, temp_min: 28, icon: '01d' }],
   },
   farm: { name: 'Ferme Baobab', locale: 'fr', timezone: 'Africa/Dakar' },
+  alerts: [],
 }
 
 describe('Dashboard Home', () => {
@@ -66,5 +68,45 @@ describe('Dashboard Home', () => {
     render(<Home {...defaultProps} />)
     expect(screen.getByTestId('map-container')).toBeInTheDocument()
     expect(screen.getByText('Semis mil')).toBeInTheDocument()
+  })
+
+  it('renders Animaux vivants KPI with animals_count value', () => {
+    render(<Home {...defaultProps} />)
+    expect(screen.getByText('Animaux vivants')).toBeInTheDocument()
+    expect(screen.getByText('8')).toBeInTheDocument()
+  })
+
+  it('hides alertes section when alerts is empty', () => {
+    render(<Home {...defaultProps} />)
+    expect(screen.queryByText('Alertes')).not.toBeInTheDocument()
+  })
+
+  it('shows alertes section with alert items when alerts is non-empty', () => {
+    const alerts: DashboardAlert[] = [
+      {
+        type: 'animal_dead',
+        label: 'Vache Bêta',
+        href: '/backend/animals/42',
+        detail: 'décédé le 15/05/2026',
+      },
+    ]
+    render(<Home {...defaultProps} alerts={alerts} />)
+    expect(screen.getByText('Alertes')).toBeInTheDocument()
+    expect(screen.getByText('Vache Bêta')).toBeInTheDocument()
+    expect(screen.getByText('décédé le 15/05/2026')).toBeInTheDocument()
+  })
+
+  it('shows Retard badge for intervention_overdue alert type', () => {
+    const alerts: DashboardAlert[] = [
+      {
+        type: 'intervention_overdue',
+        label: 'Traitement herbicide',
+        href: '/backend/interventions/7',
+        detail: 'commencée il y a 10 jours',
+      },
+    ]
+    render(<Home {...defaultProps} alerts={alerts} />)
+    expect(screen.getByText('Retard')).toBeInTheDocument()
+    expect(screen.getByText('Traitement herbicide')).toBeInTheDocument()
   })
 })
