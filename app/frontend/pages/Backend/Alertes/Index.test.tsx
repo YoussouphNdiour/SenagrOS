@@ -50,4 +50,16 @@ describe('AlertesIndex', () => {
     renderIndex({ alertes: [], counts: { intervention_overdue: 0, animal_dead: 0, worker_departed: 0 } })
     expect(screen.getByText(/Aucune alerte/)).toBeInTheDocument()
   })
+
+  it('renders a severity dot for each alert', () => {
+    renderIndex()
+    const dots = screen.getAllByLabelText(/Sévérité/)
+    expect(dots.length).toBeGreaterThanOrEqual(1)
+  })
+
+  it('renders severity dot with aria-label matching the severity level', () => {
+    renderIndex()
+    // mockAlertes[0] has severity 'high'
+    expect(screen.getByLabelText('Sévérité high')).toBeInTheDocument()
+  })
 })

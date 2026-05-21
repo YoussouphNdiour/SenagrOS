@@ -2,6 +2,8 @@ module Backend
   class AlertsController < Backend::BaseController
     layout 'inertia', only: [:index]
 
+    SEVERITY_ORDER = { 'high' => 0, 'medium' => 1, 'low' => 2 }.freeze
+
     def index
       overdue = Intervention.where(state: 'in_progress')
                             .where('started_at < ?', 7.days.ago)
@@ -40,7 +42,8 @@ module Backend
                                    severity: 'low' }
                                }
 
-      alertes = overdue + dead_animals + departed_workers
+      alertes = (overdue + dead_animals + departed_workers)
+                  .sort_by { |a| SEVERITY_ORDER[a[:severity].to_s] || 99 }
 
       render inertia: 'Backend/Alertes/Index', props: {
         alertes: alertes,

@@ -11,6 +11,12 @@ const TYPE_CONFIG: Record<AlerteType, { label: string; bg: string; color: string
 
 const ALERT_ORDER: AlerteType[] = ['intervention_overdue', 'animal_dead', 'worker_departed']
 
+const SEVERITY_COLOR: Record<string, string> = {
+  high:   '#dc2626',
+  medium: '#f59e0b',
+  low:    '#6b7280',
+}
+
 export default function AlertesIndex({ alertes, counts }: AlertesIndexProps) {
   const card: React.CSSProperties = {
     background: 'var(--color-bg-card)',
@@ -60,6 +66,10 @@ export default function AlertesIndex({ alertes, counts }: AlertesIndexProps) {
               <ul style={{ listStyle: 'none', margin: 0, padding: 0, display: 'flex', flexDirection: 'column', gap: '0.625rem' }}>
                 {group.map(alerte => (
                   <li key={alerte.id} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <span
+                      aria-label={`Sévérité ${alerte.severity}`}
+                      style={{ width: '8px', height: '8px', borderRadius: '50%', flexShrink: 0, background: SEVERITY_COLOR[alerte.severity] ?? '#6b7280' }}
+                    />
                     <span style={{ background: cfg.bg, color: cfg.color, fontSize: '0.7rem', fontWeight: 600, padding: '0.125rem 0.5rem', borderRadius: '9999px' }}>
                       {cfg.label}
                     </span>
