@@ -1,10 +1,11 @@
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
+import userEvent from '@testing-library/user-event'
 import CatalogueShow from './Show'
 import type { CatalogueShowProps } from '../../../types/catalogue'
 
 vi.mock('@inertiajs/react', () => ({
-  router: { get: vi.fn() },
+  router: { get: vi.fn(), post: vi.fn() },
 }))
 
 const mockProduit = {
@@ -60,5 +61,35 @@ describe('CatalogueShow', () => {
   it('shows empty state message when movements is empty', () => {
     renderShow({ movements: [] })
     expect(screen.getByText('Aucun mouvement enregistré')).toBeInTheDocument()
+  })
+
+  it('renders movement form', () => {
+    renderShow()
+    expect(screen.getByRole('form', { name: 'Formulaire mouvement' })).toBeInTheDocument()
+  })
+
+  it('renders delta number input', () => {
+    renderShow()
+    expect(screen.getByPlaceholderText(/ex: 10 ou -5/)).toBeInTheDocument()
+  })
+
+  it('renders mouvement type select with Achat as default', () => {
+    renderShow()
+    const select = screen.getByRole('combobox')
+    expect(select).toBeInTheDocument()
+    expect((select as HTMLSelectElement).value).toBe('purchase')
+  })
+
+  it('calls router.post on form submit', async () => {
+    const { router } = await import('@inertiajs/react')
+    renderShow()
+    const deltaInput = screen.getByPlaceholderText(/ex: 10 ou -5/)
+    await userEvent.type(deltaInput, '5')
+    await userEvent.click(screen.getByRole('button', { name: /Enregistrer le mouvement/ }))
+    expect(router.post).toHaveBeenCalledWith(
+      '/backend/products/1/movements',
+      expect.objectContaining({ delta: '5' }),
+      expect.any(Object)
+    )
   })
 })
