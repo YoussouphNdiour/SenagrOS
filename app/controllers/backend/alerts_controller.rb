@@ -50,7 +50,8 @@ module Backend
           worker_departed: departed_workers.size
         }
       }
-    rescue ActiveRecord::StatementInvalid, PG::Error
+    rescue ActiveRecord::StatementInvalid, PG::Error => e
+      Rails.logger.error("[AlertsController#index] DB error: #{e.message}")
       render inertia: 'Backend/Alertes/Index', props: {
         alertes: [],
         counts: { intervention_overdue: 0, animal_dead: 0, worker_departed: 0 }
