@@ -38,5 +38,49 @@ module Backend
     def safe_campaign_json
       current_campaign&.as_json(only: %i[name started_on stopped_on])
     end
+
+    # Nombre d'animaux vivants (dead_at IS NULL).
+    def safe_animals_count
+      Animal.where(dead_at: nil).count
+    rescue ActiveRecord::StatementInvalid, PG::Error
+      0
+    end
+
+    # Alertes dashboard : interventions en retard + animaux récemment décédés.
+    # Ruby 2.6 compatible : pas de filter_map, pas de then, pas de yield_self.
+    def safe_alerts
+      overdue = Intervention.where(state: 'in_progress')
+                            .where('started_at < ?', 7.days.ago)
+                            .order(started_at: :asc)
+                            .limit(5)
+                            .select { |i| i.name.present? }
+                            .map { |i|
+                              days = ((Time.zone.now - i.started_at) / 86400).round
+                              {
+                                type: 'intervention_overdue',
+                                label: i.name,
+                                href: "/backend/interventions/#{i.id}",
+                                detail: "commencée il y a #{days} jour#{days > 1 ? 's' : ''}"
+                              }
+                            }
+
+      dead_animals = Animal.where('dead_at IS NOT NULL')
+                           .where('dead_at >= ?', 30.days.ago)
+                           .order(dead_at: :desc)
+                           .limit(5)
+                           .select { |a| a.name.present? }
+                           .map { |a|
+                             {
+                               type: 'animal_dead',
+                               label: a.name,
+                               href: "/backend/animals/#{a.id}",
+                               detail: "décédé le #{a.dead_at.to_date.strftime('%d/%m/%Y')}"
+                             }
+                           }
+
+      overdue + dead_animals
+    rescue ActiveRecord::StatementInvalid, PG::Error
+      []
+    end
   end
 end

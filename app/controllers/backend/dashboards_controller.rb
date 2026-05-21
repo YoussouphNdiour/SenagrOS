@@ -56,7 +56,8 @@ module Backend
           interventions:     safe_intervention_counts,
           expenses_xof:      nil,
           workers_count:     safe_workers_count,
-          productions_count: safe_productions_count
+          productions_count: safe_productions_count,
+          animals_count:     safe_animals_count
         },
         parcelles:       parcelles,
         recent_activity: recent,
@@ -65,7 +66,8 @@ module Backend
           name:     safe_company_name,
           locale:   I18n.locale.to_s,
           timezone: Time.zone.name
-        }
+        },
+        alerts: safe_alerts
       }
     end
 
