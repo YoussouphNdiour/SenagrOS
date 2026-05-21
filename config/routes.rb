@@ -1152,7 +1152,11 @@ Rails.application.routes.draw do
       end
     end
 
-    resources :products, concerns: %i[products many]
+    resources :products, concerns: %i[products many] do
+      member do
+        post :create_movement, path: 'movements'
+      end
+    end
 
     resources :projects, concerns: %i[list unroll] do
       member do
