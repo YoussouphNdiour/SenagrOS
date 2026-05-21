@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react'
 import { router } from '@inertiajs/react'
 import { AppShell } from '../../../components/AppShell'
-import type { BudgetShowProps } from '../../../types/budget'
+import type { BudgetShowProps, PurchaseLine } from '../../../types/budget'
 
-export default function BudgetShow({ budget }: BudgetShowProps) {
+export default function BudgetShow({ budget, purchase_lines, total_pretax_amount }: BudgetShowProps) {
   const card: React.CSSProperties = {
     background: 'var(--color-bg-card)',
     borderRadius: '0.5rem',
@@ -72,6 +72,52 @@ export default function BudgetShow({ budget }: BudgetShowProps) {
         >
           Retour
         </button>
+      </div>
+
+      {/* Purchase lines */}
+      <div style={{ marginTop: '2rem' }}>
+        <h2 className="text-base font-semibold mb-3" style={{ color: 'var(--color-text)' }}>
+          Lignes d'achat ({purchase_lines.length})
+        </h2>
+        {purchase_lines.length === 0 ? (
+          <p className="text-sm py-4 text-center" style={{ color: 'var(--color-text-muted)' }}>
+            Aucune ligne d'achat liée à ce budget.
+          </p>
+        ) : (
+          <div style={{ background: 'var(--color-bg-card)', borderRadius: '0.5rem', border: '1px solid var(--color-border)', overflow: 'hidden' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg)' }}>
+                  {['Désignation', 'Bon de commande', 'Quantité', 'Montant HT'].map(h => (
+                    <th key={h} className="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {purchase_lines.map((line: PurchaseLine) => (
+                  <tr key={line.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                    <td className="px-4 py-2" style={{ color: 'var(--color-text)' }}>{line.label}</td>
+                    <td className="px-4 py-2" style={{ color: 'var(--color-text-muted)' }}>{line.purchase_number || '—'}</td>
+                    <td className="px-4 py-2 tabular-nums" style={{ color: 'var(--color-text)' }}>{line.quantity}</td>
+                    <td className="px-4 py-2 tabular-nums font-medium" style={{ color: 'var(--color-text)' }}>
+                      {line.pretax_amount.toLocaleString('fr-FR')} {line.currency}
+                    </td>
+                  </tr>
+                ))}
+                <tr style={{ borderTop: '2px solid var(--color-border)', background: 'var(--color-bg)' }}>
+                  <td colSpan={3} className="px-4 py-2 font-semibold text-right" style={{ color: 'var(--color-text)' }}>
+                    Total HT
+                  </td>
+                  <td className="px-4 py-2 tabular-nums font-bold" style={{ color: 'var(--color-text)' }}>
+                    {total_pretax_amount.toLocaleString('fr-FR')} {purchase_lines[0]?.currency ?? 'XOF'}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </div>
   )

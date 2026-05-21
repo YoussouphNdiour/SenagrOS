@@ -16,8 +16,14 @@ const mockBudget = {
   reception_items_count: 1,
 }
 
-function renderShow(overrides: Partial<(typeof mockBudget) & { isacompta_analytic_code: string | null }> = {}) {
-  return render(<BudgetShow budget={{ ...mockBudget, ...overrides }} />)
+function renderShow(overrides: Partial<typeof mockBudget> = {}) {
+  return render(
+    <BudgetShow
+      budget={{ ...mockBudget, ...overrides }}
+      purchase_lines={[]}
+      total_pretax_amount={0}
+    />
+  )
 }
 
 describe('BudgetShow', () => {
@@ -45,5 +51,27 @@ describe('BudgetShow', () => {
     renderShow()
     expect(screen.getByText(/3 article\(s\) d'achat/)).toBeInTheDocument()
     expect(screen.getByText(/1 réception\(s\)/)).toBeInTheDocument()
+  })
+
+  it('shows empty state when no purchase lines', () => {
+    render(<BudgetShow budget={mockBudget} purchase_lines={[]} total_pretax_amount={0} />)
+    expect(screen.getByText(/Aucune ligne d'achat/)).toBeInTheDocument()
+  })
+
+  it('renders purchase lines table when lines are present', () => {
+    const lines = [
+      { id: 1, label: 'Engrais NPK', quantity: 50, pretax_amount: 25000, currency: 'XOF', purchase_number: 'BC-001' },
+    ]
+    render(<BudgetShow budget={mockBudget} purchase_lines={lines} total_pretax_amount={25000} />)
+    expect(screen.getByText('Engrais NPK')).toBeInTheDocument()
+    expect(screen.getByText('BC-001')).toBeInTheDocument()
+  })
+
+  it('renders total pretax amount row', () => {
+    const lines = [
+      { id: 1, label: 'Semences', quantity: 10, pretax_amount: 15000, currency: 'XOF', purchase_number: 'BC-002' },
+    ]
+    render(<BudgetShow budget={mockBudget} purchase_lines={lines} total_pretax_amount={15000} />)
+    expect(screen.getByText('Total HT')).toBeInTheDocument()
   })
 })

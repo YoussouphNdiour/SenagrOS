@@ -1,3 +1,12 @@
+export interface PurchaseLine {
+  id: number
+  label: string
+  quantity: number
+  pretax_amount: number
+  currency: string
+  purchase_number: string
+}
+
 export interface ProjectBudget {
   id: number
   name: string
@@ -24,6 +33,8 @@ export interface BudgetsIndexProps {
 
 export interface BudgetShowProps {
   budget: ProjectBudget
+  purchase_lines: PurchaseLine[]
+  total_pretax_amount: number
 }
 
 export interface BudgetFormProps {

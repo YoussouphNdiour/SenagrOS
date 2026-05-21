@@ -27,7 +27,30 @@ module Backend
     end
 
     def show
-      render inertia: 'Backend/Budgets/Show', props: { budget: budget_json(@budget) }
+      purchase_lines = @budget.purchase_items.includes(:purchase, :variant).map { |item|
+        {
+          id:              item.id,
+          label:           item.label.presence || item.variant_name.to_s,
+          quantity:        item.quantity.to_f,
+          pretax_amount:   item.pretax_amount.to_f,
+          currency:        item.currency.to_s,
+          purchase_number: item.purchase&.number.to_s
+        }
+      }
+      total_pretax = @budget.purchase_items.sum(:pretax_amount).to_f
+
+      render inertia: 'Backend/Budgets/Show', props: {
+        budget:              budget_json(@budget),
+        purchase_lines:      purchase_lines,
+        total_pretax_amount: total_pretax
+      }
+    rescue ActiveRecord::StatementInvalid, PG::Error => e
+      Rails.logger.error("[ProjectBudgetsController#show] DB error: #{e.message}")
+      render inertia: 'Backend/Budgets/Show', props: {
+        budget:              budget_json(@budget),
+        purchase_lines:      [],
+        total_pretax_amount: 0.0
+      }
     end
 
     def new
