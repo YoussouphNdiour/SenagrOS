@@ -61,20 +61,29 @@ module Backend
     def show
       return unless @product = find_and_check(:product)
 
-      movements = ProductMovement.where(product_id: @product.id)
-                                 .order(started_at: :desc)
-                                 .limit(20)
-                                 .map { |mv|
-                                   {
-                                     delta: mv.delta.to_f,
-                                     population: mv.population.to_f,
-                                     started_at: mv.started_at.iso8601,
-                                     description: mv.description
-                                   }
-                                 }
+      page            = [params[:movement_page].to_i, 1].max
+      per_page        = 20
+      movement_filter = params[:movement_type].presence
+
+      mvt_scope = ProductMovement.where(product_id: @product.id)
+      mvt_scope = mvt_scope.where(description: movement_filter) if movement_filter
+      mvt_scope = mvt_scope.order(started_at: :desc)
+
+      total_movements = mvt_scope.count
+      movements = mvt_scope.offset((page - 1) * per_page).limit(per_page).map { |mv|
+        {
+          delta:       mv.delta.to_f,
+          population:  mv.population.to_f,
+          started_at:  mv.started_at.iso8601,
+          description: mv.description
+        }
+      }
+
       render inertia: 'Backend/Catalogue/Show', props: {
-        produit: produit_json(@product),
-        movements: movements
+        produit:         produit_json(@product),
+        movements:       movements,
+        movement_meta:   { total: total_movements, page: page, per_page: per_page },
+        movement_filter: movement_filter
       }
     end
 
@@ -113,6 +122,8 @@ module Backend
         render inertia: 'Backend/Catalogue/Show', props: {
           produit:         produit_json(@product),
           movements:       movements,
+          movement_meta:   { total: movements.size, page: 1, per_page: 20 },
+          movement_filter: nil,
           movement_errors: movement.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v }
         }, status: :unprocessable_entity
       end

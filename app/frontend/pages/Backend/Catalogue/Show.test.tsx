@@ -31,6 +31,8 @@ function renderShow(overrides: Partial<CatalogueShowProps> = {}) {
   const props: CatalogueShowProps = {
     produit: mockProduit,
     movements: [mockMovement],
+    movement_meta: { total: 1, page: 1, per_page: 20 },
+    movement_filter: null,
     ...overrides,
   }
   return render(<CatalogueShow {...props} />)
@@ -76,7 +78,7 @@ describe('CatalogueShow', () => {
 
   it('renders mouvement type select with Achat as default', () => {
     renderShow()
-    const select = screen.getByRole('combobox')
+    const select = screen.getByRole('combobox', { name: 'Type de mouvement' })
     expect(select).toBeInTheDocument()
     expect((select as HTMLSelectElement).value).toBe('purchase')
   })
@@ -106,5 +108,21 @@ describe('CatalogueShow', () => {
       produit: { ...mockProduit, produit_type: 'Matter' as const, born_at: '2023-01-15T00:00:00Z' },
     })
     expect(screen.queryByText(/Âge/)).not.toBeInTheDocument()
+  })
+
+  it('renders movement filter select', () => {
+    renderShow()
+    expect(screen.getByRole('combobox', { name: 'Filtrer les mouvements par type' })).toBeInTheDocument()
+  })
+
+  it('shows pagination when total exceeds per_page', () => {
+    renderShow({ movement_meta: { total: 25, page: 1, per_page: 20 } })
+    expect(screen.getByRole('button', { name: 'Suivant' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Précédent' })).toBeInTheDocument()
+  })
+
+  it('hides pagination when total fits in one page', () => {
+    renderShow({ movement_meta: { total: 5, page: 1, per_page: 20 } })
+    expect(screen.queryByRole('button', { name: 'Suivant' })).not.toBeInTheDocument()
   })
 })

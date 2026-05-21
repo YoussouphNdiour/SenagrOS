@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { AppShell } from '../../../components/AppShell'
-import type { CatalogueShowProps, ProduitType, MouvementType, MovementFormErrors } from '../../../types/catalogue'
+import type { CatalogueShowProps, ProduitType, MouvementType, MovementFormErrors, MovementMeta } from '../../../types/catalogue'
 import { MOUVEMENT_LABELS } from '../../../types/catalogue'
 
 const TYPE_CONFIG: Record<ProduitType, { label: string; bg: string; color: string }> = {
@@ -30,7 +30,7 @@ function computeAge(bornAtIso: string): string {
     : `${years} an${years > 1 ? 's' : ''}`
 }
 
-export default function CatalogueShow({ produit, movements, movement_errors }: CatalogueShowProps) {
+export default function CatalogueShow({ produit, movements, movement_errors, movement_meta, movement_filter }: CatalogueShowProps) {
   const typeCfg = TYPE_CONFIG[produit.produit_type]
   const [delta, setDelta] = useState('')
   const [mouvementType, setMouvementType] = useState<MouvementType>('purchase')
@@ -110,9 +110,31 @@ export default function CatalogueShow({ produit, movements, movement_errors }: C
       </div>
 
       {/* Movements */}
-      <h2 className="text-base font-semibold mb-3" style={{ color: 'var(--color-text)' }}>
-        Mouvements récents
-      </h2>
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="text-base font-semibold" style={{ color: 'var(--color-text)' }}>
+          Mouvements récents
+        </h2>
+        <div className="flex items-center gap-2">
+          <label className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
+            Type :
+          </label>
+          <select
+            aria-label="Filtrer les mouvements par type"
+            value={movement_filter ?? ''}
+            onChange={e => {
+              const val = e.target.value
+              router.get(`/backend/products/${produit.id}`, val ? { movement_type: val } : {})
+            }}
+            className="border rounded px-2 py-1 text-sm"
+            style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}
+          >
+            <option value="">Tous</option>
+            {(Object.keys(MOUVEMENT_LABELS) as MouvementType[]).map(k => (
+              <option key={k} value={k}>{MOUVEMENT_LABELS[k]}</option>
+            ))}
+          </select>
+        </div>
+      </div>
 
       {movements.length === 0 ? (
         <p className="text-sm py-6 text-center" style={{ color: 'var(--color-text-muted)' }}>
@@ -160,6 +182,48 @@ export default function CatalogueShow({ produit, movements, movement_errors }: C
         </div>
       )}
 
+      {movement_meta.total > movement_meta.per_page && (
+        <div className="flex justify-center items-center gap-2 mt-3">
+          <button
+            aria-label="Précédent"
+            disabled={movement_meta.page <= 1}
+            onClick={() => router.get(`/backend/products/${produit.id}`, {
+              movement_page: String(movement_meta.page - 1),
+              ...(movement_filter ? { movement_type: movement_filter } : {}),
+            })}
+            style={{
+              padding: '0.375rem 0.875rem', borderRadius: '0.375rem',
+              border: '1px solid var(--color-border)', background: 'var(--color-bg-card)',
+              cursor: movement_meta.page <= 1 ? 'not-allowed' : 'pointer',
+              opacity: movement_meta.page <= 1 ? 0.5 : 1,
+              color: 'var(--color-text)',
+            }}
+          >
+            Précédent
+          </button>
+          <span className="text-sm px-2" style={{ color: 'var(--color-text-muted)' }}>
+            Page {movement_meta.page} / {Math.ceil(movement_meta.total / movement_meta.per_page)}
+          </span>
+          <button
+            aria-label="Suivant"
+            disabled={movement_meta.page * movement_meta.per_page >= movement_meta.total}
+            onClick={() => router.get(`/backend/products/${produit.id}`, {
+              movement_page: String(movement_meta.page + 1),
+              ...(movement_filter ? { movement_type: movement_filter } : {}),
+            })}
+            style={{
+              padding: '0.375rem 0.875rem', borderRadius: '0.375rem',
+              border: '1px solid var(--color-border)', background: 'var(--color-bg-card)',
+              cursor: movement_meta.page * movement_meta.per_page >= movement_meta.total ? 'not-allowed' : 'pointer',
+              opacity: movement_meta.page * movement_meta.per_page >= movement_meta.total ? 0.5 : 1,
+              color: 'var(--color-text)',
+            }}
+          >
+            Suivant
+          </button>
+        </div>
+      )}
+
       {/* Movement form */}
       <div className="mt-8">
         <h2 className="text-base font-semibold mb-3" style={{ color: 'var(--color-text)' }}>
@@ -198,6 +262,7 @@ export default function CatalogueShow({ produit, movements, movement_errors }: C
                 Type de mouvement
               </label>
               <select
+                aria-label="Type de mouvement"
                 value={mouvementType}
                 onChange={e => setMouvementType(e.target.value as MouvementType)}
                 className="w-full border rounded px-3 py-2 text-sm"

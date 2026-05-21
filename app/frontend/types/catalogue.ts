@@ -36,10 +36,18 @@ export interface MovementFormErrors {
   started_at?: string[]
 }
 
+export interface MovementMeta {
+  total: number
+  page: number
+  per_page: number
+}
+
 export interface CatalogueShowProps {
   produit: Produit
   movements: ProduitMovement[]
   movement_errors?: MovementFormErrors
+  movement_meta: MovementMeta
+  movement_filter: string | null
 }
 
 export type MouvementType =
