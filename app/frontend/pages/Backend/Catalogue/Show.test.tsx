@@ -1,3 +1,4 @@
+import React from 'react'
 import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import userEvent from '@testing-library/user-event'
@@ -6,6 +7,21 @@ import type { CatalogueShowProps } from '../../../types/catalogue'
 
 vi.mock('@inertiajs/react', () => ({
   router: { get: vi.fn(), post: vi.fn() },
+}))
+
+vi.mock('react-leaflet', () => ({
+  MapContainer: ({ children }: { children: React.ReactNode }) => <div data-testid="map-container">{children}</div>,
+  TileLayer: () => <div data-testid="tile-layer" />,
+  Marker: ({ position }: { position: [number, number] }) => <div data-testid="marker" data-position={JSON.stringify(position)} />,
+}))
+
+vi.mock('leaflet/dist/leaflet.css', () => ({}))
+
+vi.mock('leaflet', () => ({
+  default: {
+    Icon: { Default: { mergeOptions: () => {}, prototype: {} } },
+    icon: () => ({}),
+  },
 }))
 
 const mockProduit = {
@@ -18,6 +34,7 @@ const mockProduit = {
   description: null,
   dead_at: null,
   born_at: null,
+  geolocation: null,
 }
 
 const mockMovement = {
@@ -164,5 +181,18 @@ describe('CatalogueShow', () => {
     const link = screen.getByRole('link', { name: /Supprimer/ })
     expect(link).toBeInTheDocument()
     expect(link).toHaveAttribute('data-method', 'delete')
+  })
+
+  it('shows Localisation section when produit has geolocation', () => {
+    renderShow({
+      produit: { ...mockProduit, geolocation: { lat: 14.7167, lng: -17.4677 } },
+    })
+    expect(screen.getByText('Localisation')).toBeInTheDocument()
+    expect(screen.getByTestId('map-container')).toBeInTheDocument()
+  })
+
+  it('hides Localisation section when produit has no geolocation', () => {
+    renderShow({ produit: { ...mockProduit, geolocation: null } })
+    expect(screen.queryByText('Localisation')).not.toBeInTheDocument()
   })
 })

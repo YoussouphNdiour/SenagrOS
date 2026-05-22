@@ -561,6 +561,13 @@ module Backend
                        when 'Plant'              then 'Plant'
                        else                           'Other'
                        end
+        geo = nil
+        begin
+          g = product.initial_geolocation
+          geo = { lat: g.y.to_f, lng: g.x.to_f } if g.present?
+        rescue
+          geo = nil
+        end
         {
           id: product.id,
           name: product.name,
@@ -570,7 +577,8 @@ module Backend
           unit_name: product.conditioning_unit&.name || product.variant&.default_unit&.name || '',
           description: product.description,
           dead_at: product.dead_at&.to_date&.iso8601,
-          born_at: product.born_at&.to_date&.iso8601
+          born_at: product.born_at&.to_date&.iso8601,
+          geolocation: geo
         }
       end
   end

@@ -2,6 +2,8 @@ import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { Pencil, Trash2 } from 'lucide-react'
+import { MapContainer, TileLayer, Marker } from 'react-leaflet'
+import 'leaflet/dist/leaflet.css'
 import { AppShell } from '../../../components/AppShell'
 import type { CatalogueShowProps, InterventionItem, IssueItem, ProduitType, MouvementType, MovementFormErrors, MovementMeta } from '../../../types/catalogue'
 import { MOUVEMENT_LABELS } from '../../../types/catalogue'
@@ -332,6 +334,31 @@ export default function CatalogueShow({ produit, movements, movement_errors, mov
           </div>
         )}
       </div>
+
+      {/* Geolocation map */}
+      {produit.geolocation && (
+        <div className="mb-6">
+          <h2 className="text-base font-semibold mb-3" style={{ color: 'var(--color-text)' }}>
+            Localisation
+          </h2>
+          <div
+            className="rounded-lg overflow-hidden border"
+            style={{ borderColor: 'var(--color-border)', height: '300px' }}
+          >
+            <MapContainer
+              center={[produit.geolocation.lat, produit.geolocation.lng]}
+              zoom={13}
+              style={{ height: '100%', width: '100%' }}
+            >
+              <TileLayer
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+              />
+              <Marker position={[produit.geolocation.lat, produit.geolocation.lng]} />
+            </MapContainer>
+          </div>
+        </div>
+      )}
 
       {/* Movement form */}
       <div className="mt-8">
