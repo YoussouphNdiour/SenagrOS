@@ -34,6 +34,7 @@ function renderShow(overrides: Partial<CatalogueShowProps> = {}) {
     movement_meta: { total: 1, page: 1, per_page: 20 },
     movement_filter: null,
     interventions: [],
+    issues: [],
     ...overrides,
   }
   return render(<CatalogueShow {...props} />)
@@ -137,5 +138,17 @@ describe('CatalogueShow', () => {
       interventions: [{ id: 1, name: 'Traitement herbicide', started_at: '2024-03-01T00:00:00Z', nature: 'record', parameter_type: 'input' }],
     })
     expect(screen.getByText('Traitement herbicide')).toBeInTheDocument()
+  })
+
+  it('shows empty issues message when issues is empty', () => {
+    renderShow()
+    expect(screen.getByText(/Aucun problème/)).toBeInTheDocument()
+  })
+
+  it('renders issue row when issues are present', () => {
+    renderShow({
+      issues: [{ id: 1, name: 'Attaque criquet', nature: 'pest', observed_at: '2024-04-10', state: 'opened', gravity: 4 }],
+    })
+    expect(screen.getByText('Attaque criquet')).toBeInTheDocument()
   })
 })

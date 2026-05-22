@@ -102,12 +102,27 @@ module Backend
           }
         }
 
+      issues = Issue.where(target_type: 'Product', target_id: @product.id)
+                    .order(observed_at: :desc)
+                    .limit(10)
+                    .map { |issue|
+                      {
+                        id:          issue.id,
+                        name:        issue.name.to_s,
+                        nature:      issue.nature.to_s,
+                        observed_at: issue.observed_at&.to_date&.iso8601,
+                        state:       issue.state.to_s,
+                        gravity:     issue.gravity.to_i
+                      }
+                    }
+
       render inertia: 'Backend/Catalogue/Show', props: {
         produit:         produit_json(@product),
         movements:       movements,
         movement_meta:   { total: total_movements, page: page, per_page: per_page },
         movement_filter: movement_filter,
-        interventions:   interventions
+        interventions:   interventions,
+        issues:          issues
       }
     end
 

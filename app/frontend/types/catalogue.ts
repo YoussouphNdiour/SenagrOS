@@ -50,6 +50,15 @@ export interface InterventionItem {
   parameter_type: string
 }
 
+export interface IssueItem {
+  id: number
+  name: string
+  nature: string
+  observed_at: string | null
+  state: string
+  gravity: number
+}
+
 export interface CatalogueShowProps {
   produit: Produit
   movements: ProduitMovement[]
@@ -57,6 +66,7 @@ export interface CatalogueShowProps {
   movement_meta: MovementMeta
   movement_filter: string | null
   interventions: InterventionItem[]
+  issues: IssueItem[]
 }
 
 export type MouvementType =

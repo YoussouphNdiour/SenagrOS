@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { AppShell } from '../../../components/AppShell'
-import type { CatalogueShowProps, InterventionItem, ProduitType, MouvementType, MovementFormErrors, MovementMeta } from '../../../types/catalogue'
+import type { CatalogueShowProps, InterventionItem, IssueItem, ProduitType, MouvementType, MovementFormErrors, MovementMeta } from '../../../types/catalogue'
 import { MOUVEMENT_LABELS } from '../../../types/catalogue'
 
 const TYPE_CONFIG: Record<ProduitType, { label: string; bg: string; color: string }> = {
@@ -30,7 +30,7 @@ function computeAge(bornAtIso: string): string {
     : `${years} an${years > 1 ? 's' : ''}`
 }
 
-export default function CatalogueShow({ produit, movements, movement_errors, movement_meta, movement_filter, interventions }: CatalogueShowProps) {
+export default function CatalogueShow({ produit, movements, movement_errors, movement_meta, movement_filter, interventions, issues }: CatalogueShowProps) {
   const typeCfg = TYPE_CONFIG[produit.produit_type]
   const [delta, setDelta] = useState('')
   const [mouvementType, setMouvementType] = useState<MouvementType>('purchase')
@@ -256,6 +256,51 @@ export default function CatalogueShow({ produit, movements, movement_errors, mov
                     </td>
                     <td className="px-4 py-2" style={{ color: 'var(--color-text-muted)', textTransform: 'capitalize' }}>
                       {intv.parameter_type || '—'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Problèmes */}
+      <div className="mb-6">
+        <h2 className="text-base font-semibold mb-3" style={{ color: 'var(--color-text)' }}>
+          Problèmes ({issues.length})
+        </h2>
+        {issues.length === 0 ? (
+          <p className="text-sm py-4 text-center" style={{ color: 'var(--color-text-muted)' }}>
+            Aucun problème signalé sur ce produit.
+          </p>
+        ) : (
+          <div style={{ background: 'var(--color-bg-card)', borderRadius: '0.5rem', border: '1px solid var(--color-border)', overflow: 'hidden' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg)' }}>
+                  {['Problème', 'Nature', 'Observé le', 'Gravité', 'État'].map(h => (
+                    <th key={h} className="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {issues.map((issue: IssueItem) => (
+                  <tr key={issue.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                    <td className="px-4 py-2 font-medium" style={{ color: 'var(--color-text)' }}>{issue.name}</td>
+                    <td className="px-4 py-2" style={{ color: 'var(--color-text-muted)' }}>{issue.nature}</td>
+                    <td className="px-4 py-2 tabular-nums" style={{ color: 'var(--color-text-muted)' }}>
+                      {issue.observed_at ? new Date(issue.observed_at).toLocaleDateString('fr-FR') : '—'}
+                    </td>
+                    <td className="px-4 py-2 tabular-nums" style={{ color: 'var(--color-text)' }}>{issue.gravity}/5</td>
+                    <td className="px-4 py-2">
+                      <span style={{
+                        fontSize: '0.7rem', fontWeight: 600, padding: '0.125rem 0.5rem', borderRadius: '9999px',
+                        background: issue.state === 'opened' ? '#fef3c7' : issue.state === 'closed' ? '#dcfce7' : '#f3f4f6',
+                        color:      issue.state === 'opened' ? '#92400e' : issue.state === 'closed' ? '#166534' : '#374151',
+                      }}>
+                        {issue.state === 'opened' ? 'Ouvert' : issue.state === 'closed' ? 'Fermé' : 'Abandonné'}
+                      </span>
                     </td>
                   </tr>
                 ))}
