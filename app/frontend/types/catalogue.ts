@@ -16,6 +16,9 @@ export interface Produit {
   dead_at: string | null
   born_at: string | null
   geolocation: { lat: number; lng: number } | null
+  sex: string | null
+  identification_number: string | null
+  filiation_status: string | null
 }
 
 export interface ProduitMovement {

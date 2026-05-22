@@ -20,6 +20,9 @@ const mockProduit = {
   dead_at: null,
   born_at: null,
   geolocation: null,
+  sex: null,
+  identification_number: null,
+  filiation_status: null,
 }
 
 function renderIndex(overrides: Partial<CatalogueIndexProps> = {}) {

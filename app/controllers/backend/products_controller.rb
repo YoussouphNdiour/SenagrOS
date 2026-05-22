@@ -578,7 +578,10 @@ module Backend
           description: product.description,
           dead_at: product.dead_at&.to_date&.iso8601,
           born_at: product.born_at&.to_date&.iso8601,
-          geolocation: geo
+          geolocation: geo,
+          sex:                  (product.respond_to?(:sex) ? product.sex.to_s.presence : nil),
+          identification_number: product.identification_number.presence,
+          filiation_status:     product.filiation_status.presence
         }
       end
   end

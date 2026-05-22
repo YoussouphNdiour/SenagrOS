@@ -38,6 +38,9 @@ const mockProduit = {
   dead_at: null,
   born_at: null,
   geolocation: null,
+  sex: null,
+  identification_number: null,
+  filiation_status: null,
 }
 
 const mockMovement = {
@@ -197,5 +200,26 @@ describe('CatalogueShow', () => {
   it('hides Localisation section when produit has no geolocation', () => {
     renderShow({ produit: { ...mockProduit, geolocation: null } })
     expect(screen.queryByText('Localisation')).not.toBeInTheDocument()
+  })
+
+  it('shows identification number for Animal type when set', () => {
+    renderShow({
+      produit: { ...mockProduit, produit_type: 'Animal' as const, identification_number: 'FR12345678' },
+    })
+    expect(screen.getByText('FR12345678')).toBeInTheDocument()
+  })
+
+  it('shows sex label "Mâle" for Animal type when sex is male', () => {
+    renderShow({
+      produit: { ...mockProduit, produit_type: 'Animal' as const, sex: 'male' },
+    })
+    expect(screen.getByText('Mâle')).toBeInTheDocument()
+  })
+
+  it('hides animal fields for non-Animal type', () => {
+    renderShow({
+      produit: { ...mockProduit, produit_type: 'Matter' as const, identification_number: 'FR12345678' },
+    })
+    expect(screen.queryByText('FR12345678')).not.toBeInTheDocument()
   })
 })

@@ -138,6 +138,41 @@ export default function CatalogueShow({ produit, movements, movement_errors, mov
             </p>
           </div>
         )}
+
+        {produit.produit_type === 'Animal' && produit.identification_number && (
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: 'var(--color-text-muted)' }}>
+              N° identification
+            </p>
+            <p className="text-sm font-medium" style={{ color: 'var(--color-text)' }}>
+              {produit.identification_number}
+            </p>
+          </div>
+        )}
+
+        {produit.produit_type === 'Animal' && produit.sex && (
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: 'var(--color-text-muted)' }}>
+              Sexe
+            </p>
+            <p className="text-sm font-medium" style={{ color: 'var(--color-text)' }}>
+              {produit.sex === 'male' ? 'Mâle' : produit.sex === 'female' ? 'Femelle' : produit.sex}
+            </p>
+          </div>
+        )}
+
+        {produit.produit_type === 'Animal' && produit.filiation_status && (
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide mb-1.5" style={{ color: 'var(--color-text-muted)' }}>
+              Filiation
+            </p>
+            <p className="text-sm font-medium" style={{ color: 'var(--color-text)' }}>
+              {produit.filiation_status === 'certified' ? 'Certifiée'
+                : produit.filiation_status === 'uncertified' ? 'Non certifiée'
+                : 'Inconnue'}
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Movements */}
