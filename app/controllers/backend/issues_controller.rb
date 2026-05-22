@@ -117,7 +117,7 @@ module Backend
 
       @issue.name        = params.dig(:issue, :name) if params.dig(:issue, :name).present?
       @issue.nature      = params.dig(:issue, :nature) if params.dig(:issue, :nature).present?
-      @issue.gravity     = params.dig(:issue, :gravity).to_i
+      @issue.gravity     = params.dig(:issue, :gravity).to_i if params.dig(:issue, :gravity).present?
       @issue.observed_at = params.dig(:issue, :observed_at).presence || @issue.observed_at
       @issue.description = params.dig(:issue, :description).presence
       if @issue.save

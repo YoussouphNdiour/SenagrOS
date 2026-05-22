@@ -1,3 +1,7 @@
+import type { IssueItem } from './issue'
+
+export type { IssueItem }
+
 export type ProduitType =
   | 'Matter'
   | 'Animal'
@@ -54,14 +58,6 @@ export interface InterventionItem {
   parameter_type: string
 }
 
-export interface IssueItem {
-  id: number
-  name: string
-  nature: string
-  observed_at: string | null
-  state: string
-  gravity: number
-}
 
 export interface CatalogueShowProps {
   produit: Produit
