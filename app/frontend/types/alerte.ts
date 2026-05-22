@@ -1,3 +1,7 @@
+import type { IssueItem } from './issue'
+
+export type { IssueItem }
+
 export type AlerteType = 'intervention_overdue' | 'animal_dead' | 'worker_departed'
 
 export interface Alerte {
@@ -16,4 +20,5 @@ export interface AlertesIndexProps {
     animal_dead: number
     worker_departed: number
   }
+  issues: IssueItem[]
 }

@@ -45,19 +45,35 @@ module Backend
       alertes = (overdue + dead_animals + departed_workers)
                   .sort_by { |a| SEVERITY_ORDER[a[:severity].to_s] || 99 }
 
+      issues = Issue.where(state: 'opened')
+                    .order(gravity: :desc)
+                    .limit(10)
+                    .map { |i|
+                      {
+                        id:          i.id,
+                        name:        i.name,
+                        nature:      i.nature.to_s,
+                        gravity:     i.gravity.to_i,
+                        observed_at: i.observed_at&.to_date&.iso8601,
+                        state:       i.state.to_s
+                      }
+                    }
+
       render inertia: 'Backend/Alertes/Index', props: {
         alertes: alertes,
         counts: {
           intervention_overdue: overdue.size,
           animal_dead: dead_animals.size,
           worker_departed: departed_workers.size
-        }
+        },
+        issues: issues
       }
     rescue ActiveRecord::StatementInvalid, PG::Error => e
       Rails.logger.error("[AlertsController#index] DB error: #{e.message}")
       render inertia: 'Backend/Alertes/Index', props: {
         alertes: [],
-        counts: { intervention_overdue: 0, animal_dead: 0, worker_departed: 0 }
+        counts: { intervention_overdue: 0, animal_dead: 0, worker_departed: 0 },
+        issues: []
       }
     end
   end

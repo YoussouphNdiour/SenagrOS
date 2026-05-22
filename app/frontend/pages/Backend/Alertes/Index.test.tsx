@@ -15,7 +15,7 @@ const mockAlertes = [
 ]
 
 function renderIndex(overrides: Partial<AlertesIndexProps> = {}) {
-  return render(<AlertesIndex alertes={mockAlertes} counts={mockCounts} {...overrides} />)
+  return render(<AlertesIndex alertes={mockAlertes} counts={mockCounts} issues={[]} {...overrides} />)
 }
 
 describe('AlertesIndex', () => {
