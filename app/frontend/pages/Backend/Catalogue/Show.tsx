@@ -76,7 +76,7 @@ export default function CatalogueShow({ produit, movements, movement_errors, mov
             data-method="delete"
             data-confirm="Supprimer ce produit ?"
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium no-underline border"
-            style={{ borderColor: '#fca5a5', background: '#fef2f2', color: '#dc2626' }}
+            style={{ borderColor: 'var(--color-danger)', background: 'var(--color-danger-bg)', color: 'var(--color-danger-text)' }}
           >
             <Trash2 size={15} />
             Supprimer
