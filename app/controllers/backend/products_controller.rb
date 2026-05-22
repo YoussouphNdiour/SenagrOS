@@ -21,7 +21,7 @@ require 'csv'
 
 module Backend
   class ProductsController < Backend::BaseController
-    layout 'inertia', only: %i[index show]
+    layout 'inertia', only: %i[index show edit]
 
     def index
       scope = Product.joins(:variant).includes(:variant)
@@ -195,6 +195,37 @@ module Backend
           movement_meta:   { total: movements.size, page: 1, per_page: 20 },
           movement_filter: nil,
           movement_errors: movement.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v }
+        }, status: :unprocessable_entity
+      end
+    end
+
+    def edit
+      return unless @product = find_and_check(:product)
+      render inertia: 'Backend/Catalogue/Form', props: {
+        produit: produit_form_json(@product),
+        errors: {}
+      }
+    end
+
+    def update
+      return unless @product = find_and_check(:product)
+
+      @product.name        = params.dig(:product, :name).presence || @product.name
+      @product.work_number = params.dig(:product, :work_number).presence
+      @product.description = params.dig(:product, :description).presence
+      @product.born_at     = params.dig(:product, :born_at).presence
+      @product.dead_at     = params.dig(:product, :dead_at).presence
+
+      if @product.is_a?(Animal)
+        @product.identification_number = params.dig(:product, :identification_number).presence
+      end
+
+      if @product.save
+        redirect_to backend_product_path(@product)
+      else
+        render inertia: 'Backend/Catalogue/Form', props: {
+          produit: produit_form_json(@product),
+          errors: @product.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v.first }
         }, status: :unprocessable_entity
       end
     end
@@ -582,6 +613,19 @@ module Backend
           sex:                  (product.respond_to?(:sex) ? product.sex.to_s.presence : nil),
           identification_number: product.identification_number.presence,
           filiation_status:     product.filiation_status.presence
+        }
+      end
+
+      def produit_form_json(product)
+        {
+          id:                    product.id,
+          name:                  product.name,
+          produit_type:          produit_json(product)[:produit_type],
+          work_number:           product.work_number.to_s.presence,
+          description:           product.description,
+          born_at:               product.born_at&.to_date&.iso8601,
+          dead_at:               product.dead_at&.to_date&.iso8601,
+          identification_number: product.respond_to?(:identification_number) ? product.identification_number.presence : nil
         }
       end
   end
