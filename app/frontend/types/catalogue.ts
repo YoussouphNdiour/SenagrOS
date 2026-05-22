@@ -91,3 +91,27 @@ export const MOUVEMENT_LABELS: Record<MouvementType, string> = {
   butchery:    'Abattage',
   loan:        'Prêt',
 }
+
+export interface CatalogueFormItem {
+  id: number
+  name: string
+  produit_type: ProduitType
+  work_number: string | null
+  description: string | null
+  born_at: string | null
+  dead_at: string | null
+  identification_number: string | null
+}
+
+export interface CatalogueFormErrors {
+  name?: string
+  work_number?: string
+  description?: string
+  born_at?: string
+  dead_at?: string
+}
+
+export interface CatalogueFormProps {
+  produit: CatalogueFormItem
+  errors: CatalogueFormErrors
+}
