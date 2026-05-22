@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { AppShell } from '../../../components/AppShell'
-import type { CatalogueShowProps, ProduitType, MouvementType, MovementFormErrors, MovementMeta } from '../../../types/catalogue'
+import type { CatalogueShowProps, InterventionItem, ProduitType, MouvementType, MovementFormErrors, MovementMeta } from '../../../types/catalogue'
 import { MOUVEMENT_LABELS } from '../../../types/catalogue'
 
 const TYPE_CONFIG: Record<ProduitType, { label: string; bg: string; color: string }> = {
@@ -30,7 +30,7 @@ function computeAge(bornAtIso: string): string {
     : `${years} an${years > 1 ? 's' : ''}`
 }
 
-export default function CatalogueShow({ produit, movements, movement_errors, movement_meta, movement_filter }: CatalogueShowProps) {
+export default function CatalogueShow({ produit, movements, movement_errors, movement_meta, movement_filter, interventions }: CatalogueShowProps) {
   const typeCfg = TYPE_CONFIG[produit.produit_type]
   const [delta, setDelta] = useState('')
   const [mouvementType, setMouvementType] = useState<MouvementType>('purchase')
@@ -223,6 +223,47 @@ export default function CatalogueShow({ produit, movements, movement_errors, mov
           </button>
         </div>
       )}
+
+      {/* Interventions liées */}
+      <div className="mb-6">
+        <h2 className="text-base font-semibold mb-3" style={{ color: 'var(--color-text)' }}>
+          Interventions liées ({interventions.length})
+        </h2>
+        {interventions.length === 0 ? (
+          <p className="text-sm py-4 text-center" style={{ color: 'var(--color-text-muted)' }}>
+            Aucune intervention liée à ce produit.
+          </p>
+        ) : (
+          <div style={{ background: 'var(--color-bg-card)', borderRadius: '0.5rem', border: '1px solid var(--color-border)', overflow: 'hidden' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg)' }}>
+                  {['Nom', 'Date', 'Rôle'].map(h => (
+                    <th key={h} className="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {interventions.map((intv: InterventionItem) => (
+                  <tr key={intv.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                    <td className="px-4 py-2 font-medium">
+                      <a href={`/backend/interventions/${intv.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'none' }}>
+                        {intv.name || `#${intv.id}`}
+                      </a>
+                    </td>
+                    <td className="px-4 py-2 tabular-nums" style={{ color: 'var(--color-text-muted)' }}>
+                      {intv.started_at ? new Date(intv.started_at).toLocaleDateString('fr-FR') : '—'}
+                    </td>
+                    <td className="px-4 py-2" style={{ color: 'var(--color-text-muted)', textTransform: 'capitalize' }}>
+                      {intv.parameter_type || '—'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
 
       {/* Movement form */}
       <div className="mt-8">

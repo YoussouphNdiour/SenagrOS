@@ -42,12 +42,21 @@ export interface MovementMeta {
   per_page: number
 }
 
+export interface InterventionItem {
+  id: number
+  name: string
+  started_at: string | null
+  nature: string
+  parameter_type: string
+}
+
 export interface CatalogueShowProps {
   produit: Produit
   movements: ProduitMovement[]
   movement_errors?: MovementFormErrors
   movement_meta: MovementMeta
   movement_filter: string | null
+  interventions: InterventionItem[]
 }
 
 export type MouvementType =

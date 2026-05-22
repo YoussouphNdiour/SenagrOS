@@ -85,11 +85,29 @@ module Backend
         }
       }
 
+      intv_params = @product.intervention_product_parameters.includes(:intervention).limit(20)
+      interventions = intv_params
+        .select { |p| p.intervention.present? }
+        .sort_by { |p| p.intervention.started_at || Time.zone.now }
+        .reverse
+        .first(10)
+        .map { |param|
+          i = param.intervention
+          {
+            id:             i.id,
+            name:           i.name.to_s,
+            started_at:     i.started_at&.iso8601,
+            nature:         i.nature.to_s,
+            parameter_type: param.type.to_s.gsub('Intervention', '').downcase
+          }
+        }
+
       render inertia: 'Backend/Catalogue/Show', props: {
         produit:         produit_json(@product),
         movements:       movements,
         movement_meta:   { total: total_movements, page: page, per_page: per_page },
-        movement_filter: movement_filter
+        movement_filter: movement_filter,
+        interventions:   interventions
       }
     end
 

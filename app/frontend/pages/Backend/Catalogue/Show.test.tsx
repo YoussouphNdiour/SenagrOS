@@ -33,6 +33,7 @@ function renderShow(overrides: Partial<CatalogueShowProps> = {}) {
     movements: [mockMovement],
     movement_meta: { total: 1, page: 1, per_page: 20 },
     movement_filter: null,
+    interventions: [],
     ...overrides,
   }
   return render(<CatalogueShow {...props} />)
@@ -124,5 +125,17 @@ describe('CatalogueShow', () => {
   it('hides pagination when total fits in one page', () => {
     renderShow({ movement_meta: { total: 5, page: 1, per_page: 20 } })
     expect(screen.queryByRole('button', { name: 'Suivant' })).not.toBeInTheDocument()
+  })
+
+  it('shows empty interventions message when interventions is empty', () => {
+    renderShow()
+    expect(screen.getByText(/Aucune intervention/)).toBeInTheDocument()
+  })
+
+  it('renders intervention row when interventions are present', () => {
+    renderShow({
+      interventions: [{ id: 1, name: 'Traitement herbicide', started_at: '2024-03-01T00:00:00Z', nature: 'record', parameter_type: 'input' }],
+    })
+    expect(screen.getByText('Traitement herbicide')).toBeInTheDocument()
   })
 })
