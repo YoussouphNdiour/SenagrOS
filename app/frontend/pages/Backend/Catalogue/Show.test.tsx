@@ -16,10 +16,13 @@ vi.mock('react-leaflet', () => ({
 }))
 
 vi.mock('leaflet/dist/leaflet.css', () => ({}))
+vi.mock('leaflet/dist/images/marker-icon.png', () => ({ default: '' }))
+vi.mock('leaflet/dist/images/marker-icon-2x.png', () => ({ default: '' }))
+vi.mock('leaflet/dist/images/marker-shadow.png', () => ({ default: '' }))
 
 vi.mock('leaflet', () => ({
   default: {
-    Icon: { Default: { mergeOptions: () => {}, prototype: {} } },
+    Icon: { Default: { mergeOptions: vi.fn(), prototype: {} } },
     icon: () => ({}),
   },
 }))
