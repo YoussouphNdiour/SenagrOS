@@ -82,4 +82,11 @@ describe('CatalogueIndex', () => {
     expect(link).toBeInTheDocument()
     expect(link).toHaveAttribute('href', '/backend/products/new')
   })
+
+  it('renders "Exporter CSV" link with download attribute', () => {
+    renderIndex()
+    const link = screen.getByRole('link', { name: /Exporter CSV/ })
+    expect(link).toBeInTheDocument()
+    expect(link).toHaveAttribute('download')
+  })
 })

@@ -17,6 +17,8 @@
 # You should have received a copy of the GNU Affero General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+require 'csv'
+
 module Backend
   class ProductsController < Backend::BaseController
     layout 'inertia', only: %i[index show]
@@ -57,11 +59,40 @@ module Backend
       total_pages = [(total_count.to_f / per_page).ceil, 1].max
       paginated = scope.sort_by(&:name)[(current_page - 1) * per_page, per_page] || []
 
-      render inertia: 'Backend/Catalogue/Index', props: {
-        produits: paginated.map { |p| produit_json(p) },
-        filters: { q: params[:q], produit_type: params[:produit_type], etat: params[:etat] },
-        meta: { total_count: total_count, current_page: current_page, total_pages: total_pages }
-      }
+      respond_to do |format|
+        format.html do
+          render inertia: 'Backend/Catalogue/Index', props: {
+            produits: paginated.map { |p| produit_json(p) },
+            filters: { q: params[:q], produit_type: params[:produit_type], etat: params[:etat] },
+            meta: { total_count: total_count, current_page: current_page, total_pages: total_pages }
+          }
+        end
+        format.csv do
+          csv_data = CSV.generate(headers: true) do |csv|
+            csv << ['Nom', 'N°', 'Type', 'Stock', 'Unité', 'État']
+            paginated.each do |p|
+              etat = if p.dead_at
+                       'Inactif'
+                     elsif (p.population.to_f rescue 0.0) == 0
+                       'Épuisé'
+                     else
+                       'Actif'
+                     end
+              csv << [
+                p.name,
+                p.number,
+                p.type.to_s,
+                (p.population.to_f rescue 0.0),
+                (p.conditioning_unit&.name || p.variant&.default_unit&.name || ''),
+                etat
+              ]
+            end
+          end
+          send_data "\xEF\xBB\xBF#{csv_data}",
+                    filename: "catalogue-#{Date.today}.csv",
+                    type: 'text/csv; charset=utf-8'
+        end
+      end
     end
 
     def show

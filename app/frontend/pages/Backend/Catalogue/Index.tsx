@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
-import { Plus } from 'lucide-react'
+import { Download, Plus } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
 import type { CatalogueIndexProps, ProduitType } from '../../../types/catalogue'
 
@@ -31,20 +31,37 @@ export default function CatalogueIndex({ produits, filters, meta }: CatalogueInd
     router.get('/backend/products', { q, produit_type: typeFilter, etat: etatFilter }, { preserveState: true })
   }
 
+  const csvHref = `/backend/products.csv?${new URLSearchParams(
+    Object.fromEntries(
+      Object.entries({ q, produit_type: typeFilter, etat: etatFilter }).filter(([, v]) => v !== '')
+    )
+  ).toString()}`
+
   return (
     <div className="p-8">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold" style={{ color: 'var(--color-text)' }}>
           Catalogue
         </h1>
-        <a
-          href="/backend/products/new"
-          className="flex items-center gap-1.5 px-4 py-2 rounded-md text-sm font-medium no-underline"
-          style={{ background: 'var(--color-primary)', color: '#fff' }}
-        >
-          <Plus size={16} />
-          Nouveau produit
-        </a>
+        <div className="flex items-center gap-2">
+          <a
+            href={csvHref}
+            download
+            className="flex items-center gap-1.5 px-4 py-2 rounded-md text-sm font-medium no-underline border"
+            style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg-card)', color: 'var(--color-text)' }}
+          >
+            <Download size={16} />
+            Exporter CSV
+          </a>
+          <a
+            href="/backend/products/new"
+            className="flex items-center gap-1.5 px-4 py-2 rounded-md text-sm font-medium no-underline"
+            style={{ background: 'var(--color-primary)', color: '#fff' }}
+          >
+            <Plus size={16} />
+            Nouveau produit
+          </a>
+        </div>
       </div>
 
       {/* Filter bar */}
