@@ -1,9 +1,9 @@
 import type { ReactNode } from 'react'
 import { router } from '@inertiajs/react'
 import { AppShell } from '../../../components/AppShell'
-import type { BudgetShowProps, PurchaseLine } from '../../../types/budget'
+import type { BudgetShowProps, PurchaseLine, ReceptionLine } from '../../../types/budget'
 
-export default function BudgetShow({ budget, purchase_lines, total_pretax_amount }: BudgetShowProps) {
+export default function BudgetShow({ budget, purchase_lines, total_pretax_amount, reception_lines }: BudgetShowProps) {
   const card: React.CSSProperties = {
     background: 'var(--color-bg-card)',
     borderRadius: '0.5rem',
@@ -114,6 +114,39 @@ export default function BudgetShow({ budget, purchase_lines, total_pretax_amount
                     {total_pretax_amount.toLocaleString('fr-FR')} {purchase_lines[0]?.currency ?? 'XOF'}
                   </td>
                 </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Reception lines */}
+      <div style={{ marginTop: '2rem' }}>
+        <h2 className="text-base font-semibold mb-3" style={{ color: 'var(--color-text)' }}>
+          Réceptions ({reception_lines.length})
+        </h2>
+        {reception_lines.length === 0 ? (
+          <p className="text-sm py-4 text-center" style={{ color: 'var(--color-text-muted)' }}>
+            Aucune réception liée à ce budget.
+          </p>
+        ) : (
+          <div style={{ background: 'var(--color-bg-card)', borderRadius: '0.5rem', border: '1px solid var(--color-border)', overflow: 'hidden' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.875rem' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--color-border)', background: 'var(--color-bg)' }}>
+                  {['Produit reçu', 'Bon de réception', 'Quantité'].map(h => (
+                    <th key={h} className="px-4 py-2 text-left text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>{h}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {reception_lines.map((line: ReceptionLine) => (
+                  <tr key={line.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                    <td className="px-4 py-2" style={{ color: 'var(--color-text)' }}>{line.product_name || '—'}</td>
+                    <td className="px-4 py-2" style={{ color: 'var(--color-text-muted)' }}>{line.parcel_number || '—'}</td>
+                    <td className="px-4 py-2 tabular-nums" style={{ color: 'var(--color-text)' }}>{line.quantity}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

@@ -39,17 +39,28 @@ module Backend
       }
       total_pretax = @budget.purchase_items.sum(:pretax_amount).to_f
 
+      reception_lines = @budget.reception_items.includes(:parcel, :product).map { |item|
+        {
+          id:            item.id,
+          product_name:  item.product&.name.to_s,
+          quantity:      item.population.to_f,
+          parcel_number: item.parcel&.number.to_s
+        }
+      }
+
       render inertia: 'Backend/Budgets/Show', props: {
         budget:              budget_json(@budget),
         purchase_lines:      purchase_lines,
-        total_pretax_amount: total_pretax
+        total_pretax_amount: total_pretax,
+        reception_lines:     reception_lines
       }
     rescue ActiveRecord::StatementInvalid, PG::Error => e
       Rails.logger.error("[ProjectBudgetsController#show] DB error: #{e.message}")
       render inertia: 'Backend/Budgets/Show', props: {
         budget:              budget_json(@budget),
         purchase_lines:      [],
-        total_pretax_amount: 0.0
+        total_pretax_amount: 0.0,
+        reception_lines:     []
       }
     end
 

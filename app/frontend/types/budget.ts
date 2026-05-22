@@ -31,10 +31,18 @@ export interface BudgetsIndexProps {
   }
 }
 
+export interface ReceptionLine {
+  id: number
+  product_name: string
+  quantity: number
+  parcel_number: string
+}
+
 export interface BudgetShowProps {
   budget: ProjectBudget
   purchase_lines: PurchaseLine[]
   total_pretax_amount: number
+  reception_lines: ReceptionLine[]
 }
 
 export interface BudgetFormProps {
