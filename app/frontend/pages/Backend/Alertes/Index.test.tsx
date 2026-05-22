@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import { describe, it, expect, vi } from 'vitest'
 import AlertesIndex from './Index'
 import type { AlertesIndexProps } from '../../../types/alerte'
+import type { IssueItem } from '../../../types/issue'
 
 vi.mock('@inertiajs/react', () => ({
   usePage: () => ({ props: {}, url: '/backend/alerts' }),
@@ -62,4 +63,34 @@ describe('AlertesIndex', () => {
     // mockAlertes[0] has severity 'high'
     expect(screen.getByLabelText('Sévérité high')).toBeInTheDocument()
   })
+})
+
+const mockIssue: IssueItem = {
+  id: 1,
+  name: 'Attaque criquet',
+  nature: 'aphid',
+  gravity: 4,
+  observed_at: '2026-05-10',
+  state: 'opened',
+}
+
+it('affiche la section Problèmes signalés', () => {
+  renderIndex({ issues: [] })
+  expect(screen.getByText('Problèmes signalés')).toBeInTheDocument()
+})
+
+it('affiche "Aucun problème signalé" quand issues est vide', () => {
+  renderIndex({ issues: [] })
+  expect(screen.getByText('Aucun problème signalé')).toBeInTheDocument()
+})
+
+it('affiche un issue dans la liste', () => {
+  renderIndex({ issues: [mockIssue] })
+  expect(screen.getByText('Attaque criquet')).toBeInTheDocument()
+})
+
+it('affiche le bouton Signaler un problème', () => {
+  renderIndex({ issues: [] })
+  const link = screen.getByRole('link', { name: /Signaler un problème/ })
+  expect(link).toHaveAttribute('href', '/backend/issues/new')
 })
