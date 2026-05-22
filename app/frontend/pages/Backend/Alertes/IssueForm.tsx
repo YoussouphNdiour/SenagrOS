@@ -6,8 +6,6 @@ import { AppShell } from '../../../components/AppShell'
 import type { IssueFormProps } from '../../../types/issue'
 import { ISSUE_NATURE_LABELS } from '../../../types/issue'
 
-const today = new Date().toISOString().split('T')[0]
-
 const errorStyle: React.CSSProperties = {
   fontSize: '11px',
   color: 'var(--color-danger)',
@@ -28,7 +26,9 @@ export default function IssueForm({ issue, errors }: IssueFormProps) {
   const [name, setName] = useState(issue?.name ?? '')
   const [nature, setNature] = useState(issue?.nature ?? '')
   const [gravity, setGravity] = useState<number>(issue?.gravity ?? 1)
-  const [observedAt, setObservedAt] = useState(issue?.observed_at ?? today)
+  const [observedAt, setObservedAt] = useState(
+    issue?.observed_at ?? new Date().toISOString().split('T')[0]
+  )
   const [description, setDescription] = useState(issue?.description ?? '')
   const [submitting, setSubmitting] = useState(false)
 
