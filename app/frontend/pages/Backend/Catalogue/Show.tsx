@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
+import { Pencil, Trash2 } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
 import type { CatalogueShowProps, InterventionItem, IssueItem, ProduitType, MouvementType, MovementFormErrors, MovementMeta } from '../../../types/catalogue'
 import { MOUVEMENT_LABELS } from '../../../types/catalogue'
@@ -57,9 +58,31 @@ export default function CatalogueShow({ produit, movements, movement_errors, mov
         ← Retour au catalogue
       </a>
 
-      <h1 className="text-2xl font-bold mb-4 mt-2" style={{ color: 'var(--color-text)' }}>
-        {produit.name}
-      </h1>
+      <div className="flex items-center justify-between mb-4 mt-2">
+        <h1 className="text-2xl font-bold" style={{ color: 'var(--color-text)' }}>
+          {produit.name}
+        </h1>
+        <div className="flex gap-2">
+          <a
+            href={`/backend/products/${produit.id}/edit`}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium no-underline border"
+            style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg-card)', color: 'var(--color-text)' }}
+          >
+            <Pencil size={15} />
+            Modifier
+          </a>
+          <a
+            href={`/backend/products/${produit.id}`}
+            data-method="delete"
+            data-confirm="Supprimer ce produit ?"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium no-underline border"
+            style={{ borderColor: '#fca5a5', background: '#fef2f2', color: '#dc2626' }}
+          >
+            <Trash2 size={15} />
+            Supprimer
+          </a>
+        </div>
+      </div>
 
       {/* Header card */}
       <div

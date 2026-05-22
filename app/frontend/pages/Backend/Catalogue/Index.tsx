@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
+import { Plus } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
 import type { CatalogueIndexProps, ProduitType } from '../../../types/catalogue'
 
@@ -32,9 +33,19 @@ export default function CatalogueIndex({ produits, filters, meta }: CatalogueInd
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-bold mb-6" style={{ color: 'var(--color-text)' }}>
-        Catalogue
-      </h1>
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-2xl font-bold" style={{ color: 'var(--color-text)' }}>
+          Catalogue
+        </h1>
+        <a
+          href="/backend/products/new"
+          className="flex items-center gap-1.5 px-4 py-2 rounded-md text-sm font-medium no-underline"
+          style={{ background: 'var(--color-primary)', color: '#fff' }}
+        >
+          <Plus size={16} />
+          Nouveau produit
+        </a>
+      </div>
 
       {/* Filter bar */}
       <div className="flex gap-3 mb-5 flex-wrap items-center">

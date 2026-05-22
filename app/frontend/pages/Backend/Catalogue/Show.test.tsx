@@ -151,4 +151,18 @@ describe('CatalogueShow', () => {
     })
     expect(screen.getByText('Attaque criquet')).toBeInTheDocument()
   })
+
+  it('renders "Modifier" link pointing to edit URL', () => {
+    renderShow()
+    const link = screen.getByRole('link', { name: /Modifier/ })
+    expect(link).toBeInTheDocument()
+    expect(link).toHaveAttribute('href', '/backend/products/1/edit')
+  })
+
+  it('renders "Supprimer" link with data-method delete', () => {
+    renderShow()
+    const link = screen.getByRole('link', { name: /Supprimer/ })
+    expect(link).toBeInTheDocument()
+    expect(link).toHaveAttribute('data-method', 'delete')
+  })
 })

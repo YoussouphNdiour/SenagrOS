@@ -75,4 +75,11 @@ describe('CatalogueIndex', () => {
     const select = screen.getByRole('combobox', { name: 'État du produit' }) as HTMLSelectElement
     expect(select.value).toBe('dead')
   })
+
+  it('renders "Nouveau produit" link pointing to /backend/products/new', () => {
+    renderIndex()
+    const link = screen.getByRole('link', { name: /Nouveau produit/ })
+    expect(link).toBeInTheDocument()
+    expect(link).toHaveAttribute('href', '/backend/products/new')
+  })
 })
