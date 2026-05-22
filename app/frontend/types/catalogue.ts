@@ -26,7 +26,7 @@ export interface ProduitMovement {
 
 export interface CatalogueIndexProps {
   produits: Produit[]
-  filters: { q?: string; produit_type?: ProduitType }
+  filters: { q?: string; produit_type?: ProduitType; etat?: 'alive' | 'dead' }
   meta: { total_count: number; current_page: number; total_pages: number }
 }
 

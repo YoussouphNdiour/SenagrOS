@@ -24,9 +24,10 @@ const TYPE_FILTERS: { value: ProduitType | ''; label: string }[] = [
 export default function CatalogueIndex({ produits, filters, meta }: CatalogueIndexProps) {
   const [q, setQ] = useState(filters.q ?? '')
   const [typeFilter, setTypeFilter] = useState<ProduitType | ''>(filters.produit_type ?? '')
+  const [etatFilter, setEtatFilter] = useState<'alive' | 'dead' | ''>(filters.etat ?? '')
 
   function search() {
-    router.get('/backend/products', { q, produit_type: typeFilter }, { preserveState: true })
+    router.get('/backend/products', { q, produit_type: typeFilter, etat: etatFilter }, { preserveState: true })
   }
 
   return (
@@ -63,6 +64,17 @@ export default function CatalogueIndex({ produits, filters, meta }: CatalogueInd
             </button>
           ))}
         </div>
+        <select
+          aria-label="État du produit"
+          value={etatFilter}
+          onChange={e => setEtatFilter(e.target.value as 'alive' | 'dead' | '')}
+          className="px-3 py-2 rounded-md border text-sm"
+          style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg-card)', color: 'var(--color-text)' }}
+        >
+          <option value="">Tous états</option>
+          <option value="alive">Vivant / Actif</option>
+          <option value="dead">Inactif</option>
+        </select>
         <button
           type="button"
           onClick={search}
@@ -147,7 +159,7 @@ export default function CatalogueIndex({ produits, filters, meta }: CatalogueInd
           {meta.current_page > 1 && (
             <button
               type="button"
-              onClick={() => router.get('/backend/products', { q, produit_type: typeFilter, page: meta.current_page - 1 })}
+              onClick={() => router.get('/backend/products', { q, produit_type: typeFilter, etat: etatFilter, page: meta.current_page - 1 })}
               className="px-3 py-1.5 text-xs rounded border"
               style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg-card)', color: 'var(--color-text)' }}
             >
@@ -157,7 +169,7 @@ export default function CatalogueIndex({ produits, filters, meta }: CatalogueInd
           {meta.current_page < meta.total_pages && (
             <button
               type="button"
-              onClick={() => router.get('/backend/products', { q, produit_type: typeFilter, page: meta.current_page + 1 })}
+              onClick={() => router.get('/backend/products', { q, produit_type: typeFilter, etat: etatFilter, page: meta.current_page + 1 })}
               className="px-3 py-1.5 text-xs rounded border"
               style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg-card)', color: 'var(--color-text)' }}
             >

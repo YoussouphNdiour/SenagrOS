@@ -56,11 +56,23 @@ describe('CatalogueIndex', () => {
 
   it('shows "Inactif" badge when dead_at is set', () => {
     renderIndex({ produits: [{ ...mockProduit, dead_at: '2024-01-01' }] })
-    expect(screen.getByText('Inactif')).toBeInTheDocument()
+    const instances = screen.getAllByText('Inactif')
+    expect(instances.length).toBeGreaterThanOrEqual(1)
   })
 
   it('renders pagination info from meta.total_count', () => {
     renderIndex({ meta: { total_count: 42, current_page: 1, total_pages: 3 } })
     expect(screen.getByText(/42/)).toBeInTheDocument()
+  })
+
+  it('renders état filter select', () => {
+    renderIndex()
+    expect(screen.getByRole('combobox', { name: 'État du produit' })).toBeInTheDocument()
+  })
+
+  it('initializes état filter to "dead" when filters.etat is "dead"', () => {
+    renderIndex({ filters: { etat: 'dead' } })
+    const select = screen.getByRole('combobox', { name: 'État du produit' }) as HTMLSelectElement
+    expect(select.value).toBe('dead')
   })
 })

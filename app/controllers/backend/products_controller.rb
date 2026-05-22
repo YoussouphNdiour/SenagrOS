@@ -39,6 +39,12 @@ module Backend
         end
       end
 
+      if params[:etat] == 'alive'
+        scope = scope.where(dead_at: nil)
+      elsif params[:etat] == 'dead'
+        scope = scope.where.not(dead_at: nil)
+      end
+
       if params[:q].present?
         scope = scope.select { |p| p.name.to_s.downcase.include?(params[:q].downcase) }
       else
@@ -53,7 +59,7 @@ module Backend
 
       render inertia: 'Backend/Catalogue/Index', props: {
         produits: paginated.map { |p| produit_json(p) },
-        filters: { q: params[:q], produit_type: params[:produit_type] },
+        filters: { q: params[:q], produit_type: params[:produit_type], etat: params[:etat] },
         meta: { total_count: total_count, current_page: current_page, total_pages: total_pages }
       }
     end
