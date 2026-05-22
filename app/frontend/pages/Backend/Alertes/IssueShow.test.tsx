@@ -1,5 +1,6 @@
 import React from 'react'
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi } from 'vitest'
 import IssueShow from './IssueShow'
 import type { IssueShowProps } from '../../../types/issue'
@@ -61,5 +62,19 @@ describe('IssueShow', () => {
     renderShow()
     const link = screen.getByRole('link', { name: /Modifier/ })
     expect(link).toHaveAttribute('href', '/backend/issues/1/edit')
+  })
+
+  it('appelle router.post close quand Fermer est cliqué', async () => {
+    const { router } = await import('@inertiajs/react')
+    renderShow({ state: 'opened' })
+    await userEvent.click(screen.getByRole('button', { name: /Fermer/ }))
+    expect(router.post).toHaveBeenCalledWith('/backend/issues/1/close')
+  })
+
+  it('appelle router.post abort quand Abandonner est cliqué', async () => {
+    const { router } = await import('@inertiajs/react')
+    renderShow({ state: 'opened' })
+    await userEvent.click(screen.getByRole('button', { name: /Abandonner/ }))
+    expect(router.post).toHaveBeenCalledWith('/backend/issues/1/abort')
   })
 })
