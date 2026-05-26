@@ -1,30 +1,28 @@
 // app/frontend/pages/Backend/Achats/CommandesIndex.tsx
 import { type ReactNode, useState, useEffect } from 'react'
 import { router } from '@inertiajs/react'
-import { Plus, Pencil, Trash2 } from 'lucide-react'
+import { Plus, Pencil, Trash2, Search } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
 import AchatsTabs from '../../../components/achats/AchatsTabs'
+import { PageHeader, SectionCard, FilterBar, StateBadge, Pagination, PrimaryButton } from '../../../components/ui'
 import type { CommandesIndexProps, CommandeState } from '../../../types/achat'
 
-const STATE_CONFIG: Record<CommandeState, { label: string; bg: string; color: string }> = {
-  opened: { label: 'En cours',  bg: '#dcfce7', color: '#166534' },
-  closed: { label: 'Clôturée',  bg: '#f1f5f9', color: '#475569' },
+const STATE_CONFIG: Record<CommandeState, { label: string; color: string; bg: string; border: string }> = {
+  opened: { label: 'En cours',  color: 'var(--color-warning)',    bg: 'var(--color-warning-bg)', border: 'var(--color-border)' },
+  closed: { label: 'Clôturée', color: 'var(--color-text-muted)', bg: 'var(--color-bg-subtle)',  border: 'var(--color-border)' },
+}
+
+function formatXOF(n: number) {
+  return n.toLocaleString('fr-FR').replace(/\u00A0/g, '\u2009') + ' XOF'
 }
 
 export default function CommandesIndex({ commandes, filters, meta }: CommandesIndexProps) {
   const [q, setQ] = useState(filters.q ?? '')
-  const [selectedStates, setSelectedStates] = useState<CommandeState[]>(filters.state ?? [])
 
   useEffect(() => { setQ(filters.q ?? '') }, [filters.q])
 
   function search() {
-    router.get('/backend/purchase_orders', { q, state: selectedStates }, { preserveState: true })
-  }
-
-  function toggleState(state: CommandeState) {
-    setSelectedStates(prev =>
-      prev.includes(state) ? prev.filter(s => s !== state) : [...prev, state]
-    )
+    router.get('/backend/purchase_orders', { q, state: filters.state }, { preserveState: true })
   }
 
   function handleDelete(id: number, number: string) {
@@ -33,96 +31,120 @@ export default function CommandesIndex({ commandes, filters, meta }: CommandesIn
     }
   }
 
-  const card: React.CSSProperties = { background: 'var(--color-bg-card)', borderRadius: '0.5rem', border: '1px solid var(--color-border)' }
-  const th: React.CSSProperties = { padding: '0.75rem 1rem', textAlign: 'left', fontSize: '0.8125rem', color: 'var(--color-text-muted)', fontWeight: 600, borderBottom: '1px solid var(--color-border)' }
-  const td: React.CSSProperties = { padding: '0.75rem 1rem', borderBottom: '1px solid var(--color-border)', fontSize: '0.9375rem' }
-
   return (
-    <div style={{ padding: '2rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-text)', margin: 0 }}>Achats</h1>
-        <a href="/backend/purchase_orders/new" style={{ textDecoration: 'none' }}>
-          <button type="button" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: '0.5rem', padding: '0.5rem 1rem', cursor: 'pointer', fontWeight: 500 }}>
-            <Plus size={16} /> Nouvelle commande
-          </button>
-        </a>
-      </div>
+    <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
+      <PageHeader
+        title="Achats"
+        subtitle={`${meta.total_count} commande${meta.total_count !== 1 ? 's' : ''} fournisseur`}
+        action={
+          <PrimaryButton href="/backend/purchase_orders/new">
+            <Plus size={14} /> Nouvelle commande
+          </PrimaryButton>
+        }
+      />
 
       <AchatsTabs />
 
-      {/* Filter bar */}
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.25rem', flexWrap: 'wrap', alignItems: 'center' }}>
-        <input
-          type="text"
-          value={q}
-          onChange={e => setQ(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && search()}
-          placeholder="Rechercher N°, référence, fournisseur…"
-          style={{ flex: 1, minWidth: '220px', padding: '0.5rem 0.75rem', border: '1px solid var(--color-border)', borderRadius: '0.375rem', fontSize: '0.9375rem' }}
-        />
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-          {(['opened', 'closed'] as CommandeState[]).map(state => (
-            <label key={state} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', cursor: 'pointer', fontSize: '0.9rem' }}>
-              <input
-                type="checkbox"
-                aria-label={`Filtrer par état : ${STATE_CONFIG[state].label}`}
-                checked={selectedStates.includes(state)}
-                onChange={() => toggleState(state)}
-              />
-              <span aria-hidden="true" style={{ userSelect: 'none' }}>
-                {state === 'opened' ? 'Ouvertes' : 'Clôturées'}
-              </span>
-            </label>
-          ))}
+      <FilterBar>
+        <div className="relative flex-1 min-w-[200px]">
+          <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'var(--color-text-muted)' }} />
+          <input
+            type="text"
+            value={q}
+            onChange={e => setQ(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && search()}
+            placeholder="N°, référence, fournisseur…"
+            className="w-full pl-8 pr-3 py-1.5 text-sm rounded-lg"
+            style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}
+          />
         </div>
-        <button type="button" onClick={search} style={{ padding: '0.5rem 1rem', background: 'var(--color-bg-card)', border: '1px solid var(--color-border)', borderRadius: '0.375rem', cursor: 'pointer' }}>
-          Rechercher
+        <div className="flex gap-1.5">
+          {(['opened', 'closed'] as CommandeState[]).map(state => {
+            const cfg = STATE_CONFIG[state]
+            const checked = (filters.state ?? []).includes(state)
+            return (
+              <button
+                key={state}
+                type="button"
+                onClick={() => {
+                  const cur = filters.state ?? []
+                  const next = checked ? cur.filter(s => s !== state) : [...cur, state]
+                  router.get('/backend/purchase_orders', { q, state: next }, { preserveState: true })
+                }}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold border cursor-pointer"
+                style={{
+                  background: checked ? cfg.bg : 'var(--color-bg)',
+                  borderColor: checked ? cfg.border : 'var(--color-border)',
+                  color: checked ? cfg.color : 'var(--color-text-muted)',
+                }}
+              >
+                {cfg.label}
+              </button>
+            )
+          })}
+        </div>
+        <button
+          type="button"
+          onClick={search}
+          className="px-3.5 py-1.5 rounded-lg text-sm font-semibold cursor-pointer border-none"
+          style={{ background: 'var(--color-primary)', color: '#fff' }}
+        >
+          Chercher
         </button>
-      </div>
+      </FilterBar>
 
-      {/* Table */}
-      <div style={{ ...card, overflowX: 'auto' }}>
+      <SectionCard noPadding>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
-            <tr>
-              {['N° commande', 'Référence', 'Fournisseur', 'État', 'Date commande', 'HT', 'TTC', 'Actions'].map(h => (
-                <th key={h} style={th}>{h}</th>
+            <tr style={{ background: 'var(--color-bg)' }}>
+              {['N° commande', 'Référence', 'Fournisseur', 'État', 'Date commande', 'HT', 'TTC', ''].map(h => (
+                <th
+                  key={h}
+                  className="px-3.5 py-2.5 text-[10px] font-semibold uppercase tracking-widest border-b"
+                  style={{ textAlign: h === 'HT' || h === 'TTC' ? 'right' : 'left', borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}
+                >
+                  {h}
+                </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {commandes.map(c => {
-              const badge = STATE_CONFIG[c.state]
+            {commandes.map((c, i) => {
+              const cfg = STATE_CONFIG[c.state]
               return (
-                <tr key={c.id}>
-                  <td style={td}>
-                    <a href={`/backend/purchase_orders/${c.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'none', fontWeight: 500 }}>{c.number}</a>
+                <tr
+                  key={c.id}
+                  className="border-b"
+                  style={{ background: i % 2 === 0 ? 'transparent' : 'rgba(240,247,236,0.35)', borderColor: 'var(--color-border)' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'var(--color-bg-highlight)' }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = i % 2 === 0 ? 'transparent' : 'rgba(240,247,236,0.35)' }}
+                >
+                  <td className="px-3.5 py-2.5 text-sm">
+                    <a href={`/backend/purchase_orders/${c.id}`} className="font-semibold no-underline" style={{ color: 'var(--color-primary)' }}>{c.number}</a>
                   </td>
-                  <td style={td}>{c.reference_number ?? '—'}</td>
-                  <td style={td}>{c.supplier.full_name}</td>
-                  <td style={td}>
-                    <span style={{ background: badge.bg, color: badge.color, padding: '0.125rem 0.625rem', borderRadius: '9999px', fontSize: '0.8rem', fontWeight: 500 }}>
-                      {badge.label}
-                    </span>
+                  <td className="px-3.5 py-2.5 text-sm" style={{ color: 'var(--color-text-muted)' }}>{c.reference_number ?? '—'}</td>
+                  <td className="px-3.5 py-2.5 text-sm font-medium" style={{ color: 'var(--color-text)' }}>{c.supplier.full_name}</td>
+                  <td className="px-3.5 py-2.5">
+                    {cfg && <StateBadge label={cfg.label} color={cfg.color} bg={cfg.bg} border={cfg.border} />}
                   </td>
-                  <td style={td}>{c.ordered_at}</td>
-                  <td style={{ ...td, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{c.pretax_amount.toLocaleString('fr-FR', { minimumFractionDigits: 2 })}</td>
-                  <td style={{ ...td, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>{c.amount.toLocaleString('fr-FR', { minimumFractionDigits: 2 })}</td>
-                  <td style={td}>
-                    <div style={{ display: 'flex', gap: '0.375rem' }}>
-                      <a href={`/backend/purchase_orders/${c.id}/edit`}>
-                        <button type="button" title="Modifier" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', padding: '0.25rem' }}>
-                          <Pencil size={15} />
-                        </button>
+                  <td className="px-3.5 py-2.5 text-sm whitespace-nowrap" style={{ color: 'var(--color-text-muted)' }}>
+                    {new Date(c.ordered_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
+                  </td>
+                  <td className="px-3.5 py-2.5 text-sm font-medium tabular-nums whitespace-nowrap text-right" style={{ color: 'var(--color-text)' }}>{formatXOF(c.pretax_amount)}</td>
+                  <td className="px-3.5 py-2.5 text-sm font-bold tabular-nums whitespace-nowrap text-right" style={{ color: 'var(--color-text)' }}>{formatXOF(c.amount)}</td>
+                  <td className="px-3.5 py-2.5">
+                    <div className="flex gap-2 items-center">
+                      <a href={`/backend/purchase_orders/${c.id}/edit`} title="Modifier" style={{ color: 'var(--color-text-muted)' }}>
+                        <Pencil size={14} />
                       </a>
                       {c.destroyable && (
                         <button
                           type="button"
-                          aria-label="Supprimer"
                           onClick={() => handleDelete(c.id, c.number)}
-                          style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626', padding: '0.25rem' }}
+                          className="bg-transparent border-none cursor-pointer p-0"
+                          style={{ color: 'var(--color-danger)' }}
                         >
-                          <Trash2 size={15} />
+                          <Trash2 size={14} />
                         </button>
                       )}
                     </div>
@@ -130,28 +152,25 @@ export default function CommandesIndex({ commandes, filters, meta }: CommandesIn
                 </tr>
               )
             })}
+            {commandes.length === 0 && (
+              <tr>
+                <td colSpan={8} className="py-8 text-center text-sm" style={{ color: 'var(--color-text-muted)' }}>
+                  Aucune commande fournisseur
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
-      </div>
-
-      {/* Pagination */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
-        <span style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
-          {meta.total_count} commande(s)
-        </span>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          {meta.current_page > 1 && (
-            <button type="button" onClick={() => router.get('/backend/purchase_orders', { ...filters, page: meta.current_page - 1 })} style={{ padding: '0.25rem 0.75rem', border: '1px solid var(--color-border)', borderRadius: '0.375rem', cursor: 'pointer', background: 'var(--color-bg-card)' }}>
-              Précédent
-            </button>
-          )}
-          {meta.current_page < meta.total_pages && (
-            <button type="button" onClick={() => router.get('/backend/purchase_orders', { ...filters, page: meta.current_page + 1 })} style={{ padding: '0.25rem 0.75rem', border: '1px solid var(--color-border)', borderRadius: '0.375rem', cursor: 'pointer', background: 'var(--color-bg-card)' }}>
-              Suivant
-            </button>
-          )}
-        </div>
-      </div>
+        {meta.total_pages > 1 && (
+          <Pagination
+            page={meta.current_page}
+            totalPages={meta.total_pages}
+            total={meta.total_count}
+            onPrev={() => router.get('/backend/purchase_orders', { ...filters, page: meta.current_page - 1 })}
+            onNext={() => router.get('/backend/purchase_orders', { ...filters, page: meta.current_page + 1 })}
+          />
+        )}
+      </SectionCard>
     </div>
   )
 }
