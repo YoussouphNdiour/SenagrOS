@@ -1,119 +1,121 @@
-import { useState } from 'react'
 import type { ReactNode } from 'react'
-import { List, BarChart2 } from 'lucide-react'
+import { useState } from 'react'
+import { router } from '@inertiajs/react'
+import { Plus, Sprout, Activity, CheckCircle, List, BarChart2 } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
-import type { ProductionsIndexProps } from '../../../types/production'
+import { PageHeader, KpiCard, SectionCard, DataTable, StateBadge, Pagination, PrimaryButton, ViewToggle } from '../../../components/ui'
 import { GanttView } from '../../../components/productions/GanttView'
+import type { ProductionsIndexProps, Production } from '../../../types/production'
 
-/**
- * Note: Inline style attributes with CSS variables (e.g., style={{ color: 'var(--color-text)' }})
- * are used consistently across the SenagrOS frontend. This is an intentional project pattern
- * for applying design tokens defined in app/frontend/styles/tokens.css.
- * See Dashboard and Interventions components for consistent usage.
- */
-
-const STATE_LABELS: Record<string, string> = {
-  opened:   'En cours',
-  aborted:  'Abandonné',
-  finished: 'Terminé',
-}
-
-const STATE_COLORS: Record<string, string> = {
-  opened:   'var(--color-success-text, #1B6B3A)',
-  aborted:  'var(--color-danger-text, #D4420A)',
-  finished: 'var(--color-text-muted)',
+const STATE_CONFIG: Record<string, { label: string; color: string; bg: string }> = {
+  opened:  { label: 'En cours',   color: 'var(--color-primary)',    bg: 'var(--color-success-bg)' },
+  closed:  { label: 'Terminée',   color: 'var(--color-text-muted)', bg: 'var(--color-bg-subtle)' },
+  aborted: { label: 'Abandonnée', color: 'var(--color-danger)',     bg: 'var(--color-danger-bg)' },
 }
 
 function formatDate(iso: string | null): string {
   if (!iso) return '—'
-  return new Date(iso).toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })
+  return new Date(iso).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })
 }
 
 function ProductionsIndex({ productions, meta }: ProductionsIndexProps) {
-  const [view, setView] = useState<'table' | 'gantt'>('table')
+  const [view, setView] = useState<'list' | 'gantt'>('list')
+  const totalPages = Math.ceil(meta.total / meta.per_page)
+  const enCours = productions.filter(p => p.state === 'opened').length
+  const terminees = productions.filter(p => p.state === 'closed').length
+  const families = [...new Set(productions.map(p => p.activity?.family).filter(Boolean))]
 
   return (
-    <>
-      <div className="flex items-center justify-between mb-5">
-        <h1 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>
-          Productions
-        </h1>
-        <div style={{ display: 'flex', gap: '4px' }}>
-          <button
-            aria-label="Vue tableau"
-            onClick={() => setView('table')}
-            style={{
-              padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--color-border)',
-              background: view === 'table' ? 'var(--color-primary, #6B9E3F)' : 'var(--color-bg-card)',
-              color: view === 'table' ? '#fff' : 'var(--color-text-muted)',
-              cursor: 'pointer',
-            }}
-          >
-            <List size={14} />
-          </button>
-          <button
-            aria-label="Vue Gantt"
-            onClick={() => setView('gantt')}
-            style={{
-              padding: '6px 10px', borderRadius: '4px', border: '1px solid var(--color-border)',
-              background: view === 'gantt' ? 'var(--color-primary, #6B9E3F)' : 'var(--color-bg-card)',
-              color: view === 'gantt' ? '#fff' : 'var(--color-text-muted)',
-              cursor: 'pointer',
-            }}
-          >
-            <BarChart2 size={14} />
-          </button>
+    <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
+      <div className="flex justify-between items-start mb-5 gap-4">
+        <div>
+          <h1 className="text-[26px] font-bold m-0 leading-tight" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>
+            Productions
+          </h1>
+          <p className="mt-1 text-sm m-0" style={{ color: 'var(--color-text-muted)' }}>
+            {meta.total} production{meta.total !== 1 ? 's' : ''}
+          </p>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <ViewToggle
+            views={[
+              { key: 'list',  label: 'Liste', icon: List },
+              { key: 'gantt', label: 'Gantt', icon: BarChart2 },
+            ]}
+            active={view}
+            onChange={(k) => setView(k as 'list' | 'gantt')}
+          />
+          <PrimaryButton href="/backend/activity_productions/new">
+            <Plus size={14} /> Nouvelle production
+          </PrimaryButton>
         </div>
       </div>
 
-      {productions.length === 0 ? (
-        <p className="text-center py-12" style={{ color: 'var(--color-text-muted)' }}>
-          Aucune production enregistrée.
-        </p>
-      ) : view === 'table' ? (
-        <div className="rounded-lg overflow-hidden border" style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-          <table className="w-full border-collapse text-sm">
-            <thead>
-              <tr className="border-b-2" style={{ background: 'var(--color-bg)', borderColor: 'var(--color-border)' }}>
-                {['Nom', 'Activité', 'Zone', 'Campagne', 'Début', 'Fin', 'État'].map((h) => (
-                  <th key={h} className="px-3 py-2.5 text-left uppercase tracking-wide text-xs font-semibold" style={{ color: 'var(--color-text-muted)' }}>
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {productions.map((p) => (
-                <tr key={p.id} className="border-b" style={{ borderColor: 'var(--color-border)' }}>
-                  <td className="px-3 py-2.5 font-medium" style={{ color: 'var(--color-text)' }}>{p.name}</td>
-                  <td className="px-3 py-2.5">
-                    <span className="px-2 py-0.5 rounded-full text-xs font-semibold" style={{ background: 'var(--color-success-bg, #e8f4ec)', color: 'var(--color-success-text, #1B6B3A)' }}>
-                      {p.activity.name}
-                    </span>
+      <div className="grid grid-cols-4 gap-3.5 mb-5">
+        <KpiCard icon={<Sprout size={16} />}     label="Total"     value={meta.total}       color="var(--color-primary)" />
+        <KpiCard icon={<Activity size={16} />}    label="En cours"  value={enCours}          color="var(--color-warning)" />
+        <KpiCard icon={<CheckCircle size={16} />} label="Terminées" value={terminees}        color="var(--color-info)" />
+        <KpiCard icon={<Sprout size={16} />}      label="Familles"  value={families.length}  color="var(--color-text-muted)" />
+      </div>
+
+      {view === 'gantt' ? (
+        <SectionCard noPadding>
+          <GanttView productions={productions} />
+        </SectionCard>
+      ) : (
+        <SectionCard noPadding>
+          <DataTable
+            columns={[
+              { key: 'name',     label: 'Production' },
+              { key: 'activity', label: 'Activité' },
+              { key: 'dates',    label: 'Période' },
+              { key: 'state',    label: 'État' },
+            ]}
+            data={productions}
+            emptyMessage="Aucune production enregistrée"
+            renderRow={(p: Production, i) => {
+              const s = STATE_CONFIG[p.state] ?? { label: p.state, color: 'var(--color-text-muted)', bg: 'var(--color-bg-subtle)' }
+              return (
+                <tr
+                  key={p.id}
+                  className="border-b"
+                  style={{ background: i % 2 === 0 ? 'transparent' : 'rgba(240,247,236,0.35)', borderColor: 'var(--color-border)' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'var(--color-bg-highlight)' }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = i % 2 === 0 ? 'transparent' : 'rgba(240,247,236,0.35)' }}
+                >
+                  <td className="px-3.5 py-2.5 text-sm">
+                    <div className="flex items-center gap-2.5">
+                      <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: 'var(--color-success-bg)', color: 'var(--color-primary)' }}>
+                        <Sprout size={13} />
+                      </span>
+                      <a href={`/backend/activity_productions/${p.id}`} className="font-semibold no-underline" style={{ color: 'var(--color-primary)' }}>{p.name}</a>
+                    </div>
                   </td>
-                  <td className="px-3 py-2.5" style={{ color: 'var(--color-text-muted)' }}>{p.cultivable_zone?.name ?? '—'}</td>
-                  <td className="px-3 py-2.5" style={{ color: 'var(--color-text-muted)' }}>{p.campaign.name}</td>
-                  <td className="px-3 py-2.5" style={{ color: 'var(--color-text-muted)' }}>{formatDate(p.started_on)}</td>
-                  <td className="px-3 py-2.5" style={{ color: 'var(--color-text-muted)' }}>{formatDate(p.stopped_on)}</td>
-                  <td className="px-3 py-2.5 text-xs font-semibold" style={{ color: STATE_COLORS[p.state] ?? 'var(--color-text-muted)' }}>
-                    {STATE_LABELS[p.state] ?? p.state}
+                  <td className="px-3.5 py-2.5 text-sm" style={{ color: 'var(--color-text-muted)' }}>{p.activity?.name || '—'}</td>
+                  <td className="px-3.5 py-2.5 text-xs whitespace-nowrap" style={{ color: 'var(--color-text-muted)' }}>
+                    {formatDate(p.started_on)} → {formatDate(p.stopped_on)}
+                  </td>
+                  <td className="px-3.5 py-2.5">
+                    <StateBadge label={s.label} color={s.color} bg={s.bg} />
                   </td>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      ) : (
-        <GanttView productions={productions} />
+              )
+            }}
+          />
+          {totalPages > 1 && (
+            <Pagination
+              page={meta.page}
+              totalPages={totalPages}
+              total={meta.total}
+              onPrev={() => router.visit(`/backend/activity_productions?page=${meta.page - 1}`)}
+              onNext={() => router.visit(`/backend/activity_productions?page=${meta.page + 1}`)}
+            />
+          )}
+        </SectionCard>
       )}
-
-      <p className="mt-3 text-xs" style={{ color: 'var(--color-text-muted)' }}>
-        {meta.total} production{meta.total !== 1 ? 's' : ''} — page {meta.page}
-      </p>
-    </>
+    </div>
   )
 }
 
 ProductionsIndex.layout = (page: ReactNode) => <AppShell>{page}</AppShell>
-
 export default ProductionsIndex

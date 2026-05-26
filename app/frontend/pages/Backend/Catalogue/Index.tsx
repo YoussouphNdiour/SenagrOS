@@ -1,16 +1,17 @@
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
-import { Download, Plus } from 'lucide-react'
+import { Download, Plus, Search, Package, PawPrint, Tractor, Sprout, Box } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
+import { PageHeader, SectionCard, DataTable, StateBadge, Pagination, PrimaryButton, FilterBar } from '../../../components/ui'
 import type { CatalogueIndexProps, ProduitType } from '../../../types/catalogue'
 
-const TYPE_CONFIG: Record<ProduitType, { label: string; bg: string; color: string }> = {
-  Matter:    { label: 'Matière',    bg: '#dcfce7', color: '#166534' },
-  Animal:    { label: 'Animal',     bg: '#fef9c3', color: '#854d0e' },
-  Equipment: { label: 'Équipement', bg: '#dbeafe', color: '#1e40af' },
-  Plant:     { label: 'Plante',     bg: '#ede9fe', color: '#5b21b6' },
-  Other:     { label: 'Autre',      bg: '#f3f4f6', color: '#374151' },
+const TYPE_CFG: Record<ProduitType, { label: string; color: string; bg: string; Icon: typeof Package }> = {
+  Matter:    { label: 'Matière',     color: 'var(--color-primary)',    bg: 'var(--color-success-bg)', Icon: Package },
+  Animal:    { label: 'Animal',      color: 'var(--color-warning)',    bg: 'var(--color-warning-bg)', Icon: PawPrint },
+  Equipment: { label: 'Équipement',  color: 'var(--color-info)',       bg: 'var(--color-info-bg)',    Icon: Tractor },
+  Plant:     { label: 'Plante',      color: '#7c3aed',                 bg: '#ede9fe',                 Icon: Sprout },
+  Other:     { label: 'Autre',       color: 'var(--color-text-muted)', bg: 'var(--color-bg-subtle)',  Icon: Box },
 }
 
 const TYPE_FILTERS: { value: ProduitType | ''; label: string }[] = [
@@ -22,82 +23,87 @@ const TYPE_FILTERS: { value: ProduitType | ''; label: string }[] = [
   { value: 'Other',     label: 'Autre' },
 ]
 
-export default function CatalogueIndex({ produits, filters, meta }: CatalogueIndexProps) {
+function CatalogueIndex({ produits, filters, meta }: CatalogueIndexProps) {
   const [q, setQ] = useState(filters.q ?? '')
   const [typeFilter, setTypeFilter] = useState<ProduitType | ''>(filters.produit_type ?? '')
   const [etatFilter, setEtatFilter] = useState<'alive' | 'dead' | ''>(filters.etat ?? '')
 
-  function search() {
-    router.get('/backend/products', { q, produit_type: typeFilter, etat: etatFilter }, { preserveState: true })
+  function search(overrides?: { type?: ProduitType | ''; etat?: 'alive' | 'dead' | '' }) {
+    router.get('/backend/products', {
+      q,
+      produit_type: overrides?.type !== undefined ? overrides.type : typeFilter,
+      etat: overrides?.etat !== undefined ? overrides.etat : etatFilter,
+    }, { preserveState: true })
   }
 
-  const csvHref = `/backend/products.csv?${new URLSearchParams(
+  const csvParams = new URLSearchParams(
     Object.fromEntries(
       Object.entries({ q, produit_type: typeFilter, etat: etatFilter }).filter(([, v]) => v !== '')
     )
-  ).toString()}`
+  )
+  const csvHref = `/backend/products.csv?${csvParams}`
 
   return (
-    <div className="p-8">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold" style={{ color: 'var(--color-text)' }}>
-          Catalogue
-        </h1>
-        <div className="flex items-center gap-2">
-          <a
-            href={csvHref}
-            download
-            className="flex items-center gap-1.5 px-4 py-2 rounded-md text-sm font-medium no-underline border"
-            style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg-card)', color: 'var(--color-text)' }}
-          >
-            <Download size={16} />
-            Exporter CSV
-          </a>
-          <a
-            href="/backend/products/new"
-            className="flex items-center gap-1.5 px-4 py-2 rounded-md text-sm font-medium no-underline"
-            style={{ background: 'var(--color-primary)', color: '#fff' }}
-          >
-            <Plus size={16} />
-            Nouveau produit
-          </a>
-        </div>
-      </div>
-
-      {/* Filter bar */}
-      <div className="flex gap-3 mb-5 flex-wrap items-center">
-        <input
-          type="text"
-          value={q}
-          onChange={e => setQ(e.target.value)}
-          onKeyDown={e => e.key === 'Enter' && search()}
-          placeholder="Rechercher par nom…"
-          className="flex-1 min-w-52 px-3 py-2 rounded-md border text-sm outline-none"
-          style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg-card)', color: 'var(--color-text)' }}
-        />
-        <div className="flex gap-2 flex-wrap">
-          {TYPE_FILTERS.map(f => (
-            <button
-              key={f.value}
-              type="button"
-              onClick={() => setTypeFilter(f.value)}
-              className="px-3 py-1.5 text-xs rounded-full border font-medium"
-              style={{
-                borderColor: typeFilter === f.value ? 'var(--color-primary)' : 'var(--color-border)',
-                background: typeFilter === f.value ? 'var(--color-primary)' : 'var(--color-bg-card)',
-                color: typeFilter === f.value ? '#fff' : 'var(--color-text)',
-              }}
+    <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
+      <PageHeader
+        title="Catalogue"
+        subtitle={`${meta.total_count} produit${meta.total_count !== 1 ? 's' : ''}`}
+        action={
+          <div className="flex gap-2">
+            <a
+              href={csvHref}
+              download
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold no-underline border"
+              style={{ background: 'var(--color-bg-card)', color: 'var(--color-text)', borderColor: 'var(--color-border)' }}
             >
-              {f.label}
-            </button>
-          ))}
+              <Download size={14} /> CSV
+            </a>
+            <PrimaryButton href="/backend/products/new">
+              <Plus size={14} /> Nouveau produit
+            </PrimaryButton>
+          </div>
+        }
+      />
+
+      <FilterBar>
+        <div className="relative" style={{ minWidth: 200 }}>
+          <Search size={14} className="absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" style={{ color: 'var(--color-text-muted)' }} />
+          <input
+            type="text"
+            value={q}
+            onChange={e => setQ(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && search()}
+            placeholder="Rechercher par nom…"
+            className="w-full pl-8 pr-3 py-1.5 text-sm rounded-lg"
+            style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}
+          />
+        </div>
+        <div className="flex gap-1.5 flex-wrap">
+          {TYPE_FILTERS.map(f => {
+            const cfg = f.value ? TYPE_CFG[f.value] : null
+            const active = typeFilter === f.value
+            return (
+              <button
+                key={f.value || '_all'}
+                type="button"
+                onClick={() => { setTypeFilter(f.value); search({ type: f.value }) }}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-semibold border cursor-pointer"
+                style={{
+                  background: active ? (cfg?.bg ?? 'var(--color-bg-highlight)') : 'var(--color-bg)',
+                  borderColor: active ? (cfg?.color ?? 'var(--color-primary)') : 'var(--color-border)',
+                  color: active ? (cfg?.color ?? 'var(--color-primary)') : 'var(--color-text-muted)',
+                }}
+              >
+                {f.label}
+              </button>
+            )
+          })}
         </div>
         <select
-          aria-label="État du produit"
           value={etatFilter}
-          onChange={e => setEtatFilter(e.target.value as 'alive' | 'dead' | '')}
-          className="px-3 py-2 rounded-md border text-sm"
-          style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg-card)', color: 'var(--color-text)' }}
+          onChange={e => { const v = e.target.value as 'alive' | 'dead' | ''; setEtatFilter(v); search({ etat: v }) }}
+          className="px-2.5 py-1.5 text-sm rounded-lg"
+          style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}
         >
           <option value="">Tous états</option>
           <option value="alive">Vivant / Actif</option>
@@ -105,109 +111,78 @@ export default function CatalogueIndex({ produits, filters, meta }: CatalogueInd
         </select>
         <button
           type="button"
-          onClick={search}
-          className="px-4 py-2 text-sm rounded-md border"
-          style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg-card)', color: 'var(--color-text)' }}
+          onClick={() => search()}
+          className="px-3.5 py-1.5 rounded-lg text-sm font-semibold cursor-pointer border-none"
+          style={{ background: 'var(--color-primary)', color: '#fff' }}
         >
-          Rechercher
+          Chercher
         </button>
-      </div>
+      </FilterBar>
 
-      {/* Table */}
-      <div className="rounded-lg overflow-hidden border" style={{ background: 'var(--color-bg-card)', borderColor: 'var(--color-border)' }}>
-        <table className="w-full border-collapse text-sm">
-          <thead>
-            <tr className="border-b" style={{ background: 'var(--color-bg)', borderColor: 'var(--color-border)' }}>
-              {['Nom', 'Type', 'N°', 'Stock', 'Unité', 'État'].map(h => (
-                <th
-                  key={h}
-                  className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide"
-                  style={{ color: 'var(--color-text-muted)' }}
-                >
-                  {h}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {produits.map(p => {
-              const typeCfg = TYPE_CONFIG[p.produit_type]
-              return (
-                <tr key={p.id} className="border-b" style={{ borderColor: 'var(--color-border)' }}>
-                  <td className="px-4 py-3 font-medium">
-                    <a
-                      href={`/backend/products/${p.id}`}
-                      className="no-underline"
-                      style={{ color: 'var(--color-primary)' }}
-                    >
-                      {p.name}
-                    </a>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span
-                      className="px-2.5 py-0.5 rounded-full text-xs font-medium"
-                      style={{ background: typeCfg.bg, color: typeCfg.color }}
-                    >
-                      {typeCfg.label}
+      <SectionCard noPadding>
+        <DataTable
+          columns={[
+            { key: 'name',   label: 'Nom' },
+            { key: 'type',   label: 'Type' },
+            { key: 'number', label: 'N°' },
+            { key: 'stock',  label: 'Stock' },
+            { key: 'unit',   label: 'Unité' },
+            { key: 'state',  label: 'État' },
+          ]}
+          data={produits}
+          emptyMessage="Aucun produit trouvé"
+          renderRow={(p, i) => {
+            const cfg = TYPE_CFG[p.produit_type]
+            const { Icon } = cfg
+            const isLow = p.population === 0
+            const isInactive = !!p.dead_at
+            return (
+              <tr
+                key={p.id}
+                className="border-b"
+                style={{ background: i % 2 === 0 ? 'transparent' : 'rgba(240,247,236,0.35)', borderColor: 'var(--color-border)' }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'var(--color-bg-highlight)' }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = i % 2 === 0 ? 'transparent' : 'rgba(240,247,236,0.35)' }}
+              >
+                <td className="px-3.5 py-2.5 text-sm">
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: cfg.bg, color: cfg.color }}>
+                      <Icon size={13} />
                     </span>
-                  </td>
-                  <td className="px-4 py-3" style={{ color: 'var(--color-text-muted)' }}>{p.number}</td>
-                  <td className="px-4 py-3 tabular-nums">{p.population}</td>
-                  <td className="px-4 py-3" style={{ color: 'var(--color-text-muted)' }}>{p.unit_name}</td>
-                  <td className="px-4 py-3">
-                    {p.dead_at ? (
-                      <span
-                        className="px-2.5 py-0.5 rounded-full text-xs font-medium"
-                        style={{ background: '#f3f4f6', color: '#374151' }}
-                      >
-                        Inactif
-                      </span>
-                    ) : p.population === 0 ? (
-                      <span
-                        className="px-2.5 py-0.5 rounded-full text-xs font-medium"
-                        style={{ background: '#fff7ed', color: '#c2410c' }}
-                      >
-                        Épuisé
-                      </span>
-                    ) : null}
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Pagination */}
-      <div className="flex justify-between items-center mt-4">
-        <span className="text-sm" style={{ color: 'var(--color-text-muted)' }}>
-          {meta.total_count} produit(s)
-        </span>
-        <div className="flex gap-2">
-          {meta.current_page > 1 && (
-            <button
-              type="button"
-              onClick={() => router.get('/backend/products', { q, produit_type: typeFilter, etat: etatFilter, page: meta.current_page - 1 })}
-              className="px-3 py-1.5 text-xs rounded border"
-              style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg-card)', color: 'var(--color-text)' }}
-            >
-              Précédent
-            </button>
-          )}
-          {meta.current_page < meta.total_pages && (
-            <button
-              type="button"
-              onClick={() => router.get('/backend/products', { q, produit_type: typeFilter, etat: etatFilter, page: meta.current_page + 1 })}
-              className="px-3 py-1.5 text-xs rounded border"
-              style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg-card)', color: 'var(--color-text)' }}
-            >
-              Suivant
-            </button>
-          )}
-        </div>
-      </div>
+                    <a href={`/backend/products/${p.id}`} className="font-semibold no-underline" style={{ color: 'var(--color-primary)' }}>{p.name}</a>
+                  </div>
+                </td>
+                <td className="px-3.5 py-2.5">
+                  <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-semibold" style={{ background: cfg.bg, color: cfg.color }}>{cfg.label}</span>
+                </td>
+                <td className="px-3.5 py-2.5 text-xs font-mono" style={{ color: 'var(--color-text-muted)' }}>{p.number}</td>
+                <td className="px-3.5 py-2.5 text-sm font-semibold tabular-nums" style={{ color: isLow ? 'var(--color-danger)' : 'var(--color-text)' }}>{p.population}</td>
+                <td className="px-3.5 py-2.5 text-sm" style={{ color: 'var(--color-text-muted)' }}>{p.unit_name}</td>
+                <td className="px-3.5 py-2.5">
+                  {isInactive
+                    ? <StateBadge label="Inactif"   color="var(--color-text-muted)" bg="var(--color-bg-subtle)" />
+                    : isLow
+                      ? <StateBadge label="Épuisé"   color="var(--color-danger)"     bg="var(--color-danger-bg)" />
+                      : <StateBadge label="En stock"  color="var(--color-primary)"    bg="var(--color-success-bg)" />
+                  }
+                </td>
+              </tr>
+            )
+          }}
+        />
+        {meta.total_pages > 1 && (
+          <Pagination
+            page={meta.current_page}
+            totalPages={meta.total_pages}
+            total={meta.total_count}
+            onPrev={() => router.get('/backend/products', { q, produit_type: typeFilter, etat: etatFilter, page: meta.current_page - 1 })}
+            onNext={() => router.get('/backend/products', { q, produit_type: typeFilter, etat: etatFilter, page: meta.current_page + 1 })}
+          />
+        )}
+      </SectionCard>
     </div>
   )
 }
 
 CatalogueIndex.layout = (page: ReactNode) => <AppShell>{page}</AppShell>
+export default CatalogueIndex
