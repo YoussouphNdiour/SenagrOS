@@ -2,37 +2,131 @@
 @import "tailwindcss";
 
 :root {
-  /* Couleurs */
-  --color-primary:       #1B6B3A;
-  --color-primary-light: #4CAF72;
-  --color-accent:        #E8A020;
-  --color-bg:            #F7F3EE;
-  --color-bg-card:       #FFFFFF;
-  --color-bg-subtle:     #f9f7f4;
-  --color-text:          #2C2416;
-  --color-text-muted:    #6B5E4E;
-  --color-border:        #E2D9CE;
-  --color-success:       #2D7A3A;
-  --color-success-bg:    #d1fae5;
-  --color-success-text:  #065f46;
-  --color-warning:       #D4841A;
-  --color-danger:        #D4420A;
-  --color-danger-bg:     #fee2e2;
-  --color-danger-text:   #991b1b;
-  --color-warning-bg:    #fef3c7;
-  --color-warning-text:  #92400e;
+  /* ---------------------------------------------------------------- COLORS */
 
-  /* Typographie */
-  --font-ui:      'Plus Jakarta Sans', system-ui, sans-serif;
-  --font-heading: 'Playfair Display', Georgia, serif;
+  /* Brand greens — savane & feuillage */
+  --color-primary:        #1B6B3A;
+  --color-primary-light:  #4CAF72;
+  --color-primary-dark:   #143F22;
 
-  /* Espacement */
-  --radius-card: 8px;
-  --shadow-card: 0 1px 3px rgba(44, 36, 22, 0.08);
+  /* Sidebar / nav greens — AppShell */
+  --color-nav-bar:        #1e3a16;
+  --color-nav-sidebar:    #2D4A22;
+  --color-nav-active:     #3d6130;
+  --color-nav-accent:     #6B9E3F;
+  --color-nav-text:       #9dc96b;
+  --color-nav-text-dim:   #6d9460;
+  --color-nav-divider:    #3d6130;
+
+  /* Accent — ambre baobab */
+  --color-accent:         #E8A020;
+
+  /* Backgrounds — sable */
+  --color-bg:             #F7F3EE;
+  --color-bg-subtle:      #f9f7f4;
+  --color-bg-card:        #FFFFFF;
+  --color-bg-highlight:   #f0f7ec;
+
+  /* Text — terre */
+  --color-text:           #2C2416;
+  --color-text-muted:     #6B5E4E;
+  --color-text-inverse:   #FFFFFF;
+
+  /* Borders */
+  --color-border:         #E2D9CE;
+  --color-border-strong:  #c8bdaa;
+
+  /* Semantic */
+  --color-success:        #2D7A3A;
+  --color-success-bg:     #d1fae5;
+  --color-success-text:   #065f46;
+  --color-warning:        #D4841A;
+  --color-warning-bg:     #fef3c7;
+  --color-warning-text:   #92400e;
+  --color-danger:         #D4420A;
+  --color-danger-bg:      #fee2e2;
+  --color-danger-text:    #991b1b;
+  --color-info:           #1f6f8b;
+  --color-info-bg:        #e0f2fe;
+  --color-info-text:      #1f6f8b;
+  --color-danger-border:  #fca5a5;
+
+  /* État interventions */
+  --state-planned:        #6B5E4E;
+  --state-in-progress:    #D4841A;
+  --state-done:           #2D7A3A;
+  --state-validated:      #1B6B3A;
+  --state-rejected:       #D4420A;
+
+  /* Alert surfaces */
+  --alert-overdue-bg:     #fef9c3;
+  --alert-overdue-text:   #854d0e;
+  --alert-danger-bg:      #fee2e2;
+  --alert-danger-text:    #991b1b;
+  --alert-danger-border:  #fca5a5;
+  --alert-danger-panel:   #fff5f5;
+
+  /* ----------------------------------------------------------------- TYPE */
+
+  --font-ui:        'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading:   'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-mono:      ui-monospace, 'SF Mono', Monaco, 'Cascadia Code', monospace;
+
+  /* Type scale */
+  --text-xs:        11px;
+  --text-sm:        12px;
+  --text-base:      13px;
+  --text-md:        14px;
+  --text-lg:        16px;
+  --text-xl:        20px;
+  --text-2xl:       22px;
+  --text-3xl:       24px;
+  --text-display:   32px;
+
+  /* ------------------------------------------------------------ SPACING */
+
+  --space-1:   4px;
+  --space-2:   8px;
+  --space-3:   12px;
+  --space-4:   16px;
+  --space-5:   20px;
+  --space-6:   24px;
+  --space-8:   32px;
+  --space-10:  40px;
+  --space-12:  48px;
+
+  /* ---------------------------------------------------------------- RADII */
+
+  --radius-sm:     4px;
+  --radius-md:     6px;
+  --radius-card:   8px;
+  --radius-pill:   999px;
+
+  /* ------------------------------------------------------------- SHADOWS */
+
+  --shadow-card:   0 1px 3px rgba(44, 36, 22, 0.08);
+  --shadow-elev:   0 4px 12px rgba(44, 36, 22, 0.12);
+  --shadow-pop:    0 8px 24px rgba(44, 36, 22, 0.16);
+
+  /* ----------------------------------------------------------- MOTION */
+
+  --ease-out:      cubic-bezier(0.22, 0.61, 0.36, 1);
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 300ms;
+
+  /* ----------------------------------------------- LAYOUT (AppShell) */
+
+  --layout-topbar-h:   56px;
+  --layout-sidebar-w:  220px;
+  --layout-page-pad:   24px;
 }
 
 body {
   font-family: var(--font-ui);
   background-color: var(--color-bg);
   color: var(--color-text);
+  font-size: var(--text-md);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
