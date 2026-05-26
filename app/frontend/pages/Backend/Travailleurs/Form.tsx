@@ -42,7 +42,7 @@ const TravailleursForm = ({ travailleur, errors }: TravailleurFormProps) => {
       <BackLink href="/backend/workers" label="Liste des travailleurs" />
 
       <div className="flex items-center gap-4 mb-6">
-        <IconBox icon={HardHat} color="var(--color-primary)" bg="var(--color-primary-bg)" />
+        <IconBox icon={HardHat} color="var(--color-primary)" bg="var(--color-success-bg)" />
         <div>
           <h1 className="text-[26px] font-bold m-0" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>
             {isEdit ? `Modifier le travailleur ${travailleur!.name}` : 'Nouveau travailleur'}

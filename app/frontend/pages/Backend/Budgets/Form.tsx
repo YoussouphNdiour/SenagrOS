@@ -1,7 +1,9 @@
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
+import { Save, Wallet } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
+import { BackLink, IconBox, SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
 import type { BudgetFormProps } from '../../../types/budget'
 
 export default function BudgetForm({ budget, errors, mode }: BudgetFormProps) {
@@ -27,107 +29,62 @@ export default function BudgetForm({ budget, errors, mode }: BudgetFormProps) {
     }
   }
 
-  const inputStyle: React.CSSProperties = {
-    width: '100%',
-    border: '1px solid var(--color-border)',
-    borderRadius: '0.375rem',
-    padding: '0.5rem 0.75rem',
-    fontSize: '0.875rem',
-    background: 'var(--color-bg)',
-    color: 'var(--color-text)',
-  }
+  const cancelHref = mode === 'edit'
+    ? `/backend/project_budgets/${budget.id}`
+    : '/backend/project_budgets'
 
   return (
-    <div className="p-8 max-w-lg">
-      <h1 className="text-2xl font-bold mb-6" style={{ color: 'var(--color-text)' }}>
-        {mode === 'new' ? 'Nouveau budget' : 'Modifier le budget'}
-      </h1>
+    <>
+      <BackLink href="/backend/project_budgets" label="Liste des budgets" />
 
-      <form
-        aria-label={mode === 'new' ? 'Nouveau budget' : 'Modifier le budget'}
-        onSubmit={handleSubmit}
-        style={{ background: 'var(--color-bg-card)', borderRadius: '0.5rem', border: '1px solid var(--color-border)', padding: '1.5rem' }}
-      >
-        {/* Nom */}
-        <div className="mb-4">
-          <label htmlFor="budget-name" className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text)' }}>
-            Nom <span style={{ color: '#dc2626' }}>*</span>
-          </label>
-          <input
-            id="budget-name"
-            type="text"
-            required
-            value={name}
-            onChange={e => setName(e.target.value)}
-            style={inputStyle}
-          />
-          {errors.name && <p className="text-xs mt-1" style={{ color: '#dc2626' }}>{errors.name[0]}</p>}
+      <div className="flex items-center gap-4 mb-6">
+        <IconBox icon={Wallet} color="var(--color-primary)" bg="var(--color-success-bg)" />
+        <div>
+          <h1 className="text-[26px] font-bold m-0" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>
+            {mode === 'new' ? 'Nouveau budget' : 'Modifier le budget'}
+          </h1>
         </div>
+      </div>
 
-        {/* Description */}
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text)' }}>
-            Description
-          </label>
-          <textarea
-            value={description}
-            onChange={e => setDescription(e.target.value)}
-            rows={4}
-            style={{ ...inputStyle, resize: 'vertical' }}
-          />
-          {errors.description && <p className="text-xs mt-1" style={{ color: '#dc2626' }}>{errors.description[0]}</p>}
-        </div>
+      <SectionCard>
+        <SectionTitle icon={Wallet}>Informations du budget</SectionTitle>
 
-        {/* Code analytique */}
-        <div className="mb-6">
-          <label className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text)' }}>
-            Code analytique isacompta{' '}
-            <span className="text-xs font-normal" style={{ color: 'var(--color-text-muted)' }}>(2 caractères max)</span>
-          </label>
-          <input
-            type="text"
-            maxLength={2}
-            value={analytique}
-            onChange={e => setAnalytique(e.target.value)}
-            placeholder="ex: MA"
-            style={{ ...inputStyle, width: '6rem' }}
-          />
-          {errors.isacompta_analytic_code && (
-            <p className="text-xs mt-1" style={{ color: '#dc2626' }}>{errors.isacompta_analytic_code[0]}</p>
-          )}
-        </div>
+        <form aria-label={mode === 'new' ? 'Nouveau budget' : 'Modifier le budget'} onSubmit={handleSubmit}>
+          <div className="flex flex-col gap-5">
+            <FormField label="Nom" required htmlFor="budget-name" error={errors.name?.[0]}>
+              <input id="budget-name" type="text" required value={name} onChange={e => setName(e.target.value)}
+                className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
+            </FormField>
 
-        <div style={{ display: 'flex', gap: '0.75rem' }}>
-          <button
-            type="submit"
-            disabled={submitting}
-            style={{
-              background: 'var(--color-primary)', color: '#fff', border: 'none',
-              borderRadius: '0.375rem', padding: '0.5rem 1.25rem', fontWeight: 500,
-              fontSize: '0.875rem', cursor: submitting ? 'not-allowed' : 'pointer',
-              opacity: submitting ? 0.7 : 1,
-            }}
-          >
-            {submitting ? 'Enregistrement…' : 'Enregistrer'}
-          </button>
-          <button
-            type="button"
-            onClick={() => router.visit(
-              mode === 'edit'
-                ? `/backend/project_budgets/${budget.id}`
-                : '/backend/project_budgets'
-            )}
-            style={{
-              background: 'var(--color-bg-card)', color: 'var(--color-text)',
-              border: '1px solid var(--color-border)', borderRadius: '0.375rem',
-              padding: '0.5rem 1.25rem', fontWeight: 500, fontSize: '0.875rem', cursor: 'pointer',
-            }}
-          >
-            Annuler
-          </button>
-        </div>
-      </form>
-    </div>
+            <FormField label="Description" htmlFor="budget-description" error={errors.description?.[0]}>
+              <textarea id="budget-description" value={description} onChange={e => setDescription(e.target.value)} rows={4}
+                className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y"
+                style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
+            </FormField>
+
+            <FormField
+              label="Code analytique isacompta"
+              help="2 caractères max"
+              htmlFor="budget-analytique"
+              error={errors.isacompta_analytic_code?.[0]}
+            >
+              <input id="budget-analytique" type="text" maxLength={2} value={analytique}
+                onChange={e => setAnalytique(e.target.value)} placeholder="ex: MA"
+                className="w-24 rounded-lg px-3 py-2 text-sm outline-none"
+                style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
+            </FormField>
+          </div>
+
+          <div className="flex items-center gap-3 mt-6 pt-5 border-t" style={{ borderColor: 'var(--color-border)' }}>
+            <PrimaryButton type="submit" disabled={submitting}>
+              <Save size={15} /> {submitting ? 'Enregistrement…' : 'Enregistrer'}
+            </PrimaryButton>
+            <PrimaryButton variant="secondary" onClick={() => router.visit(cancelHref)}>Annuler</PrimaryButton>
+          </div>
+        </form>
+      </SectionCard>
+    </>
   )
 }
 

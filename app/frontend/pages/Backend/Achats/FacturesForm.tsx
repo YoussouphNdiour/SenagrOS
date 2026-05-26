@@ -1,16 +1,12 @@
 import { type ReactNode, useState } from 'react'
 import { router } from '@inertiajs/react'
 import type { FormDataConvertible } from '@inertiajs/core'
+import { Save, Receipt, List } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
+import { SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
 import AchatItemsEditor from '../../../components/achats/AchatItemsEditor'
 import AchatsTabs from '../../../components/achats/AchatsTabs'
 import type { FacturesFormProps, AchatItem } from '../../../types/achat'
-
-function FieldError({ errors, field }: { errors: Record<string, string[]>; field: string }) {
-  const messages = errors[field]
-  if (!messages?.length) return null
-  return <p style={{ color: '#dc2626', fontSize: '0.875rem', margin: '0.25rem 0 0' }}>{messages[0]}</p>
-}
 
 export default function FacturesForm({ facture, natures, taxes, errors }: FacturesFormProps) {
   const isEdit = Boolean(facture.id)
@@ -61,158 +57,81 @@ export default function FacturesForm({ facture, natures, taxes, errors }: Factur
     }
   }
 
-  const label: React.CSSProperties = {
-    display: 'block',
-    fontSize: '0.875rem',
-    fontWeight: 500,
-    color: 'var(--color-text)',
-    marginBottom: '0.375rem',
-  }
-  const inp: React.CSSProperties = {
-    width: '100%',
-    padding: '0.5rem 0.75rem',
-    border: '1px solid var(--color-border)',
-    borderRadius: '0.375rem',
-    fontSize: '0.9375rem',
-    boxSizing: 'border-box',
-  }
-  const fieldStyle: React.CSSProperties = { marginBottom: '1.25rem' }
-  const card: React.CSSProperties = {
-    background: 'var(--color-bg-card)',
-    borderRadius: '0.5rem',
-    border: '1px solid var(--color-border)',
-    padding: '1.5rem',
-    marginBottom: '1.25rem',
-  }
-
   return (
-    <div style={{ padding: '2rem', maxWidth: '860px' }}>
+    <div className="max-w-4xl">
       <AchatsTabs />
-      <h1 style={{ fontSize: '1.375rem', fontWeight: 700, color: 'var(--color-text)', marginBottom: '1.5rem' }}>
+
+      <h1 className="text-[22px] font-bold mb-6" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>
         {isEdit ? `Modifier la facture N° ${facture.number}` : 'Nouvelle facture'}
       </h1>
 
       <form aria-label="Formulaire facture" onSubmit={handleSubmit}>
-        <div style={card}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.25rem' }}>
+        <SectionCard className="mb-5">
+          <SectionTitle icon={Receipt}>Informations</SectionTitle>
+          <div className="flex flex-col gap-5">
             {natures.length > 1 && (
-              <div style={fieldStyle}>
-                <label style={label}>Nature</label>
-                <select value={natureId} onChange={e => setNatureId(e.target.value)} style={inp}>
+              <FormField label="Nature" htmlFor="fac-nature" error={errors.nature_id?.[0]}>
+                <select id="fac-nature" value={natureId} onChange={e => setNatureId(e.target.value)}
+                  className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                  style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}>
                   {natures.map(n => <option key={n.id} value={n.id}>{n.name}</option>)}
                 </select>
-                <FieldError errors={errors} field="nature_id" />
-              </div>
+              </FormField>
             )}
 
-            <div style={fieldStyle}>
-              <label style={label}>Fournisseur</label>
-              <input
-                style={inp}
-                value={supplierName}
+            <FormField label="Fournisseur" required htmlFor="fac-supplier" error={errors.supplier_id?.[0]}>
+              <input id="fac-supplier" type="text" value={supplierName}
                 onChange={e => setSupplierName(e.target.value)}
-                placeholder="Nom du fournisseur"
-                required
-              />
-              <input
-                type="hidden"
-                value={supplierId}
-                onChange={e => setSupplierId(e.target.value)}
-              />
-              <FieldError errors={errors} field="supplier_id" />
+                placeholder="Nom du fournisseur" required
+                className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
+              <input type="hidden" value={supplierId} onChange={e => setSupplierId(e.target.value)} />
+            </FormField>
+
+            <div className="grid grid-cols-2 gap-4">
+              <FormField label="Date facture" required htmlFor="fac-invoiced-at" error={errors.invoiced_at?.[0]}>
+                <input id="fac-invoiced-at" type="date" value={invoicedAt} onChange={e => setInvoicedAt(e.target.value)} required
+                  className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                  style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
+              </FormField>
+
+              <FormField label="Référence fournisseur" htmlFor="fac-ref" error={errors.reference_number?.[0]}>
+                <input id="fac-ref" type="text" value={referenceNumber} onChange={e => setReferenceNumber(e.target.value)}
+                  className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                  style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
+              </FormField>
+
+              <FormField label="Délai paiement" htmlFor="fac-delay">
+                <input id="fac-delay" type="text" value={paymentDelay} onChange={e => setPaymentDelay(e.target.value)}
+                  className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                  style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
+              </FormField>
+
+              <FormField label="Responsable" htmlFor="fac-responsible">
+                <input id="fac-responsible" type="text" value={responsibleName} onChange={e => setResponsibleName(e.target.value)}
+                  className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                  style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
+              </FormField>
             </div>
 
-            <div style={fieldStyle}>
-              <label style={label}>Date facture *</label>
-              <input
-                type="date"
-                style={inp}
-                value={invoicedAt}
-                onChange={e => setInvoicedAt(e.target.value)}
-                required
-              />
-              <FieldError errors={errors} field="invoiced_at" />
-            </div>
-
-            <div style={fieldStyle}>
-              <label style={label}>Référence fournisseur</label>
-              <input
-                style={inp}
-                value={referenceNumber}
-                onChange={e => setReferenceNumber(e.target.value)}
-              />
-              <FieldError errors={errors} field="reference_number" />
-            </div>
-
-            <div style={fieldStyle}>
-              <label style={label}>Délai paiement</label>
-              <input
-                style={inp}
-                value={paymentDelay}
-                onChange={e => setPaymentDelay(e.target.value)}
-              />
-            </div>
-
-            <div style={fieldStyle}>
-              <label style={label}>Responsable</label>
-              <input
-                style={inp}
-                value={responsibleName}
-                onChange={e => setResponsibleName(e.target.value)}
-              />
-            </div>
-
-            <div style={{ ...fieldStyle, gridColumn: '1 / -1' }}>
-              <label style={label}>Description</label>
-              <textarea
-                style={{ ...inp, resize: 'vertical', minHeight: '80px' }}
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-              />
-            </div>
+            <FormField label="Description" htmlFor="fac-description">
+              <textarea id="fac-description" value={description} onChange={e => setDescription(e.target.value)} rows={3}
+                className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y"
+                style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
+            </FormField>
           </div>
-        </div>
+        </SectionCard>
 
-        <div style={card}>
-          <h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '1rem', color: 'var(--color-text)' }}>
-            Lignes de facture
-          </h2>
+        <SectionCard className="mb-5">
+          <SectionTitle icon={List}>Lignes de facture</SectionTitle>
           <AchatItemsEditor items={items} taxes={taxes} currency={currency} onChange={setItems} />
-        </div>
+        </SectionCard>
 
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-          <button
-            type="submit"
-            style={{
-              background: 'var(--color-primary)',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '0.5rem',
-              padding: '0.625rem 1.25rem',
-              cursor: 'pointer',
-              fontWeight: 600,
-              fontSize: '0.9375rem',
-            }}
-          >
-            {isEdit ? 'Enregistrer' : 'Créer la facture'}
-          </button>
-          <a
-            href="/backend/purchase_invoices"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              background: 'var(--color-bg-card)',
-              color: 'var(--color-text)',
-              border: '1px solid var(--color-border)',
-              borderRadius: '0.5rem',
-              padding: '0.625rem 1.25rem',
-              cursor: 'pointer',
-              fontSize: '0.9375rem',
-              textDecoration: 'none',
-            }}
-          >
-            Annuler
-          </a>
+        <div className="flex items-center gap-3">
+          <PrimaryButton type="submit">
+            <Save size={15} /> {isEdit ? 'Enregistrer' : 'Créer la facture'}
+          </PrimaryButton>
+          <PrimaryButton href="/backend/purchase_invoices" variant="secondary">Annuler</PrimaryButton>
         </div>
       </form>
     </div>

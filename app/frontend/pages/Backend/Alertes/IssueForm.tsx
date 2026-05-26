@@ -1,23 +1,18 @@
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
-import { ArrowLeft, Save } from 'lucide-react'
+import { Save, AlertTriangle } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
+import { BackLink, IconBox, SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
 import type { IssueFormProps } from '../../../types/issue'
 import { ISSUE_NATURE_LABELS } from '../../../types/issue'
 
-const errorStyle: React.CSSProperties = {
-  fontSize: '11px',
-  color: 'var(--color-danger)',
-  marginTop: '4px',
-}
-
 const GRAVITY_COLOR: Record<number, string> = {
-  1: '#6b7280',
-  2: '#6b7280',
-  3: '#f59e0b',
+  1: 'var(--color-text-muted)',
+  2: 'var(--color-text-muted)',
+  3: 'var(--color-warning)',
   4: '#f97316',
-  5: '#dc2626',
+  5: 'var(--color-danger)',
 }
 
 export default function IssueForm({ issue, errors }: IssueFormProps) {
@@ -51,83 +46,45 @@ export default function IssueForm({ issue, errors }: IssueFormProps) {
     }
   }
 
-  const inputStyle: React.CSSProperties = {
-    border: '1px solid var(--color-border)',
-    background: 'var(--color-bg)',
-    color: 'var(--color-text)',
-    outline: 'none',
-  }
-
   return (
-    <div className="p-8 max-w-xl">
-      {/* Retour */}
-      <div className="mb-4">
-        <a
-          href="/backend/alerts"
-          className="flex items-center gap-1 text-sm no-underline"
-          style={{ color: 'var(--color-text-muted)' }}
-        >
-          <ArrowLeft size={15} />
-          Retour aux alertes
-        </a>
+    <>
+      <BackLink href="/backend/alerts" label="Retour aux alertes" />
+
+      <div className="flex items-center gap-4 mb-6">
+        <IconBox icon={AlertTriangle} color="var(--color-warning-text)" bg="var(--color-warning-bg)" />
+        <div>
+          <h1 className="text-[26px] font-bold m-0" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>
+            {isEdit ? `Modifier — ${issue!.name}` : 'Nouveau problème'}
+          </h1>
+        </div>
       </div>
 
-      <h1 className="text-2xl font-bold mb-6" style={{ color: 'var(--color-text)' }}>
-        {isEdit ? `Modifier — ${issue!.name}` : 'Nouveau problème'}
-      </h1>
+      <SectionCard>
+        <SectionTitle icon={AlertTriangle}>Informations du problème</SectionTitle>
 
-      <div
-        className="rounded-lg p-6"
-        style={{
-          background: 'var(--color-bg-card)',
-          border: '1px solid var(--color-border)',
-          boxShadow: 'var(--shadow-card)',
-        }}
-      >
         <form onSubmit={handleSubmit} noValidate>
           <div className="flex flex-col gap-5">
-            {/* Nom */}
-            <div>
-              <label htmlFor="issue-name" className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text)' }}>
-                Nom <span style={{ color: 'var(--color-danger)' }}>*</span>
-              </label>
-              <input
-                id="issue-name"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                className="w-full rounded px-3 py-2 text-sm"
-                style={inputStyle}
-                placeholder="ex. Attaque criquet"
-              />
-              {errors.name && <p style={errorStyle}>{errors.name}</p>}
-            </div>
+            <FormField label="Nom" required htmlFor="issue-name" error={errors.name}>
+              <input id="issue-name" type="text" value={name} onChange={e => setName(e.target.value)} required
+                className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}
+                placeholder="ex. Attaque criquet" />
+            </FormField>
 
-            {/* Nature */}
-            <div>
-              <label htmlFor="issue-nature" className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text)' }}>
-                Nature <span style={{ color: 'var(--color-danger)' }}>*</span>
-              </label>
-              <select
-                id="issue-nature"
-                value={nature}
-                onChange={(e) => setNature(e.target.value)}
-                className="w-full rounded px-3 py-2 text-sm"
-                style={inputStyle}
-              >
+            <FormField label="Nature" required htmlFor="issue-nature" error={errors.nature}>
+              <select id="issue-nature" value={nature} onChange={e => setNature(e.target.value)}
+                className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}>
                 <option value="">— Choisir une nature —</option>
                 {Object.entries(ISSUE_NATURE_LABELS).map(([key, label]) => (
                   <option key={key} value={key}>{label}</option>
                 ))}
               </select>
-              {errors.nature && <p style={errorStyle}>{errors.nature}</p>}
-            </div>
+            </FormField>
 
-            {/* Gravite */}
             <div>
-              <p className="text-sm font-medium mb-2" style={{ color: 'var(--color-text)' }}>
-                Gravite <span style={{ color: 'var(--color-danger)' }}>*</span>
+              <p className="text-sm font-medium mb-2 m-0" style={{ color: 'var(--color-text)' }}>
+                Gravité <span style={{ color: 'var(--color-danger)' }}>*</span>
               </p>
               <div className="flex gap-2">
                 {([1, 2, 3, 4, 5] as const).map(g => (
@@ -135,86 +92,43 @@ export default function IssueForm({ issue, errors }: IssueFormProps) {
                     key={g}
                     type="button"
                     onClick={() => setGravity(g)}
-                    className="w-10 h-10 rounded-full text-sm font-bold"
+                    className="w-10 h-10 rounded-full text-sm font-bold cursor-pointer"
                     style={{
                       background: gravity === g ? GRAVITY_COLOR[g] : 'var(--color-bg-card)',
                       color: gravity === g ? '#fff' : GRAVITY_COLOR[g],
                       border: `2px solid ${GRAVITY_COLOR[g]}`,
-                      cursor: 'pointer',
                     }}
                   >
                     {g}
                   </button>
                 ))}
               </div>
-              {errors.gravity && <p style={errorStyle}>{errors.gravity}</p>}
+              {errors.gravity && <p className="text-xs mt-1 m-0" style={{ color: 'var(--color-danger)' }}>{errors.gravity}</p>}
             </div>
 
-            {/* Date observee */}
-            <div>
-              <label htmlFor="issue-date" className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text)' }}>
-                Date observee <span style={{ color: 'var(--color-danger)' }}>*</span>
-              </label>
-              <input
-                id="issue-date"
-                type="date"
-                value={observedAt}
-                onChange={(e) => setObservedAt(e.target.value)}
-                className="w-full rounded px-3 py-2 text-sm"
-                style={inputStyle}
-              />
-              {errors.observed_at && <p style={errorStyle}>{errors.observed_at}</p>}
-            </div>
+            <FormField label="Date observée" required htmlFor="issue-date" error={errors.observed_at}>
+              <input id="issue-date" type="date" value={observedAt} onChange={e => setObservedAt(e.target.value)}
+                className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
+            </FormField>
 
-            {/* Description */}
-            <div>
-              <label htmlFor="issue-desc" className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text)' }}>
-                Description
-              </label>
-              <textarea
-                id="issue-desc"
-                value={description ?? ''}
-                onChange={(e) => setDescription(e.target.value)}
-                rows={3}
-                className="w-full rounded px-3 py-2 text-sm"
-                style={{ ...inputStyle, resize: 'vertical' }}
-                placeholder="Description optionnelle..."
-              />
-            </div>
+            <FormField label="Description" htmlFor="issue-desc">
+              <textarea id="issue-desc" value={description ?? ''} onChange={e => setDescription(e.target.value)} rows={3}
+                className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y"
+                style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}
+                placeholder="Description optionnelle..." />
+            </FormField>
           </div>
 
-          {/* Actions */}
-          <div className="flex items-center gap-3 mt-6 pt-5" style={{ borderTop: '1px solid var(--color-border)' }}>
-            <button
-              type="submit"
-              disabled={submitting}
-              className="flex items-center gap-2 px-4 py-2 rounded text-sm font-medium"
-              style={{
-                background: 'var(--color-primary)',
-                color: '#fff',
-                border: 'none',
-                cursor: submitting ? 'not-allowed' : 'pointer',
-                opacity: submitting ? 0.7 : 1,
-              }}
-            >
-              <Save size={15} />
-              Enregistrer
-            </button>
-            <a
-              href="/backend/alerts"
-              className="px-4 py-2 rounded text-sm font-medium no-underline"
-              style={{
-                background: 'var(--color-bg-card)',
-                border: '1px solid var(--color-border)',
-                color: 'var(--color-text)',
-              }}
-            >
-              Annuler
-            </a>
+          <div className="flex items-center gap-3 mt-6 pt-5 border-t" style={{ borderColor: 'var(--color-border)' }}>
+            <PrimaryButton type="submit" disabled={submitting}>
+              <Save size={15} /> Enregistrer
+            </PrimaryButton>
+            <PrimaryButton href="/backend/alerts" variant="secondary">Annuler</PrimaryButton>
           </div>
         </form>
-      </div>
-    </div>
+      </SectionCard>
+    </>
   )
 }
 

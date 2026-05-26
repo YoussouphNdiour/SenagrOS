@@ -72,7 +72,7 @@ const InterventionsForm = ({
       <BackLink href="/backend/interventions" label="Retour aux interventions" />
 
       <div className="flex items-center gap-4 mb-6">
-        <IconBox icon={ClipboardList} color="var(--color-primary)" bg="var(--color-primary-bg)" />
+        <IconBox icon={ClipboardList} color="var(--color-primary)" bg="var(--color-success-bg)" />
         <div>
           <h1 className="text-[26px] font-bold m-0" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>
             {isEdit ? "Modifier l'intervention" : 'Nouvelle intervention'}

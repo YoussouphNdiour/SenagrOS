@@ -90,7 +90,7 @@ const ComptabiliteForm = ({ entry, journals, errors }: ComptabiliteFormProps) =>
       <div className="flex items-center gap-4 mb-6">
         <div
           className="flex items-center justify-center rounded-lg w-12 h-12 shrink-0"
-          style={{ background: 'var(--color-primary-bg)' }}
+          style={{ background: 'var(--color-success-bg)' }}
         >
           <BookOpen size={22} style={{ color: 'var(--color-primary)' }} />
         </div>
