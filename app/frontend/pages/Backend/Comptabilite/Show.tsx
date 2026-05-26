@@ -4,9 +4,9 @@ import { AppShell } from '../../../components/AppShell'
 import type { JournalEntryShowProps } from '../../../types/journal_entry'
 
 const STATE_COLORS: Record<string, { bg: string; color: string; label: string }> = {
-  draft:     { bg: '#fef3c7', color: '#92400e', label: 'Brouillon' },
-  confirmed: { bg: '#dbeafe', color: '#1e40af', label: 'Confirmée' },
-  closed:    { bg: '#d1fae5', color: '#065f46', label: 'Clôturée' },
+  draft:     { bg: 'var(--color-warning-bg)', color: 'var(--color-warning-text)', label: 'Brouillon' },
+  confirmed: { bg: 'var(--color-info-bg)',    color: 'var(--color-info)',         label: 'Confirmée' },
+  closed:    { bg: 'var(--color-success-bg)', color: 'var(--color-success-text)', label: 'Clôturée' },
 }
 
 function formatAmount(amount: number, currency: string): string {
@@ -23,13 +23,13 @@ function formatAmount(amount: number, currency: string): string {
 
 function JournalEntryShow({ entry, items }: JournalEntryShowProps) {
   const stateConfig =
-    STATE_COLORS[entry.state] ?? { bg: '#f3f4f6', color: '#374151', label: entry.state }
+    STATE_COLORS[entry.state] ?? { bg: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)', label: entry.state }
   const currency = entry.real_currency || 'XOF'
   const balance = entry.real_debit - entry.real_credit
   const isBalanced = Math.abs(balance) < 0.01
 
-  const balanceBg = isBalanced ? '#d1fae5' : '#fef3c7'
-  const balanceColor = isBalanced ? '#065f46' : '#92400e'
+  const balanceBg = isBalanced ? 'var(--color-success-bg)' : 'var(--color-warning-bg)'
+  const balanceColor = isBalanced ? 'var(--color-success-text)' : 'var(--color-warning-text)'
 
   const detailItems: Array<{ label: string; value: string }> = [
     { label: 'Date comptable', value: entry.printed_on ?? '—' },
@@ -108,7 +108,7 @@ function JournalEntryShow({ entry, items }: JournalEntryShowProps) {
           }}
         >
           <div className="flex items-center gap-2 mb-2">
-            <TrendingDown size={16} style={{ color: '#1e40af' }} />
+            <TrendingDown size={16} style={{ color: 'var(--color-info)' }} />
             <span
               className="text-xs font-semibold uppercase tracking-wide"
               style={{ color: 'var(--color-text-muted)' }}
@@ -116,7 +116,7 @@ function JournalEntryShow({ entry, items }: JournalEntryShowProps) {
               Débit total
             </span>
           </div>
-          <div className="text-lg font-bold" style={{ color: '#1e40af' }}>
+          <div className="text-lg font-bold" style={{ color: 'var(--color-info)' }}>
             {formatAmount(entry.real_debit, currency)}
           </div>
         </div>
@@ -130,7 +130,7 @@ function JournalEntryShow({ entry, items }: JournalEntryShowProps) {
           }}
         >
           <div className="flex items-center gap-2 mb-2">
-            <TrendingUp size={16} style={{ color: '#065f46' }} />
+            <TrendingUp size={16} style={{ color: 'var(--color-success-text)' }} />
             <span
               className="text-xs font-semibold uppercase tracking-wide"
               style={{ color: 'var(--color-text-muted)' }}
@@ -138,7 +138,7 @@ function JournalEntryShow({ entry, items }: JournalEntryShowProps) {
               Crédit total
             </span>
           </div>
-          <div className="text-lg font-bold" style={{ color: '#065f46' }}>
+          <div className="text-lg font-bold" style={{ color: 'var(--color-success-text)' }}>
             {formatAmount(entry.real_credit, currency)}
           </div>
         </div>
@@ -253,7 +253,7 @@ function JournalEntryShow({ entry, items }: JournalEntryShowProps) {
                     {item.letter ? (
                       <span
                         className="inline-block px-1.5 py-0.5 rounded text-xs font-mono font-semibold"
-                        style={{ background: '#dbeafe', color: '#1e40af' }}
+                        style={{ background: 'var(--color-info-bg)', color: 'var(--color-info)' }}
                       >
                         {item.letter}
                       </span>
@@ -263,13 +263,13 @@ function JournalEntryShow({ entry, items }: JournalEntryShowProps) {
                   </td>
                   <td
                     className="px-4 py-3 text-right font-medium"
-                    style={{ color: item.real_debit > 0 ? '#1e40af' : 'var(--color-text-muted)' }}
+                    style={{ color: item.real_debit > 0 ? 'var(--color-info)' : 'var(--color-text-muted)' }}
                   >
                     {item.real_debit > 0 ? formatAmount(item.real_debit, currency) : '—'}
                   </td>
                   <td
                     className="px-4 py-3 text-right font-medium"
-                    style={{ color: item.real_credit > 0 ? '#065f46' : 'var(--color-text-muted)' }}
+                    style={{ color: item.real_credit > 0 ? 'var(--color-success-text)' : 'var(--color-text-muted)' }}
                   >
                     {item.real_credit > 0 ? formatAmount(item.real_credit, currency) : '—'}
                   </td>
@@ -291,10 +291,10 @@ function JournalEntryShow({ entry, items }: JournalEntryShowProps) {
                   >
                     Totaux
                   </td>
-                  <td className="px-4 py-2 text-right font-bold" style={{ color: '#1e40af' }}>
+                  <td className="px-4 py-2 text-right font-bold" style={{ color: 'var(--color-info)' }}>
                     {formatAmount(entry.real_debit, currency)}
                   </td>
-                  <td className="px-4 py-2 text-right font-bold" style={{ color: '#065f46' }}>
+                  <td className="px-4 py-2 text-right font-bold" style={{ color: 'var(--color-success-text)' }}>
                     {formatAmount(entry.real_credit, currency)}
                   </td>
                 </tr>

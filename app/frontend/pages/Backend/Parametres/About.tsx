@@ -37,7 +37,7 @@ function ParametresAbout({ app_info }: SettingsAboutProps) {
       <div className="flex items-center gap-3 mb-6">
         <div
           className="flex items-center justify-center rounded-lg"
-          style={{ width: '40px', height: '40px', background: '#d1fae5' }}
+          style={{ width: '40px', height: '40px', background: 'var(--color-success-bg)' }}
         >
           <Settings size={20} style={{ color: 'var(--color-primary)' }} />
         </div>
