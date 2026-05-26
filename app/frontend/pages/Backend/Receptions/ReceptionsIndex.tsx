@@ -4,16 +4,17 @@ import { router } from '@inertiajs/react'
 import { Plus, Pencil, Trash2 } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
 import AchatsTabs from '../../../components/achats/AchatsTabs'
+import { PageHeader, SectionCard, FilterBar, StateBadge, Pagination, PrimaryButton } from '../../../components/ui'
 import type { ReceptionsIndexProps, ReceptionState, ReceptionReconciliationState } from '../../../types/reception'
 
-const STATE_CONFIG: Record<ReceptionState, { label: string; bg: string; color: string }> = {
-  draft: { label: 'Brouillon', bg: '#fef9c3', color: '#854d0e' },
-  given: { label: 'Validée',   bg: '#dcfce7', color: '#166534' },
+const STATE_CONFIG: Record<ReceptionState, { label: string; color: string; bg: string }> = {
+  draft: { label: 'Brouillon', color: 'var(--color-warning-text)', bg: 'var(--color-warning-bg)' },
+  given: { label: 'Validée',   color: 'var(--color-primary)',      bg: 'var(--color-success-bg)' },
 }
 
-const RECONCILIATION_CONFIG: Record<ReceptionReconciliationState, { label: string; bg: string; color: string }> = {
-  to_reconcile: { label: 'Non facturée', bg: '#fef3c7', color: '#92400e' },
-  reconcile:    { label: 'Facturée',     bg: '#dcfce7', color: '#166534' },
+const RECONCILIATION_CONFIG: Record<ReceptionReconciliationState, { label: string; color: string; bg: string }> = {
+  to_reconcile: { label: 'Non facturée', color: 'var(--color-warning-text)', bg: 'var(--color-warning-bg)' },
+  reconcile:    { label: 'Facturée',     color: 'var(--color-primary)',      bg: 'var(--color-success-bg)' },
 }
 
 export default function ReceptionsIndex({ receptions, filters, meta }: ReceptionsIndexProps) {
@@ -52,87 +53,96 @@ export default function ReceptionsIndex({ receptions, filters, meta }: Reception
     ? `/backend/purchase_invoices/new?${[...selectedIds].map(id => `reception_ids[]=${id}`).join('&')}`
     : '#'
 
-  const card: React.CSSProperties = { background: 'var(--color-bg-card)', borderRadius: '0.5rem', border: '1px solid var(--color-border)' }
-  const th: React.CSSProperties = { padding: '0.75rem 1rem', textAlign: 'left', fontSize: '0.8125rem', color: 'var(--color-text-muted)', fontWeight: 600, borderBottom: '1px solid var(--color-border)' }
-  const td: React.CSSProperties = { padding: '0.75rem 1rem', borderBottom: '1px solid var(--color-border)', fontSize: '0.9375rem' }
-
   return (
-    <div style={{ padding: '2rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-        <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-text)', margin: 0 }}>Achats</h1>
-        <a href="/backend/receptions/new" style={{ textDecoration: 'none' }}>
-          <button type="button" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', background: 'var(--color-primary)', color: '#fff', border: 'none', borderRadius: '0.5rem', padding: '0.5rem 1rem', cursor: 'pointer', fontWeight: 500 }}>
-            <Plus size={16} /> Nouvelle réception
-          </button>
-        </a>
-      </div>
+    <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
+      <PageHeader
+        title="Achats"
+        subtitle={`${meta.total_count} réception${meta.total_count !== 1 ? 's' : ''} fournisseur`}
+        action={
+          <PrimaryButton href="/backend/receptions/new">
+            <Plus size={14} /> Nouvelle réception
+          </PrimaryButton>
+        }
+      />
 
       <AchatsTabs />
 
-      {/* Filter bar */}
-      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1.25rem', flexWrap: 'wrap', alignItems: 'center' }}>
+      <FilterBar>
         <input
           type="text"
           value={q}
           onChange={e => setQ(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && search()}
           placeholder="Rechercher N°, référence, fournisseur…"
-          style={{ flex: 1, minWidth: '220px', padding: '0.5rem 0.75rem', border: '1px solid var(--color-border)', borderRadius: '0.375rem', fontSize: '0.9375rem' }}
+          className="flex-1 min-w-[220px] px-3 py-1.5 text-sm rounded-lg"
+          style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}
         />
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+        <div className="flex gap-3 items-center">
           {(['draft', 'given'] as ReceptionState[]).map(state => (
-            <label key={state} style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', cursor: 'pointer', fontSize: '0.9rem' }}>
+            <label key={state} className="flex items-center gap-1.5 cursor-pointer text-sm" style={{ color: 'var(--color-text)' }}>
               <input
                 type="checkbox"
                 aria-label={`Filtrer par état : ${STATE_CONFIG[state].label}`}
                 checked={selectedStates.includes(state)}
                 onChange={() => toggleState(state)}
               />
-              <span aria-hidden="true" style={{ userSelect: 'none' }}>
-                {state === 'draft' ? 'Brouillons' : 'Validées'}
-              </span>
+              {state === 'draft' ? 'Brouillons' : 'Validées'}
             </label>
           ))}
         </div>
-        <button type="button" onClick={search} style={{ padding: '0.5rem 1rem', background: 'var(--color-bg-card)', border: '1px solid var(--color-border)', borderRadius: '0.375rem', cursor: 'pointer' }}>
-          Rechercher
+        <button
+          type="button"
+          onClick={search}
+          className="px-3.5 py-1.5 rounded-lg text-sm font-semibold cursor-pointer border-none"
+          style={{ background: 'var(--color-primary)', color: '#fff' }}
+        >
+          Chercher
         </button>
-      </div>
+      </FilterBar>
 
-      {/* Action bar — visible only when ≥2 invoiceable receptions are checked */}
       <div role="status" aria-live="polite" aria-atomic="true">
         {selectedIds.size >= 2 && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', padding: '0.75rem 1rem', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '0.5rem', marginBottom: '1rem' }}>
-            <span style={{ fontSize: '0.9375rem', color: '#1e40af' }}>
+          <div
+            className="flex items-center gap-4 rounded-[10px] px-4 py-3 mb-4"
+            style={{ background: 'var(--color-info-bg)', border: '1px solid var(--color-border)' }}
+          >
+            <span className="text-sm" style={{ color: 'var(--color-info-text)' }}>
               {selectedIds.size} réception(s) sélectionnée(s)
             </span>
-            <a href={groupedInvoiceHref} style={{ textDecoration: 'none' }}>
-              <button type="button" style={{ background: '#166534', color: '#fff', border: 'none', borderRadius: '0.5rem', padding: '0.5rem 1rem', cursor: 'pointer', fontWeight: 500, fontSize: '0.9rem' }}>
-                Créer une facture groupée
-              </button>
-            </a>
+            <PrimaryButton href={groupedInvoiceHref} size="sm">
+              Créer une facture groupée
+            </PrimaryButton>
           </div>
         )}
       </div>
 
-      {/* Table */}
-      <div style={{ ...card, overflowX: 'auto' }}>
+      <SectionCard noPadding>
         <table style={{ width: '100%', borderCollapse: 'collapse' }}>
           <thead>
-            <tr>
-              <th style={{ ...th, width: '2.5rem' }}>Sélectionner</th>
+            <tr style={{ background: 'var(--color-bg)' }}>
+              <th className="px-3.5 py-2.5 text-[10px] font-semibold uppercase tracking-widest border-b text-left" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-muted)', width: '2.5rem' }}>
+                Sélectionner
+              </th>
               {['N° réception', 'Fournisseur', 'N° commande', 'État', 'Date prévue', 'Date réception', 'HT', 'Facturation', 'Actions'].map(h => (
-                <th key={h} style={th}>{h}</th>
+                <th key={h} className="px-3.5 py-2.5 text-left text-[10px] font-semibold uppercase tracking-widest border-b" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-muted)' }}>
+                  {h}
+                </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {receptions.map(r => {
-              const stateBadge = STATE_CONFIG[r.state] ?? { label: r.state, bg: '#f3f4f6', color: '#6b7280' }
-              const reconcBadge = RECONCILIATION_CONFIG[r.reconciliation_state] ?? { label: r.reconciliation_state, bg: '#f3f4f6', color: '#6b7280' }
+            {receptions.map((r, i) => {
+              const stateCfg = STATE_CONFIG[r.state]
+              const reconcCfg = RECONCILIATION_CONFIG[r.reconciliation_state]
               return (
-                <tr key={r.id}>
-                  <td style={{ ...td, textAlign: 'center' }}>
+                <tr
+                  key={r.id}
+                  className="border-b"
+                  style={{ background: i % 2 === 0 ? 'transparent' : 'rgba(240,247,236,0.35)', borderColor: 'var(--color-border)' }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = 'var(--color-bg-highlight)' }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = i % 2 === 0 ? 'transparent' : 'rgba(240,247,236,0.35)' }}
+                >
+                  <td className="px-3.5 py-2.5 text-center">
                     <input
                       type="checkbox"
                       aria-label={`Sélectionner la réception ${r.number}`}
@@ -141,45 +151,40 @@ export default function ReceptionsIndex({ receptions, filters, meta }: Reception
                       disabled={!r.invoiceable}
                     />
                   </td>
-                  <td style={td}>
-                    <a href={`/backend/receptions/${r.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'none', fontWeight: 500 }}>{r.number}</a>
+                  <td className="px-3.5 py-2.5 text-sm">
+                    <a href={`/backend/receptions/${r.id}`} className="font-semibold no-underline" style={{ color: 'var(--color-primary)' }}>{r.number}</a>
                   </td>
-                  <td style={td}>{r.supplier.full_name}</td>
-                  <td style={td}>
+                  <td className="px-3.5 py-2.5 text-sm" style={{ color: 'var(--color-text)' }}>{r.supplier.full_name}</td>
+                  <td className="px-3.5 py-2.5 text-sm" style={{ color: 'var(--color-text-muted)' }}>
                     {r.purchase_order
-                      ? <a href={`/backend/purchase_orders/${r.purchase_order.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'none' }}>{r.purchase_order.number}</a>
+                      ? <a href={`/backend/purchase_orders/${r.purchase_order.id}`} className="no-underline" style={{ color: 'var(--color-primary)' }}>{r.purchase_order.number}</a>
                       : '—'}
                   </td>
-                  <td style={td}>
-                    <span style={{ background: stateBadge.bg, color: stateBadge.color, padding: '0.125rem 0.625rem', borderRadius: '9999px', fontSize: '0.8rem', fontWeight: 500 }}>
-                      {stateBadge.label}
-                    </span>
+                  <td className="px-3.5 py-2.5">
+                    {stateCfg && <StateBadge label={stateCfg.label} color={stateCfg.color} bg={stateCfg.bg} />}
                   </td>
-                  <td style={td}>{r.planned_at}</td>
-                  <td style={td}>{r.given_at ?? '—'}</td>
-                  <td style={{ ...td, textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>
+                  <td className="px-3.5 py-2.5 text-sm" style={{ color: 'var(--color-text-muted)' }}>{r.planned_at}</td>
+                  <td className="px-3.5 py-2.5 text-sm" style={{ color: 'var(--color-text-muted)' }}>{r.given_at ?? '—'}</td>
+                  <td className="px-3.5 py-2.5 text-sm font-medium tabular-nums text-right" style={{ color: 'var(--color-text)' }}>
                     {r.pretax_amount.toLocaleString('fr-FR', { minimumFractionDigits: 2 })}
                   </td>
-                  <td style={td}>
-                    <span style={{ background: reconcBadge.bg, color: reconcBadge.color, padding: '0.125rem 0.625rem', borderRadius: '9999px', fontSize: '0.8rem', fontWeight: 500 }}>
-                      {reconcBadge.label}
-                    </span>
+                  <td className="px-3.5 py-2.5">
+                    {reconcCfg && <StateBadge label={reconcCfg.label} color={reconcCfg.color} bg={reconcCfg.bg} />}
                   </td>
-                  <td style={td}>
-                    <div style={{ display: 'flex', gap: '0.375rem' }}>
-                      <a href={`/backend/receptions/${r.id}/edit`}>
-                        <button type="button" title="Modifier" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--color-text-muted)', padding: '0.25rem' }}>
-                          <Pencil size={15} />
-                        </button>
+                  <td className="px-3.5 py-2.5">
+                    <div className="flex gap-1.5">
+                      <a href={`/backend/receptions/${r.id}/edit`} title="Modifier" style={{ color: 'var(--color-text-muted)' }}>
+                        <Pencil size={14} />
                       </a>
                       {r.destroyable && (
                         <button
                           type="button"
                           aria-label="Supprimer"
                           onClick={() => handleDelete(r.id, r.number)}
-                          style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#dc2626', padding: '0.25rem' }}
+                          className="bg-transparent border-none cursor-pointer p-0"
+                          style={{ color: 'var(--color-danger)' }}
                         >
-                          <Trash2 size={15} />
+                          <Trash2 size={14} />
                         </button>
                       )}
                     </div>
@@ -189,26 +194,16 @@ export default function ReceptionsIndex({ receptions, filters, meta }: Reception
             })}
           </tbody>
         </table>
-      </div>
-
-      {/* Pagination */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem' }}>
-        <span style={{ fontSize: '0.875rem', color: 'var(--color-text-muted)' }}>
-          {meta.total_count} réception(s)
-        </span>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          {meta.current_page > 1 && (
-            <button type="button" onClick={() => { setSelectedIds(new Set()); router.get('/backend/receptions', { q, state: selectedStates, page: meta.current_page - 1 }) }} style={{ padding: '0.25rem 0.75rem', border: '1px solid var(--color-border)', borderRadius: '0.375rem', cursor: 'pointer', background: 'var(--color-bg-card)' }}>
-              Précédent
-            </button>
-          )}
-          {meta.current_page < meta.total_pages && (
-            <button type="button" onClick={() => { setSelectedIds(new Set()); router.get('/backend/receptions', { q, state: selectedStates, page: meta.current_page + 1 }) }} style={{ padding: '0.25rem 0.75rem', border: '1px solid var(--color-border)', borderRadius: '0.375rem', cursor: 'pointer', background: 'var(--color-bg-card)' }}>
-              Suivant
-            </button>
-          )}
-        </div>
-      </div>
+        {meta.total_pages > 1 && (
+          <Pagination
+            page={meta.current_page}
+            totalPages={meta.total_pages}
+            total={meta.total_count}
+            onPrev={() => { setSelectedIds(new Set()); router.get('/backend/receptions', { q, state: selectedStates, page: meta.current_page - 1 }) }}
+            onNext={() => { setSelectedIds(new Set()); router.get('/backend/receptions', { q, state: selectedStates, page: meta.current_page + 1 }) }}
+          />
+        )}
+      </SectionCard>
     </div>
   )
 }
