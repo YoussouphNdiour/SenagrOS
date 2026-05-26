@@ -1,118 +1,125 @@
 import type { ReactNode } from 'react'
 import { router } from '@inertiajs/react'
+import { Plus, Wallet, ShoppingBag, Package, Trash2, Edit } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
+import { PageHeader, KpiCard, SectionCard, EmptyState, ProgressBar, CodeBadge, Pagination, PrimaryButton } from '../../../components/ui'
 import type { BudgetsIndexProps } from '../../../types/budget'
 
-export default function BudgetsIndex({ budgets, meta }: BudgetsIndexProps) {
+function BudgetsIndex({ budgets, meta }: BudgetsIndexProps) {
+  const totalPages = Math.ceil(meta.total / meta.per_page)
+  const totalPurchases = budgets.reduce((s, b) => s + b.purchase_items_count, 0)
+  const totalReceptions = budgets.reduce((s, b) => s + b.reception_items_count, 0)
+
   function handleDelete(id: number, name: string) {
     if (!window.confirm(`Supprimer le budget "${name}" ?`)) return
     router.delete(`/backend/project_budgets/${id}`)
   }
 
   return (
-    <div className="p-8">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold" style={{ color: 'var(--color-text)' }}>
-          Budgets projet{' '}
-          <span className="text-sm font-normal" style={{ color: 'var(--color-text-muted)' }}>
-            ({meta.total})
-          </span>
-        </h1>
-        <button
-          onClick={() => router.visit('/backend/project_budgets/new')}
-          style={{
-            background: 'var(--color-primary)', color: '#fff', border: 'none',
-            borderRadius: '0.375rem', padding: '0.5rem 1rem', fontWeight: 500,
-            fontSize: '0.875rem', cursor: 'pointer',
-          }}
-        >
-          Nouveau budget
-        </button>
+    <div className="min-h-screen" style={{ background: 'var(--color-bg)' }}>
+      <PageHeader
+        title="Budgets projet"
+        subtitle={`${meta.total} budget${meta.total !== 1 ? 's' : ''}`}
+        action={
+          <PrimaryButton href="/backend/project_budgets/new">
+            <Plus size={14} /> Nouveau budget
+          </PrimaryButton>
+        }
+      />
+
+      <div className="grid grid-cols-3 gap-3.5 mb-5">
+        <KpiCard icon={<Wallet size={16} />}      label="Total budgets"     value={meta.total}       color="var(--color-primary)" />
+        <KpiCard icon={<ShoppingBag size={16} />} label="Lignes achats"     value={totalPurchases}   color="var(--color-warning)" />
+        <KpiCard icon={<Package size={16} />}     label="Lignes réceptions" value={totalReceptions}  color="var(--color-info)" />
       </div>
 
       {budgets.length === 0 ? (
-        <p className="text-center py-12" style={{ color: 'var(--color-text-muted)' }}>
-          Aucun budget projet enregistré.
-        </p>
+        <SectionCard>
+          <EmptyState icon={Wallet} message="Aucun budget projet enregistré" />
+        </SectionCard>
       ) : (
-        <>
-          <div style={{ background: 'var(--color-bg-card)', borderRadius: '0.5rem', border: '1px solid var(--color-border)', overflow: 'hidden' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid var(--color-border)' }}>
-                  {['Nom', 'Description', 'Code analytique', 'Actions'].map(h => (
-                    <th key={h} className="text-left text-xs font-semibold px-4 py-3" style={{ color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                      {h}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {budgets.map(budget => (
-                  <tr key={budget.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
-                    <td className="px-4 py-3">
-                      <a
-                        href={`/backend/project_budgets/${budget.id}`}
-                        style={{ color: 'var(--color-primary)', textDecoration: 'none', fontWeight: 500 }}
-                      >
-                        {budget.name}
-                      </a>
-                    </td>
-                    <td className="px-4 py-3 text-sm" style={{ color: 'var(--color-text-muted)' }}>
-                      {budget.description
-                        ? budget.description.slice(0, 60) + (budget.description.length > 60 ? '…' : '')
-                        : '—'}
-                    </td>
-                    <td className="px-4 py-3">
-                      {budget.isacompta_analytic_code ?? (
-                        <span style={{ background: '#fef3c7', color: '#92400e', fontSize: '0.75rem', fontWeight: 600, padding: '0.125rem 0.5rem', borderRadius: '9999px' }}>
-                          Manquant
-                        </span>
-                      )}
-                    </td>
-                    <td className="px-4 py-3">
-                      <div style={{ display: 'flex', gap: '0.5rem' }}>
-                        <a href={`/backend/project_budgets/${budget.id}`} style={{ fontSize: '0.8rem', color: 'var(--color-primary)' }}>Voir</a>
-                        <a href={`/backend/project_budgets/${budget.id}/edit`} style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)' }}>Modifier</a>
-                        <button
-                          onClick={() => handleDelete(budget.id, budget.name)}
-                          style={{ fontSize: '0.8rem', color: '#dc2626', background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-                        >
-                          Supprimer
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+        <SectionCard noPadding>
+          <ul className="list-none m-0 p-0">
+            {budgets.map((budget, idx) => (
+              <li
+                key={budget.id}
+                className="flex items-center gap-4 px-4 py-4 border-b"
+                style={{ borderColor: idx < budgets.length - 1 ? 'var(--color-border)' : 'transparent' }}
+              >
+                <span
+                  className="w-10 h-10 rounded-[10px] flex items-center justify-center shrink-0"
+                  style={{ background: 'var(--color-bg-highlight)', color: 'var(--color-primary)' }}
+                >
+                  <Wallet size={18} />
+                </span>
 
-          {meta.total > meta.per_page && (
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '1rem' }}>
-              <button
-                disabled={meta.page <= 1}
-                onClick={() => router.visit(`/backend/project_budgets?page=${meta.page - 1}`)}
-                style={{ padding: '0.375rem 0.875rem', borderRadius: '0.375rem', border: '1px solid var(--color-border)', background: 'var(--color-bg-card)', cursor: meta.page <= 1 ? 'not-allowed' : 'pointer', opacity: meta.page <= 1 ? 0.5 : 1 }}
-              >
-                Précédent
-              </button>
-              <span className="text-sm px-2 py-1" style={{ color: 'var(--color-text-muted)' }}>
-                Page {meta.page}
-              </span>
-              <button
-                disabled={meta.page * meta.per_page >= meta.total}
-                onClick={() => router.visit(`/backend/project_budgets?page=${meta.page + 1}`)}
-                style={{ padding: '0.375rem 0.875rem', borderRadius: '0.375rem', border: '1px solid var(--color-border)', background: 'var(--color-bg-card)', cursor: meta.page * meta.per_page >= meta.total ? 'not-allowed' : 'pointer', opacity: meta.page * meta.per_page >= meta.total ? 0.5 : 1 }}
-              >
-                Suivant
-              </button>
-            </div>
+                <div className="flex-1 min-w-0">
+                  <a href={`/backend/project_budgets/${budget.id}`} className="text-sm font-bold no-underline" style={{ color: 'var(--color-primary)' }}>
+                    {budget.name}
+                  </a>
+                  {budget.description && (
+                    <div className="text-xs mt-0.5 truncate" style={{ color: 'var(--color-text-muted)' }}>
+                      {budget.description}
+                    </div>
+                  )}
+                  {budget.purchase_items_count > 0 && (
+                    <ProgressBar
+                      value={budget.reception_items_count}
+                      max={budget.purchase_items_count}
+                      label={`${budget.reception_items_count}/${budget.purchase_items_count} reçus`}
+                    />
+                  )}
+                </div>
+
+                {budget.isacompta_analytic_code ? (
+                  <CodeBadge value={budget.isacompta_analytic_code} />
+                ) : (
+                  <CodeBadge value="Code manquant" variant="warning" />
+                )}
+
+                <div className="flex gap-3 shrink-0 text-center">
+                  {[
+                    { n: budget.purchase_items_count,  l: 'Achats' },
+                    { n: budget.reception_items_count, l: 'Réceptions' },
+                  ].map(({ n, l }) => (
+                    <div key={l}>
+                      <div className="text-base font-bold" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>{n}</div>
+                      <div className="text-[10px] uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>{l}</div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex gap-1.5 items-center shrink-0">
+                  <a href={`/backend/project_budgets/${budget.id}/edit`} title="Modifier" style={{ color: 'var(--color-text-muted)' }}>
+                    <Edit size={14} />
+                  </a>
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(budget.id, budget.name)}
+                    title="Supprimer"
+                    className="bg-transparent border-none cursor-pointer p-0"
+                    style={{ color: 'var(--color-danger)' }}
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              </li>
+            ))}
+          </ul>
+          {totalPages > 1 && (
+            <Pagination
+              page={meta.page}
+              totalPages={totalPages}
+              total={meta.total}
+              onPrev={() => router.visit(`/backend/project_budgets?page=${meta.page - 1}`)}
+              onNext={() => router.visit(`/backend/project_budgets?page=${meta.page + 1}`)}
+            />
           )}
-        </>
+        </SectionCard>
       )}
     </div>
   )
 }
 
 BudgetsIndex.layout = (page: ReactNode) => <AppShell>{page}</AppShell>
+export default BudgetsIndex
