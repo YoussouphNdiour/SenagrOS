@@ -156,7 +156,7 @@ module Backend
                 cancellable:      s.cancellable?,
               }
             },
-            meta: { total:, page:, per_page: },
+            meta: { total: total, page: page, per_page: per_page },
             filters: {
               q:              params[:q],
               state:          params[:state].is_a?(Array) ? params[:state] : [],
@@ -446,7 +446,7 @@ module Backend
           taxes: Tax.current.map { |t|
             { id: t.id, name: t.name, short_label: t.short_label, amount: t.usable_amount.to_f / 100.0 }
           },
-          errors:,
+          errors: errors,
         }, status: :unprocessable_entity
       end
     end
@@ -493,7 +493,7 @@ module Backend
           taxes: Tax.current.map { |t|
             { id: t.id, name: t.name, short_label: t.short_label, amount: t.usable_amount.to_f / 100.0 }
           },
-          errors:,
+          errors: errors,
         }, status: :unprocessable_entity
       end
     end

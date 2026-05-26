@@ -87,8 +87,8 @@ module Backend
       return unless @activity_production = find_and_check
 
       interventions = Intervention
-        .joins(:activity_production_interventions)
-        .where(activity_production_interventions: { activity_production_id: @activity_production.id })
+        .joins(:activity_productions)
+        .where(activity_productions: { id: @activity_production.id })
         .where(nature: 'record')
         .order(started_at: :desc)
         .limit(20)
