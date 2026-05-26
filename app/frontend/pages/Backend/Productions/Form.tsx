@@ -1,16 +1,10 @@
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
-import { ArrowLeft, Save, BarChart3 } from 'lucide-react'
+import { Save, BarChart3 } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
+import { BackLink, IconBox, SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
 import type { ProductionFormProps } from '../../../types/production'
-
-const errorStyle = { fontSize: '11px', color: 'var(--color-danger)', marginTop: '4px' }
-const fieldStyle = {
-  width: '100%', padding: '8px 12px', borderRadius: '6px',
-  border: '1px solid var(--color-border)', background: 'var(--color-bg)',
-  color: 'var(--color-text)', fontSize: '13px',
-} as const
 
 const STATE_OPTIONS = [
   { value: 'opened',   label: 'Ouverte' },
@@ -55,127 +49,93 @@ const ProductionsForm = ({ production, activities, campaigns, cultivable_zones, 
 
   return (
     <>
-      <div className="flex items-center gap-3 mb-6">
-        <a href="/backend/activity_productions" className="flex items-center gap-1 text-sm no-underline" style={{ color: 'var(--color-text-muted)' }}>
-          <ArrowLeft size={16} />
-          Liste des productions
-        </a>
-      </div>
+      <BackLink href="/backend/activity_productions" label="Liste des productions" />
 
       <div className="flex items-center gap-4 mb-6">
-        <div className="flex items-center justify-center rounded-lg w-12 h-12 shrink-0" style={{ background: 'var(--color-success-bg)' }}>
-          <BarChart3 size={22} style={{ color: 'var(--color-success-text)' }} />
+        <IconBox icon={BarChart3} color="var(--color-success-text)" bg="var(--color-success-bg)" />
+        <div>
+          <h1 className="text-[26px] font-bold m-0" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>
+            {isEdit ? 'Modifier la production' : 'Nouvelle production'}
+          </h1>
+          <p className="mt-1 text-sm m-0" style={{ color: 'var(--color-text-muted)' }}>
+            {isEdit ? 'Modifiez les informations de la production.' : 'Renseignez les informations de la production à créer.'}
+          </p>
         </div>
-        <h1 className="text-2xl font-bold" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>
-          {isEdit ? 'Modifier la production' : 'Nouvelle production'}
-        </h1>
       </div>
 
-      <div className="rounded-lg p-6" style={{ background: 'var(--color-bg-card)', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-card)' }}>
+      <SectionCard>
+        <SectionTitle icon={BarChart3}>Informations de la production</SectionTitle>
+
         <form onSubmit={handleSubmit} noValidate>
           <div className="flex flex-col gap-5">
-
-            {/* Activité */}
-            <div>
-              <label htmlFor="prod-activity" className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text)' }}>
-                Activité <span style={{ color: 'var(--color-danger)' }}>*</span>
-              </label>
+            <FormField label="Activité" required htmlFor="prod-activity" error={errors.activity_id}>
               <select id="prod-activity" value={activityId} onChange={e => setActivityId(e.target.value)} required
-                aria-invalid={!!errors.activity_id || undefined} aria-describedby={errors.activity_id ? 'prod-activity-error' : undefined}
-                style={fieldStyle}>
+                className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}>
                 <option value="">— Choisir une activité —</option>
                 {activities.map(a => <option key={a.id} value={a.id}>{a.name}</option>)}
               </select>
-              {errors.activity_id && <p id="prod-activity-error" style={errorStyle}>{errors.activity_id}</p>}
-            </div>
+            </FormField>
 
-            {/* Campagne */}
-            <div>
-              <label htmlFor="prod-campaign" className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text)' }}>
-                Campagne <span style={{ color: 'var(--color-danger)' }}>*</span>
-              </label>
+            <FormField label="Campagne" required htmlFor="prod-campaign" error={errors.campaign_id}>
               <select id="prod-campaign" value={campaignId} onChange={e => setCampaignId(e.target.value)} required
-                aria-invalid={!!errors.campaign_id || undefined} aria-describedby={errors.campaign_id ? 'prod-campaign-error' : undefined}
-                style={fieldStyle}>
+                className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}>
                 <option value="">— Choisir une campagne —</option>
                 {campaigns.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
-              {errors.campaign_id && <p id="prod-campaign-error" style={errorStyle}>{errors.campaign_id}</p>}
-            </div>
+            </FormField>
 
-            {/* Parcelle */}
-            <div>
-              <label htmlFor="prod-zone" className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text)' }}>
-                Parcelle support
-              </label>
+            <FormField label="Parcelle support" htmlFor="prod-zone" error={errors.cultivable_zone_id}>
               <select id="prod-zone" value={cultivableZoneId} onChange={e => setCultivableZoneId(e.target.value)}
-                aria-invalid={!!errors.cultivable_zone_id || undefined} aria-describedby={errors.cultivable_zone_id ? 'prod-zone-error' : undefined}
-                style={fieldStyle}>
+                className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}>
                 <option value="">— Aucune parcelle —</option>
                 {cultivable_zones.map(z => <option key={z.id} value={z.id}>{z.name}</option>)}
               </select>
-              {errors.cultivable_zone_id && <p id="prod-zone-error" style={errorStyle}>{errors.cultivable_zone_id}</p>}
-            </div>
+            </FormField>
 
-            {/* Dates */}
             <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="prod-start" className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text)' }}>
-                  Date de début <span style={{ color: 'var(--color-danger)' }}>*</span>
-                </label>
+              <FormField label="Date de début" required htmlFor="prod-start" error={errors.started_on}>
                 <input id="prod-start" type="date" value={startedOn} onChange={e => setStartedOn(e.target.value)} required
-                  aria-invalid={!!errors.started_on || undefined} aria-describedby={errors.started_on ? 'prod-start-error' : undefined}
-                  style={fieldStyle} />
-                {errors.started_on && <p id="prod-start-error" style={errorStyle}>{errors.started_on}</p>}
-              </div>
-              <div>
-                <label htmlFor="prod-stop" className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text)' }}>Date de fin</label>
+                  className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                  style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
+              </FormField>
+              <FormField label="Date de fin" htmlFor="prod-stop" error={errors.stopped_on}>
                 <input id="prod-stop" type="date" value={stoppedOn} onChange={e => setStoppedOn(e.target.value)}
-                  aria-invalid={!!errors.stopped_on || undefined} aria-describedby={errors.stopped_on ? 'prod-stop-error' : undefined}
-                  style={fieldStyle} />
-                {errors.stopped_on && <p id="prod-stop-error" style={errorStyle}>{errors.stopped_on}</p>}
-              </div>
+                  className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                  style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
+              </FormField>
             </div>
 
-            {/* État */}
-            <div>
-              <label htmlFor="prod-state" className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text)' }}>État</label>
+            <FormField label="État" htmlFor="prod-state" error={errors.state}>
               <select id="prod-state" value={state} onChange={e => setState(e.target.value)}
-                aria-invalid={!!errors.state || undefined} aria-describedby={errors.state ? 'prod-state-error' : undefined}
-                style={fieldStyle}>
+                className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}>
                 {STATE_OPTIONS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
               </select>
-              {errors.state && <p id="prod-state-error" style={errorStyle}>{errors.state}</p>}
-            </div>
+            </FormField>
 
-            {/* Checkboxes */}
             <div className="flex gap-8">
               <div className="flex items-center gap-2">
                 <input id="prod-irrigated" type="checkbox" checked={irrigated} onChange={e => setIrrigated(e.target.checked)} />
-                <label htmlFor="prod-irrigated" className="text-sm" style={{ color: 'var(--color-text)', cursor: 'pointer' }}>Irriguée</label>
+                <label htmlFor="prod-irrigated" className="text-sm cursor-pointer" style={{ color: 'var(--color-text)' }}>Irriguée</label>
               </div>
               <div className="flex items-center gap-2">
                 <input id="prod-nitrate" type="checkbox" checked={nitrate} onChange={e => setNitrate(e.target.checked)} />
-                <label htmlFor="prod-nitrate" className="text-sm" style={{ color: 'var(--color-text)', cursor: 'pointer' }}>Fixation d'azote</label>
+                <label htmlFor="prod-nitrate" className="text-sm cursor-pointer" style={{ color: 'var(--color-text)' }}>Fixation d'azote</label>
               </div>
             </div>
-
           </div>
 
-          <div className="flex items-center gap-3 mt-6 pt-5" style={{ borderTop: '1px solid var(--color-border)' }}>
-            <button type="submit" disabled={submitting}
-              className="flex items-center gap-2 px-4 py-2 rounded text-sm font-medium"
-              style={{ background: 'var(--color-primary)', color: '#fff', border: 'none', cursor: submitting ? 'not-allowed' : 'pointer', opacity: submitting ? 0.7 : 1 }}>
-              <Save size={15} />
-              {isEdit ? 'Enregistrer' : 'Créer la production'}
-            </button>
-            <a href="/backend/activity_productions" className="px-4 py-2 rounded text-sm font-medium no-underline"
-              style={{ background: 'var(--color-bg-card)', border: '1px solid var(--color-border)', color: 'var(--color-text)' }}>
-              Annuler
-            </a>
+          <div className="flex items-center gap-3 mt-6 pt-5 border-t" style={{ borderColor: 'var(--color-border)' }}>
+            <PrimaryButton type="submit" disabled={submitting}>
+              <Save size={15} /> {isEdit ? 'Enregistrer' : 'Créer la production'}
+            </PrimaryButton>
+            <PrimaryButton href="/backend/activity_productions" variant="secondary">Annuler</PrimaryButton>
           </div>
         </form>
-      </div>
+      </SectionCard>
     </>
   )
 }
