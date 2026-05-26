@@ -11,15 +11,21 @@ import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png'
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png'
 L.Icon.Default.mergeOptions({ iconUrl, iconRetinaUrl, shadowUrl })
 import { AppShell } from '../../../components/AppShell'
-import type { CatalogueShowProps, InterventionItem, IssueItem, ProduitType, MouvementType, MovementFormErrors, MovementMeta } from '../../../types/catalogue'
+import { BackLink } from '../../../components/ui'
+import type { CatalogueShowProps, InterventionItem, IssueItem, ProduitType, MouvementType } from '../../../types/catalogue'
 import { MOUVEMENT_LABELS } from '../../../types/catalogue'
 
 const TYPE_CONFIG: Record<ProduitType, { label: string; bg: string; color: string }> = {
-  Matter:    { label: 'Matière',    bg: '#dcfce7', color: '#166534' },
-  Animal:    { label: 'Animal',     bg: '#fef9c3', color: '#854d0e' },
-  Equipment: { label: 'Équipement', bg: '#dbeafe', color: '#1e40af' },
-  Plant:     { label: 'Plante',     bg: '#ede9fe', color: '#5b21b6' },
-  Other:     { label: 'Autre',      bg: '#f3f4f6', color: '#374151' },
+  Matter:    { label: 'Matière',    bg: 'var(--color-success-bg)', color: 'var(--color-success-text)' },
+  Animal:    { label: 'Animal',     bg: 'var(--color-warning-bg)', color: 'var(--color-warning-text)' },
+  Equipment: { label: 'Équipement', bg: 'var(--color-info-bg)',    color: 'var(--color-info)' },
+  Plant:     { label: 'Plante',     bg: '#ede9fe',                 color: '#5b21b6' },
+  Other:     { label: 'Autre',      bg: 'var(--color-bg-subtle)',  color: 'var(--color-text-muted)' },
+}
+
+const ISSUE_STATE: Record<string, { bg: string; color: string; label: string }> = {
+  opened: { bg: 'var(--color-warning-bg)', color: 'var(--color-warning-text)', label: 'Ouvert' },
+  closed: { bg: 'var(--color-success-bg)', color: 'var(--color-success-text)', label: 'Fermé' },
 }
 
 function formatDate(iso: string): string {
@@ -58,13 +64,7 @@ export default function CatalogueShow({ produit, movements, movement_errors, mov
 
   return (
     <div className="p-8">
-      <a
-        href="/backend/products"
-        className="no-underline text-sm mb-6 inline-block"
-        style={{ color: 'var(--color-primary)' }}
-      >
-        ← Retour au catalogue
-      </a>
+      <BackLink href="/backend/products" label="Retour au catalogue" />
 
       <div className="flex items-center justify-between mb-4 mt-2">
         <h1 className="text-2xl font-bold" style={{ color: 'var(--color-text)' }}>
@@ -233,7 +233,7 @@ export default function CatalogueShow({ produit, movements, movement_errors, mov
                   </td>
                   <td
                     className="px-4 py-3 font-semibold tabular-nums"
-                    style={{ color: mv.delta > 0 ? 'var(--color-success-text)' : '#dc2626' }}
+                    style={{ color: mv.delta > 0 ? 'var(--color-success-text)' : 'var(--color-danger)' }}
                   >
                     {mv.delta > 0 ? `+${mv.delta}` : `${mv.delta}`}
                   </td>
@@ -257,9 +257,10 @@ export default function CatalogueShow({ produit, movements, movement_errors, mov
               movement_page: String(movement_meta.page - 1),
               ...(movement_filter ? { movement_type: movement_filter } : {}),
             })}
+            className="px-3 py-1.5 rounded border text-sm"
             style={{
-              padding: '0.375rem 0.875rem', borderRadius: '0.375rem',
-              border: '1px solid var(--color-border)', background: 'var(--color-bg-card)',
+              borderColor: 'var(--color-border)',
+              background: 'var(--color-bg-card)',
               cursor: movement_meta.page <= 1 ? 'not-allowed' : 'pointer',
               opacity: movement_meta.page <= 1 ? 0.5 : 1,
               color: 'var(--color-text)',
@@ -277,9 +278,10 @@ export default function CatalogueShow({ produit, movements, movement_errors, mov
               movement_page: String(movement_meta.page + 1),
               ...(movement_filter ? { movement_type: movement_filter } : {}),
             })}
+            className="px-3 py-1.5 rounded border text-sm"
             style={{
-              padding: '0.375rem 0.875rem', borderRadius: '0.375rem',
-              border: '1px solid var(--color-border)', background: 'var(--color-bg-card)',
+              borderColor: 'var(--color-border)',
+              background: 'var(--color-bg-card)',
               cursor: movement_meta.page * movement_meta.per_page >= movement_meta.total ? 'not-allowed' : 'pointer',
               opacity: movement_meta.page * movement_meta.per_page >= movement_meta.total ? 0.5 : 1,
               color: 'var(--color-text)',
@@ -291,7 +293,7 @@ export default function CatalogueShow({ produit, movements, movement_errors, mov
       )}
 
       {/* Interventions liées */}
-      <div className="mb-6">
+      <div className="mb-6 mt-6">
         <h2 className="text-base font-semibold mb-3" style={{ color: 'var(--color-text)' }}>
           Interventions liées ({interventions.length})
         </h2>
@@ -351,25 +353,27 @@ export default function CatalogueShow({ produit, movements, movement_errors, mov
                 </tr>
               </thead>
               <tbody>
-                {issues.map((issue: IssueItem) => (
-                  <tr key={issue.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
-                    <td className="px-4 py-2 font-medium" style={{ color: 'var(--color-text)' }}>{issue.name}</td>
-                    <td className="px-4 py-2" style={{ color: 'var(--color-text-muted)' }}>{issue.nature}</td>
-                    <td className="px-4 py-2 tabular-nums" style={{ color: 'var(--color-text-muted)' }}>
-                      {issue.observed_at ? new Date(issue.observed_at).toLocaleDateString('fr-FR') : '—'}
-                    </td>
-                    <td className="px-4 py-2 tabular-nums" style={{ color: 'var(--color-text)' }}>{issue.gravity}/5</td>
-                    <td className="px-4 py-2">
-                      <span style={{
-                        fontSize: '0.7rem', fontWeight: 600, padding: '0.125rem 0.5rem', borderRadius: '9999px',
-                        background: issue.state === 'opened' ? '#fef3c7' : issue.state === 'closed' ? '#dcfce7' : '#f3f4f6',
-                        color:      issue.state === 'opened' ? '#92400e' : issue.state === 'closed' ? '#166534' : '#374151',
-                      }}>
-                        {issue.state === 'opened' ? 'Ouvert' : issue.state === 'closed' ? 'Fermé' : 'Abandonné'}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
+                {issues.map((issue: IssueItem) => {
+                  const issueSt = ISSUE_STATE[issue.state] ?? { bg: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)', label: 'Abandonné' }
+                  return (
+                    <tr key={issue.id} style={{ borderBottom: '1px solid var(--color-border)' }}>
+                      <td className="px-4 py-2 font-medium" style={{ color: 'var(--color-text)' }}>{issue.name}</td>
+                      <td className="px-4 py-2" style={{ color: 'var(--color-text-muted)' }}>{issue.nature}</td>
+                      <td className="px-4 py-2 tabular-nums" style={{ color: 'var(--color-text-muted)' }}>
+                        {issue.observed_at ? new Date(issue.observed_at).toLocaleDateString('fr-FR') : '—'}
+                      </td>
+                      <td className="px-4 py-2 tabular-nums" style={{ color: 'var(--color-text)' }}>{issue.gravity}/5</td>
+                      <td className="px-4 py-2">
+                        <span
+                          className="text-xs font-semibold px-2 py-0.5 rounded-full"
+                          style={{ background: issueSt.bg, color: issueSt.color }}
+                        >
+                          {issueSt.label}
+                        </span>
+                      </td>
+                    </tr>
+                  )
+                })}
               </tbody>
             </table>
           </div>
@@ -416,7 +420,7 @@ export default function CatalogueShow({ produit, movements, movement_errors, mov
             {/* Delta */}
             <div>
               <label className="block text-sm font-medium mb-1" style={{ color: 'var(--color-text)' }}>
-                Variation (+ entrée / - sortie) <span style={{ color: '#dc2626' }}>*</span>
+                Variation (+ entrée / - sortie) <span style={{ color: 'var(--color-danger)' }}>*</span>
               </label>
               <input
                 type="number"
@@ -429,7 +433,7 @@ export default function CatalogueShow({ produit, movements, movement_errors, mov
                 style={{ borderColor: 'var(--color-border)', background: 'var(--color-bg)' }}
               />
               {movement_errors?.delta && (
-                <p className="text-xs mt-1" style={{ color: '#dc2626' }}>{movement_errors.delta[0]}</p>
+                <p className="text-xs mt-1" style={{ color: 'var(--color-danger)' }}>{movement_errors.delta[0]}</p>
               )}
             </div>
 
@@ -466,18 +470,15 @@ export default function CatalogueShow({ produit, movements, movement_errors, mov
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+          <div className="flex items-center gap-3">
             <button
               type="submit"
               disabled={submitting}
+              className="rounded px-5 py-2 text-sm font-medium"
               style={{
                 background: 'var(--color-primary)',
                 color: '#fff',
                 border: 'none',
-                borderRadius: '0.375rem',
-                padding: '0.5rem 1.25rem',
-                fontWeight: 500,
-                fontSize: '0.875rem',
                 cursor: submitting ? 'not-allowed' : 'pointer',
                 opacity: submitting ? 0.7 : 1,
               }}

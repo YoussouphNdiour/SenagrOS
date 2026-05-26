@@ -1,82 +1,43 @@
 import type { ReactNode } from 'react'
-import { ArrowLeft } from 'lucide-react'
 import { router } from '@inertiajs/react'
 import { AppShell } from '../../../components/AppShell'
+import { BackLink, SectionCard, StateBadge, PrimaryButton } from '../../../components/ui'
 import type { IssueShowProps } from '../../../types/issue'
 import { ISSUE_NATURE_LABELS, ISSUE_STATE_LABELS } from '../../../types/issue'
 
 function gravityColor(gravity: number): string {
-  if (gravity >= 5) return '#dc2626'
+  if (gravity >= 5) return 'var(--color-danger)'
   if (gravity === 4) return '#f97316'
-  if (gravity === 3) return '#f59e0b'
-  return '#6b7280'
+  if (gravity === 3) return 'var(--color-warning-text)'
+  return 'var(--color-text-muted)'
 }
 
-function stateBg(state: string): string {
-  if (state === 'opened') return '#fef9c3'
-  if (state === 'closed') return '#dcfce7'
-  return '#f3f4f6'
-}
-
-function stateColor(state: string): string {
-  if (state === 'opened') return '#854d0e'
-  if (state === 'closed') return '#166534'
-  return '#4b5563'
+const STATE_BADGE: Record<string, { bg: string; color: string }> = {
+  opened: { bg: 'var(--color-warning-bg)', color: 'var(--color-warning-text)' },
+  closed: { bg: 'var(--color-success-bg)', color: 'var(--color-success-text)' },
 }
 
 export default function IssueShow({ issue }: IssueShowProps) {
-  const card: React.CSSProperties = {
-    background: 'var(--color-bg-card)',
-    borderRadius: '0.5rem',
-    border: '1px solid var(--color-border)',
-    padding: '1rem 1.25rem',
-    marginBottom: '1rem',
-  }
-
-  function handleClose() {
-    router.post(`/backend/issues/${issue.id}/close`)
-  }
-
-  function handleAbort() {
-    router.post(`/backend/issues/${issue.id}/abort`)
-  }
+  const stateBadge = STATE_BADGE[issue.state] ?? { bg: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)' }
 
   return (
-    <div className="p-8 max-w-2xl">
-      {/* Retour */}
-      <div className="mb-4">
-        <a
-          href="/backend/alerts"
-          className="flex items-center gap-1 text-sm no-underline"
-          style={{ color: 'var(--color-text-muted)' }}
-        >
-          <ArrowLeft size={15} />
-          Retour aux alertes
-        </a>
-      </div>
+    <div className="max-w-2xl">
+      <BackLink href="/backend/alerts" label="Retour aux alertes" />
 
-      {/* Titre + état */}
       <div className="flex items-center gap-3 mb-6">
-        <h1 className="text-2xl font-bold" style={{ color: 'var(--color-text)' }}>
+        <h1 className="text-[26px] font-bold m-0" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>
           {issue.name}
         </h1>
-        <span
-          style={{
-            background: stateBg(issue.state),
-            color: stateColor(issue.state),
-            fontSize: '0.75rem',
-            fontWeight: 600,
-            padding: '0.125rem 0.625rem',
-            borderRadius: '9999px',
-          }}
-        >
-          {ISSUE_STATE_LABELS[issue.state] ?? issue.state}
-        </span>
+        <StateBadge
+          label={ISSUE_STATE_LABELS[issue.state] ?? issue.state}
+          color={stateBadge.color}
+          bg={stateBadge.bg}
+          dot={false}
+        />
       </div>
 
-      {/* Header card */}
-      <div style={card}>
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1.5rem' }}>
+      <SectionCard className="mb-4">
+        <div className="flex flex-wrap gap-6">
           <div>
             <p className="text-xs font-semibold uppercase" style={{ color: 'var(--color-text-muted)' }}>Nature</p>
             <p className="text-sm font-medium mt-0.5" style={{ color: 'var(--color-text)' }}>
@@ -86,16 +47,8 @@ export default function IssueShow({ issue }: IssueShowProps) {
           <div>
             <p className="text-xs font-semibold uppercase" style={{ color: 'var(--color-text-muted)' }}>Gravité</p>
             <span
-              style={{
-                display: 'inline-block',
-                marginTop: '0.125rem',
-                background: gravityColor(issue.gravity),
-                color: '#fff',
-                fontSize: '0.75rem',
-                fontWeight: 700,
-                padding: '0.125rem 0.5rem',
-                borderRadius: '9999px',
-              }}
+              className="inline-block mt-0.5 text-xs font-bold px-2 py-0.5 rounded-full"
+              style={{ background: gravityColor(issue.gravity), color: '#fff' }}
             >
               {issue.gravity}
             </span>
@@ -107,53 +60,32 @@ export default function IssueShow({ issue }: IssueShowProps) {
             </div>
           )}
         </div>
-      </div>
+      </SectionCard>
 
-      {/* Description */}
       {issue.description && (
-        <div style={card}>
+        <SectionCard className="mb-4">
           <p className="text-xs font-semibold uppercase mb-2" style={{ color: 'var(--color-text-muted)' }}>Description</p>
           <p className="text-sm" style={{ color: 'var(--color-text)' }}>{issue.description}</p>
-        </div>
+        </SectionCard>
       )}
 
-      {/* Actions */}
       <div className="flex items-center gap-3 mt-4">
-        <a
-          href={`/backend/issues/${issue.id}/edit`}
-          className="px-3 py-2 rounded text-sm font-medium no-underline"
-          style={{
-            background: 'var(--color-primary)',
-            color: '#fff',
-          }}
-        >
-          Modifier
-        </a>
+        <PrimaryButton href={`/backend/issues/${issue.id}/edit`} variant="primary">Modifier</PrimaryButton>
         {issue.state === 'opened' && (
           <>
             <button
               type="button"
-              onClick={handleClose}
-              className="px-3 py-2 rounded text-sm font-medium"
-              style={{
-                background: 'var(--color-success-bg)',
-                color: 'var(--color-success-text)',
-                border: 'none',
-                cursor: 'pointer',
-              }}
+              onClick={() => router.post(`/backend/issues/${issue.id}/close`)}
+              className="px-3 py-2 rounded text-sm font-medium cursor-pointer"
+              style={{ background: 'var(--color-success-bg)', color: 'var(--color-success-text)', border: 'none' }}
             >
               Fermer
             </button>
             <button
               type="button"
-              onClick={handleAbort}
-              className="px-3 py-2 rounded text-sm font-medium"
-              style={{
-                background: 'var(--color-bg-card)',
-                color: 'var(--color-text-muted)',
-                border: '1px solid var(--color-border)',
-                cursor: 'pointer',
-              }}
+              onClick={() => router.post(`/backend/issues/${issue.id}/abort`)}
+              className="px-3 py-2 rounded text-sm font-medium cursor-pointer"
+              style={{ background: 'var(--color-bg-card)', color: 'var(--color-text-muted)', border: '1px solid var(--color-border)' }}
             >
               Abandonner
             </button>

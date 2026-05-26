@@ -1,19 +1,20 @@
 // app/frontend/pages/Backend/Receptions/ReceptionsShow.tsx
 import { type ReactNode } from 'react'
 import { router } from '@inertiajs/react'
-import { ArrowLeft, Pencil, Trash2, FileText, CheckCircle } from 'lucide-react'
+import { Pencil, Trash2, FileText, CheckCircle, Info, List } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
+import { BackLink, SectionCard, SectionTitle, DetailRow, StateBadge, PrimaryButton, DataTable } from '../../../components/ui'
 import AchatsTabs from '../../../components/achats/AchatsTabs'
 import type { ReceptionsShowProps, ReceptionState, ReceptionReconciliationState } from '../../../types/reception'
 
 const STATE_CONFIG: Record<ReceptionState, { label: string; bg: string; color: string }> = {
-  draft: { label: 'Brouillon', bg: '#fef9c3', color: '#854d0e' },
-  given: { label: 'Validée',   bg: '#dcfce7', color: '#166534' },
+  draft: { label: 'Brouillon', bg: 'var(--color-warning-bg)', color: 'var(--color-warning-text)' },
+  given: { label: 'Validée',   bg: 'var(--color-success-bg)', color: 'var(--color-success-text)' },
 }
 
 const RECONCILIATION_CONFIG: Record<ReceptionReconciliationState, { label: string; bg: string; color: string }> = {
-  to_reconcile: { label: 'Non facturée', bg: '#fef3c7', color: '#92400e' },
-  reconcile:    { label: 'Facturée',     bg: '#dcfce7', color: '#166534' },
+  to_reconcile: { label: 'Non facturée', bg: 'var(--color-warning-bg)', color: 'var(--color-warning-text)' },
+  reconcile:    { label: 'Facturée',     bg: 'var(--color-success-bg)', color: 'var(--color-success-text)' },
 }
 
 const ROLE_LABEL: Record<string, string> = {
@@ -22,144 +23,115 @@ const ROLE_LABEL: Record<string, string> = {
   service: 'Service',
 }
 
-function fmt(n: number) {
-  return n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-}
+const fmt = (n: number) => n.toLocaleString('fr-FR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
 
 export default function ReceptionsShow({ reception }: ReceptionsShowProps) {
-  const stateBadge = STATE_CONFIG[reception.state] ?? { label: reception.state, bg: '#f3f4f6', color: '#6b7280' }
-  const reconcBadge = RECONCILIATION_CONFIG[reception.reconciliation_state] ?? { label: reception.reconciliation_state, bg: '#f3f4f6', color: '#6b7280' }
+  const stateBadge = STATE_CONFIG[reception.state]
+    ?? { label: reception.state, bg: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)' }
+  const reconcBadge = RECONCILIATION_CONFIG[reception.reconciliation_state]
+    ?? { label: reception.reconciliation_state, bg: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)' }
 
   const visibleItems = reception.items.filter(i => !i._destroy)
   const total = visibleItems.reduce((s, i) => s + i.conditioning_quantity * i.unit_pretax_amount, 0)
 
-  const card: React.CSSProperties = { background: 'var(--color-bg-card)', borderRadius: '0.5rem', border: '1px solid var(--color-border)', padding: '1.5rem', marginBottom: '1.25rem' }
-  const dl: React.CSSProperties = { display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: '1rem', margin: 0 }
-  const dt: React.CSSProperties = { fontSize: '0.8125rem', color: 'var(--color-text-muted)', marginBottom: '0.25rem' }
-  const dd: React.CSSProperties = { fontSize: '0.9375rem', fontWeight: 500, margin: 0 }
-  const th: React.CSSProperties = { padding: '0.625rem 0.875rem', textAlign: 'left', fontSize: '0.8125rem', color: 'var(--color-text-muted)', fontWeight: 600, borderBottom: '1px solid var(--color-border)' }
-  const td: React.CSSProperties = { padding: '0.625rem 0.875rem', borderBottom: '1px solid var(--color-border)' }
-
   return (
-    <div style={{ padding: '2rem' }}>
+    <div className="max-w-4xl">
       <AchatsTabs />
 
-      {/* Header */}
-      <div style={{ marginBottom: '1.5rem' }}>
-        <a href="/backend/receptions" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', color: 'var(--color-text-muted)', textDecoration: 'none', fontSize: '0.875rem', marginBottom: '0.75rem' }}>
-          <ArrowLeft size={14} /> Réceptions
-        </a>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap' }}>
-          <h1 style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--color-text)', margin: 0 }}>{reception.number}</h1>
-          <span style={{ background: stateBadge.bg, color: stateBadge.color, padding: '0.25rem 0.75rem', borderRadius: '9999px', fontSize: '0.8rem', fontWeight: 600 }}>
-            {stateBadge.label}
-          </span>
-          <span style={{ background: reconcBadge.bg, color: reconcBadge.color, padding: '0.25rem 0.75rem', borderRadius: '9999px', fontSize: '0.8rem', fontWeight: 600 }}>
-            {reconcBadge.label}
-          </span>
-        </div>
-        <div style={{ color: 'var(--color-text-muted)', fontSize: '0.9rem', marginTop: '0.25rem' }}>{reception.supplier.full_name}</div>
-      </div>
+      <BackLink href="/backend/receptions" label="Réceptions" />
 
-      {/* Workflow buttons */}
-      <div style={{ display: 'flex', gap: '0.625rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+      <div className="flex items-center gap-3 mb-3">
+        <h1 className="text-[26px] font-bold m-0" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>
+          {reception.number}
+        </h1>
+        <StateBadge label={stateBadge.label} color={stateBadge.color} bg={stateBadge.bg} dot={false} />
+        <StateBadge label={reconcBadge.label} color={reconcBadge.color} bg={reconcBadge.bg} dot={false} />
+      </div>
+      <p className="text-sm mb-5" style={{ color: 'var(--color-text-muted)' }}>{reception.supplier.full_name}</p>
+
+      <div className="flex gap-2 mb-5 flex-wrap">
         {reception.state === 'draft' && (
           <button
             type="button"
             aria-label="Valider"
             onClick={() => router.post(`/backend/receptions/${reception.id}/give`)}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', background: 'var(--color-primary)', color: '#fff', border: 'none', padding: '0.5rem 1rem', borderRadius: '0.375rem', cursor: 'pointer', fontWeight: 500 }}
+            className="flex items-center gap-1.5 px-3 py-2 rounded text-sm font-medium cursor-pointer"
+            style={{ background: 'var(--color-primary)', color: '#fff', border: 'none' }}
           >
             <CheckCircle size={14} /> Valider
           </button>
         )}
         {reception.state === 'draft' && (
-          <a href={`/backend/receptions/${reception.id}/edit`} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', background: 'var(--color-bg-card)', color: 'var(--color-text)', border: '1px solid var(--color-border)', padding: '0.5rem 1rem', borderRadius: '0.375rem', fontWeight: 500, textDecoration: 'none', fontSize: '0.9375rem' }}>
+          <PrimaryButton href={`/backend/receptions/${reception.id}/edit`} variant="secondary">
             <Pencil size={14} /> Modifier
-          </a>
+          </PrimaryButton>
         )}
         {reception.invoiceable && (
-          <a
-            href={`/backend/purchase_invoices/new?reception_id=${reception.id}`}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.375rem', background: '#166534', color: '#fff', padding: '0.5rem 1rem', borderRadius: '0.375rem', fontWeight: 500, textDecoration: 'none', fontSize: '0.9375rem' }}
-          >
+          <PrimaryButton href={`/backend/purchase_invoices/new?reception_id=${reception.id}`} variant="primary">
             <FileText size={14} /> Créer une facture
-          </a>
+          </PrimaryButton>
         )}
         {reception.destroyable && (
           <button
             type="button"
             aria-label="Supprimer"
             onClick={() => { if (window.confirm('Supprimer cette réception ?')) router.delete(`/backend/receptions/${reception.id}`) }}
-            style={{ display: 'flex', alignItems: 'center', gap: '0.375rem', background: '#fee2e2', color: '#991b1b', border: '1px solid #fca5a5', padding: '0.5rem 1rem', borderRadius: '0.375rem', cursor: 'pointer', fontWeight: 500 }}
+            className="flex items-center gap-1.5 px-3 py-2 rounded text-sm font-medium cursor-pointer"
+            style={{ background: 'var(--color-danger-bg)', color: 'var(--color-danger-text)', border: '1px solid var(--color-danger-border)' }}
           >
             <Trash2 size={14} /> Supprimer
           </button>
         )}
       </div>
 
-      {/* Attributes card */}
-      <div style={card}>
-        <dl style={dl}>
-          <div>
-            <dt style={dt}>Date prévue</dt>
-            <dd style={dd}>{reception.planned_at}</dd>
-          </div>
-          <div>
-            <dt style={dt}>Date réception</dt>
-            <dd style={dd}>{reception.given_at ?? '—'}</dd>
-          </div>
-          <div>
-            <dt style={dt}>Référence</dt>
-            <dd style={dd}>{reception.reference_number ?? '—'}</dd>
-          </div>
-          {reception.purchase_order && (
-            <div>
-              <dt style={dt}>Commande</dt>
-              <dd style={dd}>
-                <a href={`/backend/purchase_orders/${reception.purchase_order.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'none' }}>
-                  {reception.purchase_order.number}
-                </a>
-              </dd>
-            </div>
-          )}
-          <div>
-            <dt style={dt}>Fournisseur</dt>
-            <dd style={dd}>{reception.supplier.full_name}</dd>
-          </div>
-        </dl>
-      </div>
+      <SectionCard className="mb-5">
+        <SectionTitle icon={Info}>Informations</SectionTitle>
+        <DetailRow items={[
+          { label: 'Date prévue',    value: reception.planned_at },
+          { label: 'Date réception', value: reception.given_at ?? '—' },
+          { label: 'Référence',      value: reception.reference_number ?? '—' },
+          { label: 'Fournisseur',    value: reception.supplier.full_name },
+          ...(reception.purchase_order ? [{
+            label: 'Commande',
+            value: (
+              <a href={`/backend/purchase_orders/${reception.purchase_order.id}`} style={{ color: 'var(--color-primary)', textDecoration: 'none' }}>
+                {reception.purchase_order.number}
+              </a>
+            ),
+          }] : []),
+        ]} />
+      </SectionCard>
 
-      {/* Items table (read-only) */}
-      <div style={{ ...card, padding: 0, overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-          <thead>
-            <tr>
-              {['Désignation', 'Qté', 'Prix unitaire HT', 'Rôle', 'Non conforme', 'HT ligne'].map(h => (
-                <th key={h} style={{ ...th, textAlign: h === 'HT ligne' ? 'right' : 'left' }}>{h}</th>
-              ))}
+      <SectionCard className="mb-5">
+        <SectionTitle icon={List}>Lignes ({visibleItems.length})</SectionTitle>
+        <DataTable
+          columns={[
+            { key: 'designation', label: 'Désignation' },
+            { key: 'qty',         label: 'Qté' },
+            { key: 'pu',          label: 'Prix unitaire HT' },
+            { key: 'role',        label: 'Rôle' },
+            { key: 'non_comp',    label: 'Non conforme' },
+            { key: 'ht',          label: 'HT ligne', align: 'right' },
+          ]}
+          data={visibleItems}
+          footer={
+            <tr style={{ borderTop: '2px solid var(--color-border)', background: 'var(--color-bg)' }}>
+              <td colSpan={5} className="px-3 py-3 text-sm font-semibold text-right" style={{ color: 'var(--color-text-muted)' }}>Total HT</td>
+              <td className="px-3 py-3 text-right font-bold text-sm" style={{ color: 'var(--color-text)' }}>{fmt(total)}</td>
             </tr>
-          </thead>
-          <tbody>
-            {visibleItems.map((item, idx) => (
-              <tr key={item.id ?? `new-${idx}`}>
-                <td style={td}>{item.variant_name ?? '—'}</td>
-                <td style={td}>{item.conditioning_quantity}</td>
-                <td style={td}>{fmt(item.unit_pretax_amount)}</td>
-                <td style={td}>{ROLE_LABEL[item.role] ?? item.role}</td>
-                <td style={td}>{item.non_compliant ? '✓' : '—'}</td>
-                <td style={{ ...td, textAlign: 'right' }}>{fmt(item.conditioning_quantity * item.unit_pretax_amount)}</td>
-              </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            <tr style={{ borderTop: '2px solid var(--color-border)', fontWeight: 600 }}>
-              <td colSpan={5} style={{ ...td, textAlign: 'right' }}>Total HT</td>
-              <td style={{ ...td, textAlign: 'right' }}>{fmt(total)}</td>
+          }
+          renderRow={(item, idx) => (
+            <tr key={item.id ?? `new-${idx}`} style={{ borderTop: '1px solid var(--color-border)' }}>
+              <td className="px-3 py-3 text-sm" style={{ color: 'var(--color-text)' }}>{item.variant_name ?? '—'}</td>
+              <td className="px-3 py-3 text-sm" style={{ color: 'var(--color-text-muted)' }}>{item.conditioning_quantity}</td>
+              <td className="px-3 py-3 text-sm" style={{ color: 'var(--color-text-muted)' }}>{fmt(item.unit_pretax_amount)}</td>
+              <td className="px-3 py-3 text-sm" style={{ color: 'var(--color-text-muted)' }}>{ROLE_LABEL[item.role] ?? item.role}</td>
+              <td className="px-3 py-3 text-sm" style={{ color: 'var(--color-text-muted)' }}>{item.non_compliant ? '✓' : '—'}</td>
+              <td className="px-3 py-3 text-right text-sm font-medium" style={{ color: 'var(--color-text)' }}>{fmt(item.conditioning_quantity * item.unit_pretax_amount)}</td>
             </tr>
-          </tfoot>
-        </table>
-      </div>
+          )}
+        />
+      </SectionCard>
     </div>
   )
 }
