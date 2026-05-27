@@ -44,6 +44,10 @@ module Backend
             name:     current_user&.name.to_s,
             initials: current_user&.name.to_s.split(' ').map { |w| w[0].to_s }.join
           }
+        },
+        flash: {
+          notice: flash[:notice],
+          alert:  flash[:alert]
         }
       }
     end

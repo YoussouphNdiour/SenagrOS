@@ -3,7 +3,8 @@ import { usePage } from '@inertiajs/react'
 import {
   LayoutDashboard, Wrench, Map, Sprout, BookOpen, Settings, Calendar, Users, Tractor,
   UserCog, PawPrint, Activity, ShoppingCart, ShoppingBag, Package, Bell, Wallet,
-  ChevronDown, ChevronRight, Search, LogOut, User, LifeBuoy, type LucideIcon,
+  ChevronDown, ChevronRight, Search, LogOut, User, LifeBuoy, CheckCircle, AlertTriangle,
+  type LucideIcon,
 } from 'lucide-react'
 import type { InertiaSharedProps } from '../types/shared'
 
@@ -224,6 +225,19 @@ export const AppShell = ({ children }: AppShellComponentProps) => {
 
   const [userMenuOpen, setUserMenuOpen] = useState(false)
   const userRef = useRef<HTMLDivElement>(null)
+
+  const flash = props.flash ?? { notice: null, alert: null }
+  const [visibleNotice, setVisibleNotice] = useState<string | null>(flash.notice ?? null)
+  const [visibleAlert, setVisibleAlert] = useState<string | null>(flash.alert ?? null)
+
+  useEffect(() => {
+    setVisibleNotice(flash.notice ?? null)
+    setVisibleAlert(flash.alert ?? null)
+    if (flash.notice) {
+      const t = setTimeout(() => setVisibleNotice(null), 4000)
+      return () => clearTimeout(t)
+    }
+  }, [flash.notice, flash.alert])
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -512,6 +526,30 @@ export const AppShell = ({ children }: AppShellComponentProps) => {
 
         {/* MAIN CONTENT */}
         <main style={{ flex: 1, overflowY: 'auto', padding: 'var(--layout-page-pad)' }}>
+          {visibleNotice && (
+            <div role="status" style={{
+              display: 'flex', alignItems: 'center', gap: '8px',
+              padding: '10px 14px', marginBottom: '16px', borderRadius: '8px',
+              background: 'var(--color-success-bg)', border: '1px solid var(--color-success-text)',
+              color: 'var(--color-success-text)', fontSize: '14px',
+            }}>
+              <CheckCircle size={16} />
+              {visibleNotice}
+              <button onClick={() => setVisibleNotice(null)} style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', padding: 0 }}>×</button>
+            </div>
+          )}
+          {visibleAlert && (
+            <div role="alert" style={{
+              display: 'flex', alignItems: 'center', gap: '8px',
+              padding: '10px 14px', marginBottom: '16px', borderRadius: '8px',
+              background: 'var(--color-danger-bg)', border: '1px solid var(--color-danger-text)',
+              color: 'var(--color-danger-text)', fontSize: '14px',
+            }}>
+              <AlertTriangle size={16} />
+              {visibleAlert}
+              <button onClick={() => setVisibleAlert(null)} style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', padding: 0 }}>×</button>
+            </div>
+          )}
           {children}
         </main>
       </div>

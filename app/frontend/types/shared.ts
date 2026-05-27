@@ -17,6 +17,7 @@ export interface AppShellProps {
 
 export interface InertiaSharedProps {
   appShell: AppShellProps
+  flash: { notice: string | null; alert: string | null }
   errors: Record<string, string>
   [key: string]: unknown
 }
