@@ -14,6 +14,7 @@ export interface EntitesIndexProps {
 }
 
 export interface EntiteShowProps {
+  canDestroy: boolean
   entite: {
     id: number
     nature: string
@@ -73,7 +74,7 @@ export interface EntiteFormData {
 
 export interface EntiteFormProps {
   entite: EntiteFormData | null
-  errors: Record<string, string>
+  errors: Record<string, string | string[]>
 }
 
 export interface AddressFormData {
@@ -88,5 +89,5 @@ export interface AddressFormData {
 export interface AddressFormProps {
   address: AddressFormData | null
   entity_id: number
-  errors: Record<string, string>
+  errors: Record<string, string | string[]>
 }

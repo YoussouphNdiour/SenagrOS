@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { Save, Beef } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, IconBox, SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
+import { BackLink, FlashBanner, IconBox, SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
 import type { AnimalFormProps } from '../../../types/animal'
 
 const AnimauxForm = ({ animal, errors }: AnimalFormProps) => {
@@ -57,31 +57,32 @@ const AnimauxForm = ({ animal, errors }: AnimalFormProps) => {
 
       <SectionCard>
         <SectionTitle icon={Beef}>Informations de l'animal</SectionTitle>
+        <FlashBanner errors={errors} />
 
         <form onSubmit={handleSubmit} noValidate aria-label="Formulaire animal">
           <div className="flex flex-col gap-5">
-            <FormField label="Nom" required htmlFor="animal-name" error={errors.name?.[0]}>
+            <FormField label="Nom" required htmlFor="animal-name" error={Array.isArray(errors.name) ? errors.name[0] : errors.name}>
               <input id="animal-name" type="text" value={name} onChange={e => setName(e.target.value)} required
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}
                 placeholder="ex. Bœuf Alpha" />
             </FormField>
 
-            <FormField label="N° travail" htmlFor="animal-work-number" error={errors.work_number?.[0]}>
+            <FormField label="N° travail" htmlFor="animal-work-number" error={Array.isArray(errors.work_number) ? errors.work_number[0] : errors.work_number}>
               <input id="animal-work-number" type="text" value={workNumber} onChange={e => setWorkNumber(e.target.value)}
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}
                 placeholder="ex. W-001" />
             </FormField>
 
-            <FormField label="Race / Variété" htmlFor="animal-variety" error={errors.variety?.[0]}>
+            <FormField label="Race / Variété" htmlFor="animal-variety" error={Array.isArray(errors.variety) ? errors.variety[0] : errors.variety}>
               <input id="animal-variety" type="text" value={variety} onChange={e => setVariety(e.target.value)}
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}
                 placeholder="ex. Ndama" />
             </FormField>
 
-            <FormField label="N° identification" htmlFor="animal-identification" error={errors.identification_number?.[0]}>
+            <FormField label="N° identification" htmlFor="animal-identification" error={Array.isArray(errors.identification_number) ? errors.identification_number[0] : errors.identification_number}>
               <input id="animal-identification" type="text" value={identificationNumber} onChange={e => setIdentificationNumber(e.target.value)}
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}
@@ -89,19 +90,19 @@ const AnimauxForm = ({ animal, errors }: AnimalFormProps) => {
             </FormField>
 
             <div className="grid grid-cols-2 gap-4">
-              <FormField label="Date de naissance" htmlFor="animal-born-at" error={errors.born_at?.[0]}>
+              <FormField label="Date de naissance" htmlFor="animal-born-at" error={Array.isArray(errors.born_at) ? errors.born_at[0] : errors.born_at}>
                 <input id="animal-born-at" type="date" value={bornAt} onChange={e => setBornAt(e.target.value)}
                   className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                   style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
               </FormField>
-              <FormField label="Date de décès" htmlFor="animal-dead-at" error={errors.dead_at?.[0]}>
+              <FormField label="Date de décès" htmlFor="animal-dead-at" error={Array.isArray(errors.dead_at) ? errors.dead_at[0] : errors.dead_at}>
                 <input id="animal-dead-at" type="date" value={deadAt} onChange={e => setDeadAt(e.target.value)}
                   className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                   style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
               </FormField>
             </div>
 
-            <FormField label="Description" htmlFor="animal-description" error={errors.description?.[0]}>
+            <FormField label="Description" htmlFor="animal-description" error={Array.isArray(errors.description) ? errors.description[0] : errors.description}>
               <textarea id="animal-description" value={description} onChange={e => setDescription(e.target.value)} rows={3}
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}

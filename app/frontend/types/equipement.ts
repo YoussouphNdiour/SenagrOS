@@ -48,6 +48,7 @@ export interface EquipementShowProps {
   interventions: EquipementIntervention[]
   maintenances: EquipementMaintenance[]
   links: EquipementLink[]
+  canDestroy: boolean
 }
 
 export interface EquipementFormData {
@@ -61,5 +62,5 @@ export interface EquipementFormData {
 
 export interface EquipementFormProps {
   equipement: EquipementFormData | null
-  errors: Record<string, string>
+  errors: Record<string, string | string[]>
 }

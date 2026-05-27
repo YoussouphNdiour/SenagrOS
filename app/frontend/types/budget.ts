@@ -16,12 +16,6 @@ export interface ProjectBudget {
   reception_items_count: number
 }
 
-export interface ProjectBudgetFormErrors {
-  name?: string[]
-  description?: string[]
-  isacompta_analytic_code?: string[]
-}
-
 export interface BudgetsIndexProps {
   budgets: ProjectBudget[]
   meta: {
@@ -43,10 +37,11 @@ export interface BudgetShowProps {
   purchase_lines: PurchaseLine[]
   total_pretax_amount: number
   reception_lines: ReceptionLine[]
+  canDestroy: boolean
 }
 
 export interface BudgetFormProps {
   budget: ProjectBudget
-  errors: ProjectBudgetFormErrors
+  errors: Record<string, string | string[]>
   mode: 'new' | 'edit'
 }

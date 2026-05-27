@@ -6,7 +6,7 @@ import CatalogueShow from './Show'
 import type { CatalogueShowProps } from '../../../types/catalogue'
 
 vi.mock('@inertiajs/react', () => ({
-  router: { get: vi.fn(), post: vi.fn() },
+  router: { get: vi.fn(), post: vi.fn(), delete: vi.fn() },
 }))
 
 vi.mock('react-leaflet', () => ({
@@ -58,6 +58,7 @@ function renderShow(overrides: Partial<CatalogueShowProps> = {}) {
     movement_filter: null,
     interventions: [],
     issues: [],
+    canDestroy: true,
     ...overrides,
   }
   return render(<CatalogueShow {...props} />)

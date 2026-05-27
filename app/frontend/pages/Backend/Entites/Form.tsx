@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { Mail, MapPin, Phone, Plus, Save, User, Users, X } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, IconBox, SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
+import { BackLink, FlashBanner, IconBox, SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
 import type { EntiteEmail, EntiteFormProps, EntiteMail, EntitePhone } from '../../../types/entite'
 
 const EntitesForm = ({ entite, errors }: EntiteFormProps) => {
@@ -87,11 +87,12 @@ const EntitesForm = ({ entite, errors }: EntiteFormProps) => {
       </div>
 
       <form onSubmit={handleSubmit} noValidate>
+        <FlashBanner errors={errors} />
         <SectionCard className="mb-5">
           <SectionTitle icon={User}>Identité</SectionTitle>
 
           <div className="flex flex-col gap-5">
-            <FormField label="Nature" htmlFor="ent-nature" error={errors.nature}>
+            <FormField label="Nature" htmlFor="ent-nature" error={Array.isArray(errors.nature) ? errors.nature[0] : errors.nature}>
               <select id="ent-nature" value={nature} onChange={e => setNature(e.target.value)}
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}>
@@ -113,13 +114,13 @@ const EntitesForm = ({ entite, errors }: EntiteFormProps) => {
             </FormField>
 
             <div className="grid grid-cols-2 gap-4">
-              <FormField label="Prénom" htmlFor="ent-firstname" error={errors.first_name}>
+              <FormField label="Prénom" htmlFor="ent-firstname" error={Array.isArray(errors.first_name) ? errors.first_name[0] : errors.first_name}>
                 <input id="ent-firstname" type="text" value={firstName} onChange={e => setFirstName(e.target.value)}
                   className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                   style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}
                   placeholder="ex. Mamadou" />
               </FormField>
-              <FormField label="Nom" required htmlFor="ent-lastname" error={errors.last_name}>
+              <FormField label="Nom" required htmlFor="ent-lastname" error={Array.isArray(errors.last_name) ? errors.last_name[0] : errors.last_name}>
                 <input id="ent-lastname" type="text" value={lastName} onChange={e => setLastName(e.target.value)} required
                   className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                   style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}

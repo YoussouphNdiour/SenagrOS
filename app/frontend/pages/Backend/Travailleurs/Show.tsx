@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react'
 import { HardHat, Hash, Settings, Wrench } from 'lucide-react'
+import { router } from '@inertiajs/react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, IconBox, SectionCard, SectionTitle, DetailRow, StateBadge, CodeBadge, PrimaryButton, DataTable } from '../../../components/ui'
+import { BackLink, ConfirmDeleteButton, IconBox, SectionCard, SectionTitle, DetailRow, StateBadge, CodeBadge, PrimaryButton, DataTable } from '../../../components/ui'
 import type { TravailleurShowProps } from '../../../types/travailleur'
 
 const STATE_LABELS: Record<string, string> = {
@@ -10,7 +11,7 @@ const STATE_LABELS: Record<string, string> = {
   validated: 'Validée',
 }
 
-function TravailleurShow({ travailleur, interventions }: TravailleurShowProps) {
+function TravailleurShow({ travailleur, interventions, canDestroy }: TravailleurShowProps) {
   const isActive = !travailleur.dead_at
 
   return (
@@ -36,7 +37,14 @@ function TravailleurShow({ travailleur, interventions }: TravailleurShowProps) {
             </div>
           </div>
         </div>
-        <PrimaryButton href={`/backend/workers/${travailleur.id}/edit`} variant="secondary">Modifier</PrimaryButton>
+        <div className="flex items-center gap-2">
+          <PrimaryButton href={`/backend/workers/${travailleur.id}/edit`} variant="secondary">Modifier</PrimaryButton>
+          <ConfirmDeleteButton
+            onDelete={() => router.delete(`/backend/workers/${travailleur.id}`)}
+            canDestroy={canDestroy}
+            resourceName="ce travailleur"
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">

@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { router } from '@inertiajs/react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, SectionCard, StateBadge, PrimaryButton } from '../../../components/ui'
+import { BackLink, ConfirmDeleteButton, SectionCard, StateBadge, PrimaryButton } from '../../../components/ui'
 import type { IssueShowProps } from '../../../types/issue'
 import { ISSUE_NATURE_LABELS, ISSUE_STATE_LABELS } from '../../../types/issue'
 
@@ -17,7 +17,7 @@ const STATE_BADGE: Record<string, { bg: string; color: string }> = {
   closed: { bg: 'var(--color-success-bg)', color: 'var(--color-success-text)' },
 }
 
-export default function IssueShow({ issue }: IssueShowProps) {
+export default function IssueShow({ issue, canDestroy }: IssueShowProps) {
   const stateBadge = STATE_BADGE[issue.state] ?? { bg: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)' }
 
   return (
@@ -91,6 +91,11 @@ export default function IssueShow({ issue }: IssueShowProps) {
             </button>
           </>
         )}
+        <ConfirmDeleteButton
+          onDelete={() => router.delete(`/backend/issues/${issue.id}`)}
+          canDestroy={canDestroy}
+          resourceName="ce problème"
+        />
       </div>
     </div>
   )

@@ -67,6 +67,7 @@ export interface CatalogueShowProps {
   movement_filter: string | null
   interventions: InterventionItem[]
   issues: IssueItem[]
+  canDestroy: boolean
 }
 
 export type MouvementType =
@@ -109,5 +110,5 @@ export interface CatalogueFormErrors {
 
 export interface CatalogueFormProps {
   produit: CatalogueFormItem
-  errors: CatalogueFormErrors
+  errors: Record<string, string | string[]>
 }

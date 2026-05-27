@@ -23,6 +23,7 @@ function renderShow(overrides: Partial<typeof mockBudget> = {}) {
       purchase_lines={[]}
       total_pretax_amount={0}
       reception_lines={[]}
+      canDestroy={true}
     />
   )
 }
@@ -55,7 +56,7 @@ describe('BudgetShow', () => {
   })
 
   it('shows empty state when no purchase lines', () => {
-    render(<BudgetShow budget={mockBudget} purchase_lines={[]} total_pretax_amount={0} reception_lines={[]} />)
+    render(<BudgetShow budget={mockBudget} purchase_lines={[]} total_pretax_amount={0} reception_lines={[]} canDestroy={true} />)
     expect(screen.getByText(/Aucune ligne d'achat/)).toBeInTheDocument()
   })
 
@@ -63,7 +64,7 @@ describe('BudgetShow', () => {
     const lines = [
       { id: 1, label: 'Engrais NPK', quantity: 50, pretax_amount: 25000, currency: 'XOF', purchase_number: 'BC-001' },
     ]
-    render(<BudgetShow budget={mockBudget} purchase_lines={lines} total_pretax_amount={25000} reception_lines={[]} />)
+    render(<BudgetShow budget={mockBudget} purchase_lines={lines} total_pretax_amount={25000} reception_lines={[]} canDestroy={true} />)
     expect(screen.getByText('Engrais NPK')).toBeInTheDocument()
     expect(screen.getByText('BC-001')).toBeInTheDocument()
   })
@@ -72,23 +73,23 @@ describe('BudgetShow', () => {
     const lines = [
       { id: 1, label: 'Semences', quantity: 10, pretax_amount: 15000, currency: 'XOF', purchase_number: 'BC-002' },
     ]
-    render(<BudgetShow budget={mockBudget} purchase_lines={lines} total_pretax_amount={15000} reception_lines={[]} />)
+    render(<BudgetShow budget={mockBudget} purchase_lines={lines} total_pretax_amount={15000} reception_lines={[]} canDestroy={true} />)
     expect(screen.getByText('Total HT')).toBeInTheDocument()
   })
 
   it('renders Réceptions heading', () => {
-    render(<BudgetShow budget={mockBudget} purchase_lines={[]} total_pretax_amount={0} reception_lines={[]} />)
+    render(<BudgetShow budget={mockBudget} purchase_lines={[]} total_pretax_amount={0} reception_lines={[]} canDestroy={true} />)
     expect(screen.getByText(/Réceptions/)).toBeInTheDocument()
   })
 
   it('shows empty reception state when reception_lines is empty', () => {
-    render(<BudgetShow budget={mockBudget} purchase_lines={[]} total_pretax_amount={0} reception_lines={[]} />)
+    render(<BudgetShow budget={mockBudget} purchase_lines={[]} total_pretax_amount={0} reception_lines={[]} canDestroy={true} />)
     expect(screen.getByText(/Aucune réception/)).toBeInTheDocument()
   })
 
   it('renders reception line when reception_lines is present', () => {
     const lines = [{ id: 1, product_name: 'Semences mil', quantity: 25, parcel_number: 'REC-001' }]
-    render(<BudgetShow budget={mockBudget} purchase_lines={[]} total_pretax_amount={0} reception_lines={lines} />)
+    render(<BudgetShow budget={mockBudget} purchase_lines={[]} total_pretax_amount={0} reception_lines={lines} canDestroy={true} />)
     expect(screen.getByText('Semences mil')).toBeInTheDocument()
     expect(screen.getByText('REC-001')).toBeInTheDocument()
   })

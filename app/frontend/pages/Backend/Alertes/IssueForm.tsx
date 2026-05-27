@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { Save, AlertTriangle } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, IconBox, SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
+import { BackLink, FlashBanner, IconBox, SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
 import type { IssueFormProps } from '../../../types/issue'
 import { ISSUE_NATURE_LABELS } from '../../../types/issue'
 
@@ -61,17 +61,18 @@ export default function IssueForm({ issue, errors }: IssueFormProps) {
 
       <SectionCard>
         <SectionTitle icon={AlertTriangle}>Informations du problème</SectionTitle>
+        <FlashBanner errors={errors} />
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="flex flex-col gap-5">
-            <FormField label="Nom" required htmlFor="issue-name" error={errors.name}>
+            <FormField label="Nom" required htmlFor="issue-name" error={Array.isArray(errors.name) ? errors.name[0] : errors.name}>
               <input id="issue-name" type="text" value={name} onChange={e => setName(e.target.value)} required
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}
                 placeholder="ex. Attaque criquet" />
             </FormField>
 
-            <FormField label="Nature" required htmlFor="issue-nature" error={errors.nature}>
+            <FormField label="Nature" required htmlFor="issue-nature" error={Array.isArray(errors.nature) ? errors.nature[0] : errors.nature}>
               <select id="issue-nature" value={nature} onChange={e => setNature(e.target.value)}
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}>
@@ -103,10 +104,10 @@ export default function IssueForm({ issue, errors }: IssueFormProps) {
                   </button>
                 ))}
               </div>
-              {errors.gravity && <p className="text-xs mt-1 m-0" style={{ color: 'var(--color-danger)' }}>{errors.gravity}</p>}
+              {errors.gravity && <p className="text-xs mt-1 m-0" style={{ color: 'var(--color-danger)' }}>{Array.isArray(errors.gravity) ? errors.gravity[0] : errors.gravity}</p>}
             </div>
 
-            <FormField label="Date observée" required htmlFor="issue-date" error={errors.observed_at}>
+            <FormField label="Date observée" required htmlFor="issue-date" error={Array.isArray(errors.observed_at) ? errors.observed_at[0] : errors.observed_at}>
               <input id="issue-date" type="date" value={observedAt} onChange={e => setObservedAt(e.target.value)}
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />

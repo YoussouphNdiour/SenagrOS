@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react'
 import { Tractor, Settings, Hash, Wrench, Shield, Link2 } from 'lucide-react'
+import { router } from '@inertiajs/react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, IconBox, SectionCard, SectionTitle, DetailRow, StateBadge, CodeBadge, PrimaryButton, DataTable } from '../../../components/ui'
+import { BackLink, ConfirmDeleteButton, IconBox, SectionCard, SectionTitle, DetailRow, StateBadge, CodeBadge, PrimaryButton, DataTable } from '../../../components/ui'
 import type { EquipementShowProps } from '../../../types/equipement'
 
 const STATE_LABELS: Record<string, string> = {
@@ -10,7 +11,7 @@ const STATE_LABELS: Record<string, string> = {
   validated: 'Validée',
 }
 
-function EquipementShow({ equipement, interventions, maintenances, links }: EquipementShowProps) {
+function EquipementShow({ equipement, interventions, maintenances, links, canDestroy }: EquipementShowProps) {
   const isActive = !equipement.dead_at
 
   return (
@@ -36,7 +37,14 @@ function EquipementShow({ equipement, interventions, maintenances, links }: Equi
             </div>
           </div>
         </div>
-        <PrimaryButton href={`/backend/equipments/${equipement.id}/edit`} variant="secondary">Modifier</PrimaryButton>
+        <div className="flex items-center gap-2">
+          <PrimaryButton href={`/backend/equipments/${equipement.id}/edit`} variant="secondary">Modifier</PrimaryButton>
+          <ConfirmDeleteButton
+            onDelete={() => router.delete(`/backend/equipments/${equipement.id}`)}
+            canDestroy={canDestroy}
+            resourceName="cet équipement"
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">

@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { Save, Package } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, IconBox, SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
+import { BackLink, FlashBanner, IconBox, SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
 import type { CatalogueFormProps } from '../../../types/catalogue'
 
 export default function CatalogueForm({ produit, errors }: CatalogueFormProps) {
@@ -51,28 +51,29 @@ export default function CatalogueForm({ produit, errors }: CatalogueFormProps) {
 
       <SectionCard>
         <SectionTitle icon={Package}>Informations du produit</SectionTitle>
+        <FlashBanner errors={errors} />
 
         <form onSubmit={handleSubmit} noValidate aria-label="Formulaire produit">
           <div className="flex flex-col gap-5">
-            <FormField label="Nom" required htmlFor="product-name" error={errors.name}>
+            <FormField label="Nom" required htmlFor="product-name" error={Array.isArray(errors.name) ? errors.name[0] : errors.name}>
               <input id="product-name" type="text" required value={name} onChange={e => setName(e.target.value)}
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
             </FormField>
 
-            <FormField label="Numéro de travail" htmlFor="product-work-number" error={errors.work_number}>
+            <FormField label="Numéro de travail" htmlFor="product-work-number" error={Array.isArray(errors.work_number) ? errors.work_number[0] : errors.work_number}>
               <input id="product-work-number" type="text" value={workNumber} onChange={e => setWorkNumber(e.target.value)}
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
             </FormField>
 
             <div className="grid grid-cols-2 gap-4">
-              <FormField label="Date de naissance" htmlFor="product-born-at" error={errors.born_at}>
+              <FormField label="Date de naissance" htmlFor="product-born-at" error={Array.isArray(errors.born_at) ? errors.born_at[0] : errors.born_at}>
                 <input id="product-born-at" type="date" value={bornAt} onChange={e => setBornAt(e.target.value)}
                   className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                   style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
               </FormField>
-              <FormField label="Date de décès" htmlFor="product-dead-at" error={errors.dead_at}>
+              <FormField label="Date de décès" htmlFor="product-dead-at" error={Array.isArray(errors.dead_at) ? errors.dead_at[0] : errors.dead_at}>
                 <input id="product-dead-at" type="date" value={deadAt} onChange={e => setDeadAt(e.target.value)}
                   className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                   style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
@@ -88,7 +89,7 @@ export default function CatalogueForm({ produit, errors }: CatalogueFormProps) {
               </FormField>
             )}
 
-            <FormField label="Description" htmlFor="product-description" error={errors.description}>
+            <FormField label="Description" htmlFor="product-description" error={Array.isArray(errors.description) ? errors.description[0] : errors.description}>
               <textarea id="product-description" rows={4} value={description} onChange={e => setDescription(e.target.value)}
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />

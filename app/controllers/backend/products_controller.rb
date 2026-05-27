@@ -153,7 +153,8 @@ module Backend
         movement_meta:   { total: total_movements, page: page, per_page: per_page },
         movement_filter: movement_filter,
         interventions:   interventions,
-        issues:          issues
+        issues:          issues,
+        can_destroy:     @product.destroyable?,
       }
     end
 

@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { Save, Tractor } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, IconBox, SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
+import { BackLink, FlashBanner, IconBox, SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
 import type { EquipementFormProps } from '../../../types/equipement'
 
 const EquipementsForm = ({ equipement, errors }: EquipementFormProps) => {
@@ -53,17 +53,18 @@ const EquipementsForm = ({ equipement, errors }: EquipementFormProps) => {
 
       <SectionCard>
         <SectionTitle icon={Tractor}>Informations de l'équipement</SectionTitle>
+        <FlashBanner errors={errors} />
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="flex flex-col gap-5">
-            <FormField label="Nom" required htmlFor="eq-name" error={errors.name}>
+            <FormField label="Nom" required htmlFor="eq-name" error={Array.isArray(errors.name) ? errors.name[0] : errors.name}>
               <input id="eq-name" type="text" value={name} onChange={e => setName(e.target.value)} required
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}
                 placeholder="ex. Tracteur John Deere 5055E" />
             </FormField>
 
-            <FormField label="Numéro de travail" htmlFor="eq-work" error={errors.work_number}>
+            <FormField label="Numéro de travail" htmlFor="eq-work" error={Array.isArray(errors.work_number) ? errors.work_number[0] : errors.work_number}>
               <input id="eq-work" type="text" value={workNumber} onChange={e => setWorkNumber(e.target.value)}
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}
@@ -71,19 +72,19 @@ const EquipementsForm = ({ equipement, errors }: EquipementFormProps) => {
             </FormField>
 
             <div className="grid grid-cols-2 gap-4">
-              <FormField label="Date d'acquisition" htmlFor="eq-born" error={errors.born_at}>
+              <FormField label="Date d'acquisition" htmlFor="eq-born" error={Array.isArray(errors.born_at) ? errors.born_at[0] : errors.born_at}>
                 <input id="eq-born" type="date" value={bornAt} onChange={e => setBornAt(e.target.value)}
                   className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                   style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
               </FormField>
-              <FormField label="Date de retrait" htmlFor="eq-dead" error={errors.dead_at}>
+              <FormField label="Date de retrait" htmlFor="eq-dead" error={Array.isArray(errors.dead_at) ? errors.dead_at[0] : errors.dead_at}>
                 <input id="eq-dead" type="date" value={deadAt} onChange={e => setDeadAt(e.target.value)}
                   className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                   style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
               </FormField>
             </div>
 
-            <FormField label="Description" htmlFor="eq-desc" error={errors.description}>
+            <FormField label="Description" htmlFor="eq-desc" error={Array.isArray(errors.description) ? errors.description[0] : errors.description}>
               <textarea id="eq-desc" value={description} onChange={e => setDescription(e.target.value)} rows={3}
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}

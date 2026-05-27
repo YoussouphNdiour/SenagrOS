@@ -21,6 +21,7 @@ export interface IssueShowItem {
 
 export interface IssueShowProps {
   issue: IssueShowItem
+  canDestroy: boolean
 }
 
 export interface IssueFormItem {
@@ -42,7 +43,7 @@ export interface IssueFormErrors {
 
 export interface IssueFormProps {
   issue: IssueFormItem | null
-  errors: IssueFormErrors
+  errors: Record<string, string | string[]>
 }
 
 export const ISSUE_NATURE_LABELS: Record<string, string> = {

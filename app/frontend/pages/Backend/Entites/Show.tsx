@@ -1,10 +1,11 @@
 import type { ReactNode } from 'react'
 import { User, Building2, FileText } from 'lucide-react'
+import { router } from '@inertiajs/react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, SectionCard, SectionTitle, DetailRow, StateBadge, PrimaryButton } from '../../../components/ui'
+import { BackLink, ConfirmDeleteButton, SectionCard, SectionTitle, DetailRow, StateBadge, PrimaryButton } from '../../../components/ui'
 import type { EntiteShowProps } from '../../../types/entite'
 
-function EntiteShow({ entite }: EntiteShowProps) {
+function EntiteShow({ entite, canDestroy }: EntiteShowProps) {
   const isOrg = entite.nature === 'organization'
 
   const roleList: Array<{ label: string; bg: string; color: string }> = []
@@ -54,6 +55,11 @@ function EntiteShow({ entite }: EntiteShowProps) {
             <StateBadge label="Inactif" color="var(--color-danger-text)" bg="var(--color-danger-bg)" dot={false} />
           )}
           <PrimaryButton href={`/backend/entities/${entite.id}/edit`} variant="secondary">Modifier</PrimaryButton>
+          <ConfirmDeleteButton
+            onDelete={() => router.delete(`/backend/entities/${entite.id}`)}
+            canDestroy={canDestroy}
+            resourceName="cette entité"
+          />
         </div>
       </div>
 

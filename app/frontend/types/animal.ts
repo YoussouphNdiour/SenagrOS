@@ -35,9 +35,10 @@ export interface AnimalIntervention {
 export interface AnimalShowProps {
   animal: AnimalDetail
   interventions: AnimalIntervention[]
+  canDestroy: boolean
 }
 
 export interface AnimalFormProps {
   animal: (AnimalDetail & { id?: number }) | null
-  errors: Record<string, string[]>
+  errors: Record<string, string | string[]>
 }

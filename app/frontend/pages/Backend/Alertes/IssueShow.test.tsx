@@ -6,7 +6,7 @@ import IssueShow from './IssueShow'
 import type { IssueShowProps } from '../../../types/issue'
 
 vi.mock('@inertiajs/react', () => ({
-  router: { post: vi.fn() },
+  router: { post: vi.fn(), delete: vi.fn() },
 }))
 
 const mockIssue: IssueShowProps['issue'] = {
@@ -22,7 +22,7 @@ const mockIssue: IssueShowProps['issue'] = {
 }
 
 function renderShow(overrides: Partial<IssueShowProps['issue']> = {}) {
-  return render(<IssueShow issue={{ ...mockIssue, ...overrides }} />)
+  return render(<IssueShow issue={{ ...mockIssue, ...overrides }} canDestroy={true} />)
 }
 
 describe('IssueShow', () => {

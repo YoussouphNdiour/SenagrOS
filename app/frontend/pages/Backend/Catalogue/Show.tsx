@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { useState } from 'react'
 import { router } from '@inertiajs/react'
-import { Pencil, Trash2 } from 'lucide-react'
+import { Pencil } from 'lucide-react'
 import { MapContainer, TileLayer, Marker } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 // Fix Leaflet default icon issue with Vite
@@ -11,7 +11,7 @@ import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png'
 import shadowUrl from 'leaflet/dist/images/marker-shadow.png'
 L.Icon.Default.mergeOptions({ iconUrl, iconRetinaUrl, shadowUrl })
 import { AppShell } from '../../../components/AppShell'
-import { BackLink } from '../../../components/ui'
+import { BackLink, ConfirmDeleteButton } from '../../../components/ui'
 import type { CatalogueShowProps, InterventionItem, IssueItem, ProduitType, MouvementType } from '../../../types/catalogue'
 import { MOUVEMENT_LABELS } from '../../../types/catalogue'
 
@@ -45,7 +45,7 @@ function computeAge(bornAtIso: string): string {
     : `${years} an${years > 1 ? 's' : ''}`
 }
 
-export default function CatalogueShow({ produit, movements, movement_errors, movement_meta, movement_filter, interventions, issues }: CatalogueShowProps) {
+export default function CatalogueShow({ produit, movements, movement_errors, movement_meta, movement_filter, interventions, issues, canDestroy }: CatalogueShowProps) {
   const typeCfg = TYPE_CONFIG[produit.produit_type]
   const [delta, setDelta] = useState('')
   const [mouvementType, setMouvementType] = useState<MouvementType>('purchase')
@@ -79,16 +79,11 @@ export default function CatalogueShow({ produit, movements, movement_errors, mov
             <Pencil size={15} />
             Modifier
           </a>
-          <a
-            href={`/backend/products/${produit.id}`}
-            data-method="delete"
-            data-confirm="Supprimer ce produit ?"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium no-underline border"
-            style={{ borderColor: 'var(--color-danger)', background: 'var(--color-danger-bg)', color: 'var(--color-danger-text)' }}
-          >
-            <Trash2 size={15} />
-            Supprimer
-          </a>
+          <ConfirmDeleteButton
+            onDelete={() => router.delete(`/backend/products/${produit.id}`)}
+            canDestroy={canDestroy}
+            resourceName="ce produit"
+          />
         </div>
       </div>
 

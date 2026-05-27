@@ -1,10 +1,11 @@
 import type { ReactNode } from 'react'
 import { ShoppingCart, Package } from 'lucide-react'
+import { router } from '@inertiajs/react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, SectionCard, SectionTitle, DetailRow, StateBadge, PrimaryButton, DataTable } from '../../../components/ui'
+import { BackLink, ConfirmDeleteButton, SectionCard, SectionTitle, DetailRow, StateBadge, PrimaryButton, DataTable } from '../../../components/ui'
 import type { BudgetShowProps, PurchaseLine, ReceptionLine } from '../../../types/budget'
 
-export default function BudgetShow({ budget, purchase_lines, total_pretax_amount, reception_lines }: BudgetShowProps) {
+export default function BudgetShow({ budget, purchase_lines, total_pretax_amount, reception_lines, canDestroy }: BudgetShowProps) {
   const currency = purchase_lines[0]?.currency ?? 'XOF'
 
   return (
@@ -15,7 +16,14 @@ export default function BudgetShow({ budget, purchase_lines, total_pretax_amount
         <h1 className="text-[26px] font-bold m-0" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>
           {budget.name}
         </h1>
-        <PrimaryButton href={`/backend/project_budgets/${budget.id}/edit`} variant="secondary">Modifier</PrimaryButton>
+        <div className="flex items-center gap-2">
+          <PrimaryButton href={`/backend/project_budgets/${budget.id}/edit`} variant="secondary">Modifier</PrimaryButton>
+          <ConfirmDeleteButton
+            onDelete={() => router.delete(`/backend/project_budgets/${budget.id}`)}
+            canDestroy={canDestroy}
+            resourceName="ce budget"
+          />
+        </div>
       </div>
 
       <SectionCard className="mb-5">
