@@ -13,7 +13,8 @@ module Backend
           description:             b.description,
           isacompta_analytic_code: b.isacompta_analytic_code,
           purchase_items_count:    b.purchase_items.count,
-          reception_items_count:   b.reception_items.count
+          reception_items_count:   b.reception_items.count,
+          can_destroy:             b.destroyable?
         }
       }
       render inertia: 'Backend/Budgets/Index', props: {
@@ -49,6 +50,7 @@ module Backend
       }
 
       render inertia: 'Backend/Budgets/Show', props: {
+        can_destroy:         @budget.destroyable?,
         budget:              budget_json(@budget),
         purchase_lines:      purchase_lines,
         total_pretax_amount: total_pretax,
@@ -57,6 +59,7 @@ module Backend
     rescue ActiveRecord::StatementInvalid, PG::Error => e
       Rails.logger.error("[ProjectBudgetsController#show] DB error: #{e.message}")
       render inertia: 'Backend/Budgets/Show', props: {
+        can_destroy:         @budget.destroyable?,
         budget:              budget_json(@budget),
         purchase_lines:      [],
         total_pretax_amount: 0.0,
@@ -107,8 +110,13 @@ module Backend
     end
 
     def destroy
-      @budget.destroy
-      redirect_to backend_project_budgets_path
+      if @budget.destroyable?
+        @budget.destroy!
+        redirect_to backend_project_budgets_path, notice: 'Budget supprimé.'
+      else
+        redirect_to backend_project_budget_path(@budget),
+                    alert: 'Impossible de supprimer : ce budget a des lignes saisies.'
+      end
     end
 
     private

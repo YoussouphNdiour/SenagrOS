@@ -56,6 +56,7 @@ module Backend
       end
 
       render inertia: 'Backend/Activites/Show', props: {
+        can_destroy: @activity.destroyable?,
         activite: {
           'id'                     => @activity.id,
           'name'                   => @activity.name.to_s,
@@ -100,6 +101,7 @@ module Backend
 
     def edit
       return unless @activity = find_and_check
+
       render inertia: 'Backend/Activites/Form', props: {
         activite:  activite_form_props(@activity),
         families:  activity_families,
@@ -109,6 +111,7 @@ module Backend
 
     def update
       return unless @activity = find_and_check
+
       if @activity.update(permitted_activite_params)
         redirect_to backend_activity_path(@activity), notice: 'Activité mise à jour.'
       else
@@ -120,9 +123,21 @@ module Backend
       end
     end
 
+    def destroy
+      return unless @activity = find_and_check
+
+      if @activity.destroyable?
+        @activity.destroy!
+        redirect_to backend_activities_path, notice: 'Activité supprimée.'
+      else
+        redirect_to backend_activity_path(@activity),
+                    alert: 'Impossible de supprimer : cette activité a des productions liées.'
+      end
+    end
+
     manage_restfully except: %i[index show]
 
-    layout 'inertia', only: [:index, :show, :new, :edit]
+    layout 'inertia', only: %i[index show new edit]
 
     def index
       scope = Activity.order(:family, :name)
@@ -130,11 +145,12 @@ module Backend
       render inertia: 'Backend/Activites/Index', props: {
         activites: scope.map { |a|
           {
-            'id'        => a.id,
-            'name'      => a.name.to_s,
-            'family'    => a.family.to_s,
-            'nature'    => a.nature.to_s,
-            'suspended' => a.suspended
+            'id'          => a.id,
+            'name'        => a.name.to_s,
+            'family'      => a.family.to_s,
+            'nature'      => a.nature.to_s,
+            'suspended'   => a.suspended,
+            'can_destroy' => a.destroyable?
           }
         },
         meta: { total: scope.count }

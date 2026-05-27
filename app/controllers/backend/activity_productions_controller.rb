@@ -23,7 +23,7 @@ module Backend
     unroll :rank_number, activity: :name, support: :name
 
     layout 'assets_injection_layout' if defined?(Planning)
-    layout 'inertia', only: [:index, :show, :new, :edit]
+    layout 'inertia', only: %i[index show new edit]
 
     def index
       scope = ActivityProduction
@@ -41,7 +41,8 @@ module Backend
           'state'           => prod.state.to_s,
           'activity'        => prod.activity&.as_json(only: %i[id name family]),
           'cultivable_zone' => prod.cultivable_zone&.as_json(only: %i[id name]),
-          'campaign'        => prod.campaign&.as_json(only: %i[id name harvest_year])
+          'campaign'        => prod.campaign&.as_json(only: %i[id name harvest_year]),
+          'can_destroy'     => prod.destroyable?
         }
       end
 
@@ -102,6 +103,7 @@ module Backend
         end
 
       render inertia: 'Backend/Productions/Show', props: {
+        can_destroy: @activity_production.destroyable?,
         production: {
           'id'                   => @activity_production.id,
           'name'                 => @activity_production.name.to_s,
@@ -156,6 +158,7 @@ module Backend
 
     def edit
       return unless @activity_production = find_and_check
+
       render inertia: 'Backend/Productions/Form', props: {
         production:       production_form_props(@activity_production),
         activities:       activity_production_activities,
@@ -167,6 +170,7 @@ module Backend
 
     def update
       return unless @activity_production = find_and_check
+
       if @activity_production.update(permitted_production_params)
         redirect_to backend_activity_production_path(@activity_production), notice: 'Production mise à jour.'
       else
@@ -177,6 +181,18 @@ module Backend
           cultivable_zones: activity_production_cultivable_zones,
           errors:           production_errors(@activity_production)
         }, status: :unprocessable_entity
+      end
+    end
+
+    def destroy
+      return unless @activity_production = find_and_check
+
+      if @activity_production.destroyable?
+        @activity_production.destroy!
+        redirect_to backend_activity_productions_path, notice: 'Production supprimée.'
+      else
+        redirect_to backend_activity_production_path(@activity_production),
+                    alert: 'Impossible de supprimer : cette production a des interventions liées.'
       end
     end
 
@@ -211,39 +227,39 @@ module Backend
 
     private
 
-    def production_form_props(prod)
-      {
-        'id'                  => prod.id,
-        'activity_id'         => prod.activity_id,
-        'campaign_id'         => prod.campaign_id,
-        'cultivable_zone_id'  => prod.cultivable_zone_id,
-        'started_on'          => prod.started_on&.iso8601,
-        'stopped_on'          => prod.stopped_on&.iso8601,
-        'irrigated'           => prod.irrigated,
-        'nitrate_fixing'      => prod.nitrate_fixing,
-        'state'               => prod.state.to_s
-      }
-    end
+      def production_form_props(prod)
+        {
+          'id'                  => prod.id,
+          'activity_id'         => prod.activity_id,
+          'campaign_id'         => prod.campaign_id,
+          'cultivable_zone_id'  => prod.cultivable_zone_id,
+          'started_on'          => prod.started_on&.iso8601,
+          'stopped_on'          => prod.stopped_on&.iso8601,
+          'irrigated'           => prod.irrigated,
+          'nitrate_fixing'      => prod.nitrate_fixing,
+          'state'               => prod.state.to_s
+        }
+      end
 
-    def activity_production_activities
-      Activity.order(:name).map { |a| { 'id' => a.id, 'name' => a.name.to_s } }
-    end
+      def activity_production_activities
+        Activity.order(:name).map { |a| { 'id' => a.id, 'name' => a.name.to_s } }
+      end
 
-    def activity_production_campaigns
-      Campaign.order(harvest_year: :desc).map { |c| { 'id' => c.id, 'name' => c.name.to_s } }
-    end
+      def activity_production_campaigns
+        Campaign.order(harvest_year: :desc).map { |c| { 'id' => c.id, 'name' => c.name.to_s } }
+      end
 
-    def activity_production_cultivable_zones
-      CultivableZone.order(:name).map { |z| { 'id' => z.id, 'name' => z.name.to_s } }
-    end
+      def activity_production_cultivable_zones
+        CultivableZone.order(:name).map { |z| { 'id' => z.id, 'name' => z.name.to_s } }
+      end
 
-    def production_errors(prod)
-      prod.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v.first.to_s }
-    end
+      def production_errors(prod)
+        prod.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v.first.to_s }
+      end
 
-    def permitted_production_params
-      params.require(:production).permit(:activity_id, :campaign_id, :cultivable_zone_id, :started_on, :stopped_on, :irrigated, :nitrate_fixing, :state)
-    end
+      def permitted_production_params
+        params.require(:production).permit(:activity_id, :campaign_id, :cultivable_zone_id, :started_on, :stopped_on, :irrigated, :nitrate_fixing, :state)
+      end
 
   end
 end

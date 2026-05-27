@@ -201,6 +201,7 @@ module Backend
 
     def edit
       return unless @product = find_and_check(:product)
+
       render inertia: 'Backend/Catalogue/Form', props: {
         produit: produit_form_json(@product),
         errors: {}
@@ -227,6 +228,18 @@ module Backend
           produit: produit_form_json(@product),
           errors: @product.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v.first }
         }, status: :unprocessable_entity
+      end
+    end
+
+    def destroy
+      return unless @product = find_and_check(:product)
+
+      if @product.destroyable?
+        @product.destroy!
+        redirect_to backend_products_path, notice: 'Produit supprimé.'
+      else
+        redirect_to backend_product_path(@product),
+                    alert: 'Impossible de supprimer : ce produit est utilisé dans des ventes ou achats.'
       end
     end
 
@@ -612,7 +625,8 @@ module Backend
           geolocation: geo,
           sex:                  (product.respond_to?(:sex) ? product.sex.to_s.presence : nil),
           identification_number: product.identification_number.presence,
-          filiation_status:     product.filiation_status.presence
+          filiation_status:     product.filiation_status.presence,
+          can_destroy:          product.destroyable?
         }
       end
 

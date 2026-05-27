@@ -73,6 +73,7 @@ module Backend
       return unless @issue = find_and_check(:issue)
 
       render inertia: 'Backend/Alertes/IssueShow', props: {
+        can_destroy: @issue.destroyable?,
         issue: issue_json(@issue)
       }
     end
@@ -130,20 +131,32 @@ module Backend
       end
     end
 
+    def destroy
+      return unless @issue = find_and_check(:issue)
+
+      if @issue.destroyable?
+        @issue.destroy!
+        redirect_to backend_alerts_path, notice: 'Alerte supprimée.'
+      else
+        redirect_to backend_issue_path(@issue),
+                    alert: 'Impossible de supprimer : cette alerte a des interventions liées.'
+      end
+    end
+
     private
 
-    def issue_json(issue)
-      {
-        id:          issue.id,
-        name:        issue.name,
-        nature:      issue.nature.to_s,
-        gravity:     issue.gravity.to_i,
-        observed_at: issue.observed_at&.to_date&.iso8601,
-        state:       issue.state.to_s,
-        description: issue.description,
-        target_type: issue.target_type,
-        target_id:   issue.target_id
-      }
-    end
+      def issue_json(issue)
+        {
+          id:          issue.id,
+          name:        issue.name,
+          nature:      issue.nature.to_s,
+          gravity:     issue.gravity.to_i,
+          observed_at: issue.observed_at&.to_date&.iso8601,
+          state:       issue.state.to_s,
+          description: issue.description,
+          target_type: issue.target_type,
+          target_id:   issue.target_id
+        }
+      end
   end
 end

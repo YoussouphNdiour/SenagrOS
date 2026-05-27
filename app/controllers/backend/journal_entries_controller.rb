@@ -20,7 +20,7 @@ module Backend
   class JournalEntriesController < Backend::BaseController
     manage_restfully only: %i[show destroy]
 
-    layout 'inertia', only: [:index, :show, :new, :edit]
+    layout 'inertia', only: %i[index show new edit]
 
     respond_to :pdf, :odt, :docx, :xml, :json, :html, :csv
 
@@ -85,6 +85,7 @@ module Backend
           'real_debit'   => e.real_debit.to_f,
           'real_credit'  => e.real_credit.to_f,
           'journal_name' => e.journal&.name.to_s,
+          'can_destroy'  => e.destroyable?,
           'items'        => e.items.map do |item|
             {
               'id'             => item.id,
@@ -124,6 +125,7 @@ module Backend
       end
 
       render inertia: 'Backend/Comptabilite/Show', props: {
+        can_destroy: @journal_entry.destroyable?,
         entry: {
           'id'                  => @journal_entry.id,
           'number'              => @journal_entry.number.to_s,
@@ -169,6 +171,7 @@ module Backend
 
     def edit
       return unless @journal_entry = find_and_check
+
       unless @journal_entry.editable?
         redirect_to backend_journal_entry_path(@journal_entry)
         return
@@ -182,6 +185,7 @@ module Backend
 
     def update
       return unless @journal_entry = find_and_check
+
       unless @journal_entry.editable?
         redirect_to backend_journal_entry_path(@journal_entry)
         return
@@ -196,6 +200,18 @@ module Backend
           journals: entry_form_journals,
           errors:   entry_errors(@journal_entry)
         }, status: :unprocessable_entity
+      end
+    end
+
+    def destroy
+      return unless @journal_entry = find_and_check
+
+      if @journal_entry.destroyable?
+        @journal_entry.destroy!
+        redirect_to backend_journal_entries_path, notice: 'Écriture supprimée.'
+      else
+        redirect_to backend_journal_entry_path(@journal_entry),
+                    alert: 'Impossible de supprimer : cette écriture est confirmée.'
       end
     end
 
