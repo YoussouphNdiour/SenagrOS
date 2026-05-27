@@ -14,7 +14,7 @@ test.describe('Parcelles', () => {
 
   test('crée une parcelle', async ({ page }) => {
     await page.goto('/backend/cultivable-zones/new')
-    await expect(page.locator('#parcelle-name')).toBeVisible()
+    await expect(page.locator('#parcelle-name')).toBeVisible({ timeout: 15000 })
     await page.fill('#parcelle-name', NAME)
     await page.fill('#parcelle-work-number', `P-E2E-${TS}`)
     await page.fill('#parcelle-description', 'Description créée par test E2E')
@@ -28,19 +28,20 @@ test.describe('Parcelles', () => {
       await page.goto(parcelleUrl)
     } else {
       await page.goto('/backend/cultivable-zones')
+      await page.waitForLoadState('networkidle')
       const link = page.locator('a', { hasText: NAME }).first()
-      if (!await link.isVisible({ timeout: 5000 }).catch(() => false)) { test.skip(); return }
+      await expect(link).toBeVisible({ timeout: 5000 })
       await link.click()
     }
     await page.waitForLoadState('networkidle')
-    if (!await page.getByText(NAME).isVisible({ timeout: 5000 }).catch(() => false)) { test.skip(); return }
     await expect(page.getByText(NAME)).toBeVisible()
   })
 
   test('modifie une parcelle', async ({ page }) => {
     await page.goto('/backend/cultivable-zones')
+    await page.waitForLoadState('networkidle')
     const link = page.locator('a', { hasText: NAME }).first()
-    if (!await link.isVisible({ timeout: 5000 }).catch(() => false)) { test.skip(); return }
+    await expect(link).toBeVisible({ timeout: 5000 })
     await link.click()
     await page.waitForLoadState('networkidle')
     await page.getByRole('link', { name: /Modifier/i }).first().click()
@@ -52,14 +53,14 @@ test.describe('Parcelles', () => {
 
   test('supprime une parcelle', async ({ page }) => {
     await page.goto('/backend/cultivable-zones')
+    await page.waitForLoadState('networkidle')
     const link = page.locator('a', { hasText: NAME_EDITED }).or(page.locator('a', { hasText: NAME })).first()
-    if (!await link.isVisible()) test.skip()
+    await expect(link).toBeVisible({ timeout: 5000 })
     await link.click()
+    await page.waitForLoadState('networkidle')
     const deleteBtn = page.getByRole('button', { name: /Supprimer/i })
-    if (!await deleteBtn.isEnabled()) {
-      test.skip()
-      return
-    }
+    await expect(deleteBtn).toBeVisible()
+    await expect(deleteBtn).toBeEnabled()
     page.on('dialog', d => d.accept())
     await deleteBtn.click()
     await expect(page).toHaveURL(/cultivable-zones/, { timeout: 10000 })

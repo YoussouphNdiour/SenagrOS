@@ -13,6 +13,7 @@ test.describe('Campagnes', () => {
 
   test('crée une campagne', async ({ page }) => {
     await page.goto('/backend/campaigns/new')
+    await expect(page.locator('#campagne-name')).toBeVisible({ timeout: 15000 })
     await page.fill('#campagne-name', NAME)
     await page.fill('#campagne-harvest-year', '2025')
     await page.fill('#campagne-description', 'Test E2E')
@@ -22,18 +23,21 @@ test.describe('Campagnes', () => {
 
   test('affiche le détail d\'une campagne', async ({ page }) => {
     await page.goto('/backend/campaigns')
+    await page.waitForLoadState('networkidle')
     const link = page.getByText(NAME).first()
-    if (!await link.isVisible()) test.skip()
+    await expect(link).toBeVisible({ timeout: 5000 })
     await link.click()
     await expect(page.getByText(NAME)).toBeVisible()
   })
 
   test('modifie une campagne', async ({ page }) => {
     await page.goto('/backend/campaigns')
+    await page.waitForLoadState('networkidle')
     const link = page.getByText(NAME).first()
-    if (!await link.isVisible()) test.skip()
+    await expect(link).toBeVisible({ timeout: 5000 })
     await link.click()
     await page.getByRole('link', { name: /Modifier/i }).first().click()
+    await expect(page.locator('#campagne-name')).toBeVisible()
     await page.fill('#campagne-name', NAME_EDITED)
     await page.click('button[type="submit"]')
     await expect(page).toHaveURL(/campaigns/)
@@ -41,11 +45,13 @@ test.describe('Campagnes', () => {
 
   test('supprime une campagne', async ({ page }) => {
     await page.goto('/backend/campaigns')
+    await page.waitForLoadState('networkidle')
     const link = page.getByText(NAME_EDITED).or(page.getByText(NAME)).first()
-    if (!await link.isVisible()) test.skip()
+    await expect(link).toBeVisible({ timeout: 5000 })
     await link.click()
     const deleteBtn = page.getByRole('button', { name: /Supprimer/i })
-    if (!await deleteBtn.isEnabled()) { test.skip(); return }
+    await expect(deleteBtn).toBeVisible()
+    await expect(deleteBtn).toBeEnabled()
     page.on('dialog', d => d.accept())
     await deleteBtn.click()
     await expect(page).toHaveURL(/campaigns/, { timeout: 10000 })

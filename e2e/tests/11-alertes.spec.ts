@@ -13,6 +13,7 @@ test.describe('Alertes (Issues)', () => {
 
   test('crée une alerte', async ({ page }) => {
     await page.goto('/backend/issues/new')
+    await expect(page.locator('#issue-name')).toBeVisible({ timeout: 15000 })
     await page.fill('#issue-name', NAME)
     const natureOpts = await page.locator('#issue-nature option').count()
     if (natureOpts > 1) await page.selectOption('#issue-nature', { index: 1 })
@@ -25,18 +26,21 @@ test.describe('Alertes (Issues)', () => {
 
   test('affiche le détail d\'une alerte', async ({ page }) => {
     await page.goto('/backend/alerts')
+    await page.waitForLoadState('networkidle')
     const link = page.getByText(NAME).first()
-    if (!await link.isVisible()) { test.skip(); return }
+    await expect(link).toBeVisible({ timeout: 5000 })
     await link.click()
     await expect(page.getByText(NAME)).toBeVisible()
   })
 
   test('modifie une alerte', async ({ page }) => {
     await page.goto('/backend/alerts')
+    await page.waitForLoadState('networkidle')
     const link = page.getByText(NAME).first()
-    if (!await link.isVisible()) { test.skip(); return }
+    await expect(link).toBeVisible({ timeout: 5000 })
     await link.click()
     await page.getByRole('link', { name: /Modifier/i }).first().click()
+    await expect(page.locator('#issue-name')).toBeVisible()
     await page.fill('#issue-name', NAME_EDITED)
     await page.click('button[type="submit"]')
     await expect(page).toHaveURL(/issues|alerts/)
@@ -44,22 +48,25 @@ test.describe('Alertes (Issues)', () => {
 
   test('ferme une alerte ouverte', async ({ page }) => {
     await page.goto('/backend/alerts')
+    await page.waitForLoadState('networkidle')
     const link = page.getByText(NAME_EDITED).or(page.getByText(NAME)).first()
-    if (!await link.isVisible()) { test.skip(); return }
+    await expect(link).toBeVisible({ timeout: 5000 })
     await link.click()
     const closeBtn = page.getByRole('button', { name: /Fermer/i })
-    if (!await closeBtn.isVisible()) { test.skip(); return }
+    await expect(closeBtn).toBeVisible({ timeout: 5000 })
     await closeBtn.click()
     await expect(page).toHaveURL(/issues\/\d+|alerts/)
   })
 
   test('supprime une alerte', async ({ page }) => {
     await page.goto('/backend/alerts')
+    await page.waitForLoadState('networkidle')
     const link = page.getByText(NAME_EDITED).or(page.getByText(NAME)).first()
-    if (!await link.isVisible()) { test.skip(); return }
+    await expect(link).toBeVisible({ timeout: 5000 })
     await link.click()
     const deleteBtn = page.getByRole('button', { name: /Supprimer/i })
-    if (!await deleteBtn.isVisible() || !await deleteBtn.isEnabled()) { test.skip(); return }
+    await expect(deleteBtn).toBeVisible({ timeout: 5000 })
+    await expect(deleteBtn).toBeEnabled()
     page.on('dialog', d => d.accept())
     await deleteBtn.click()
     await expect(page).toHaveURL(/alerts|issues/, { timeout: 10000 })

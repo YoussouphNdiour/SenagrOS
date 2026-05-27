@@ -13,7 +13,7 @@ test.describe('Travailleurs', () => {
 
   test('crée un travailleur', async ({ page }) => {
     await page.goto('/backend/workers/new')
-    if (!await page.locator('#worker-name').isVisible({ timeout: 5000 }).catch(() => false)) { test.skip(); return }
+    await expect(page.locator('#worker-name')).toBeVisible({ timeout: 15000 })
     await page.fill('#worker-name', NAME)
     await page.fill('#worker-work-number', `W-E2E-${TS}`)
     await page.fill('#worker-identification', `ID-E2E-${TS}`)
@@ -25,18 +25,21 @@ test.describe('Travailleurs', () => {
 
   test('affiche le détail d\'un travailleur', async ({ page }) => {
     await page.goto('/backend/workers')
+    await page.waitForLoadState('networkidle')
     const link = page.getByText(NAME).first()
-    if (!await link.isVisible()) { test.skip(); return }
+    await expect(link).toBeVisible({ timeout: 5000 })
     await link.click()
     await expect(page.getByText(NAME)).toBeVisible()
   })
 
   test('modifie un travailleur', async ({ page }) => {
     await page.goto('/backend/workers')
+    await page.waitForLoadState('networkidle')
     const link = page.getByText(NAME).first()
-    if (!await link.isVisible()) { test.skip(); return }
+    await expect(link).toBeVisible({ timeout: 5000 })
     await link.click()
     await page.getByRole('link', { name: /Modifier/i }).first().click()
+    await expect(page.locator('#worker-name')).toBeVisible()
     await page.fill('#worker-name', NAME_EDITED)
     await page.click('button[type="submit"]')
     await expect(page).toHaveURL(/workers/)
@@ -44,11 +47,13 @@ test.describe('Travailleurs', () => {
 
   test('supprime un travailleur', async ({ page }) => {
     await page.goto('/backend/workers')
+    await page.waitForLoadState('networkidle')
     const link = page.getByText(NAME_EDITED).or(page.getByText(NAME)).first()
-    if (!await link.isVisible()) { test.skip(); return }
+    await expect(link).toBeVisible({ timeout: 5000 })
     await link.click()
     const deleteBtn = page.getByRole('button', { name: /Supprimer/i })
-    if (!await deleteBtn.isEnabled()) { test.skip(); return }
+    await expect(deleteBtn).toBeVisible()
+    await expect(deleteBtn).toBeEnabled()
     page.on('dialog', d => d.accept())
     await deleteBtn.click()
     await expect(page).toHaveURL(/workers/, { timeout: 10000 })

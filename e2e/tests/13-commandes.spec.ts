@@ -15,8 +15,14 @@ test.describe('Commandes d\'achat', () => {
 
   test('crée une commande', async ({ page }) => {
     await page.goto('/backend/purchase_orders/new')
-    const natures = await page.locator('select').first().locator('option').count()
-    if (natures <= 1) { test.skip(); return }
+    await expect(page.locator('form')).toBeVisible({ timeout: 15000 })
+    const selects = page.locator('select')
+    const count = await selects.count()
+    if (count > 0) {
+      const firstOpts = await selects.first().locator('option').count()
+      expect(firstOpts, 'Des options doivent exister dans le formulaire de commande').toBeGreaterThan(1)
+      await selects.first().selectOption({ index: 1 })
+    }
     await page.fill('input[type="date"]', '2025-06-01')
     await page.click('button[type="submit"]')
     await expect(page).toHaveURL(/purchase_orders/, { timeout: 10000 })
@@ -24,19 +30,22 @@ test.describe('Commandes d\'achat', () => {
 
   test('affiche le détail d\'une commande', async ({ page }) => {
     await page.goto('/backend/purchase_orders')
-    const firstLink = page.locator('table a, td a').first()
-    if (!await firstLink.isVisible()) { test.skip(); return }
+    await page.waitForLoadState('networkidle')
+    const firstLink = page.locator('table a, td a, a[href*="/purchase_orders/"]').first()
+    await expect(firstLink).toBeVisible({ timeout: 5000 })
     await firstLink.click()
     await expect(page).toHaveURL(/purchase_orders\/\d+/)
   })
 
   test('supprime une commande', async ({ page }) => {
     await page.goto('/backend/purchase_orders')
-    const firstLink = page.locator('table a, td a').first()
-    if (!await firstLink.isVisible()) { test.skip(); return }
+    await page.waitForLoadState('networkidle')
+    const firstLink = page.locator('table a, td a, a[href*="/purchase_orders/"]').first()
+    await expect(firstLink).toBeVisible({ timeout: 5000 })
     await firstLink.click()
     const deleteBtn = page.getByRole('button', { name: /Supprimer/i })
-    if (!await deleteBtn.isVisible() || !await deleteBtn.isEnabled()) { test.skip(); return }
+    await expect(deleteBtn).toBeVisible({ timeout: 5000 })
+    await expect(deleteBtn).toBeEnabled()
     page.on('dialog', d => d.accept())
     await deleteBtn.click()
     await expect(page).toHaveURL(/purchase_orders/, { timeout: 10000 })

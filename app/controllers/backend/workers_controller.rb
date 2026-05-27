@@ -82,6 +82,7 @@ module Backend
 
     respond_to :html, :json
     layout 'inertia', only: %i[index show new edit]
+    skip_before_action :check_variant_availability, only: :new
 
     def index
       scope = Worker.includes(:variant).order(:name).page(params[:page]).per(50)

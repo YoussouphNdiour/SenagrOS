@@ -11,6 +11,7 @@ test.describe('Interventions', () => {
 
   test('crée une intervention', async ({ page }) => {
     await page.goto('/backend/interventions/new')
+    await expect(page.locator('form, #int-nature')).toBeVisible({ timeout: 15000 })
     const procedureOpts = await page.locator('#int-procedure option').count()
     if (procedureOpts > 1) {
       await page.selectOption('#int-procedure', { index: 1 })
@@ -28,19 +29,21 @@ test.describe('Interventions', () => {
 
   test('affiche le détail d\'une intervention', async ({ page }) => {
     await page.goto('/backend/interventions')
-    const firstLink = page.locator('table a, td a').first()
-    if (!await firstLink.isVisible()) { test.skip(); return }
+    await page.waitForLoadState('networkidle')
+    const firstLink = page.locator('table a, td a, a[href*="/interventions/"]').first()
+    await expect(firstLink).toBeVisible({ timeout: 5000 })
     await firstLink.click()
     await expect(page).toHaveURL(/interventions\/\d+/)
   })
 
   test('modifie une intervention', async ({ page }) => {
     await page.goto('/backend/interventions')
-    const firstLink = page.locator('table a, td a').first()
-    if (!await firstLink.isVisible()) { test.skip(); return }
+    await page.waitForLoadState('networkidle')
+    const firstLink = page.locator('table a, td a, a[href*="/interventions/"]').first()
+    await expect(firstLink).toBeVisible({ timeout: 5000 })
     await firstLink.click()
     const editBtn = page.getByRole('link', { name: /Modifier/i })
-    if (!await editBtn.isVisible()) { test.skip(); return }
+    await expect(editBtn).toBeVisible({ timeout: 5000 })
     await editBtn.click()
     if (await page.locator('#int-desc').isVisible()) {
       await page.fill('#int-desc', 'Modifiée par E2E')
@@ -51,11 +54,13 @@ test.describe('Interventions', () => {
 
   test('supprime une intervention', async ({ page }) => {
     await page.goto('/backend/interventions')
-    const firstLink = page.locator('table a, td a').first()
-    if (!await firstLink.isVisible()) { test.skip(); return }
+    await page.waitForLoadState('networkidle')
+    const firstLink = page.locator('table a, td a, a[href*="/interventions/"]').first()
+    await expect(firstLink).toBeVisible({ timeout: 5000 })
     await firstLink.click()
     const deleteBtn = page.getByRole('button', { name: /Supprimer/i })
-    if (!await deleteBtn.isVisible() || !await deleteBtn.isEnabled()) { test.skip(); return }
+    await expect(deleteBtn).toBeVisible({ timeout: 5000 })
+    await expect(deleteBtn).toBeEnabled()
     page.on('dialog', d => d.accept())
     await deleteBtn.click()
     await expect(page).toHaveURL(/interventions/, { timeout: 10000 })

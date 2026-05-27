@@ -9,19 +9,21 @@ test.describe('Catalogue (Produits)', () => {
 
   test('accède au détail d\'un produit', async ({ page }) => {
     await page.goto('/backend/products')
+    await page.waitForLoadState('networkidle')
     const firstLink = page.locator('[href*="/backend/products/"]:not([href$="/new"]):not([href*="/new?"])').first()
-    if (!await firstLink.isVisible()) { test.skip(); return }
+    await expect(firstLink).toBeVisible({ timeout: 5000 })
     await firstLink.click()
     await expect(page).toHaveURL(/products\/\d+/)
   })
 
   test('modifie un produit', async ({ page }) => {
     await page.goto('/backend/products')
+    await page.waitForLoadState('networkidle')
     const firstLink = page.locator('[href*="/backend/products/"]:not([href$="/new"]):not([href*="/new?"])').first()
-    if (!await firstLink.isVisible()) { test.skip(); return }
+    await expect(firstLink).toBeVisible({ timeout: 5000 })
     await firstLink.click()
     const editLink = page.getByRole('link', { name: /Modifier/i })
-    if (!await editLink.isVisible()) { test.skip(); return }
+    await expect(editLink).toBeVisible({ timeout: 5000 })
     await editLink.click()
     await expect(page.locator('#product-name')).toBeVisible()
     await page.fill('#product-description', 'Modifié par test E2E')
@@ -31,8 +33,9 @@ test.describe('Catalogue (Produits)', () => {
 
   test('bouton supprimer présent sur le détail', async ({ page }) => {
     await page.goto('/backend/products')
+    await page.waitForLoadState('networkidle')
     const firstLink = page.locator('[href*="/backend/products/"]:not([href$="/new"]):not([href*="/new?"])').first()
-    if (!await firstLink.isVisible()) { test.skip(); return }
+    await expect(firstLink).toBeVisible({ timeout: 5000 })
     await firstLink.click()
     const deleteBtn = page.getByRole('button', { name: /Supprimer/i })
     await expect(deleteBtn).toBeVisible()
@@ -40,11 +43,12 @@ test.describe('Catalogue (Produits)', () => {
 
   test('saisit un mouvement de stock', async ({ page }) => {
     await page.goto('/backend/products')
+    await page.waitForLoadState('networkidle')
     const firstLink = page.locator('[href*="/backend/products/"]:not([href$="/new"]):not([href*="/new?"])').first()
-    if (!await firstLink.isVisible()) { test.skip(); return }
+    await expect(firstLink).toBeVisible({ timeout: 5000 })
     await firstLink.click()
     const mvtForm = page.getByLabel('Formulaire mouvement')
-    if (!await mvtForm.isVisible()) { test.skip(); return }
+    await expect(mvtForm).toBeVisible({ timeout: 5000 })
     await page.fill('input[type="number"][step]', '5')
     await page.click('button:has-text("Enregistrer le mouvement")')
     await expect(page).toHaveURL(/products\/\d+/)

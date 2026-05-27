@@ -11,8 +11,9 @@ test.describe('Ventes', () => {
 
   test('crée une vente', async ({ page }) => {
     await page.goto('/backend/sales/new')
+    await expect(page.locator('#sale-nature, form')).toBeVisible({ timeout: 15000 })
     const natures = await page.locator('#sale-nature option').count()
-    if (natures <= 1) { test.skip(); return }
+    expect(natures, 'Des natures de vente doivent exister pour créer une vente').toBeGreaterThan(1)
     await page.selectOption('#sale-nature', { index: 1 })
     const dateInput = page.locator('input[type="date"]').first()
     if (await dateInput.isVisible()) {
@@ -24,19 +25,21 @@ test.describe('Ventes', () => {
 
   test('affiche le détail d\'une vente', async ({ page }) => {
     await page.goto('/backend/sales')
-    const firstLink = page.locator('table a, td a').first()
-    if (!await firstLink.isVisible()) { test.skip(); return }
+    await page.waitForLoadState('networkidle')
+    const firstLink = page.locator('table a, td a, a[href*="/sales/"]').first()
+    await expect(firstLink).toBeVisible({ timeout: 5000 })
     await firstLink.click()
     await expect(page).toHaveURL(/sales\/\d+/)
   })
 
   test('modifie une vente', async ({ page }) => {
     await page.goto('/backend/sales')
-    const firstLink = page.locator('table a, td a').first()
-    if (!await firstLink.isVisible()) { test.skip(); return }
+    await page.waitForLoadState('networkidle')
+    const firstLink = page.locator('table a, td a, a[href*="/sales/"]').first()
+    await expect(firstLink).toBeVisible({ timeout: 5000 })
     await firstLink.click()
     const editBtn = page.getByRole('link', { name: /Modifier/i })
-    if (!await editBtn.isVisible()) { test.skip(); return }
+    await expect(editBtn).toBeVisible({ timeout: 5000 })
     await editBtn.click()
     const desc = page.locator('textarea').first()
     if (await desc.isVisible()) await desc.fill('Modifiée E2E')
@@ -46,11 +49,13 @@ test.describe('Ventes', () => {
 
   test('supprime une vente', async ({ page }) => {
     await page.goto('/backend/sales')
-    const firstLink = page.locator('table a, td a').first()
-    if (!await firstLink.isVisible()) { test.skip(); return }
+    await page.waitForLoadState('networkidle')
+    const firstLink = page.locator('table a, td a, a[href*="/sales/"]').first()
+    await expect(firstLink).toBeVisible({ timeout: 5000 })
     await firstLink.click()
     const deleteBtn = page.getByRole('button', { name: /Supprimer/i })
-    if (!await deleteBtn.isVisible() || !await deleteBtn.isEnabled()) { test.skip(); return }
+    await expect(deleteBtn).toBeVisible({ timeout: 5000 })
+    await expect(deleteBtn).toBeEnabled()
     page.on('dialog', d => d.accept())
     await deleteBtn.click()
     await expect(page).toHaveURL(/sales/, { timeout: 10000 })

@@ -162,6 +162,7 @@ module Backend
     end
 
     layout 'inertia', only: %i[index show new edit]
+    skip_before_action :check_variant_availability, only: :new
 
     # Show a list of animal groups
     def index

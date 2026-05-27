@@ -19,6 +19,7 @@
 module Backend
   class EquipmentsController < Backend::MattersController
     layout 'inertia', only: %i[index show new edit]
+    skip_before_action :check_variant_availability, only: :new
 
     # params:
     #   :q Text search
