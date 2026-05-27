@@ -242,11 +242,13 @@ module Backend
                    end
 
       render inertia: 'Backend/Interventions/Index', props: {
-        interventions: paginated.as_json(
-          only:    %i[id procedure_name nature state started_at stopped_at],
-          methods: %i[name human_activities_names human_target_names
-                      human_working_duration human_working_zone_area]
-        ),
+        interventions: paginated.map { |i|
+          i.as_json(
+            only:    %i[id procedure_name nature state started_at stopped_at],
+            methods: %i[name human_activities_names human_target_names
+                        human_working_duration human_working_zone_area]
+          ).merge('can_destroy' => i.destroyable?)
+        },
         kanban:      kanban,
         map_geojson: { 'type' => 'FeatureCollection', 'features' => zones },
         filters:     params.permit(:q, :state, :nature, :cultivable_zone_id,
@@ -288,6 +290,7 @@ module Backend
       end
 
       render inertia: 'Backend/Interventions/Show', props: {
+        can_destroy: @intervention.destroyable?,
         intervention: {
           'id'               => @intervention.id,
           'number'           => @intervention.number.to_s,
@@ -349,6 +352,7 @@ module Backend
 
     def edit
       return unless @intervention = find_and_check(:intervention)
+
       procedures = Procedo.selection.map { |label, name| { 'label' => label.to_s, 'name' => name.to_s } }
       proc = Procedo.find(@intervention.procedure_name.to_s)
       procedure_schema = proc ? build_procedure_schema(proc) : nil
@@ -377,6 +381,7 @@ module Backend
 
     def update
       return unless @intervention = find_and_check(:intervention)
+
       if @intervention.update(permitted_intervention_params)
         redirect_to backend_intervention_path(@intervention), notice: 'Intervention mise à jour.'
       else
@@ -387,6 +392,18 @@ module Backend
           procedure_schema: nil,
           errors:           intervention_errors(@intervention)
         }, status: :unprocessable_entity
+      end
+    end
+
+    def destroy
+      return unless @intervention = find_and_check
+
+      if @intervention.destroyable?
+        @intervention.destroy!
+        redirect_to backend_interventions_path, notice: 'Intervention supprimée.'
+      else
+        redirect_to backend_intervention_path(@intervention),
+                    alert: 'Impossible de supprimer : cette intervention est liée à une vente ou facture.'
       end
     end
 
