@@ -115,3 +115,9 @@ yarn-debug.log*
 /.rubocop-*
 .rbenv-gemsets
 ekylibre-document-ai.json
+
+# Playwright
+e2e/.auth/user.json
+e2e/report/
+playwright-report/
+test-results/

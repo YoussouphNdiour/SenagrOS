@@ -37,6 +37,7 @@
     "zustand": "^4"
   },
   "devDependencies": {
+    "@playwright/test": "^1.60.0",
     "@testing-library/jest-dom": "^6",
     "@testing-library/react": "^14",
     "@testing-library/user-event": "^14",
@@ -64,7 +65,9 @@
     "vite:dev": "vite",
     "vite:build": "vite build",
     "vitest": "vitest run",
-    "vitest:watch": "vitest"
+    "vitest:watch": "vitest",
+    "e2e": "playwright test --config=e2e/playwright.config.ts",
+    "e2e:ui": "playwright test --config=e2e/playwright.config.ts --ui"
   },
   "husky": {
     "hooks": {
