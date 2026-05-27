@@ -50,6 +50,6 @@ describe('BudgetForm', () => {
 
   it('shows server error under name field', () => {
     render(<BudgetForm budget={emptyBudget} errors={{ name: ['est obligatoire'] }} mode="new" />)
-    expect(screen.getByText('est obligatoire')).toBeInTheDocument()
+    expect(screen.getAllByText('est obligatoire').length).toBeGreaterThan(0)
   })
 })

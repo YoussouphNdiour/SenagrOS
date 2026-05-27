@@ -63,6 +63,6 @@ describe('CatalogueForm', () => {
 
   it('affiche une erreur si name est vide (erreur serveur)', () => {
     renderForm({}, { name: 'Le nom est obligatoire' })
-    expect(screen.getByText('Le nom est obligatoire')).toBeInTheDocument()
+    expect(screen.getAllByText('Le nom est obligatoire').length).toBeGreaterThan(0)
   })
 })

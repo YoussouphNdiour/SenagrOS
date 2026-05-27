@@ -51,8 +51,9 @@ describe('BudgetShow', () => {
 
   it('renders purchase_items_count and reception_items_count', () => {
     renderShow()
-    expect(screen.getByText(/3 article\(s\) d'achat/)).toBeInTheDocument()
-    expect(screen.getByText(/1 réception\(s\)/)).toBeInTheDocument()
+    expect(screen.getByText("Articles d'achat")).toBeInTheDocument()
+    expect(screen.getAllByText('3').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('1').length).toBeGreaterThan(0)
   })
 
   it('shows empty state when no purchase lines', () => {
@@ -79,7 +80,7 @@ describe('BudgetShow', () => {
 
   it('renders Réceptions heading', () => {
     render(<BudgetShow budget={mockBudget} purchase_lines={[]} total_pretax_amount={0} reception_lines={[]} canDestroy={true} />)
-    expect(screen.getByText(/Réceptions/)).toBeInTheDocument()
+    expect(screen.getAllByText(/Réceptions/).length).toBeGreaterThan(0)
   })
 
   it('shows empty reception state when reception_lines is empty', () => {

@@ -65,14 +65,14 @@ describe('EntitesForm', () => {
   // 5. Last name input is empty when null
   it('last name input is empty when entite is null', () => {
     render(<EntitesForm entite={null} errors={emptyErrors} />)
-    const input = screen.getByLabelText(/nom \*/i) as HTMLInputElement
+    const input = screen.getByLabelText(/^Nom/i) as HTMLInputElement
     expect(input.value).toBe('')
   })
 
   // 6. Last name shows entite.last_name when editing
   it('last name shows entite.last_name when editing', () => {
     render(<EntitesForm entite={entite} errors={emptyErrors} />)
-    const input = screen.getByLabelText(/nom \*/i) as HTMLInputElement
+    const input = screen.getByLabelText(/^Nom/i) as HTMLInputElement
     expect(input.value).toBe('Diallo')
   })
 

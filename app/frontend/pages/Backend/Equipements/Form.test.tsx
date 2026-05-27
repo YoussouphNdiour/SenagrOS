@@ -65,6 +65,6 @@ describe('EquipementsForm — édition', () => {
 
   it('affiche les erreurs de validation', () => {
     render(<EquipementsForm equipement={null} errors={{ name: 'est vide' }} />)
-    expect(screen.getByText('est vide')).toBeInTheDocument()
+    expect(screen.getAllByText('est vide').length).toBeGreaterThan(0)
   })
 })

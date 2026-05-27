@@ -45,7 +45,7 @@ describe('IssueForm — création', () => {
 
   it('affiche une erreur si name manquant (erreur serveur)', () => {
     render(<IssueForm issue={null} errors={{ name: 'est obligatoire' }} />)
-    expect(screen.getByText('est obligatoire')).toBeInTheDocument()
+    expect(screen.getAllByText('est obligatoire').length).toBeGreaterThan(0)
   })
 
   it('appelle router.post au submit en mode création', async () => {

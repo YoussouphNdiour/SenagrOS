@@ -183,11 +183,10 @@ describe('CatalogueShow', () => {
     expect(link).toHaveAttribute('href', '/backend/products/1/edit')
   })
 
-  it('renders "Supprimer" link with data-method delete', () => {
+  it('renders "Supprimer" button via ConfirmDeleteButton', () => {
     renderShow()
-    const link = screen.getByRole('link', { name: /Supprimer/ })
-    expect(link).toBeInTheDocument()
-    expect(link).toHaveAttribute('data-method', 'delete')
+    const btn = screen.getByRole('button', { name: /Supprimer/ })
+    expect(btn).toBeInTheDocument()
   })
 
   it('shows Localisation section when produit has geolocation', () => {

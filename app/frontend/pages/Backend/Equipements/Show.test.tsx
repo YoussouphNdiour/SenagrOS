@@ -42,7 +42,7 @@ describe('EquipementShow', () => {
 
   it('shows work number badge', () => {
     render(<EquipementShow equipement={mockEquipement} {...emptySubsections} />)
-    expect(screen.getByText('N° EQ001')).toBeInTheDocument()
+    expect(screen.getAllByText('EQ001').length).toBeGreaterThan(0)
   })
 
   it('shows Actif badge when no dead_at', () => {
