@@ -3,6 +3,7 @@ export interface Parcelle {
   name: string
   area_ha: number | null
   geojson: string | null
+  canDestroy?: boolean
 }
 
 export interface ParcellesIndexProps {
@@ -33,4 +34,5 @@ export interface ParcelleShowProps {
     created_at: string | null
   }
   productions: ParcelleProduction[]
+  canDestroy: boolean
 }

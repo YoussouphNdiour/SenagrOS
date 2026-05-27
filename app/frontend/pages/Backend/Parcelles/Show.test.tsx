@@ -4,6 +4,7 @@ import ParcelleShow from './Show'
 
 vi.mock('@inertiajs/react', () => ({
   usePage: vi.fn(),
+  router: { delete: vi.fn() },
   Link: ({ href, children }: { href: string; children: React.ReactNode }) => (
     <a href={href}>{children}</a>
   ),
@@ -80,24 +81,24 @@ beforeEach(() => {
 
 describe('ParcelleShow', () => {
   it('renders parcelle name and work number', () => {
-    render(<ParcelleShow parcelle={mockParcelle} productions={[]} />)
+    render(<ParcelleShow parcelle={mockParcelle} productions={[]} canDestroy={true} />)
     expect(screen.getByText('Champ Nord - Louga')).toBeInTheDocument()
     expect(screen.getByText('P001')).toBeInTheDocument()
   })
 
   it('shows area in hectares', () => {
-    render(<ParcelleShow parcelle={mockParcelle} productions={[]} />)
+    render(<ParcelleShow parcelle={mockParcelle} productions={[]} canDestroy={true} />)
     expect(screen.getByText('12.5 ha')).toBeInTheDocument()
   })
 
   it('renders productions table', () => {
-    render(<ParcelleShow parcelle={mockParcelle} productions={mockProductions} />)
+    render(<ParcelleShow parcelle={mockParcelle} productions={mockProductions} canDestroy={true} />)
     expect(screen.getByText('Culture du mil 2024')).toBeInTheDocument()
     expect(screen.getByText('Ouverte')).toBeInTheDocument()
   })
 
   it('does not render map when no geojson', () => {
-    render(<ParcelleShow parcelle={mockParcelle} productions={[]} />)
+    render(<ParcelleShow parcelle={mockParcelle} productions={[]} canDestroy={true} />)
     expect(screen.queryByTestId('map')).not.toBeInTheDocument()
   })
 })

@@ -2,8 +2,9 @@ import type { ReactNode } from 'react'
 import { MapPin, Layers } from 'lucide-react'
 import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
+import { router } from '@inertiajs/react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, SectionCard, SectionTitle, DetailRow, StateBadge, CodeBadge, PrimaryButton, DataTable } from '../../../components/ui'
+import { BackLink, SectionCard, SectionTitle, DetailRow, StateBadge, CodeBadge, PrimaryButton, DataTable, ConfirmDeleteButton } from '../../../components/ui'
 import type { ParcelleShowProps } from '../../../types/parcelle'
 
 // Fix Leaflet default icon issue with Vite
@@ -31,7 +32,7 @@ const PRODUCTION_STATE: Record<string, { label: string; bg: string; color: strin
   aborted: { label: 'Abandonnée', bg: 'var(--color-warning-bg)', color: 'var(--color-warning-text)' },
 }
 
-function ParcelleShow({ parcelle, productions }: ParcelleShowProps) {
+function ParcelleShow({ parcelle, productions, canDestroy }: ParcelleShowProps) {
   return (
     <>
       <BackLink href="/backend/cultivable-zones" label="Retour aux parcelles" />
@@ -45,7 +46,14 @@ function ParcelleShow({ parcelle, productions }: ParcelleShowProps) {
             <CodeBadge value={parcelle.work_number} />
           )}
         </div>
-        <PrimaryButton href={`/backend/cultivable-zones/${parcelle.id}/edit`} variant="secondary">Modifier</PrimaryButton>
+        <div className="flex items-center gap-2">
+          <PrimaryButton href={`/backend/cultivable-zones/${parcelle.id}/edit`} variant="secondary">Modifier</PrimaryButton>
+          <ConfirmDeleteButton
+            onDelete={() => router.delete(`/backend/cultivable-zones/${parcelle.id}`)}
+            canDestroy={canDestroy}
+            resourceName="cette parcelle"
+          />
+        </div>
       </div>
 
       <div className="grid gap-5" style={{ gridTemplateColumns: parcelle.geojson ? '1fr 1fr' : '1fr' }}>

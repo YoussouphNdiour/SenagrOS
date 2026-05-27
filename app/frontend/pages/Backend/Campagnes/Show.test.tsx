@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import CampagneShow from './Show'
 
-vi.mock('@inertiajs/react', () => ({ usePage: vi.fn() }))
+vi.mock('@inertiajs/react', () => ({ usePage: vi.fn(), router: { delete: vi.fn() } }))
 
 import { usePage } from '@inertiajs/react'
 
@@ -51,24 +51,24 @@ const mockProductions = [
 
 describe('CampagneShow', () => {
   it('renders campaign name', () => {
-    render(<CampagneShow campagne={mockCampagne} productions={[]} />)
+    render(<CampagneShow campagne={mockCampagne} productions={[]} canDestroy={true} />)
     expect(screen.getByText('Campagne 2024')).toBeInTheDocument()
     expect(screen.getByText('En cours')).toBeInTheDocument()
   })
 
   it('shows harvest year', () => {
-    render(<CampagneShow campagne={mockCampagne} productions={[]} />)
+    render(<CampagneShow campagne={mockCampagne} productions={[]} canDestroy={true} />)
     expect(screen.getByText('2024')).toBeInTheDocument()
   })
 
   it('renders productions table', () => {
-    render(<CampagneShow campagne={mockCampagne} productions={mockProductions} />)
+    render(<CampagneShow campagne={mockCampagne} productions={mockProductions} canDestroy={true} />)
     expect(screen.getByText('Production mil')).toBeInTheDocument()
     expect(screen.getByText('Ouverte')).toBeInTheDocument()
   })
 
   it('shows empty state when no productions', () => {
-    render(<CampagneShow campagne={mockCampagne} productions={[]} />)
+    render(<CampagneShow campagne={mockCampagne} productions={[]} canDestroy={true} />)
     expect(screen.getByText(/Aucune production/)).toBeInTheDocument()
   })
 
@@ -77,6 +77,7 @@ describe('CampagneShow', () => {
       <CampagneShow
         campagne={{ ...mockCampagne, closed: true, closed_at: '2024-12-01T00:00:00Z' }}
         productions={[]}
+        canDestroy={true}
       />
     )
     expect(screen.getByText('Clôturée')).toBeInTheDocument()

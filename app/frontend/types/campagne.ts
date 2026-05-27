@@ -31,4 +31,5 @@ export interface CampagneShowProps {
     created_at: string | null
   }
   productions: CampagneProduction[]
+  canDestroy: boolean
 }

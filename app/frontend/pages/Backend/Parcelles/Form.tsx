@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { Save, Map } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, IconBox, SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
+import { BackLink, IconBox, SectionCard, SectionTitle, FormField, PrimaryButton, FlashBanner } from '../../../components/ui'
 
 interface ParcelleFormData {
   id: number
@@ -14,7 +14,7 @@ interface ParcelleFormData {
 
 interface ParcellesFormProps {
   parcelle: ParcelleFormData | null
-  errors: Record<string, string>
+  errors: Record<string, string | string[]>
 }
 
 const ParcellesForm = ({ parcelle, errors }: ParcellesFormProps) => {
@@ -55,23 +55,25 @@ const ParcellesForm = ({ parcelle, errors }: ParcellesFormProps) => {
       <SectionCard>
         <SectionTitle icon={Map}>Informations de la parcelle</SectionTitle>
 
+        <FlashBanner errors={errors} />
+
         <form onSubmit={handleSubmit} noValidate>
           <div className="flex flex-col gap-5">
-            <FormField label="Nom" required htmlFor="parcelle-name" error={errors.name}>
+            <FormField label="Nom" required htmlFor="parcelle-name" error={Array.isArray(errors.name) ? errors.name[0] : errors.name}>
               <input id="parcelle-name" type="text" value={name} onChange={e => setName(e.target.value)} required
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}
                 placeholder="ex. Champ Nord" />
             </FormField>
 
-            <FormField label="Numéro de travail" htmlFor="parcelle-work-number" error={errors.work_number}>
+            <FormField label="Numéro de travail" htmlFor="parcelle-work-number" error={Array.isArray(errors.work_number) ? errors.work_number[0] : errors.work_number}>
               <input id="parcelle-work-number" type="text" value={workNumber} onChange={e => setWorkNumber(e.target.value)}
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}
                 placeholder="ex. P001" />
             </FormField>
 
-            <FormField label="Description" htmlFor="parcelle-description" error={errors.description}>
+            <FormField label="Description" htmlFor="parcelle-description" error={Array.isArray(errors.description) ? errors.description[0] : errors.description}>
               <textarea id="parcelle-description" value={description} onChange={e => setDescription(e.target.value)} rows={3}
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}

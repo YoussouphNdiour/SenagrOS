@@ -1,3 +1,5 @@
+import { router } from '@inertiajs/react'
+import { ConfirmDeleteButton } from '../ui'
 import type { Parcelle } from '../../types/parcelle'
 
 interface ParcellesTableProps {
@@ -41,9 +43,17 @@ export function ParcellesTable({ parcelles, highlightId, onRowClick }: Parcelles
             <td className="px-3 py-2.5 font-medium" style={{ color: 'var(--color-text)' }}>{p.name}</td>
             <td className="px-3 py-2.5 text-right" style={{ color: 'var(--color-text-muted)' }}>{p.area_ha != null ? `${p.area_ha} ha` : '—'}</td>
             <td className="px-3 py-2.5 text-center">
-              <a href={`/backend/cultivable-zones/${p.id}`} className="text-xs font-semibold" style={{ color: 'var(--color-primary)' }}>
-                Voir
-              </a>
+              <div className="inline-flex items-center gap-2">
+                <a href={`/backend/cultivable-zones/${p.id}`} className="text-xs font-semibold" style={{ color: 'var(--color-primary)' }}>
+                  Voir
+                </a>
+                <ConfirmDeleteButton
+                  size="sm"
+                  onDelete={() => router.delete(`/backend/cultivable-zones/${p.id}`)}
+                  canDestroy={p.canDestroy ?? false}
+                  resourceName={p.name}
+                />
+              </div>
             </td>
           </tr>
         ))}

@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import InterventionShow from './Show'
 
-vi.mock('@inertiajs/react', () => ({ usePage: vi.fn() }))
+vi.mock('@inertiajs/react', () => ({ usePage: vi.fn(), router: { delete: vi.fn() } }))
 
 import { usePage } from '@inertiajs/react'
 
@@ -40,6 +40,7 @@ describe('InterventionShow', () => {
         inputs={[]}
         doers={[]}
         tools={[]}
+        canDestroy={true}
       />
     )
     expect(screen.getByText('INT-2024-001')).toBeInTheDocument()
@@ -54,6 +55,7 @@ describe('InterventionShow', () => {
         inputs={[]}
         doers={[]}
         tools={[]}
+        canDestroy={true}
       />
     )
     expect(screen.getByText('Terminée')).toBeInTheDocument()
@@ -67,6 +69,7 @@ describe('InterventionShow', () => {
         inputs={[]}
         doers={[]}
         tools={[]}
+        canDestroy={true}
       />
     )
     expect(screen.getByText('Semis de mil sur parcelle nord')).toBeInTheDocument()
@@ -81,6 +84,7 @@ describe('InterventionShow', () => {
         inputs={[]}
         doers={[]}
         tools={[]}
+        canDestroy={true}
       />
     )
     expect(screen.getByText('Parcelle Nord')).toBeInTheDocument()
@@ -94,6 +98,7 @@ describe('InterventionShow', () => {
         inputs={[]}
         doers={[]}
         tools={[]}
+        canDestroy={true}
       />
     )
     const durations = screen.getAllByText('4h')

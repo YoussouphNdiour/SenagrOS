@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { Save, Calendar } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, IconBox, SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
+import { BackLink, IconBox, SectionCard, SectionTitle, FormField, PrimaryButton, FlashBanner } from '../../../components/ui'
 
 interface CampagneData {
   id: number
@@ -15,7 +15,7 @@ interface CampagneData {
 
 interface CampagnesFormProps {
   campagne: CampagneData | null
-  errors: Record<string, string>
+  errors: Record<string, string | string[]>
 }
 
 const CampagnesForm = ({ campagne, errors }: CampagnesFormProps) => {
@@ -60,16 +60,18 @@ const CampagnesForm = ({ campagne, errors }: CampagnesFormProps) => {
       <SectionCard>
         <SectionTitle icon={Calendar}>Informations de la campagne</SectionTitle>
 
+        <FlashBanner errors={errors} />
+
         <form onSubmit={handleSubmit} noValidate>
           <div className="flex flex-col gap-5">
-            <FormField label="Nom" required htmlFor="campagne-name" error={errors.name}>
+            <FormField label="Nom" required htmlFor="campagne-name" error={Array.isArray(errors.name) ? errors.name[0] : errors.name}>
               <input id="campagne-name" type="text" value={name} onChange={e => setName(e.target.value)} required
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}
                 placeholder="ex. Hivernage 2025" />
             </FormField>
 
-            <FormField label="Année de récolte" required htmlFor="campagne-harvest-year" error={errors.harvest_year}>
+            <FormField label="Année de récolte" required htmlFor="campagne-harvest-year" error={Array.isArray(errors.harvest_year) ? errors.harvest_year[0] : errors.harvest_year}>
               <input id="campagne-harvest-year" type="number" value={harvestYear}
                 onChange={e => setHarvestYear(e.target.value === '' ? '' : parseInt(e.target.value, 10))}
                 required min={2000} max={2100}
@@ -78,7 +80,7 @@ const CampagnesForm = ({ campagne, errors }: CampagnesFormProps) => {
                 placeholder="ex. 2025" />
             </FormField>
 
-            <FormField label="Description" htmlFor="campagne-description" error={errors.description}>
+            <FormField label="Description" htmlFor="campagne-description" error={Array.isArray(errors.description) ? errors.description[0] : errors.description}>
               <textarea id="campagne-description" value={description} onChange={e => setDescription(e.target.value)} rows={3}
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}

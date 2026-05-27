@@ -53,7 +53,7 @@ it('shows notice when no schema', () => {
 
 it('renders error messages', () => {
   render(<InterventionsForm intervention={null} procedures={procedures} procedure_schema={null} errors={{ procedure_name: 'est requise' }} />)
-  expect(screen.getByText('est requise')).toBeInTheDocument()
+  expect(screen.getAllByText('est requise').length).toBeGreaterThanOrEqual(1)
 })
 
 it('calls router.post on new form submit', () => {

@@ -77,6 +77,7 @@ export interface InterventionShowProps {
   inputs: InterventionInputItem[]
   doers: InterventionParticipant[]
   tools: InterventionParticipant[]
+  canDestroy: boolean
 }
 
 export interface ProcedureParameter {
@@ -111,5 +112,5 @@ export interface InterventionFormProps {
   intervention: InterventionFormData | null
   procedures: Array<{ label: string; name: string }>
   procedure_schema: ProcedureSchema | null
-  errors: Record<string, string>
+  errors: Record<string, string | string[]>
 }

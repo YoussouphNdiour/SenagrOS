@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react'
 import { Calendar, Sprout } from 'lucide-react'
+import { router } from '@inertiajs/react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, SectionCard, SectionTitle, DetailRow, StateBadge, PrimaryButton, DataTable } from '../../../components/ui'
+import { BackLink, SectionCard, SectionTitle, DetailRow, StateBadge, PrimaryButton, DataTable, ConfirmDeleteButton } from '../../../components/ui'
 import type { CampagneShowProps } from '../../../types/campagne'
 
 const PRODUCTION_STATE: Record<string, { label: string; bg: string; color: string }> = {
@@ -10,7 +11,7 @@ const PRODUCTION_STATE: Record<string, { label: string; bg: string; color: strin
   aborted: { label: 'Abandonnée', bg: 'var(--color-warning-bg)', color: 'var(--color-warning-text)' },
 }
 
-function CampagneShow({ campagne, productions }: CampagneShowProps) {
+function CampagneShow({ campagne, productions, canDestroy }: CampagneShowProps) {
   return (
     <>
       <BackLink href="/backend/campaigns" label="Retour aux campagnes" />
@@ -26,7 +27,14 @@ function CampagneShow({ campagne, productions }: CampagneShowProps) {
             bg={campagne.closed ? 'var(--color-danger-bg)' : 'var(--color-success-bg)'}
           />
         </div>
-        <PrimaryButton href={`/backend/campaigns/${campagne.id}/edit`} variant="secondary">Modifier</PrimaryButton>
+        <div className="flex items-center gap-2">
+          <PrimaryButton href={`/backend/campaigns/${campagne.id}/edit`} variant="secondary">Modifier</PrimaryButton>
+          <ConfirmDeleteButton
+            onDelete={() => router.delete(`/backend/campaigns/${campagne.id}`)}
+            canDestroy={canDestroy}
+            resourceName="cette campagne"
+          />
+        </div>
       </div>
 
       <SectionCard className="mb-5">

@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react'
 import { Wrench, Users, Package, Target, Clock } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
+import { router } from '@inertiajs/react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, SectionCard, SectionTitle, DetailRow, StateBadge, PrimaryButton } from '../../../components/ui'
+import { BackLink, SectionCard, SectionTitle, DetailRow, StateBadge, PrimaryButton, ConfirmDeleteButton } from '../../../components/ui'
 import type { InterventionShowProps, InterventionParticipant, InterventionInputItem } from '../../../types/intervention'
 
 const STATE_COLORS: Record<string, { bg: string; color: string; label: string }> = {
@@ -51,7 +52,7 @@ function ParticipantList({ title, icon, items, extra }: ParticipantListProps) {
   )
 }
 
-function InterventionShow({ intervention, targets, inputs, doers, tools }: InterventionShowProps) {
+function InterventionShow({ intervention, targets, inputs, doers, tools, canDestroy }: InterventionShowProps) {
   const stateConfig = STATE_COLORS[intervention.state] ?? { bg: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)', label: intervention.state }
 
   return (
@@ -73,7 +74,14 @@ function InterventionShow({ intervention, targets, inputs, doers, tools }: Inter
             {intervention.procedure_name || 'Intervention'}
           </h1>
         </div>
-        <PrimaryButton href={`/backend/interventions/${intervention.id}/edit`} variant="secondary">Modifier</PrimaryButton>
+        <div className="flex items-center gap-2">
+          <PrimaryButton href={`/backend/interventions/${intervention.id}/edit`} variant="secondary">Modifier</PrimaryButton>
+          <ConfirmDeleteButton
+            onDelete={() => router.delete(`/backend/interventions/${intervention.id}`)}
+            canDestroy={canDestroy}
+            resourceName="cette intervention"
+          />
+        </div>
       </div>
 
       <SectionCard className="mb-5">

@@ -51,6 +51,6 @@ describe('ParcellesForm — édition', () => {
 
   it('affiche les erreurs de validation', () => {
     render(<ParcellesForm parcelle={null} errors={{ name: 'est vide' }} />)
-    expect(screen.getByText('est vide')).toBeInTheDocument()
+    expect(screen.getAllByText('est vide').length).toBeGreaterThanOrEqual(1)
   })
 })

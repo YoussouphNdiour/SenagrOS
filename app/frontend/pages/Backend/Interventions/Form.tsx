@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { ClipboardList, Save, ListChecks } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, IconBox, SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
+import { BackLink, IconBox, SectionCard, SectionTitle, FormField, PrimaryButton, FlashBanner } from '../../../components/ui'
 import { ProcedureFormBuilder } from '../../../components/interventions/ProcedureFormBuilder'
 import type { InterventionFormProps } from '../../../types/intervention'
 
@@ -85,7 +85,7 @@ const InterventionsForm = ({
 
       <SectionCard className="mb-4">
         <SectionTitle icon={ClipboardList}>Procédure</SectionTitle>
-        <FormField label="Procédure" htmlFor="int-procedure" error={errors.procedure_name}>
+        <FormField label="Procédure" htmlFor="int-procedure" error={Array.isArray(errors.procedure_name) ? errors.procedure_name[0] : errors.procedure_name}>
           <select id="int-procedure" value={procedureName} onChange={e => handleProcedureChange(e.target.value)}
             className="w-full rounded-lg px-3 py-2 text-sm outline-none"
             style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}>
@@ -100,10 +100,12 @@ const InterventionsForm = ({
       <SectionCard className="mb-4">
         <SectionTitle icon={ClipboardList}>Informations</SectionTitle>
 
+        <FlashBanner errors={errors} />
+
         <form onSubmit={handleSubmit} noValidate>
           <div className="flex flex-col gap-5">
             <div className="grid grid-cols-2 gap-4">
-              <FormField label="Nature" htmlFor="int-nature" error={errors.nature}>
+              <FormField label="Nature" htmlFor="int-nature" error={Array.isArray(errors.nature) ? errors.nature[0] : errors.nature}>
                 <select id="int-nature" value={nature} onChange={e => setNature(e.target.value)}
                   className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                   style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}>
@@ -112,7 +114,7 @@ const InterventionsForm = ({
                   ))}
                 </select>
               </FormField>
-              <FormField label="État" htmlFor="int-state" error={errors.state}>
+              <FormField label="État" htmlFor="int-state" error={Array.isArray(errors.state) ? errors.state[0] : errors.state}>
                 <select id="int-state" value={state} onChange={e => setState(e.target.value)}
                   className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                   style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}>
@@ -124,26 +126,26 @@ const InterventionsForm = ({
             </div>
 
             <div className="grid grid-cols-2 gap-4">
-              <FormField label="Date de début" htmlFor="int-started" error={errors.started_at}>
+              <FormField label="Date de début" htmlFor="int-started" error={Array.isArray(errors.started_at) ? errors.started_at[0] : errors.started_at}>
                 <input id="int-started" type="datetime-local" value={startedAt} onChange={e => setStartedAt(e.target.value)}
                   className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                   style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
               </FormField>
-              <FormField label="Date de fin" htmlFor="int-stopped" error={errors.stopped_at}>
+              <FormField label="Date de fin" htmlFor="int-stopped" error={Array.isArray(errors.stopped_at) ? errors.stopped_at[0] : errors.stopped_at}>
                 <input id="int-stopped" type="datetime-local" value={stoppedAt} onChange={e => setStoppedAt(e.target.value)}
                   className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                   style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
               </FormField>
             </div>
 
-            <FormField label="Numéro" htmlFor="int-number" error={errors.number}>
+            <FormField label="Numéro" htmlFor="int-number" error={Array.isArray(errors.number) ? errors.number[0] : errors.number}>
               <input id="int-number" type="text" value={number} onChange={e => setNumber(e.target.value)}
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}
                 placeholder="ex. I-001" />
             </FormField>
 
-            <FormField label="Description" htmlFor="int-desc" error={errors.description}>
+            <FormField label="Description" htmlFor="int-desc" error={Array.isArray(errors.description) ? errors.description[0] : errors.description}>
               <textarea id="int-desc" value={description} onChange={e => setDescription(e.target.value)} rows={3}
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}

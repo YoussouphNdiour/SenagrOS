@@ -52,6 +52,6 @@ describe('CampagnesForm — édition', () => {
 
   it('affiche les erreurs de validation', () => {
     render(<CampagnesForm campagne={null} errors={{ name: 'est vide', harvest_year: 'est invalide' }} />)
-    expect(screen.getByText('est vide')).toBeInTheDocument()
+    expect(screen.getAllByText('est vide').length).toBeGreaterThanOrEqual(1)
   })
 })
