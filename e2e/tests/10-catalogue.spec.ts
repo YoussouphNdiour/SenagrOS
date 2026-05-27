@@ -9,7 +9,7 @@ test.describe('Catalogue (Produits)', () => {
 
   test('accède au détail d\'un produit', async ({ page }) => {
     await page.goto('/backend/products')
-    const firstLink = page.locator('table a, td a, [href*="/backend/products/"]').first()
+    const firstLink = page.locator('[href*="/backend/products/"]:not([href$="/new"]):not([href*="/new?"])').first()
     if (!await firstLink.isVisible()) { test.skip(); return }
     await firstLink.click()
     await expect(page).toHaveURL(/products\/\d+/)
@@ -17,7 +17,7 @@ test.describe('Catalogue (Produits)', () => {
 
   test('modifie un produit', async ({ page }) => {
     await page.goto('/backend/products')
-    const firstLink = page.locator('table a, td a, [href*="/backend/products/"]').first()
+    const firstLink = page.locator('[href*="/backend/products/"]:not([href$="/new"]):not([href*="/new?"])').first()
     if (!await firstLink.isVisible()) { test.skip(); return }
     await firstLink.click()
     const editLink = page.getByRole('link', { name: /Modifier/i })
@@ -31,7 +31,7 @@ test.describe('Catalogue (Produits)', () => {
 
   test('bouton supprimer présent sur le détail', async ({ page }) => {
     await page.goto('/backend/products')
-    const firstLink = page.locator('table a, td a, [href*="/backend/products/"]').first()
+    const firstLink = page.locator('[href*="/backend/products/"]:not([href$="/new"]):not([href*="/new?"])').first()
     if (!await firstLink.isVisible()) { test.skip(); return }
     await firstLink.click()
     const deleteBtn = page.getByRole('button', { name: /Supprimer/i })
@@ -40,7 +40,7 @@ test.describe('Catalogue (Produits)', () => {
 
   test('saisit un mouvement de stock', async ({ page }) => {
     await page.goto('/backend/products')
-    const firstLink = page.locator('table a, td a, [href*="/backend/products/"]').first()
+    const firstLink = page.locator('[href*="/backend/products/"]:not([href$="/new"]):not([href*="/new?"])').first()
     if (!await firstLink.isVisible()) { test.skip(); return }
     await firstLink.click()
     const mvtForm = page.getByLabel('Formulaire mouvement')

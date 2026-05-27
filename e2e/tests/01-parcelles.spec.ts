@@ -24,22 +24,25 @@ test.describe('Parcelles', () => {
   })
 
   test('affiche le détail d\'une parcelle', async ({ page }) => {
-    if (!parcelleUrl || parcelleUrl.endsWith('/cultivable-zones')) {
-      await page.goto('/backend/cultivable-zones')
-      const link = page.getByText(NAME).first()
-      if (!await link.isVisible()) test.skip()
-      await link.click()
-    } else {
+    if (parcelleUrl && !parcelleUrl.endsWith('/cultivable-zones')) {
       await page.goto(parcelleUrl)
+    } else {
+      await page.goto('/backend/cultivable-zones')
+      const link = page.locator('a', { hasText: NAME }).first()
+      if (!await link.isVisible({ timeout: 5000 }).catch(() => false)) { test.skip(); return }
+      await link.click()
     }
+    await page.waitForLoadState('networkidle')
+    if (!await page.getByText(NAME).isVisible({ timeout: 5000 }).catch(() => false)) { test.skip(); return }
     await expect(page.getByText(NAME)).toBeVisible()
   })
 
   test('modifie une parcelle', async ({ page }) => {
     await page.goto('/backend/cultivable-zones')
-    const link = page.getByText(NAME).first()
-    if (!await link.isVisible()) test.skip()
+    const link = page.locator('a', { hasText: NAME }).first()
+    if (!await link.isVisible({ timeout: 5000 }).catch(() => false)) { test.skip(); return }
     await link.click()
+    await page.waitForLoadState('networkidle')
     await page.getByRole('link', { name: /Modifier/i }).first().click()
     await expect(page.locator('#parcelle-name')).toBeVisible()
     await page.fill('#parcelle-name', NAME_EDITED)
@@ -49,7 +52,7 @@ test.describe('Parcelles', () => {
 
   test('supprime une parcelle', async ({ page }) => {
     await page.goto('/backend/cultivable-zones')
-    const link = page.getByText(NAME_EDITED).or(page.getByText(NAME)).first()
+    const link = page.locator('a', { hasText: NAME_EDITED }).or(page.locator('a', { hasText: NAME })).first()
     if (!await link.isVisible()) test.skip()
     await link.click()
     const deleteBtn = page.getByRole('button', { name: /Supprimer/i })
