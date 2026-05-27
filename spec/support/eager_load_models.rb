@@ -19,6 +19,17 @@ module LexiconTestStub
   end
 end
 
+# Pre-load Entity at require time (not just before(:suite)) so that controllers
+# using the active_list `list` macro with Entity-backed association columns
+# (e.g. CultivableZonesController farmer/owner columns) can load without error.
+# The stub must be active before Entity's class body executes.
+begin
+  MasterLegalPosition.singleton_class.prepend(LexiconTestStub)
+  Entity
+rescue StandardError
+  # Silently ignore if models are not yet available at this point.
+end
+
 RSpec.configure do |config|
   config.before(:suite) do
     MasterLegalPosition.singleton_class.prepend(LexiconTestStub)
