@@ -26,19 +26,8 @@ export function ConfirmDeleteButton({
         type="button"
         disabled
         title="Des enregistrements liés empêchent la suppression"
-        style={{
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '6px',
-          padding: size === 'sm' ? '4px 10px' : '7px 14px',
-          borderRadius: '8px',
-          fontSize: size === 'sm' ? '12px' : '14px',
-          background: 'var(--color-danger-bg)',
-          color: 'var(--color-danger-text)',
-          border: '1px solid var(--color-danger-text)',
-          opacity: 0.45,
-          cursor: 'not-allowed',
-        }}
+        className={`inline-flex items-center gap-1.5 rounded-lg border opacity-45 cursor-not-allowed ${size === 'sm' ? 'px-2.5 py-1 text-xs' : 'px-3.5 py-1.5 text-sm'}`}
+        style={{ background: 'var(--color-danger-bg)', color: 'var(--color-danger-text)', borderColor: 'var(--color-danger-text)' }}
       >
         <Trash2 size={size === 'sm' ? 13 : 15} />
         {label}

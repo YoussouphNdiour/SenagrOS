@@ -1,7 +1,6 @@
 import { AlertCircle } from 'lucide-react'
 
 interface FlashBannerProps {
-  /** Validation errors from Inertia — keys are field names, values are message(s) */
   errors: Record<string, string | string[]>
 }
 
@@ -12,21 +11,11 @@ export function FlashBanner({ errors }: FlashBannerProps) {
   return (
     <div
       role="alert"
-      style={{
-        display: 'flex',
-        alignItems: 'flex-start',
-        gap: '8px',
-        padding: '10px 14px',
-        marginBottom: '16px',
-        borderRadius: '8px',
-        background: 'var(--color-danger-bg)',
-        border: '1px solid var(--color-danger-text)',
-        color: 'var(--color-danger-text)',
-        fontSize: '14px',
-      }}
+      className="flex items-start gap-2 rounded-lg mb-4 p-3 text-sm"
+      style={{ background: 'var(--color-danger-bg)', border: '1px solid var(--color-danger-text)', color: 'var(--color-danger-text)' }}
     >
-      <AlertCircle size={16} style={{ flexShrink: 0, marginTop: '2px' }} />
-      <ul style={{ margin: 0, padding: 0, listStyle: 'none' }}>
+      <AlertCircle size={16} className="shrink-0 mt-0.5" />
+      <ul className="m-0 p-0 list-none">
         {messages.map((msg, i) => (
           <li key={i}>{msg}</li>
         ))}
