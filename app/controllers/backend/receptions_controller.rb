@@ -158,7 +158,7 @@ module Backend
                 pretax_amount: r.pretax_amount.to_f,
                 currency: r.currency,
                 items: [],
-                destroyable: r.destroyable?,
+                can_destroy: r.destroyable?,
                 invoiceable: r.reconciliation_state == 'to_reconcile' && r.given?
               }
             },
@@ -201,7 +201,7 @@ module Backend
                   purchase_invoice_item_id: i.purchase_invoice_item_id
                 }
               },
-              destroyable: @reception.destroyable?,
+              can_destroy: @reception.destroyable?,
               invoiceable: @reception.reconciliation_state == 'to_reconcile' && @reception.given?
             }
           }
@@ -241,7 +241,7 @@ module Backend
                   purchase_invoice_item_id: i.purchase_invoice_item_id
                 }
               },
-              destroyable: @reception.destroyable?,
+              can_destroy: @reception.destroyable?,
               invoiceable: @reception.reconciliation_state == 'to_reconcile' && @reception.given?
             },
             purchase_orders: purchase_orders_for_select,

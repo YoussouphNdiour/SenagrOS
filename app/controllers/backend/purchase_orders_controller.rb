@@ -138,7 +138,7 @@ module Backend
                 description: o.description,
                 responsible_name: o.responsible&.full_name,
                 receptions_count: o.receptions.count,
-                destroyable: o.destroyable?
+                can_destroy: o.destroyable?
               }
             },
             filters: { q: params[:q], state: params[:state] },
@@ -180,7 +180,7 @@ module Backend
                 }
               },
               receptions_count: @purchase_order.receptions.count,
-              destroyable: @purchase_order.destroyable?
+              can_destroy: @purchase_order.destroyable?
             }
           }
         end
@@ -243,7 +243,7 @@ module Backend
                   reduction_percentage: i.reduction_percentage.to_f, pretax_amount: i.pretax_amount.to_f, amount: i.amount.to_f }
               },
               receptions_count: @purchase_order.receptions.count,
-              destroyable: @purchase_order.destroyable?
+              can_destroy: @purchase_order.destroyable?
             },
             natures: PurchaseNature.all.as_json(only: %i[id name currency payment_delay]),
             taxes: Tax.all.as_json(only: %i[id name short_label amount]),

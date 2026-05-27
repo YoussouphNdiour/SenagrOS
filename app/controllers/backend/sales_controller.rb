@@ -152,7 +152,7 @@ module Backend
                 amount:           s.amount.to_f,
                 currency:         s.currency,
                 updateable:       s.updateable?,
-                destroyable:      s.destroyable?,
+                can_destroy:      s.destroyable?,
                 cancellable:      s.cancellable?,
               }
             },
@@ -321,7 +321,7 @@ module Backend
                 { id: c.id, number: c.number, amount: c.amount.to_f, pretax_amount: c.pretax_amount.to_f, currency: c.currency, created_at: c.created_at.iso8601 }
               },
               updateable:          @sale.updateable?,
-              destroyable:         @sale.destroyable?,
+              can_destroy:         @sale.destroyable?,
               cancellable:         @sale.cancellable?,
               can_generate_parcel: @sale.can_generate_parcel?,
             }
