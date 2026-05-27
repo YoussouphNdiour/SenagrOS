@@ -242,6 +242,7 @@ module Backend
     # Displays details of one sale selected with +params[:id]+
     def show
       return unless @sale = find_and_check
+
       t3e @sale.attributes, client: @sale.client.full_name, state: @sale.state_label, label: @sale.label
 
       respond_to do |format|
@@ -295,13 +296,17 @@ module Backend
                   annotation:            item.annotation,
                 }
               },
-              affair: @sale.affair ? {
-                balance: @sale.affair.balance.to_f,
-                closed:  @sale.affair.closed,
-                incoming_payments: @sale.affair.incoming_payments.map { |p|
-                  { id: p.id, amount: p.amount.to_f, paid_at: p.paid_at&.iso8601, mode_name: p.mode&.name }
-                }
-              } : nil,
+              affair: if @sale.affair
+                        {
+                                      balance: @sale.affair.balance.to_f,
+                                      closed:  @sale.affair.closed,
+                                      incoming_payments: @sale.affair.incoming_payments.map { |p|
+                                        { id: p.id, amount: p.amount.to_f, paid_at: p.paid_at&.iso8601, mode_name: p.mode&.name }
+                                      }
+                                    }
+                      else
+                        nil
+                      end,
               shipments: @sale.parcels.map { |p|
                 {
                   id:               p.id,
@@ -362,6 +367,7 @@ module Backend
 
     def edit
       return unless @sale = find_and_check
+
       render inertia: 'Backend/Ventes/Form', props: {
         sale: {
           id:               @sale.id,
@@ -453,6 +459,7 @@ module Backend
 
     def update
       return unless @sale = find_and_check
+
       if @sale.update(sale_params)
         redirect_to backend_sale_path(@sale), notice: 'Vente mise à jour.'
       else
@@ -495,6 +502,18 @@ module Backend
           },
           errors: errors,
         }, status: :unprocessable_entity
+      end
+    end
+
+    def destroy
+      return unless @sale = find_and_check
+
+      if @sale.destroyable?
+        @sale.destroy!
+        redirect_to backend_sales_path, notice: 'Vente supprimée.'
+      else
+        redirect_to backend_sale_path(@sale),
+                    alert: 'Impossible de supprimer : cette vente est confirmée ou a des lignes facturées.'
       end
     end
 
@@ -718,9 +737,9 @@ module Backend
         params.require(:sale).permit(
           :nature_id, :client_id, :invoiced_at, :reference_number,
           :responsible_id, :description,
-          items_attributes: [
-            :id, :variant_name, :conditioning_quantity, :unit_pretax_amount,
-            :tax_id, :reduction_percentage, :_destroy, :position
+          items_attributes: %i[
+            id variant_name conditioning_quantity unit_pretax_amount
+            tax_id reduction_percentage _destroy position
           ]
         )
       end

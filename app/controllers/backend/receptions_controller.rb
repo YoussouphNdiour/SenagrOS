@@ -325,6 +325,18 @@ module Backend
       end
     end
 
+    def destroy
+      return unless (@reception = find_and_check(:reception))
+
+      if @reception.destroyable?
+        @reception.destroy!
+        redirect_to backend_receptions_path, notice: 'Réception supprimée.'
+      else
+        redirect_to backend_reception_path(@reception),
+                    alert: 'Impossible de supprimer : cette réception est liée à une facture ou a été validée.'
+      end
+    end
+
     def give
       return unless (record = find_and_check)
 

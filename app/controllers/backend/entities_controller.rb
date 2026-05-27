@@ -18,7 +18,7 @@
 
 module Backend
   class EntitiesController < Backend::BaseController
-    layout 'inertia', only: [:index, :show, :new, :edit]
+    layout 'inertia', only: %i[index show new edit]
 
     def new
       render inertia: 'Backend/Entites/Form', props: {
@@ -42,6 +42,7 @@ module Backend
 
     def edit
       return unless @entity = find_and_check
+
       @entity = Entity.includes(:emails, :phones, :mails).find(@entity.id)
       render inertia: 'Backend/Entites/Form', props: {
         entite: entity_form_props(@entity),
@@ -51,6 +52,7 @@ module Backend
 
     def update
       return unless @entity = find_and_check
+
       assign_nested_addresses(@entity)
       if @entity.update(permitted_entity_params)
         redirect_to backend_entity_path(@entity), notice: 'Entité mise à jour.'
@@ -84,13 +86,14 @@ module Backend
       render inertia: 'Backend/Entites/Index', props: {
         entites: scope.map { |e|
           {
-            'id'        => e.id,
-            'number'    => e.number.to_s,
-            'full_name' => e.full_name.to_s,
-            'nature'    => e.nature.to_s,
-            'active'    => e.active,
-            'client'    => e.client,
-            'supplier'  => e.supplier
+            'id'          => e.id,
+            'number'      => e.number.to_s,
+            'full_name'   => e.full_name.to_s,
+            'nature'      => e.nature.to_s,
+            'active'      => e.active,
+            'client'      => e.client,
+            'supplier'    => e.supplier,
+            'can_destroy' => e.destroyable?
           }
         },
         meta: { total: scope.total_count, page: (params[:page] || 1).to_i, per_page: 50 }
@@ -203,6 +206,7 @@ module Backend
       return unless @entity = find_and_check
 
       render inertia: 'Backend/Entites/Show', props: {
+        can_destroy: @entity.destroyable?,
         entite: {
           'id'           => @entity.id,
           'nature'       => @entity.nature.to_s,
@@ -449,6 +453,18 @@ module Backend
       t.column :credit, currency: true, hidden: true
       t.column :absolute_debit,  currency: :absolute_currency
       t.column :absolute_credit, currency: :absolute_currency
+    end
+
+    def destroy
+      return unless @entity = find_and_check
+
+      if @entity.destroyable?
+        @entity.destroy!
+        redirect_to backend_entities_path, notice: 'Entité supprimée.'
+      else
+        redirect_to backend_entity_path(@entity),
+                    alert: 'Impossible de supprimer : cette entité a des ventes, achats ou travailleurs liés.'
+      end
     end
 
     def toggle

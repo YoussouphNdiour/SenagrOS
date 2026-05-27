@@ -291,6 +291,18 @@ module Backend
       end
     end
 
+    def destroy
+      return unless @purchase_order = find_and_check
+
+      if @purchase_order.destroyable?
+        @purchase_order.destroy!
+        redirect_to backend_purchase_orders_path, notice: 'Commande supprimée.'
+      else
+        redirect_to backend_purchase_order_path(@purchase_order),
+                    alert: 'Impossible de supprimer : cette commande a des réceptions liées.'
+      end
+    end
+
     def open
       return unless @purchase_order = find_and_check
 
@@ -341,13 +353,13 @@ module Backend
 
     private
 
-    def purchase_order_params
-      params.require(:purchase_order).permit(
-        :nature_id, :supplier_id, :ordered_at, :reference_number,
-        :responsible_id, :description,
-        items_attributes: %i[id variant_name conditioning_quantity unit_pretax_amount
-                             tax_id reduction_percentage _destroy position]
-      )
-    end
+      def purchase_order_params
+        params.require(:purchase_order).permit(
+          :nature_id, :supplier_id, :ordered_at, :reference_number,
+          :responsible_id, :description,
+          items_attributes: %i[id variant_name conditioning_quantity unit_pretax_amount
+                               tax_id reduction_percentage _destroy position]
+        )
+      end
   end
 end
