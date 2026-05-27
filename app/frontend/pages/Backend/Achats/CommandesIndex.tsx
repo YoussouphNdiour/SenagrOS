@@ -137,7 +137,7 @@ export default function CommandesIndex({ commandes, filters, meta }: CommandesIn
                       <a href={`/backend/purchase_orders/${c.id}/edit`} title="Modifier" style={{ color: 'var(--color-text-muted)' }}>
                         <Pencil size={14} />
                       </a>
-                      {c.destroyable && (
+                      {c.canDestroy && (
                         <button
                           type="button"
                           onClick={() => handleDelete(c.id, c.number)}

@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react'
+import { router } from '@inertiajs/react'
 import { Info, Droplets, Wrench } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, SectionCard, SectionTitle, DetailRow, StateBadge, PrimaryButton, DataTable } from '../../../components/ui'
+import { BackLink, SectionCard, SectionTitle, DetailRow, StateBadge, PrimaryButton, DataTable, ConfirmDeleteButton } from '../../../components/ui'
 import type { ProductionShowProps } from '../../../types/production'
 
 const FAMILY_COLORS: Record<string, { bg: string; color: string; label: string }> = {
@@ -24,7 +25,7 @@ const INTERVENTION_STATE_LABELS: Record<string, string> = {
   validated:   'Validée',
 }
 
-const ProductionShow = ({ production, interventions }: ProductionShowProps) => {
+const ProductionShow = ({ production, interventions, canDestroy }: ProductionShowProps) => {
   const state = STATE_COLORS[production.state] ?? { bg: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)', label: production.state }
   const family = FAMILY_COLORS[production.activity_family] ?? { bg: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)', label: production.activity_family }
 
@@ -44,7 +45,14 @@ const ProductionShow = ({ production, interventions }: ProductionShowProps) => {
             )}
           </div>
         </div>
-        <PrimaryButton href={`/backend/activity_productions/${production.id}/edit`} variant="secondary">Modifier</PrimaryButton>
+        <div className="flex items-center gap-2">
+          <PrimaryButton href={`/backend/activity_productions/${production.id}/edit`} variant="secondary">Modifier</PrimaryButton>
+          <ConfirmDeleteButton
+            onDelete={() => router.delete(`/backend/activity_productions/${production.id}`)}
+            canDestroy={canDestroy}
+            resourceName="cette production"
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-2 gap-4">

@@ -51,6 +51,7 @@ export interface JournalEntryShowProps {
     financial_year_name: string
   }
   items: JournalEntryItemDetail[]
+  canDestroy: boolean
 }
 
 export interface JournalEntryFormItem {
@@ -72,5 +73,5 @@ export interface JournalEntryFormData {
 export interface ComptabiliteFormProps {
   entry: JournalEntryFormData | null
   journals: Array<{ id: number; name: string }>
-  errors: Record<string, string>
+  errors: Record<string, string | string[]>
 }

@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
+import { router } from '@inertiajs/react'
 import { ArrowLeft, BookOpen, FileText, TrendingUp, TrendingDown } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
+import { ConfirmDeleteButton } from '../../../components/ui'
 import type { JournalEntryShowProps } from '../../../types/journal_entry'
 
 const STATE_COLORS: Record<string, { bg: string; color: string; label: string }> = {
@@ -21,7 +23,7 @@ function formatAmount(amount: number, currency: string): string {
   }
 }
 
-function JournalEntryShow({ entry, items }: JournalEntryShowProps) {
+function JournalEntryShow({ entry, items, canDestroy }: JournalEntryShowProps) {
   const stateConfig =
     STATE_COLORS[entry.state] ?? { bg: 'var(--color-bg-subtle)', color: 'var(--color-text-muted)', label: entry.state }
   const currency = entry.real_currency || 'XOF'
@@ -82,19 +84,26 @@ function JournalEntryShow({ entry, items }: JournalEntryShowProps) {
             {entry.financial_year_name ? ` · ${entry.financial_year_name}` : ''}
           </p>
         </div>
-        {entry.state === 'draft' && (
-          <a
-            href={`/backend/journal_entries/${entry.id}/edit`}
-            className="px-3 py-1.5 rounded text-sm font-medium no-underline"
-            style={{
-              background: 'var(--color-bg-card)',
-              border: '1px solid var(--color-border)',
-              color: 'var(--color-text)',
-            }}
-          >
-            Modifier
-          </a>
-        )}
+        <div className="flex items-center gap-2">
+          {entry.state === 'draft' && (
+            <a
+              href={`/backend/journal_entries/${entry.id}/edit`}
+              className="px-3 py-1.5 rounded text-sm font-medium no-underline"
+              style={{
+                background: 'var(--color-bg-card)',
+                border: '1px solid var(--color-border)',
+                color: 'var(--color-text)',
+              }}
+            >
+              Modifier
+            </a>
+          )}
+          <ConfirmDeleteButton
+            onDelete={() => router.delete(`/backend/journal_entries/${entry.id}`)}
+            canDestroy={canDestroy}
+            resourceName="cette écriture"
+          />
+        </div>
       </div>
 
       {/* Summary cards */}

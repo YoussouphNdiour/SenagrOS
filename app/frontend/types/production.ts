@@ -47,6 +47,7 @@ export interface ProductionDetail {
 export interface ProductionShowProps {
   production: ProductionDetail
   interventions: ProductionIntervention[]
+  canDestroy: boolean
 }
 
 export interface ProductionFormData {
@@ -66,5 +67,5 @@ export interface ProductionFormProps {
   activities: Array<{ id: number; name: string }>
   campaigns: Array<{ id: number; name: string }>
   cultivable_zones: Array<{ id: number; name: string }>
-  errors: Record<string, string>
+  errors: Record<string, string | string[]>
 }

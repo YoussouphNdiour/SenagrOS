@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { ArrowLeft, BookOpen, Check, FileText, Plus, Save, X } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
+import { FlashBanner } from '../../../components/ui'
 import type { ComptabiliteFormProps, JournalEntryFormItem } from '../../../types/journal_entry'
 
 const errorStyle = {
@@ -110,6 +111,7 @@ const ComptabiliteForm = ({ entry, journals, errors }: ComptabiliteFormProps) =>
       </div>
 
       <form onSubmit={handleSubmit} noValidate>
+        <FlashBanner errors={errors} />
         {/* Card 1 — Informations générales */}
         <div
           className="rounded-lg p-6 mb-5"

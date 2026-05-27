@@ -176,7 +176,7 @@ function VentesIndex({ sales, meta, filters, natures }: VentesIndexProps) {
                             <Edit size={14} />
                           </a>
                         )}
-                        {sale.destroyable && (
+                        {sale.canDestroy && (
                           <button
                             type="button"
                             onClick={() => handleDestroy(sale.id)}

@@ -83,7 +83,7 @@ describe('ProductionsForm — édition', () => {
 
   it('affiche les erreurs de validation', () => {
     render(<ProductionsForm production={null} activities={ACTIVITIES} campaigns={CAMPAIGNS} cultivable_zones={ZONES} errors={{ activity_id: 'requis' }} />)
-    expect(screen.getByText('requis')).toBeInTheDocument()
+    expect(screen.getAllByText('requis').length).toBeGreaterThan(0)
   })
 
   it('le layout persistant est défini', () => {

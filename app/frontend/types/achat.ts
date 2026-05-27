@@ -51,7 +51,7 @@ export interface Commande {
   responsible_name: string | null
   items: AchatItem[]
   receptions_count: number
-  destroyable: boolean
+  canDestroy: boolean
 }
 
 export interface CommandesIndexProps {

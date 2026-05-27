@@ -176,7 +176,7 @@ export default function ReceptionsIndex({ receptions, filters, meta }: Reception
                       <a href={`/backend/receptions/${r.id}/edit`} title="Modifier" style={{ color: 'var(--color-text-muted)' }}>
                         <Pencil size={14} />
                       </a>
-                      {r.destroyable && (
+                      {r.canDestroy && (
                         <button
                           type="button"
                           aria-label="Supprimer"

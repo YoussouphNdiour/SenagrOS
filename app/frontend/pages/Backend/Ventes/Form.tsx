@@ -4,7 +4,7 @@ import { router } from '@inertiajs/react'
 import type { FormDataConvertible } from '@inertiajs/core'
 import { Save, ShoppingCart, Info, List } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
+import { BackLink, SectionCard, SectionTitle, FormField, PrimaryButton, FlashBanner } from '../../../components/ui'
 import VenteItemsEditor from '../../../components/ventes/VenteItemsEditor'
 import type { VentesFormProps, VenteItem } from '../../../types/vente'
 
@@ -67,6 +67,7 @@ function VentesForm({ sale, natures, taxes, errors }: VentesFormProps) {
       </div>
 
       <form onSubmit={handleSubmit} noValidate aria-label="Formulaire vente">
+        <FlashBanner errors={errors} />
         {natures.length > 1 && (
           <SectionCard className="mb-5">
             <SectionTitle icon={ShoppingCart}>Nature</SectionTitle>

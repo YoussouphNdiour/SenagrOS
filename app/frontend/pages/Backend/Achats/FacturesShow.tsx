@@ -1,8 +1,8 @@
 import { type ReactNode } from 'react'
 import { router } from '@inertiajs/react'
-import { Pencil, Copy, Trash2, Info, List } from 'lucide-react'
+import { Pencil, Copy, Info, List } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, SectionCard, SectionTitle, DetailRow, StateBadge, PrimaryButton, DataTable } from '../../../components/ui'
+import { BackLink, SectionCard, SectionTitle, DetailRow, StateBadge, PrimaryButton, DataTable, ConfirmDeleteButton } from '../../../components/ui'
 import AchatsTabs from '../../../components/achats/AchatsTabs'
 import type { FacturesShowProps, ReconciliationState } from '../../../types/achat'
 
@@ -48,16 +48,11 @@ export default function FacturesShow({ facture }: FacturesShowProps) {
         <PrimaryButton href={`/backend/purchase_invoices/new?duplicate_of=${facture.id}`} variant="secondary">
           <Copy size={14} /> Dupliquer
         </PrimaryButton>
-        {facture.destroyable && (
-          <button
-            type="button"
-            onClick={() => { if (window.confirm('Supprimer cette facture ?')) router.delete(`/backend/purchase_invoices/${facture.id}`) }}
-            className="flex items-center gap-1.5 px-3 py-2 rounded text-sm font-medium cursor-pointer"
-            style={{ background: 'var(--color-danger-bg)', color: 'var(--color-danger-text)', border: '1px solid var(--color-danger-border)' }}
-          >
-            <Trash2 size={14} /> Supprimer
-          </button>
-        )}
+        <ConfirmDeleteButton
+          onDelete={() => router.delete(`/backend/purchase_invoices/${facture.id}`)}
+          canDestroy={facture.destroyable}
+          resourceName="cette facture"
+        />
       </div>
 
       <SectionCard className="mb-5">

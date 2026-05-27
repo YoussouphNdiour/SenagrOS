@@ -3,7 +3,7 @@ import { router } from '@inertiajs/react'
 import type { FormDataConvertible } from '@inertiajs/core'
 import { Save, Receipt, List } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
-import { SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
+import { SectionCard, SectionTitle, FormField, PrimaryButton, FlashBanner } from '../../../components/ui'
 import AchatItemsEditor from '../../../components/achats/AchatItemsEditor'
 import AchatsTabs from '../../../components/achats/AchatsTabs'
 import type { FacturesFormProps, AchatItem } from '../../../types/achat'
@@ -64,6 +64,8 @@ export default function FacturesForm({ facture, natures, taxes, errors }: Factur
       <h1 className="text-[22px] font-bold mb-6" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>
         {isEdit ? `Modifier la facture N° ${facture.number}` : 'Nouvelle facture'}
       </h1>
+
+      <FlashBanner errors={errors} />
 
       <form aria-label="Formulaire facture" onSubmit={handleSubmit}>
         <SectionCard className="mb-5">

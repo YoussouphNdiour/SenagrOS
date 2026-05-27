@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { router } from '@inertiajs/react'
 import { Save, BarChart3 } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, IconBox, SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
+import { BackLink, IconBox, SectionCard, SectionTitle, FormField, PrimaryButton, FlashBanner } from '../../../components/ui'
 import type { ProductionFormProps } from '../../../types/production'
 
 const STATE_OPTIONS = [
@@ -11,6 +11,9 @@ const STATE_OPTIONS = [
   { value: 'aborted',  label: 'Abandonnée' },
   { value: 'finished', label: 'Terminée' },
 ]
+
+const normalizeError = (e: string | string[] | undefined): string | undefined =>
+  Array.isArray(e) ? e[0] : e
 
 const ProductionsForm = ({ production, activities, campaigns, cultivable_zones, errors }: ProductionFormProps) => {
   const isEdit = production !== null
@@ -65,10 +68,10 @@ const ProductionsForm = ({ production, activities, campaigns, cultivable_zones, 
 
       <SectionCard>
         <SectionTitle icon={BarChart3}>Informations de la production</SectionTitle>
-
+        <FlashBanner errors={errors} />
         <form onSubmit={handleSubmit} noValidate>
           <div className="flex flex-col gap-5">
-            <FormField label="Activité" required htmlFor="prod-activity" error={errors.activity_id}>
+            <FormField label="Activité" required htmlFor="prod-activity" error={normalizeError(errors.activity_id)}>
               <select id="prod-activity" value={activityId} onChange={e => setActivityId(e.target.value)} required
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}>
@@ -77,7 +80,7 @@ const ProductionsForm = ({ production, activities, campaigns, cultivable_zones, 
               </select>
             </FormField>
 
-            <FormField label="Campagne" required htmlFor="prod-campaign" error={errors.campaign_id}>
+            <FormField label="Campagne" required htmlFor="prod-campaign" error={normalizeError(errors.campaign_id)}>
               <select id="prod-campaign" value={campaignId} onChange={e => setCampaignId(e.target.value)} required
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}>
@@ -86,7 +89,7 @@ const ProductionsForm = ({ production, activities, campaigns, cultivable_zones, 
               </select>
             </FormField>
 
-            <FormField label="Parcelle support" htmlFor="prod-zone" error={errors.cultivable_zone_id}>
+            <FormField label="Parcelle support" htmlFor="prod-zone" error={normalizeError(errors.cultivable_zone_id)}>
               <select id="prod-zone" value={cultivableZoneId} onChange={e => setCultivableZoneId(e.target.value)}
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}>
@@ -96,19 +99,19 @@ const ProductionsForm = ({ production, activities, campaigns, cultivable_zones, 
             </FormField>
 
             <div className="grid grid-cols-2 gap-4">
-              <FormField label="Date de début" required htmlFor="prod-start" error={errors.started_on}>
+              <FormField label="Date de début" required htmlFor="prod-start" error={normalizeError(errors.started_on)}>
                 <input id="prod-start" type="date" value={startedOn} onChange={e => setStartedOn(e.target.value)} required
                   className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                   style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
               </FormField>
-              <FormField label="Date de fin" htmlFor="prod-stop" error={errors.stopped_on}>
+              <FormField label="Date de fin" htmlFor="prod-stop" error={normalizeError(errors.stopped_on)}>
                 <input id="prod-stop" type="date" value={stoppedOn} onChange={e => setStoppedOn(e.target.value)}
                   className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                   style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
               </FormField>
             </div>
 
-            <FormField label="État" htmlFor="prod-state" error={errors.state}>
+            <FormField label="État" htmlFor="prod-state" error={normalizeError(errors.state)}>
               <select id="prod-state" value={state} onChange={e => setState(e.target.value)}
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }}>

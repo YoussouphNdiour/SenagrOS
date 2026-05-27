@@ -17,7 +17,7 @@ const baseCommande: CommandesShowProps['commande'] = {
   items: [
     { id: 1, variant_name: 'Semences mil', conditioning_quantity: 10, unit_pretax_amount: 5000, tax_id: 1, reduction_percentage: 0, pretax_amount: 50000, amount: 59000 }
   ],
-  receptions_count: 0, destroyable: false,
+  receptions_count: 0, canDestroy: false,
 }
 
 describe('CommandesShow', () => {

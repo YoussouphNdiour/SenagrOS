@@ -1,9 +1,9 @@
 // app/frontend/pages/Backend/Receptions/ReceptionsShow.tsx
 import { type ReactNode } from 'react'
 import { router } from '@inertiajs/react'
-import { Pencil, Trash2, FileText, CheckCircle, Info, List } from 'lucide-react'
+import { Pencil, FileText, CheckCircle, Info, List } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, SectionCard, SectionTitle, DetailRow, StateBadge, PrimaryButton, DataTable } from '../../../components/ui'
+import { BackLink, SectionCard, SectionTitle, DetailRow, StateBadge, PrimaryButton, DataTable, ConfirmDeleteButton } from '../../../components/ui'
 import AchatsTabs from '../../../components/achats/AchatsTabs'
 import type { ReceptionsShowProps, ReceptionState, ReceptionReconciliationState } from '../../../types/reception'
 
@@ -71,17 +71,11 @@ export default function ReceptionsShow({ reception }: ReceptionsShowProps) {
             <FileText size={14} /> Créer une facture
           </PrimaryButton>
         )}
-        {reception.destroyable && (
-          <button
-            type="button"
-            aria-label="Supprimer"
-            onClick={() => { if (window.confirm('Supprimer cette réception ?')) router.delete(`/backend/receptions/${reception.id}`) }}
-            className="flex items-center gap-1.5 px-3 py-2 rounded text-sm font-medium cursor-pointer"
-            style={{ background: 'var(--color-danger-bg)', color: 'var(--color-danger-text)', border: '1px solid var(--color-danger-border)' }}
-          >
-            <Trash2 size={14} /> Supprimer
-          </button>
-        )}
+        <ConfirmDeleteButton
+          onDelete={() => router.delete(`/backend/receptions/${reception.id}`)}
+          canDestroy={reception.canDestroy}
+          resourceName="cette réception"
+        />
       </div>
 
       <SectionCard className="mb-5">

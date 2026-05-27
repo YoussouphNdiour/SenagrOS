@@ -60,7 +60,7 @@ const defaultProps: VentesShowProps = {
     shipments: [],
     credits: [],
     updateable: true,
-    destroyable: false,
+    canDestroy: false,
     cancellable: true,
     can_generate_parcel: true,
   },

@@ -32,7 +32,7 @@ const editProps: ReceptionsFormProps = {
     reference_number: 'REF-42',
     state: 'draft', reconciliation_state: 'to_reconcile',
     pretax_amount: 50000, currency: 'XOF',
-    items: [], destroyable: true, invoiceable: false,
+    items: [], canDestroy: true, invoiceable: false,
   },
   purchase_orders: purchaseOrders,
   errors: {},

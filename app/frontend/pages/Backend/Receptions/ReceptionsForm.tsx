@@ -4,7 +4,7 @@ import { router } from '@inertiajs/react'
 import type { FormDataConvertible } from '@inertiajs/core'
 import { Save, Truck, List } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
-import { SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
+import { SectionCard, SectionTitle, FormField, PrimaryButton, FlashBanner } from '../../../components/ui'
 import AchatsTabs from '../../../components/achats/AchatsTabs'
 import ReceptionItemsEditor from '../../../components/receptions/ReceptionItemsEditor'
 import type { ReceptionsFormProps, ReceptionItem } from '../../../types/reception'
@@ -61,6 +61,8 @@ export default function ReceptionsForm({ reception, purchase_orders, errors }: R
       <h1 className="text-[22px] font-bold mb-6" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>
         {isEdit ? `Modifier la réception N° ${reception.number}` : 'Nouvelle réception'}
       </h1>
+
+      <FlashBanner errors={errors} />
 
       <form aria-label="Formulaire réception" onSubmit={handleSubmit}>
         <SectionCard className="mb-5">

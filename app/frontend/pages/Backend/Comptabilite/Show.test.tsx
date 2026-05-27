@@ -59,34 +59,34 @@ const mockItems = [
 
 describe('JournalEntryShow', () => {
   it('renders entry number and name', () => {
-    render(<JournalEntryShow entry={mockEntry} items={[]} />)
+    render(<JournalEntryShow entry={mockEntry} items={[]} canDestroy={true} />)
     expect(screen.getByText('E2024001')).toBeInTheDocument()
     expect(screen.getByText('Achat semences mil')).toBeInTheDocument()
   })
 
   it('shows draft state badge', () => {
-    render(<JournalEntryShow entry={mockEntry} items={[]} />)
+    render(<JournalEntryShow entry={mockEntry} items={[]} canDestroy={true} />)
     expect(screen.getByText('Brouillon')).toBeInTheDocument()
   })
 
   it('shows balanced when debit equals credit', () => {
-    render(<JournalEntryShow entry={mockEntry} items={[]} />)
+    render(<JournalEntryShow entry={mockEntry} items={[]} canDestroy={true} />)
     expect(screen.getByText('Équilibrée')).toBeInTheDocument()
   })
 
   it('renders items table with account numbers', () => {
-    render(<JournalEntryShow entry={mockEntry} items={mockItems} />)
+    render(<JournalEntryShow entry={mockEntry} items={mockItems} canDestroy={true} />)
     expect(screen.getByText('60100000')).toBeInTheDocument()
     expect(screen.getByText('40110000')).toBeInTheDocument()
   })
 
   it('shows lettering badge', () => {
-    render(<JournalEntryShow entry={mockEntry} items={mockItems} />)
+    render(<JournalEntryShow entry={mockEntry} items={mockItems} canDestroy={true} />)
     expect(screen.getByText('A')).toBeInTheDocument()
   })
 
   it('shows journal name', () => {
-    render(<JournalEntryShow entry={mockEntry} items={[]} />)
+    render(<JournalEntryShow entry={mockEntry} items={[]} canDestroy={true} />)
     const matches = screen.getAllByText(/Achats/)
     expect(matches.length).toBeGreaterThanOrEqual(1)
   })

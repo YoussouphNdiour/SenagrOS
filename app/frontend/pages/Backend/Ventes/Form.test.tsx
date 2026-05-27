@@ -76,6 +76,6 @@ describe('Ventes Form', () => {
 
   it('displays error messages', () => {
     render(<Form {...{ ...defaultProps, errors: { client_id: ['est obligatoire'] } }} />)
-    expect(screen.getByText('est obligatoire')).toBeInTheDocument()
+    expect(screen.getAllByText('est obligatoire').length).toBeGreaterThan(0)
   })
 })

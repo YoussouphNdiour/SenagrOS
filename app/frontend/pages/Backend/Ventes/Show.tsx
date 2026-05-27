@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react'
 import { router } from '@inertiajs/react'
-import { Edit, Trash2, Copy, FileText, CheckCircle, XCircle, Receipt, Info, List, CreditCard, Truck } from 'lucide-react'
+import { Edit, Copy, FileText, CheckCircle, XCircle, Receipt, Info, List, CreditCard, Truck } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
-import { BackLink, SectionCard, SectionTitle, DetailRow, StateBadge, PrimaryButton, DataTable } from '../../../components/ui'
+import { BackLink, SectionCard, SectionTitle, DetailRow, StateBadge, PrimaryButton, DataTable, ConfirmDeleteButton } from '../../../components/ui'
 import type { VentesShowProps, VenteState } from '../../../types/vente'
 
 const STATE_CONFIG: Record<VenteState, { label: string; bg: string; color: string }> = {
@@ -54,11 +54,6 @@ function VentesShow({ sale }: VentesShowProps) {
     router.post(`/backend/sales/${sale.id}/${action}`)
   }
 
-  function handleDestroy() {
-    if (!window.confirm('Supprimer définitivement cette vente ?')) return
-    router.delete(`/backend/sales/${sale.id}`)
-  }
-
   const totalHT = sale.items.reduce((sum, item) => sum + item.pretax_amount, 0)
   const totalTTC = sale.items.reduce((sum, item) => sum + item.amount, 0)
 
@@ -93,9 +88,11 @@ function VentesShow({ sale }: VentesShowProps) {
               <Edit size={15} /> Modifier
             </PrimaryButton>
           )}
-          {sale.destroyable && (
-            <WorkflowButton label="Supprimer" icon={<Trash2 size={15} />} onClick={handleDestroy} variant="danger" />
-          )}
+          <ConfirmDeleteButton
+            onDelete={() => router.delete(`/backend/sales/${sale.id}`)}
+            canDestroy={sale.canDestroy}
+            resourceName="cette vente"
+          />
         </div>
       </div>
 

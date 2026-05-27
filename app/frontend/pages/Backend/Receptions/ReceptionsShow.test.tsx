@@ -20,7 +20,7 @@ const baseReception = {
       unit_pretax_amount: 500, role: 'merchandise' as const,
       non_compliant: false, annotation: null, purchase_invoice_item_id: null }
   ],
-  destroyable: true, invoiceable: false,
+  canDestroy: true, invoiceable: false,
 }
 
 describe('ReceptionsShow', () => {

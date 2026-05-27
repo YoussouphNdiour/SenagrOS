@@ -23,7 +23,7 @@ const defaultProps: VentesIndexProps = {
       amount: 118000,
       currency: 'XOF',
       updateable: false,
-      destroyable: false,
+      canDestroy: false,
       cancellable: false,
     },
     {
@@ -39,7 +39,7 @@ const defaultProps: VentesIndexProps = {
       amount: 50000,
       currency: 'XOF',
       updateable: true,
-      destroyable: true,
+      canDestroy: true,
       cancellable: false,
     },
   ],
@@ -89,7 +89,7 @@ describe('Ventes Index', () => {
   it('calls router.delete when destroy button clicked and confirmed', () => {
     window.confirm = vi.fn(() => true)
     render(<Index {...{ ...defaultProps, sales: [{ ...defaultProps.sales[1] }] }} />)
-    // sale[1] has destroyable: true
+    // sale[1] has canDestroy: true
     const destroyBtn = screen.getByTitle('Supprimer')
     fireEvent.click(destroyBtn)
     expect(window.confirm).toHaveBeenCalled()

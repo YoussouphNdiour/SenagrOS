@@ -105,7 +105,7 @@ export interface Vente {
   shipments: VenteShipment[]
   credits: VenteCredit[]
   updateable: boolean
-  destroyable: boolean
+  canDestroy: boolean
   cancellable: boolean
   can_generate_parcel: boolean
 }
@@ -145,7 +145,7 @@ export interface VentesIndexProps {
     amount: number
     currency: string
     updateable: boolean
-    destroyable: boolean
+    canDestroy: boolean
     cancellable: boolean
   }>
   meta: VenteMeta

@@ -38,7 +38,7 @@ export interface Reception {
   pretax_amount: number
   currency: string
   items: ReceptionItem[]
-  destroyable: boolean
+  canDestroy: boolean
   invoiceable: boolean         // = reconciliation_state === 'to_reconcile' && state === 'given'
 }
 

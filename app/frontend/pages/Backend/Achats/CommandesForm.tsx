@@ -4,7 +4,7 @@ import { router } from '@inertiajs/react'
 import type { FormDataConvertible } from '@inertiajs/core'
 import { Save, ShoppingBag, List } from 'lucide-react'
 import { AppShell } from '../../../components/AppShell'
-import { SectionCard, SectionTitle, FormField, PrimaryButton } from '../../../components/ui'
+import { SectionCard, SectionTitle, FormField, PrimaryButton, FlashBanner } from '../../../components/ui'
 import AchatItemsEditor from '../../../components/achats/AchatItemsEditor'
 import AchatsTabs from '../../../components/achats/AchatsTabs'
 import type { CommandesFormProps, AchatItem } from '../../../types/achat'
@@ -63,6 +63,8 @@ export default function CommandesForm({ commande, natures, taxes, errors }: Comm
       <h1 className="text-[22px] font-bold mb-6" style={{ fontFamily: 'var(--font-heading)', color: 'var(--color-text)' }}>
         {isEdit ? `Modifier la commande ${commande.number}` : 'Nouvelle commande'}
       </h1>
+
+      <FlashBanner errors={errors} />
 
       <form aria-label="Formulaire commande" onSubmit={handleSubmit}>
         <SectionCard className="mb-5">

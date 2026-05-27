@@ -28,7 +28,7 @@ const editProps: CommandesFormProps = {
     id: 1, number: 'CMD-001', reference_number: 'REF-A', state: 'opened',
     ordered_at: '2025-06-01', supplier: { id: 10, full_name: 'Agro Sénégal' },
     nature_name: null, pretax_amount: 0, amount: 0, currency: 'XOF',
-    description: null, responsible_name: null, items: [], receptions_count: 0, destroyable: false,
+    description: null, responsible_name: null, items: [], receptions_count: 0, canDestroy: false,
   },
   natures,
   taxes,
