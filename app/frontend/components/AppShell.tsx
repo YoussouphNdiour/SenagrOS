@@ -3,7 +3,7 @@ import { usePage } from '@inertiajs/react'
 import {
   LayoutDashboard, Wrench, Map, Sprout, BookOpen, Settings, Calendar, Users, Tractor,
   UserCog, PawPrint, Activity, ShoppingCart, ShoppingBag, Package, Bell, Wallet,
-  ChevronDown, ChevronRight, Search, LogOut, User, LifeBuoy, CheckCircle, AlertTriangle,
+  ChevronDown, ChevronRight, Search, LogOut, User, LifeBuoy, CheckCircle, AlertTriangle, X,
   type LucideIcon,
 } from 'lucide-react'
 import type { InertiaSharedProps } from '../types/shared'
@@ -232,12 +232,19 @@ export const AppShell = ({ children }: AppShellComponentProps) => {
 
   useEffect(() => {
     setVisibleNotice(flash.notice ?? null)
-    setVisibleAlert(flash.alert ?? null)
     if (flash.notice) {
       const t = setTimeout(() => setVisibleNotice(null), 4000)
       return () => clearTimeout(t)
     }
-  }, [flash.notice, flash.alert])
+  }, [flash.notice])
+
+  useEffect(() => {
+    setVisibleAlert(flash.alert ?? null)
+    if (flash.alert) {
+      const t = setTimeout(() => setVisibleAlert(null), 6000)
+      return () => clearTimeout(t)
+    }
+  }, [flash.alert])
 
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
@@ -535,7 +542,7 @@ export const AppShell = ({ children }: AppShellComponentProps) => {
             }}>
               <CheckCircle size={16} />
               {visibleNotice}
-              <button onClick={() => setVisibleNotice(null)} style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', padding: 0 }}>×</button>
+              <button onClick={() => setVisibleNotice(null)} style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', padding: 0 }}><X size={12} /></button>
             </div>
           )}
           {visibleAlert && (
@@ -547,7 +554,7 @@ export const AppShell = ({ children }: AppShellComponentProps) => {
             }}>
               <AlertTriangle size={16} />
               {visibleAlert}
-              <button onClick={() => setVisibleAlert(null)} style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', padding: 0 }}>×</button>
+              <button onClick={() => setVisibleAlert(null)} style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', padding: 0 }}><X size={12} /></button>
             </div>
           )}
           {children}
