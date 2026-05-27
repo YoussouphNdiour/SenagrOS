@@ -1,0 +1,97 @@
+:css
+  h2
+  {
+    font-weight: bolder;
+    color: red;
+  }
+
+  h3
+  {
+    font-weight: bold;
+    color: green;
+  }
+  .bold{font-weight: bold;}
+
+  .italic{font-style: italic}
+
+  .key
+  {
+    font-style: italic;
+    color: blue;
+  }
+
+  .result
+  {
+    font-style: italic;
+    color: purple;
+  }
+
+  .variety
+  {
+    color: orange;
+  }
+
+:ruby
+
+  require 'benchmark'
+
+  activated = false
+
+  if activated
+
+  ############################
+  # generating data for test
+  ############################
+
+  # array of crumbs ready to be managed by VisualizationHelper
+  interventions_crumbs = []
+
+  @slider_ary = []
+
+  interventions = Crumb.interventions(current_user.id)
+  interventions.each do |intervention|
+    name = interventions.index(intervention)
+    started_at = intervention.first.read_at
+    stopped_at = intervention.last.read_at
+    doer = User.find(intervention.first.user_id)
+    intervention.each do |crumb|
+      item =  {
+                name:         name,
+                read_at:      crumb.read_at,
+                nature:       crumb.nature,
+                shape:        crumb.geolocation,
+                started_at:   started_at,
+                stopped_at:   stopped_at,
+                doer:         doer
+              }
+      interventions_crumbs << item
+      @slider_ary << crumb.read_at
+    end
+  end
+
+  end # 'activated' block
+
+  rendering = activated
+
+- if rendering
+  %h2 Playing with sliders
+  = visualization do |v|
+    - v.serie :crumbs, interventions_crumbs
+    - v.paths :started_at, :crumbs
+    - v.control :zoom
+    - v.control :scale
+    - v.control :fullscreen
+    - v.control :layer_selector
+
+  %p
+    %label sliderval
+    %input#sliderval
+  %div#slider
+
+:coffee
+  $ ->
+    $("#slider").slider
+      min: 0
+      max: 100
+      values: [25,75]
+

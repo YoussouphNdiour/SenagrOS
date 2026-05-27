@@ -1,0 +1,116 @@
+- main_period_selector(:year)
+
+- main_toolbar do |t|
+  = t.export(:animal_sheet, key: :identification_number, target: "_blank")
+  = t.edit resource
+  = t.new(params: {controller: :issues, target_id: resource.id, target_type: resource.class.name}, tool: 'new-issue')
+  -# t.destroy
+
+= main_informations attachment: true do
+  - if resource.picture.exists?
+    .picture= image_tag(resource.picture.url(:identity))
+  = infos do
+    .med-info.important
+      :ruby
+        sex_icon = if resource.sex == 'male'
+                     'mars'
+                   elsif resource.sex == 'female'
+                     'venus'
+                   else
+                     'sex'
+                   end
+      %span.title= Animal.human_attribute_name(:work_number)
+      %span.value
+        %i.picto{class: "picto-#{sex_icon}"}
+        = resource.work_number
+
+    .med-info.important
+      %span.title= Animal.human_attribute_name(:state)
+      %span.value{ title: resource.state }= lights(resource.status)
+
+    .med-info
+      %span.title= Animal.human_attribute_name(:identification_number)
+      %span.value
+        %i.picto{class: "picto-barcode"}
+        = resource.identification_number
+
+  - if resource.born_at && resource.age >= 1.day
+    .med-info
+      %span.title= Animal.human_attribute_name(:age)
+      %span.value
+        %i.picto{class: "picto-clock-o"}
+        = human_age(resource.born_at, display: 3)
+
+  - if resource.outgoing_parcel_item
+    .med-info
+      %span.title= :outgoing_parcels.tl + " #{resource.outgoing_parcel_item.shipment.given_at.l}"
+      %span.value
+        %i.picto{class: "picto-truck-loading"}
+        = link_to(resource.outgoing_parcel_item.shipment.number, {controller: :shipments, action: :show, id: resource.outgoing_parcel_item.shipment.id})
+
+  - if resource.evaluated_price
+    .med-info
+      %span.title= :sales.tl
+      %span.value
+        = resource.evaluated_price.l(ccurrency: :EUR)
+
+  = labels_info(resource.labels)
+
+= cobbles do |c|
+
+  - if resource.mother || resource.father
+    - c.cobble :genealogy do
+      = infos do
+        - if resource.mother
+          .med-info
+            %span.title= Animal.human_attribute_name(:mother)
+            %span.value
+              %i.picto{class: "picto-venus"}
+              = link_to(resource.mother.name, {action: :show, id: resource.mother.id})
+
+        - if resource.father
+          .med-info
+            %span.title= Animal.human_attribute_name(:father)
+            %span.value
+              %i.picto{class: "picto-mars"}
+              = link_to(resource.father.name, {action: :show, id: resource.father.id})
+
+  - if resource.analyses.any?
+    - started_at = Time.zone.now.change(year: current_campaign.harvest_year) - 1.year
+    - stopped_at = Time.zone.now.change(year: current_campaign.harvest_year)
+    - c.cobble :last_analyses do
+      = cell :last_analyses, params: {nature: :unitary_cow_milk_analysis, product_id: resource.id, started_at: started_at, stopped_at: stopped_at}
+
+  - if resource.customized?
+    - c.cobble :custom_fields do
+      = attributes_list(stamps: false)
+
+  - c.cobble(:children) do
+    = cobble_list(:children)
+
+  - c.cobble(:groups) do
+    = cobble_list(:groups)
+
+  - count = 0
+  - map = visualization do |v|
+    - if resource.container
+      - shape = resource.container.shape
+      - if shape
+        - v.serie resource.container.id, [{name: resource.container.name, shape: shape}]
+        - v.simple resource.container.name , resource.container.id, fill_color: cycle(theme_colors)
+        - count += 1
+    - v.control :zoom
+    - v.control :scale
+    - v.control :fullscreen
+    - v.control :layer_selector
+  - if count > 0
+    - c.cobble :container do
+      = map
+
+  - c.cobble(:issues) do
+    = cobble_toolbar do |t|
+      = t.new(params: {controller: :issues, :target_id => resource.id, :target_type => resource.class.name}, tool: 'new-issue')
+    = cobble_list(:issues)
+
+  - c.cobble(:interventions) do
+    = cobble_list(:interventions)

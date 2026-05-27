@@ -1,0 +1,43 @@
+#!/usr/bin/env ruby
+require 'active_support'
+require 'active_support/core_ext'
+require 'optparse'
+require 'pathname'
+require 'fileutils'
+require 'colored'
+
+STDOUT.sync = true
+
+@simulate = false
+
+def execute(command)
+  puts command.send(@simulate ? :yellow : :red).to_s
+  system(command) unless @simulate
+end
+
+table = ARGV.shift
+
+unless $PROGRAM_NAME =~ /^(.\/)?bin\//
+  puts 'Script must be started from Rails root.'
+  exit 0
+end
+
+raise 'No table given' if table.blank?
+
+root = Pathname.new('.')
+
+records = table
+record = records.singularize
+puts "Removes #{record}"
+
+files = ["app/models/#{record}.rb",
+         "app/controllers/backend/#{records}_controller.rb",
+         "app/helpers/backend/#{records}_helper.rb",
+         "app/views/backend/#{records}",
+         # "test/fixtures/#{records}.yml", # Done where 'rake db:fixtures:restore' and 'rake db:fixtures:dump'
+         "test/models/#{record}_test.rb",
+         "test/controllers/backend/#{records}_controller_test.rb"]
+
+for file in files
+  execute("git rm -fr #{file}") if File.exist?(file)
+end

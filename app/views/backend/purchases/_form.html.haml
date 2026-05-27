@@ -1,0 +1,48 @@
+= field_set do
+  - if f.object.new_record?
+    - if params[:affair_id] && f.object.affair = PurchaseAffair.find_by(id: params[:affair_id])
+      = f.association :affair, as: :hidden
+  = f.referenced_association :supplier, source: :suppliers, new: { supplier: 1 }
+  = f.referenced_association :delivery_address, source: :own_mails, new: { entity_id: Entity.of_company.id }
+  = f.association :nature, as: :hidden
+  = f.input :reference_number
+  = f.input :invoiced_at, wrapper_html: { class: 'apply-fy-date' }, input_html: { data: { deal_reference_date: true } }
+  %span.hidden#financial-year-dates{ financial_year_started_on_stopped_on }
+    = :warning_date_not_in_period.tl
+  = f.input :payment_delay, placeholder: :payment_delay_placeholder.tl
+  = f.input :payment_delay
+  = f.input :tax_payability, as: :radio_buttons
+  = f.referenced_association :responsible, source: :employees, new: { employed: 1 }
+  = f.input :description
+  = f.custom_fields
+
+= field_set Purchase.human_attribute_name(:items) do
+  .items
+    %table#items-table
+      %thead
+        %tr
+          %th= PurchaseItem.human_attribute_name(:variant)
+          %th= Parcel.human_attribute_name(:number) if f.object.parcels.any?
+          %th= PurchaseItem.human_attribute_name(:accounting_label)
+          %th= PurchaseItem.human_attribute_name(:quantity)
+          %th= PurchaseItem.human_attribute_name(:unit_pretax_amount)
+          %th= PurchaseItem.human_attribute_name(:tax)
+          %th= PurchaseItem.human_attribute_name(:reduction_percentage)
+          %th= PurchaseItem.human_attribute_name(:pretax_amount)
+          %th= PurchaseItem.human_attribute_name(:amount)
+          %th= PurchaseItem.human_attribute_name(:currency)
+          %th
+      - precision = Onoma::Currency[f.object.currency].precision
+      %tfoot
+        %tr.total
+          %td= link_to_add_association :add_item.tl, f, :items, partial: 'item_fields', data: { association_insertion_node: '#items-table', association_insertion_method: :append }, class: "btn primary"
+          - colspan = f.object.parcels.any? ? 5 : 4
+          %th{ colspan: 4 }= :total.tl
+          %td#pta{ data:{ use: ".nested-fields .pta", calculate: "sum", calculate_round: precision } }= f.object.pretax_amount
+          %td#wta{ data:{ use: ".nested-fields .wta", calculate: "sum", calculate_round: precision } }= f.object.amount
+          %td= f.object.currency
+          %th
+      = f.simple_fields_for(:items, f.object.items.sort_by { |i| i.id.to_i }) do |item|
+        = render 'item_fields', f: item
+
+= f.attachments_field_set

@@ -1,0 +1,12 @@
+= field_set do
+  = f.input :name
+  - if @document_template.new_record?
+    = f.input :nature, collection: Onoma::DocumentNature.selection
+  = f.input :archiving
+  = f.input :active
+  = f.input :by_default
+  = f.input :formats, :placeholder => 'pdf,odt,...'
+  - unless @document_template.managed?
+    = f.input :language
+    = f.input :source, as: :file
+  = f.custom_fields

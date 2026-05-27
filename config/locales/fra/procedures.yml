@@ -1,0 +1,523 @@
+fra:
+  procedure_handlers:
+    dry_matter_mass: "Masse de matière sèche"
+    dry_matter_mass_area_density: "Masse de matière sèche par surface"
+    fodder_bales_count: "Nombre de bottes"
+    food_mass_per_animal: "Masse d’aliment par animal"
+    grains_area_density: "Densité surfacique de grains"
+    grains_area_density_in_thousand_per_hectare: "Densité surfacique de grains en milliers par hectare"
+    grains_count: "Millers de grains"
+    items_count: "Nombre d'éléments"
+    length: "Longueur"
+    mass_area_density: "Densité surfacique"
+    mass_area_density_in_gram_per_square_meter: "Densité surfacique en grammes par mètre carré" #?
+    mass_area_density_in_hectoliter_per_hectare: "Densité surfacique en hectolitres par hectare" #?
+    mass_area_density_in_ton: "Densité surfacique en tonnes"
+    mass_area_density_in_ton_per_hectare: "Densité surfacique en tonnes par hectare"
+    mass_volume_density: "Masse volumique"
+    milk_mass_per_animal: "Masse de lait par animal" #?
+    net_length: "Longueur nette"
+    net_mass: "Masse nette"
+    net_mass_in_kilogram: "Masse nette en kilogrammes"
+    net_mass_in_ton: "Masse nette en tonnes"
+    net_surface_area: "Surface"
+    net_volume: "Volume"
+    net_volume_in_liter: "Volume net en litre"
+    nitrogen: "Unités d’azote par surface"
+    nitrogen_unities_density: "Unités d’azote par surface"
+    phosphorus_unities_density: "Unités de phosphore par surface" #?
+    plants_count: "Nombre de plantes" #?
+    population: "Population"
+    potassium_unities_density: "Unités de potassium par surface" #?
+    seedling_area_density: "Densité surfacique de plants"
+    seedling_area_density_in_thousand_per_hectare: "Densité surfacique de plants en millers par hectare"
+    seedling_count: "Milliers de plants"
+    shape: "Contour"
+    stakes_by_hectare: "Enjeux par hectare"
+    stakes_count: "Nombre de piquets"
+    sulfur_dioxide_density: "Dioxyde de soufre par volume"
+    surface_area_percentage: "% de surface couverte"
+    ton: "Tonnes"
+    volume_area_density: "Densité surfacique"
+    volume_area_density_in_liter_per_square_meter: "Densité volumique en litres par mètre carré" #?
+    volume_density: "Densité volumique"
+  procedure_killable_parameters:
+    # is_cultivation_completely_destroyed_by_chemical_mechanical_weeding: "Is cultivation completely destroyed by chemical mechanical weeding?"
+    # is_cultivation_completely_destroyed_by_crop_residues_grinding: "Is cultivation completely destroyed by crop residues grinding?"
+    # is_cultivation_completely_destroyed_by_direct_silage: "Is cultivation completely destroyed by direct silage?"
+    # is_cultivation_completely_destroyed_by_gas_weeding: "Is cultivation completely destroyed by gas weeding?"
+    # is_cultivation_completely_destroyed_by_hand_weeding: "Is cultivation completely destroyed by hand weeding?"
+    # is_cultivation_completely_destroyed_by_indirect_silage: "Is cultivation completely destroyed by indirect silage?"
+    is_cultivation_completely_destroyed_by_intervention: "L'intervention détruit-elle cette culture\_?"
+    # is_cultivation_completely_destroyed_by_spraying: "Is cultivation completely destroyed by spraying?"
+    # is_cultivation_completely_destroyed_by_steam_weeding: "Is cultivation completely destroyed by steam weeding?"
+    # is_cultivation_completely_destroyed_by_straw_bunching: "Is cultivation completely destroyed by straw bunching?"
+    # is_cultivation_completely_destroyed_by_swathing: "Is cultivation completely destroyed by swathing?"
+    is_it_completely_destroyed_by_intervention: "L'intervention détruit-elle la culture\_?"
+    # is_plant_completely_destroyed_by_harvesting: "Is plant completely destroyed by harvesting?"
+    is_plant_completely_destroyed_by_intervention: "L'intervention détruit-elle cette culture\_?"
+    # is_plant_completely_destroyed_by_lifting: "Is plant completely destroyed by lifting?"
+    # is_plant_completely_destroyed_by_plant_mowing: "Is plant completely destroyed by plant mowing?"
+    # is_plant_completely_destroyed_by_topkilling: "Is plant completely destroyed by topkilling?"
+  procedure_parameters:
+    adding_wine: "Vin (mineur)"
+    adding_wine_to_blend: "Vin à assembler (mineur)" #?
+    animal: "Animal"
+    animal_food: "Aliment"
+    animal_housing: "Zone d'hébergement de l'animal"
+    animal_medicine: "Produit vétérinaire"
+    animal_medicine_to_give: "Produit vétérinaire à donner" #?
+    animal_movement: "Déplacement d'un animal" #?
+    baler: "Botteleuse"
+    bird_band: "Bande d'oiseaux" #?
+    bottles: "Bouteilles"
+    bottles_to_use: "Bouteilles à utiliser" #?
+    candles: "Bougies"
+    caregiver: "Soigneur"
+    chemical_mix: "Mélange de produits de protection des végétaux" #?
+    chemical_storage: "Stockage de produits de protection des végétaux" #?
+    child: "Nouveau né"
+    cleaner: "Outil de nettoyage"
+    cleaner_product: "Produit de nettoyage"
+    compressor: "Compresseur"
+    construction_material: "Materiel de construction"
+    consumable_part: "Consommable"
+    container: "Conteneur"
+    corker: "Boucheuse"
+    corks: "Bouchons"
+    corks_to_use: "Bouchons à utiliser" #?
+    corn_topper: "Écimeuse"
+    cover_implanter: "Plastiqueuse"
+    crop: "Culture" #?
+    cropper: "Outil de récolte"
+    cultivation: "Parcelle / Culture"
+    cutter: "Outil de taille"
+    cutting_equipment: "Équipement de coupe"
+    destination_tank: "Cuve de destination"
+    disinfectant: "Désinfectant"
+    doer: "Opérateur"
+    driver: "Conducteur"
+    eggs: "Œufs"
+    electric_pruning_shears: "Sécateur electrique"
+    energy: "Energie"
+    equipment: "Équipement"
+    excrement: "Excrément" #?
+    excrement_zone: "Fumière" #?
+    fermented_juice: "Jus fermenté"
+    fertilizer: "Engrais"
+    fertilizer_to_spread: "Engrais à épandre" #?
+    first_chemical_input: "Premier intrant de protection des végétaux" #?
+    first_chemical_input_to_use: "Premier intrant de protection des végétaux à utiliser" #?
+    first_child: "Premier nouveau né" #?
+    first_food_input: "Premier ingrédient" #?
+    first_food_input_to_use: "Premier ingrédient utilisé" #?
+    first_plant_medicine: "Premier produit utilisé" #?
+    first_plant_medicine_to_spray: "Premier produit à pulvériser" #?
+    first_seed_input: "Première semence" #?
+    first_seed_input_to_use: "Première semence utilisée" #?
+    food: "Nourriture"
+    food_mix: "Mélange"
+    food_storage: "Stockage du mélange" #?
+    forager: "Ensileuse"
+    forager_driver: "Conducteur d’ensileuse"
+    frost_protection_equipment: "Équipement de protection anti-gel"
+    fruit_harvester: "Récolteuse de fruit" #?
+    fruits: "Fruits" #?
+    fuel: "Carburant"
+    fuel_to_input: "Carburant mis" #?
+    gaz_engine: "Désherbeur à gaz"
+    grain: "Grain" #?
+    grain_to_deliver: "Grain à livrer" #?
+    grains: "Grains" #?
+    grape: "Raisin"
+    grape_picker: "Vendangeur" #?
+    grape_reaper: "Machine à vendanger" #?
+    grape_reaper_driver: "Conducteur de machine à vendanger" #?
+    grape_to_deliver: "Raisin à livrer" #?
+    grape_to_press: "Raisin à presser" #?
+    grass: "Herbe"
+    grinded: "Résidu de culture" #?
+    grinder: "Broyeur"
+    group: "Groupe" #?
+    hand_drawn: "Tireuse"
+    hand_tying: "Pince à lier"
+    harrow: "Herse"
+    harvester_man: "Récolteur" #?
+    hay_rake: "Andaineur"
+    hazelnuts: "Noisettes" #?
+    herbicide: "Herbicide"
+    herd: "Troupeau"
+    hiller: "Butteuse"
+    hive: "Ruche"
+    hoe: "Bineuse"
+    hoeing_weeder: "Désherbineuse" #?
+    implanter_tool: "Équipement de plantation"
+    implement: "Outil"
+    insecticide: "Insecticide" #?
+    insecticide_to_input: "Insecticide à distribuer" #?
+    insemination: "Insémination"
+    inseminator: "Inséminateur"
+    intervine_hill_remover: "Décavaillonneuse"
+    intervine_hiller: "Chausseuse | Rechausseuse"
+    item: "Pièce"
+    item_to_change: "Pièce changée" #?
+    items: "Éléments" #?
+    items_to_fill: "Éléments à remplir" #?
+    juice: "Jus"
+    juice_to_ferment: "Jus à fermenter"
+    land_parcel: "Parcelle"
+    leaves_remover: "Effeuilleuse"
+    lifter: "Souleveuse"
+    litter: "Litière"
+    maintained: "Maintenu" #?
+    mammal: "Animal" #?
+    mammal_herd: "Troupeau à traire" #?
+    mammal_herd_to_milk: "Troupeau à traire" #?
+    mammal_to_milk: "Animal à traire"
+    manure: "Fumier" #?
+    manure_to_spread: "Fumier à épandre" #?
+    matters: "Matières"
+    mechanic: "Mécanicien"
+    mechanical_pollinator: "Pollinisateur artificiel"
+    mechanical_weeder: "Outil de désherbage mécanique"
+    medicine: "Traitement" #?
+    medicine_to_give: "Traitement à donner" #?
+    medicine_to_spray: "Traitement à pulvériser" #?
+    member: "Membre" #?
+    milk: "Lait"
+    milking_robot: "Robot de traite"
+    molluscicide: "Molluscicide" #?
+    molluscicide_to_input: "Molluscicide à distribuer" #?
+    mother: "Mère"
+    mother_animal: "Mère" #?
+    movement: "Mouvement" #?
+    mower: "Faucheuse"
+    mulching_material: "Matériel de paillage"
+    net_implanter: "Dérouleur de filet"
+    net_roll: "Enrouleur de filet"
+    new_animal_variant: "Nouvel article de l'animal" #?
+    nuts: "Fruits à coques" #?
+    nuts_harvester: "Récolteuse de fruits à coques" #?
+    nuts_to_deliver: "Fruits à coques à livrer" #?
+    oenological_intrant: "Produit œnologique"
+    oenological_intrant_to_put: "Produit œnologique à mettre" #?
+    oil: "Huile"
+    oil_to_input: "Huile mise" #?
+    operator: "Opérateur"
+    packaging_material: "Matériel d'emballage"
+    parturition: "Mise bas"
+    plant: "Culture"
+    plant_medicine: "Produit phytosanitaire"
+    plant_medicine_to_spray: "Produit phytosanitaire à pulvériser" #?
+    plants: "Plants"
+    plants_to_fix: "Plants à implanter" #?
+    plastic_to_mulch: "Plastique à poser" #?
+    plow: "Charrue"
+    pollinating_insects: "Insectes pollinisateurs"
+    pollination_tool: "Outil de pollinisation"
+    poultry: "Volailles"
+    pre_pruner: "Outil de taille"
+    prepared_product: "Produit préparé"
+    press: "Presse"
+    product_to_prepare: "Produit à préparer"
+    product_to_sort: "Produits à trier"
+    protective_canvas: "Bâche de protection"
+    protective_net: "Filet de protection"
+    protective_sleeves: "Manchon de protection"
+    pruner: "Sécateur" #?
+    raised_manure: "Fumier collecté"
+    replacement_part: "Pièce de remplacement"
+    residue: "Residue"
+    responsible: "Responsable"
+    roll: "Rouleau"
+    second_chemical_input: "Second intrant de protection des végétaux" #?
+    second_chemical_input_to_use: "Second intrant de protection des végétaux à utiliser" #?
+    second_child: "Second nouveau né" #?
+    second_food_input: "Second ingrédient" #?
+    second_food_input_to_use: "Second ingrédient utilisé" #?
+    second_plant_medicine: "Second produit utilisé" #?
+    second_plant_medicine_to_spray: "Second produit à pulvériser" #?
+    second_seed_input: "Seconde semence" #?
+    second_seed_input_to_use: "Seconde semence utilisée" #?
+    seed_mix: "Mélange de graine" #?
+    seed_storage: "Stockage de semences" #?
+    seedbed_preparator: "Outil de préparation du lit de semence"
+    seeder: "Semoir" #?
+    seedlings: "Plants"
+    seeds: "Semences"
+    seeds_to_sow: "Semence à semer" #?
+    shoot_grinder: "Broyeur de sarments"
+    sieve_shaker: "Tamiseuse"
+    silage: "Ensilage"
+    silage_to_deliver: "Ensilage à livrer" #?
+    silage_to_give: "Ensilage à donner" #?
+    silage_unloader: "Désileuse" #?
+    silo: "Silo" #?
+    soil_loosener: "Décompacteur"
+    sortable: "Produit à trier"
+    sorted_product: "Produits triés"
+    sorted_seedlings: "Plants triés"
+    sorting_differential: "Écart de tri"
+    sower: "Semoir"
+    sprayer: "Pulvérisateur"
+    spreader: "Épandeur"
+    stakes: "Piquets"
+    stakes_to_plant: "Piquets à planter" #?
+    steam_engine: "Désherbeur à vapeur"
+    straw: "Fourrage"
+    straw_bales: "Bottes de fourrage"
+    straw_to_bunch: "Fourrage entrant"
+    straw_to_deliver: "Fourrage à livrer" #?
+    straw_to_mulch: "Paille à pailler" #?
+    straws: "Paille" #?
+    stubble_cultivator: "Déchaumeur"
+    tank: "Cuve"
+    tank_for_residue: "Cuve pour les résidus"
+    tank_for_wine: "Cuve pour le vin"
+    target: "Cible" #?
+    third_food_input: "Troisième ingrédient" #?
+    third_food_input_to_use: "Troisième ingrédient utilisé" #?
+    third_plant_medicine: "Troisième produit utilisé" #?
+    third_plant_medicine_to_spray: "Troisième produit à pulvériser" #?
+    third_seed_input: "Troisième semence" #?
+    third_seed_input_to_use: "Troisième semence utilisée" #?
+    tool: "Outil"
+    topper: "Effaneuse"
+    tractor: "Tracteur / Automoteur"
+    trailed_equipment: "Outil tracté"
+    trailer: "Remorque"
+    trunck_cleaner: "Épampreuse"
+    tunnel: "Tunnel/Chenille"
+    tunnel_implanter: "Outil de pose de tunnel/chenille"
+    tunnel_remover: "Outil de retrait de tunnel/chenille"
+    uncover: "Débâcheuse"
+    variant: "Article"
+    vehicle: "Véhicule"
+    vial: "Paillette"
+    vial_to_give: "Paillette à utiliser" #?
+    vine_lifter: "Arracheuse de vigne"
+    vine_planter: "Planteuse de vigne"
+    vine_shoot_extractor: "Tireuse de bois"
+    vine_trimmer: "Rogneuse"
+    walnuts: "Noix" #?
+    water: "Eau"
+    water_to_spread: "Eau à apporter" #?
+    weeding_kit: "Kit de désherbage"
+    weedkiller: "Désherbant" #?
+    weedkiller_to_spray: "Désherbant à pulvériser" #?
+    wine: "Vin"
+    wine_blended: "Vin assemblé"
+    wine_bottles: "Bouteilles de vin"
+    wine_man: "Opérateur de chai"
+    wine_storage: "Stockage de vin" #?
+    wine_to_blend: "Vin à assembler" #?
+    wine_to_move: "Vin à transférer" #?
+    wine_to_pack: "Vin à embouteiller" #?
+    wine_to_treat: "Vin à traiter"
+    wire_fence: "Fils de clôture"
+    wire_fence_to_put: "Fils de clôture à positionner" #?
+    wire_lifter: "Releveuse"
+    work: "Opération sur équipement"
+    worker: "Travailleur"
+    zone: "Zone"
+  procedures:
+    administrative_task: "Tâche administrative générale" #?
+    administrative_tasks: "Tâches administratives"
+    all_in_one_planting: "Plantation «\_tout-en-un\_»"
+    all_in_one_sowing: "Semis «\_tout-en-un\_»"
+    all_in_one_sowing_without_plant_output: "Semis «\_tout-en-un\_» (sans gestion des cultures)"
+    animal_antibiotic_treatment: "Traitement antibiotique" #?
+    animal_artificial_insemination: "Insémination artificielle"
+    animal_birth: "Naissance d’un animal" #?
+    animal_group_changing: "Déplacement d'animaux"
+    animal_housing_cleaning: "Nettoyage"
+    animal_housing_disinfection: "Désinfection"
+    animal_housing_mulching: "Paillage"
+    animal_treatment: "Traitement animal" #?
+    animal_veterinary_treatment: "Traitement vétérinaire"
+    attach: "Attellage" #?
+    calving_one: "Vêlage unique" #?
+    calving_twin: "Vêlage jumeaux" #?
+    chaptalization: "Chaptalisation"
+    chemical_mechanical_weeding: "Désherbinage"
+    chemical_weed_killing: "Désherbage chimique" #?
+    complete_wine_transfer: "Transfert de vin (Complet)"
+    crop_residues_grinding: "Broyage des résidus de culture"
+    cutting: "Taille/Effeuillage"
+    detach: "Détellage" #?
+    detasseling: "Écimage"
+    direct_silage: "Ensilage"
+    double_chemical_mixing: "Mélange d'intrants de protection des végétaux avec deux produits" #?
+    double_food_mixing: "Mélange alimentaire avec deux ingrédients" #?
+    double_seed_mixing: "Mélange de semences avec deux semences" #?
+    double_spraying_on_cultivation: "Pulvérisation sur culture (deux spécialités)" #?
+    double_spraying_on_land_parcel: "Pulvérisation sur parcelle (deux spécialités)" #?
+    earth_work: "Terrassement"
+    egg_collecting: "Ramassage d'œufs"
+    egg_production: "Production d'œufs" #?
+    enzyme_addition: "Ajout d'enzymes"
+    equipment_item_replacement: "Équipement pièce de rechange"
+    equipment_maintenance: "Réparation et maintenance"
+    equipment_part_replacement: "Remplacement de pièces d'équipement" #?
+    fermentation: "Fermentation"
+    fertilizing: "Fertilisation"
+    plant_moving: "Changement de zone de stockage (lot entier)"
+    field_plant_sorting: "Tri au champ"
+    filling: "Remplissage" #?
+    food_preparation: "Préparation des aliments"
+    fuel_up: "Plein de carburant"
+    gas_weeding: "Désherbage thermique au gaz"
+    generic_covering: "Bachage / Paillage (PV)"
+    generic_harvesting: "Arrachage / Récolte / Moisson (PV)"
+    generic_fertilizing: "Fertilisation (PV)"
+    generic_sowing: "Semis / Plantation (PV)"
+    generic_spraying: "Pulvérisation (PV)"
+    generic_tillage: "Travail du sol (PV)"
+    generic_transport_harvesting: "Transport de récolte (PV)"
+    grain_transport: "Transport de grain" #?
+    grains_harvest: "Moisson" #?
+    grape_pressing: "Pressage de raisin"
+    grape_transport: "Transport de raisin" #?
+    grazing: "Pâturage sur parcours"
+    greenhouse_assembling: "Montage de serre"
+    grinding: "Broyage" #?
+    ground_destratification: "Déstratification"
+    group_exclusion: "Exclusion de groupe" #?
+    group_inclusion: "Inclusion de groupe" #?
+    hand_weeding: "Désherbage manuel"
+    handling: "Manutention"
+    harvest_helping: "Aide à la récolte" #?
+    harvest_transportation: "Transport de récolte"
+    harvesting: "Récolte"
+    harvesting_with_plant_or_land_parcel: "Récolte (culture ou parcelle)"
+    hazelnuts_harvest: "Récolte de noisettes" #?
+    hazelnuts_transport: "Transport de noisettes" #?
+    herd_feeding: "Alimentation d'un troupeau"
+    hilling: "Buttage"
+    hilling_for_sifting: "Buttage pour tamisage"
+    hoeing: "Binage"
+    housing_soil_disinfection: "Désinfection" #?
+    identification: "Identification"
+    implant_helping: "Aide à l'implantation" #?
+    implanting: "Plantation" #?
+    indirect_silage: "Ensilage indirect"
+    individual_feeding: "Alimentation individuelle"
+    installation_maintenance: "Entretien des installations"
+    inter_row_hoeing: "Binage inter-rangs"
+    intervine_hilling: "Chaussage | Rechaussage"
+    intervine_hill_removing: "Déchaussage"
+    intervine_maintenance: "Entretien intercep"
+    item_replacement: "Remplacement de pièce" #?
+    land_parcel_grinding: "Broyage du sol"
+    lifting: "Soulevage"
+    maintenance_task: "Tâche de maintenance générale" #?
+    mammal_herd_milking: "Traite d’un troupeau" #?
+    mammal_milking: "Traite d’un animal" #?
+    manual_feeding: "Alimentation manuelle"
+    manual_vine_harvest: "Vendange manuelle" #?
+    mecanical_vine_harvest: "Vendange mécanique" #?
+    mechanical_harvesting: "Récolte mécanique" #?
+    mechanical_planting: "Plantation"
+    milking: "Traite"
+    mineral_fertilizing: "Fertilisation minérale" #?
+    moving: "Déplacement" #?
+    net_installation: "Pose de filet de protection"
+    net_removing: "Retrait de filet"
+    oil_replacement: "Vidange d’huile"
+    organic_fertilizing: "Fertilisation organique" #?
+    packaging: "Conditionnement"
+    partial_wine_transfer: "Transfert de vin (Partiel)"
+    parturition: "Mise bas"
+    pasturing: "Pâturage"
+    plant_cover_sowing: "Semis de couvert"
+    plant_covering: "Bâchage"
+    plant_grinding: "Broyage de végétaux" #?
+    plant_mowing: "Fauchage"
+    plant_mulching: "Paillage/Mulching"
+    plant_uncovering: "Débâchage"
+    plant_watering: "Arrosage des plants"
+    plant_watering_installation: "Installation de l'irrigation"
+    plantation_unfixing: "Déchaussage"
+    plants_harvest: "Récolte de plante" #?
+    plants_sorting: "Tri de produits végétaux"
+    plastic_mulching: "Paillage plastique" #?
+    plowing: "Labour"
+    plums_harvest: "Récolte de prunes" #?
+    pollination: "Pollinisation"
+    product_evolution: "Évolution d'un produit" #?
+    product_moving: "Mouvement d'un produit" #?
+    raking: "Hersage"
+    rolling: "Roulage"
+    seedbed_preparing: "Préparation du lit de semences"
+    seedling_sorting: "Triage de plants"
+    sifting: "Tamisage"
+    silage_transport: "Transport d'ensilage" #?
+    silage_unload: "Alimentation d’un troupeau via désileuse" #?
+    sowing: "Semis"
+    sowing_with_insecticide_and_molluscicide: "Semis (avec insecticide et molluscicide)" #?
+    sowing_with_spraying: "Semis avec pulvérisation"
+    sowing_without_plant_output: "Semis simple (sans gestion des cultures)"
+    spraying: "Pulvérisation"
+    spraying_on_cultivation: "Pulvérisation sur culture" #?
+    spraying_on_land_parcel: "Pulvérisation sur parcelle" #?
+    standard_enclosing: "Pose de clôture standard"
+    steam_weeding: "Désherbage vapeur"
+    straw_bunching: "Pressage de fourrage"
+    straw_transport: "Transport de fourrage" #?
+    sulfur_addition: "Sulfitage"
+    superficial_plowing: "Déchaumage"
+    swathing: "Andainage"
+    technical_task: "Tâche technique générale" #?
+    topkilling: "Défanage"
+    trellising: "Palissage"
+    triple_food_mixing: "Mélange alimentaire avec trois ingrédients" #?
+    triple_seed_mixing: "Mélange de semences avec trois semences" #?
+    triple_spraying_on_cultivation: "Pulvérisation sur culture (trois spécialités)" #?
+    tunnel_installation: "Pose de chenille ou tunnel"
+    tunnel_removing: "Retrait de chenille ou tunnel"
+    uncompacting: "Décompactage"
+    vine_capsuls_dispersing: "Pose de capsules de bio-contrôle"
+    vine_complanting: "Complantation"
+    vine_folding: "Pliage"
+    vine_frost_protecting: "Protection anti-gel"
+    vine_grapes_removing: "Éclaircissage"
+    vine_grubbing: "Arrachage"
+    vine_harvesting: "Vendange" #?
+    vine_inter_row_grinding: "Broyage/roulage couvert inter-rang"
+    vine_inter_row_sowing: "Semis inter-rang"
+    vine_inter_row_weeding: "Désherbage inter-rang" #?
+    vine_layering: "Marcottage"
+    vine_leaves_fertilizing: "Fertilisation foliaire"
+    vine_leaves_removing: "Effeuillage"
+    vine_lifting: "Relevage"
+    vine_planting: "Plantation de vigne"
+    vine_plowing: "Labour"
+    vine_pre_pruning: "Pré-taillage"
+    vine_pruning: "Taille"
+    vine_pulling: "Retrait pieds morts/malades"
+    vine_raking: "Hersage"
+    vine_shearing: "Tonte"
+    vine_shoot_extracting: "Tirage des bois"
+    vine_shoot_grinding: "Broyage des sarments"
+    vine_sleeves_net_protecting: "Pose/dépose de manchons/protections"
+    vine_soil_fertilizing: "Épandage engrais | Amendement"
+    vine_spraying_with_fertilizing: "Pulvérisation (avec fertilisation)"
+    vine_spraying_without_fertilizing: "Pulvérisation (sans fertilisation)"
+    vine_trimming: "Écimage | Rognage"
+    vine_trunk_cleaning_debudding: "Épamprage | Ébourgeonnage"
+    vine_uncompacting: "Décompactage | Sous-solage"
+    vine_chemical_weeding: "Désherbage chimique"
+    walnuts_harvest: "Récolte de noix" #?
+    walnuts_transport: "Transport de noix" #?
+    watering: "Irrigation" #?
+    wine_blending: "Assemblage de vin"
+    wine_bottling: "Mise en bouteille"
+    vine_trellising_maintenance: "Sécaillage | Carassonage"
+    vine_wire_tension: "Tension des fils"
+    vine_stakes_replacing: "Changement des piquets"
+    vine_watering: "Arrosage des vignes"
+    vine_watering_with_fertilizing: "Fertirrigation"
+    vine_watering_installation: "Installation de l'irrigation"
+    vine_wire_lifting_dropping: "Tombée des fils de levage"
+    vine_trellising_construction: "Construction palissage"
+    vine_trellising_destruction: "Destruction palissage"

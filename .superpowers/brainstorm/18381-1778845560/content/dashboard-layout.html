@@ -1,0 +1,86 @@
+<h2>Quel contenu pour le Dashboard SenagrOS ?</h2>
+<p class="subtitle">Le dashboard home <code>/backend</code> — ce que l'agriculteur voit en premier</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="A" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="font-size:11px;font-family:monospace;background:#f5f5f0;border-radius:6px;padding:12px;line-height:1.8">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;margin-bottom:8px">
+          <div style="background:#1B6B3A;color:white;border-radius:4px;padding:6px;text-align:center"><div style="font-size:9px;opacity:.8">CAMPAGNE</div><div style="font-weight:bold">Hivernage 25</div></div>
+          <div style="background:#E8A020;color:white;border-radius:4px;padding:6px;text-align:center"><div style="font-size:9px;opacity:.8">PARCELLES</div><div style="font-weight:bold">12 ha</div></div>
+          <div style="background:#2D7A3A;color:white;border-radius:4px;padding:6px;text-align:center"><div style="font-size:9px;opacity:.8">INTERVENTIONS</div><div style="font-weight:bold">3 en cours</div></div>
+          <div style="background:#6B5E4E;color:white;border-radius:4px;padding:6px;text-align:center"><div style="font-size:9px;opacity:.8">MÉTÉO</div><div style="font-weight:bold">34°C ☀</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:6px">
+          <div style="background:#fff;border:1px solid #E2D9CE;border-radius:4px;padding:8px;height:60px"><div style="font-size:9px;color:#6B5E4E">Carte des parcelles</div><div style="background:#e8f5e9;height:40px;border-radius:3px;margin-top:4px"></div></div>
+          <div style="background:#fff;border:1px solid #E2D9CE;border-radius:4px;padding:8px;height:60px"><div style="font-size:9px;color:#6B5E4E">Activité récente</div><div style="font-size:8px;margin-top:4px;color:#2C2416">• Semis mil — Hier<br>• Irrigation — 12/05</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Tableau de bord complet</h3>
+      <p>4 KPI cards en tête + mini-carte Leaflet des parcelles + fil d'activité récente. Vue dense, orientée décision quotidienne.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="B" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="font-size:11px;font-family:monospace;background:#f5f5f0;border-radius:6px;padding:12px;line-height:1.8">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px">
+          <div style="background:#1B6B3A;color:white;border-radius:4px;padding:8px"><div style="font-size:9px;opacity:.8">CAMPAGNE EN COURS</div><div style="font-size:16px;font-weight:bold">Hivernage 2025</div><div style="font-size:8px;margin-top:2px">3 activités · 12 ha</div></div>
+          <div style="background:#fff;border:1px solid #E2D9CE;border-radius:4px;padding:8px"><div style="font-size:9px;color:#6B5E4E">MÉTÉO — Thiès</div><div style="font-size:14px;font-weight:bold;color:#2C2416">34°C</div><div style="font-size:8px;color:#6B5E4E">Pluie prévue vendredi</div></div>
+        </div>
+        <div style="background:#fff;border:1px solid #E2D9CE;border-radius:4px;padding:8px">
+          <div style="font-size:9px;color:#6B5E4E;margin-bottom:4px">INTERVENTIONS À VENIR</div>
+          <div style="display:flex;flex-direction:column;gap:3px">
+            <div style="display:flex;justify-content:space-between;font-size:8px;padding:3px;background:#F7F3EE;border-radius:2px"><span>Semis sorgho — Parcelle Nord</span><span style="color:#E8A020">Demain</span></div>
+            <div style="display:flex;justify-content:space-between;font-size:8px;padding:3px;background:#F7F3EE;border-radius:2px"><span>Désherbage — Mil</span><span style="color:#6B5E4E">16/05</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Campagne + météo + planning</h3>
+      <p>Focus sur la campagne active et les prochaines interventions. Météo proéminente. Pas de carte. Plus léger, mobile-friendly.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="C" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="font-size:11px;font-family:monospace;background:#f5f5f0;border-radius:6px;padding:12px;line-height:1.8">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin-bottom:8px">
+          <div style="background:#fff;border:1px solid #E2D9CE;border-radius:4px;padding:6px;text-align:center"><div style="font-size:8px;color:#6B5E4E">SURFACES</div><div style="font-size:14px;font-weight:bold;color:#1B6B3A">12 ha</div></div>
+          <div style="background:#fff;border:1px solid #E2D9CE;border-radius:4px;padding:6px;text-align:center"><div style="font-size:8px;color:#6B5E4E">CULTURES</div><div style="font-size:14px;font-weight:bold;color:#E8A020">4</div></div>
+          <div style="background:#fff;border:1px solid #E2D9CE;border-radius:4px;padding:6px;text-align:center"><div style="font-size:8px;color:#6B5E4E">DÉPENSES</div><div style="font-size:14px;font-weight:bold;color:#D4841A">485k CFA</div></div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          <div style="background:#fff;border:1px solid #E2D9CE;border-radius:4px;padding:6px;height:55px">
+            <div style="font-size:8px;color:#6B5E4E">Avancement cultures</div>
+            <div style="margin-top:4px">
+              <div style="font-size:8px;display:flex;justify-content:space-between"><span>Mil</span><span>60%</span></div>
+              <div style="background:#E2D9CE;border-radius:2px;height:4px"><div style="background:#1B6B3A;width:60%;height:4px;border-radius:2px"></div></div>
+              <div style="font-size:8px;display:flex;justify-content:space-between;margin-top:2px"><span>Sorgho</span><span>30%</span></div>
+              <div style="background:#E2D9CE;border-radius:2px;height:4px"><div style="background:#4CAF72;width:30%;height:4px;border-radius:2px"></div></div>
+            </div>
+          </div>
+          <div style="background:#fff;border:1px solid #E2D9CE;border-radius:4px;padding:6px;height:55px">
+            <div style="font-size:8px;color:#6B5E4E">Météo 5 jours</div>
+            <div style="display:flex;gap:3px;margin-top:4px">
+              <div style="text-align:center;font-size:7px"><div>Jeu</div><div style="font-size:10px">☀</div><div>36°</div></div>
+              <div style="text-align:center;font-size:7px"><div>Ven</div><div style="font-size:10px">🌧</div><div>28°</div></div>
+              <div style="text-align:center;font-size:7px"><div>Sam</div><div style="font-size:10px">⛅</div><div>31°</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — KPIs financiers + avancement cultures</h3>
+      <p>3 métriques clés (surfaces, cultures, dépenses CFA) + barres de progression par culture + météo 5j. Vue analytique, orientée suivi de performance.</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:16px">Tu peux en combiner plusieurs — dis-moi aussi dans le terminal ce que tu veux garder ou changer.</p>

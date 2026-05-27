@@ -1,0 +1,5 @@
+development: &default
+  adapter: redis
+  url: <%= ENV.fetch('REDIS_URL', 'redis://localhost:6379') %>
+test: *default
+production: *default

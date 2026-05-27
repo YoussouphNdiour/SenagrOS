@@ -1,0 +1,85 @@
+<h2>Architecture des composants React — Dashboard</h2>
+<p class="subtitle">Hiérarchie et responsabilités. Clique sur l'option qui correspond à ta vision.</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="flat" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="font-family:monospace;font-size:10px;background:#f5f5f0;padding:12px;border-radius:6px;line-height:2">
+        <div style="color:#1B6B3A;font-weight:bold">pages/Backend/Dashboard/Home.tsx</div>
+        <div style="padding-left:12px;color:#6B5E4E">useQuery(weather) · useQuery(activity)</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px">
+          <div style="background:#e8f5e9;border:1px solid #4CAF72;border-radius:4px;padding:6px">
+            <div style="color:#1B6B3A;font-weight:bold">KpiCard</div>
+            <div style="color:#6B5E4E;font-size:9px">× 4 instances<br>title · value · unit · icon</div>
+          </div>
+          <div style="background:#fff3e0;border:1px solid #E8A020;border-radius:4px;padding:6px">
+            <div style="color:#E8A020;font-weight:bold">WeatherWidget</div>
+            <div style="color:#6B5E4E;font-size:9px">temp · description<br>forecast 5j</div>
+          </div>
+          <div style="background:#e3f2fd;border:1px solid #1976D2;border-radius:4px;padding:6px">
+            <div style="color:#1976D2;font-weight:bold">ParcellesMap</div>
+            <div style="color:#6B5E4E;font-size:9px">react-leaflet<br>GeoJSON layers</div>
+          </div>
+          <div style="background:#fce4ec;border:1px solid #E91E63;border-radius:4px;padding:6px">
+            <div style="color:#E91E63;font-weight:bold">ActivityFeed</div>
+            <div style="color:#6B5E4E;font-size:9px">5 dernières<br>interventions</div>
+          </div>
+        </div>
+        <div style="margin-top:6px;color:#6B5E4E;font-size:9px">⬑ Tous dans components/dashboard/</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Flat (recommandé)</h3>
+      <p>La page <code>Home.tsx</code> orchestre tout. Chaque widget est un composant autonome dans <code>components/dashboard/</code>. Simple, testable unitairement, pas de sur-abstraction.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="sections" onclick="toggleSelect(this)">
+    <div class="card-image">
+      <div style="font-family:monospace;font-size:10px;background:#f5f5f0;padding:12px;border-radius:6px;line-height:2">
+        <div style="color:#1B6B3A;font-weight:bold">pages/Backend/Dashboard/Home.tsx</div>
+        <div style="display:flex;flex-direction:column;gap:4px;margin-top:6px">
+          <div style="background:#e8f5e9;border:1px solid #4CAF72;border-radius:4px;padding:6px">
+            <div style="color:#1B6B3A;font-weight:bold">KpiSection</div>
+            <div style="color:#6B5E4E;font-size:9px;padding-left:8px">→ KpiCard × 4</div>
+          </div>
+          <div style="background:#fff3e0;border:1px solid #E8A020;border-radius:4px;padding:6px">
+            <div style="color:#E8A020;font-weight:bold">MapSection</div>
+            <div style="color:#6B5E4E;font-size:9px;padding-left:8px">→ ParcellesMap · WeatherWidget</div>
+          </div>
+          <div style="background:#fce4ec;border:1px solid #E91E63;border-radius:4px;padding:6px">
+            <div style="color:#E91E63;font-weight:bold">ActivitySection</div>
+            <div style="color:#6B5E4E;font-size:9px;padding-left:8px">→ ActivityFeed · InterventionBadge</div>
+          </div>
+        </div>
+        <div style="margin-top:6px;color:#6B5E4E;font-size:9px">Sections = wrappers de layout, pas de logique</div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Sections intermédiaires</h3>
+      <p>Des composants "section" groupent les widgets par zone de la page. Utile si le layout est complexe ou si des sections ont leur propre logique de chargement.</p>
+    </div>
+  </div>
+
+</div>
+
+<div style="margin-top:20px;background:#fff;border:1px solid #E2D9CE;border-radius:8px;padding:16px">
+  <h3 style="margin:0 0 8px 0;font-size:13px;color:#2C2416">Structure de fichiers résultante (option A)</h3>
+  <div style="font-family:monospace;font-size:10px;color:#2C2416;line-height:2">
+    <div>app/frontend/</div>
+    <div style="padding-left:12px">├── app.tsx</div>
+    <div style="padding-left:12px">├── styles/tokens.css</div>
+    <div style="padding-left:12px">├── pages/Backend/Dashboard/</div>
+    <div style="padding-left:24px">│   └── Home.tsx</div>
+    <div style="padding-left:12px">└── components/</div>
+    <div style="padding-left:24px">    ├── dashboard/</div>
+    <div style="padding-left:36px">    │   ├── KpiCard.tsx</div>
+    <div style="padding-left:36px">    │   ├── WeatherWidget.tsx</div>
+    <div style="padding-left:36px">    │   ├── ParcellesMap.tsx</div>
+    <div style="padding-left:36px">    │   └── ActivityFeed.tsx</div>
+    <div style="padding-left:24px">    └── ui/ (shadcn)</div>
+  </div>
+</div>
+
+<p class="subtitle" style="margin-top:12px">Réponds dans le terminal si tu veux ajuster quelque chose.</p>

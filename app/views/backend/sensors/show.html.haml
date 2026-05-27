@@ -1,0 +1,21 @@
+- main_toolbar do |t|
+  = t.edit resource
+  - if resource.requesting?
+    = t.retrieve resource, method: :post
+
+= main_informations attachment: true do
+  = attributes_list do |l|
+    - l.attribute :active
+    - l.attribute :vendor_euid
+    - l.attribute :model_euid
+    - l.attribute :name
+    - l.attribute :retrieval_mode
+    - l.attribute :token
+    - l.attribute :product, url: true
+    - l.attribute :embedded
+    - l.attribute :host, url: true
+
+= cobbles do |c|
+
+  - c.cobble :analyses do
+    = cobble_list :analyses

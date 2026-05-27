@@ -1,0 +1,810 @@
+@import "bootstrap/mixins";
+@import "bootstrap/type";
+@import "bootstrap/panels";
+
+@mixin calc($property, $expression) {
+  #{$property}: -webkit-calc(#{$expression});
+  #{$property}: -khtml-calc(#{$expression});
+  #{$property}: -moz-calc(#{$expression});
+  #{$property}: -ms-calc(#{$expression});
+  #{$property}: -o-calc(#{$expression});
+  #{$property}: calc(#{$expression});
+}
+
+@mixin prefixed-property($property, $value) {
+  -webkit-#{$property}: $value;
+  -khtml-#{$property}: $value;
+  -moz-#{$property}: $value;
+  -ms-#{$property}: $value;
+  -o-#{$property}: $value;
+  #{$property}: $value;
+}
+
+@mixin prefixed-property-value($property, $value) {
+  #{$property}: -webkit-#{$value};
+  #{$property}: -khtml-#{$value};
+  #{$property}: -moz-#{$value};
+  #{$property}: -ms-#{$value};
+  #{$property}: -o-#{$value};
+  #{$property}: $value;
+}
+
+
+@mixin animation($animate...) {
+  $max: length($animate);
+  $animations: '';
+
+  @for $i from 1 through $max {
+    $animations: #{$animations + nth($animate, $i)};
+
+    @if $i < $max {
+      $animations: #{$animations + ", "};
+    }
+  }
+  @include prefixed-property(animation, $animations);
+}
+
+@mixin keyframes($animation-name) {
+  @-webkit-keyframes #{$animation-name} {
+  @content;
+}
+  @-moz-keyframes #{$animation-name} {
+    @content;
+  }
+  @-o-keyframes #{$animation-name} {
+    @content;
+  }
+  @keyframes #{$animation-name} {
+    @content;
+  }
+}
+
+@mixin border-radius($radius) {
+  @include prefixed-property(border-radius, $radius);
+}
+
+@mixin background-size($size) {
+  @include prefixed-property(background-size, $size);
+}
+
+@mixin columns($width-and-count) {
+  @include prefixed-property(columns, $width-and-count);
+}
+
+@mixin column-count($count) {
+  @include prefixed-property(column-count, $count);
+}
+
+@mixin text-overflow($mode) {
+  @include prefixed-property(text-overflow, $mode);
+}
+
+@mixin transform($transform) {
+  @include prefixed-property(transform, $transform);
+}
+
+@mixin translateY($transform-y, $perspective: false) {
+  $trans: translateY($transform-y);
+  @if $perspective {
+    $trans: perspective($perspective) $trans;
+  }
+  @include transform($trans)
+}
+
+
+@mixin hyphens($mode: auto) {
+  @include prefixed-property(hyphens, $mode);
+}
+
+@mixin ellipsis($no-wrap: true) {
+  @if $no-wrap {
+    white-space: nowrap;
+  }
+  overflow: hidden;
+  @include text-overflow(ellipsis);
+}
+
+@mixin inline-block($alignment: middle) {
+  display: -moz-inline-stack;
+  display: inline-block;
+  @if $alignment and $alignment != none {
+    vertical-align: $alignment;
+  }
+}
+
+@mixin text-shadow($shadow...) {
+  $shadow: if(length($shadow) > 0, $shadow, default);
+  $default: -compass-space-list(compact($default-text-shadow-h-offset $default-text-shadow-v-offset $default-text-shadow-blur $default-text-shadow-spread $default-text-shadow-color));
+  $shadows-without-spread: join((), (), comma);
+  $shadows: join((), (), comma);
+  $has-spread: false;
+  @each $layer in $shadow {
+    $layer: if($layer == "default", $default, $layer);
+    @if length($layer) > 4 {
+      $has-spread: true;
+      $shadows-without-spread: append($shadows-without-spread, nth($layer, 1) nth($layer, 2) nth($layer, 3) nth($layer, 5));
+      $shadows: append($shadows, $layer);
+    }
+    @else {
+      $shadows-without-spread: append($shadows-without-spread, $layer);
+      $shadows: append($shadows, $layer);
+    }
+  }
+  @if $has-spread {
+    text-shadow: $shadows-without-spread;
+  }
+  text-shadow: $shadows;
+}
+
+@function background-hover($background-color) {
+  @return mix($background-color, opacify($hover-mask, 1), percentage($hover-transparency));
+}
+
+@function visible-color($background-color) {
+  @if lightness($background-color) > 70% {
+    @return $base-font-color;
+  }
+  @else {
+    @return $base-font-reversed-color;
+  }
+}
+
+@function shadow-color-of($color) {
+  @if lightness($color) > 50% {
+    @return rgba(#222, 0.5);
+  }
+  @else {
+    @return rgba(#FFF, 0.8);
+  }
+}
+
+@mixin disabled {
+  filter: contrast(75%) grayscale(100%);
+  cursor: default;
+  pointer-events: none;
+}
+
+@mixin calc-height($expression) {
+  @include calc(height, $expression);
+}
+
+@mixin calc-width($expression) {
+  @include calc(width, $expression);
+}
+
+@function icon-character($name) {
+  @each $symbolic-icon in $symbolic-icons {
+    @if nth($symbolic-icon, 1) == $name {
+      @return nth($symbolic-icon, 2);
+    }
+  }
+  @error "Icon #{$name} cannot be found";
+  @return 'not found';
+}
+
+
+
+@mixin basic-icon($font-size: null) {
+  font-family: Agric;
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: inherit;
+  -webkit-font-smoothing: antialiased;
+  width: auto;
+  height: auto;
+  background-image: none;
+  background-position: 0% 0%;
+  background-repeat: repeat;
+  margin-top: 0;
+  @if $font-size != null {
+    font-size: $font-size;
+  }
+}
+
+@mixin is-icon($font-size: round(1.2 * $fs-normal)) {
+  @include basic-icon($font-size);
+  vertical-align: middle;
+}
+
+@mixin use-icon($name) {
+  &::before { content: icon-character($name); }
+}
+
+@mixin icon-after($name, $gap: $default-gap, $font-size: null) {
+  &::after {
+    content: icon-character($name);
+    @include padding-left($gap);
+    @include basic-icon($font-size);
+  }
+}
+
+@mixin icon-before($name, $gap: $default-gap, $font-size: null) {
+  &::before {
+    @include basic-icon($font-size);
+    @include padding-right($gap);
+    content: icon-character($name);
+  }
+}
+
+
+@mixin define-right-property($base-name, $value) {
+  html[dir="ltr"] & { #{$base-name}-right: $value; }
+  html[dir="rtl"] & { #{$base-name}-left: $value; }
+}
+
+@mixin define-left-property($base-name, $value) {
+  html[dir="ltr"] & { #{$base-name}-left: $value; }
+  html[dir="rtl"] & { #{$base-name}-right: $value; }
+}
+
+@mixin padding-right($value) { @include define-right-property(padding, $value); }
+@mixin padding-left($value)  { @include define-left-property(padding, $value); }
+@mixin margin-right($value) { @include define-right-property(margin, $value); }
+@mixin margin-left($value)  { @include define-left-property(margin, $value); }
+@mixin border-right($value) { @include define-right-property(border, $value); }
+@mixin border-left($value)  { @include define-left-property(border, $value); }
+
+@mixin left($value) {
+  html[dir="ltr"] & { left: $value; }
+  html[dir="rtl"] & { right: $value; }
+}
+
+@mixin right($value) {
+  html[dir="ltr"] & { right: $value; }
+  html[dir="rtl"] & { left: $value; }
+}
+
+@mixin text-align($dir) {
+  @if $dir == right {
+    html[dir="ltr"] & { text-align: right; }
+    html[dir="rtl"] & { text-align: left; }
+  } @else if $dir == left {
+    html[dir="ltr"] & { text-align: left; }
+    html[dir="rtl"] & { text-align: right; }
+  } @else {
+    html[dir="ltr"] &, html[dir="rtl"] & { text-align: $dir; }
+  }
+}
+
+@mixin float($dir) {
+  @if $dir == right {
+    html[dir="ltr"] & { float: right; }
+    html[dir="rtl"] & { float: left; }
+  } @else if $dir == left {
+    html[dir="ltr"] & { float: left; }
+    html[dir="rtl"] & { float: right; }
+  } @else {
+    html[dir="ltr"] &, html[dir="rtl"] & { float: $dir; }
+  }
+}
+
+@mixin display($mode) {
+  @if $mode == box {
+    @include prefixed-property-value(display, box);
+  } @else {
+    display: $mode;
+  }
+}
+
+@mixin background-active-gradient {
+  background: $active-color;
+  @include gradient-vertical(lighten($active-color, $default-lightness-variation), $active-color, darken($active-color, $default-lightness-variation));
+}
+
+@mixin title($font-size) {
+  font-size: $font-size;
+  line-height: round($font-size * $lh-ratio);
+  font-weight: bold;
+  color: $text-color;
+}
+
+@mixin box-emphasis {
+  background: $base-color;
+  &, & > span {
+    color: white;
+  }
+  @include border-radius($default-border-radius);
+  padding: $default-gap;
+  text-align: center;
+}
+
+@mixin menu-box {
+  background: $menu-background;
+  @include menu-shadow;
+  border: $menu-border;
+}
+
+@mixin menu-shadow {
+  @include box-shadow(0 0 ($fs-normal/4) rgba(0, 0, 0, 0.3));
+}
+
+@mixin menu {
+  @include menu-box;
+  &, li a {
+    font-weight: normal;
+    color: $text-color;
+  }
+}
+
+@mixin menu-item {
+  display: block;
+  padding: 0;
+  height: $menu-height;
+  min-width: $menu-width;
+  max-width: 2 * $menu-width;
+  list-style-type: none;
+  @include user-select(none);
+  @include transition(background 0.2s, box-shadow 0.2s);
+  &:hover > a {
+    outline: none;
+    cursor: pointer;
+    background: background-hover($menu-background);
+  }
+  &.disabled, &[disabled] {
+    @include disabled;
+  }
+  &.separator {
+    @include menu-separator;
+  }
+  a {
+    padding: $menu-item-vertical-padding $menu-item-horizontal-padding;
+    display: block;
+    font-size: $fs-normal;
+    line-height: $menu-text-height;
+    height: $menu-text-height;
+    vertical-align: middle;
+    @include ellipsis;
+    i {
+      @include is-icon();
+      @include inline-block;
+      width: $fs-normal;
+      color: $text-color;
+      line-height: $menu-text-height;
+      height: $menu-text-height;
+      vertical-align: middle;
+      @include margin-left(0);
+      @include margin-right($menu-item-horizontal-padding);
+    }
+    &:focus,
+    &:active {
+      outline: none;
+    }
+  }
+}
+
+@mixin dropdown-menu($vpos: bottom, $hpos: start) {
+  @include menu;
+  max-height: 12 * $menu-height;
+  overflow-y: auto;
+  overflow-x: hidden;
+  position: absolute;
+  @if $hpos == end {
+    right: 0;
+    left: auto;
+    @include float(right);
+  } @else {
+    right: auto;
+    left: 0;
+    @include float(left);
+  }
+  li {
+    @include float(none);
+    @include menu-item;
+    &.main {
+      &, a {
+        font-weight: bold;
+      }
+    }
+  }
+  z-index: 14;
+}
+
+
+@mixin menu-separator {
+  height: $menu-border-width;
+  background: $menu-border-color;
+  padding: 0;
+  margin: $default-gap auto;
+}
+
+@mixin item-label {
+  &, & * {
+    color:$neutral-color;
+  }
+}
+
+@mixin legend-label {
+  &, * {
+    color: $neutral-color;
+    text-transform: uppercase;
+    font-size: $fs-small;
+    line-height: $lh-small;
+    font-weight: bold;
+  }
+}
+
+@mixin normal-shadow {
+  @include box-shadow(0 0.5px $default-gap*0.7 rgba(black, 0.3));
+}
+
+@mixin incrust-shadow {
+  @include box-shadow(0 0 round($fs-normal/2) rgba(black, 0.15));
+}
+
+@mixin tab-pills($font-size: $fs-normal, $title-selector: "dt", $tab-selector: "dd") {
+  display: block;
+  @include clearfix;
+  border-bottom: none;
+  margin-bottom: 10px;
+  #{$title-selector}, #{$tab-selector} {
+    display: block;
+    @include float(left);
+    margin-top: 0;
+    @include margin-right(10px);
+    margin-bottom: $default-gap;
+    @include margin-left(0);
+  }
+  #{$title-selector} {
+    font-weight: bold;
+    color: $neutral-color;
+    font-variant: small-caps;
+    padding: round($default-gap * 0.3) 0;
+    cursor: default;
+  }
+  #{$tab-selector} {
+    &:last-of-type {
+      @include margin-right(0);
+    }
+    a {
+      @include inline-block;
+      @include border-radius(1000px);
+      $border-width: 1px;
+      border: $border-width solid transparent;
+      background: $neutral-background;
+      padding: round($default-gap * 0.2 - $border-width) $default-gap;
+      &, & * {
+        color: mix($base-font-color, $active-color);
+        @include text-shadow(1px 1px 0 white);
+        font-size: $font-size;
+        line-height: round($lh-ratio * $font-size);
+      }
+      &:focus {
+        @include box-shadow(0 0 round($fs-normal*0.6) rgba($base-color, 0.6));
+      }
+      &:focus,
+      &:active {
+        outline: none;
+        border-color: $active-color;
+      }
+      &:hover {
+        @include box-shadow(0 0 $default-gap white);
+      }
+    }
+    &.active {
+      margin-top: 0;
+      a {
+        background-color: $primary-color;
+        border-color: $active-color;
+        &, & * { color: white; font-weight: bold; @include text-shadow(1px 1px 0 $neutral-color)}
+        i { font-weight: normal; }
+      }
+    }
+    &.disabled {
+      filter: contrast(75%) grayscale(100%);
+      cursor: default;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+  }
+}
+
+
+
+// Permits to define properly media queries
+@mixin respond-to($screen-sizes...) {
+  @each $screen-size in $screen-sizes {
+    @if $screen-size == small {
+      @media only screen and (max-width: $small-screen) { @content; }
+    }
+    @else if $screen-size == medium {
+      @media only screen and (min-width: $small-screen + 1px) and (max-width: $medium-screen) { @content; }
+    }
+    @else if $screen-size == normal {
+      @media only screen and (min-width: $medium-screen + 1px) and (max-width: $large-screen) { @content; }
+    }
+    @else if $screen-size == large {
+      @media only screen and (min-width: $large-screen + 1px) { @content; }
+    }
+    @else {
+      @warn "Assuming no @media queries for unknown screen size: #{$screen-size}";
+      @content;
+    }
+  }
+}
+
+@mixin respond-to-bigger-than($screen-size) {
+  @if $screen-size == small {
+    @media screen and (min-width: $small-screen) { @content; }
+  }
+  @else if $screen-size == medium {
+    @media screen and (min-width: $medium-screen) { @content; }
+  }
+  @else if $screen-size == normal {
+    @media screen and (min-width: $large-screen) { @content; }
+  }
+  @else {
+    @warn "Assuming no @media queries for unknown screen size: #{$screen-size}";
+    @content;
+  }
+}
+
+@mixin respond-to-smaller-than($screen-size) {
+  @if $screen-size == small {
+    @media screen and (max-width: $small-screen - 1px) { @content; }
+  }
+  @else if $screen-size == medium {
+    @media screen and (max-width: $medium-screen - 1px) { @content; }
+  }
+  @else if $screen-size == normal {
+    @media screen and (max-width: $large-screen - 1px) { @content; }
+  }
+  @else {
+    @warn "Assuming no @media queries for unknown screen size: #{$screen-size}";
+    @content;
+  }
+}
+
+@mixin description-list {
+  padding: 0;
+  @include clearfix;
+  & > li, & > a, & > .desc-list-group-item {
+    display: block;
+    padding: $default-gap $default-gap * 2;
+    @include clearfix;
+    border-top: $menu-border;
+    &:first-child {
+      border-top: none;
+    }
+    &:link:hover {
+      // border-color: #DDD;
+      // @include box-shadow(0 0 round($default-gap * 0.3) rgba(#000, 0.25));
+      background: background-hover(white);
+    }
+    span.badge {
+      @include float(right);
+    }
+  }
+  .cell-content & {
+    @media only screen and (min-width: $mini-screen){
+      overflow: auto;
+      max-height: 400px;
+    }
+  }
+
+}
+
+@mixin toolbar($group: ".btn-group", $total-height: $toolbar-height) {
+  @include display(block);
+  $margin-top: round(($total-height - $button-height) / 2);
+  margin: $margin-top $default-gap ($total-height - $margin-top - $button-height);
+}
+
+@include keyframes(loading-rotate) {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+// General mixin for buttons
+@mixin button ($background-color: $neutral-background, $color: false, $focus-background-color: $base-color, $focus-color: false, $input: false) {
+  @if $color == false {
+    $color: visible-color($background-color);
+  }
+  @else {
+    $color: $color;
+  }
+  @if $focus-background-color == false {
+    $focus-background-color: $background-color;
+  }
+  @if $focus-color == false {
+    $focus-color: visible-color($focus-background-color);
+  }
+  $shadow-color: shadow-color-of($color);
+  $focus-shadow-color: shadow-color-of($color);
+  white-space: nowrap;
+  margin: 0;
+  @include box-sizing(border-box);
+  padding: $button-vertical-padding $button-horizontal-padding;
+  // height: $button-height;
+  font-weight: bold;
+  font-size: $fs-normal;
+  line-height: $button-line-height;
+  cursor: pointer;
+  text-decoration: none;
+  border: $menu-border-width solid darken($background-color, 10%);
+  border-width: $menu-border-width;
+  border-style: solid;
+  border-color: rgba(#000, 0.1) rgba(#000, 0.1) rgba(#000, 0.25);
+  background: $background-color;
+  @include user-select(none);
+  @include gradient-vertical(lighten($background-color, $default-lightness-variation), darken($background-color, $default-lightness-variation));
+  @include box-shadow(0 1px 0 rgba(#FFF, 0.2) inset);
+  @include box-shadow(0 1px 0 rgba(#FFF, 0.2) inset, 0 1px 2px rgba(#000, 0.05));
+  @include border-radius($default-border-radius);
+  @include inline-block;
+  @include transition-duration(0.15s);
+  @include text-align(center);
+  /* &, &::after, &::before { */
+  /*   vertical-align: middle !important; */
+  /* } */
+  &, &:link, &:focus, &:active, &:hover, & > i {
+    color: $color !important;
+    @include text-shadow(1px 1px 0 $shadow-color);
+    @include transition-duration(0.15s);
+  }
+  & > i {
+    vertical-align: top !important;
+    @include is-icon($fs-normal + 1px);
+    line-height: $lh-normal;
+    @include use-icon(cog);
+    @include inline-block;
+  }
+  &:focus, &.focus {
+    outline: none;
+    border: $menu-border-width solid $focus-background-color;
+    @include box-shadow(0 0 round($fs-normal/2) rgba($focus-background-color, 0.5));
+    z-index: 2;
+  }
+  &:active, &.active {
+    outline: none;
+    @include gradient-vertical($background-color, darken($background-color, 8%));
+    border-color: rgba(#000, 0.25) rgba(#000, 0.1) rgba(#000, 0.1);
+    border: $menu-border-width solid $focus-background-color;
+    @include box-shadow(0 2px 3px rgba(#000, 0.3) inset, 0 -2px 2px rgba(#000, 0.05), 0 0 round($fs-normal/2) rgba($focus-background-color, 0.5));
+    &, & > i {
+      // color: $focus-color;
+      @include text-shadow(-1px -1px 1px $shadow-color);
+      text-decoration: none;
+    }
+  }
+  &[disabled], &.disabled {
+    filter: contrast(75%) grayscale(100%);
+    cursor: default;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+}
+
+@mixin button-group() {
+  @include inline-block;
+  font-size: 0;
+  position: relative;
+  vertical-align: middle;
+  white-space: nowrap;
+  // height: $button-height;
+  & + & {
+    @include margin-left($default-gap);
+  }
+  > button, > a.button, > a.btn, > input, > select, & > .add-on {
+    @include margin-left(-1 * $menu-border-width);
+    z-index: 1;
+    &:first-child {
+      @include margin-left(0);
+    }
+    @include border-radius(0);
+    html[dir="ltr"] &:first-child,
+    html[dir="rtl"] &:last-child {
+      @include border-left-radius($default-border-radius);
+    }
+    html[dir="ltr"] &:last-child,
+    html[dir="ltr"] &.dropdown-toggle:last-of-type,
+    html[dir="rtl"] &:first-child {
+      @include border-right-radius($default-border-radius);
+    }
+    &:focus, &:hover, &:active {
+      position: relative;
+      z-index: 2;
+    }
+  }
+
+}
+
+
+@mixin base-indicator($size: 6 * $lh-normal) {
+  opacity: 0.8;
+  $font-size: $size / $lh-ratio;
+  color: $neutral-color;
+  @include text-align(center);
+  @include is-icon($font-size);
+  line-height: $size;
+  height: $size;
+  width: $size;
+}
+
+@mixin loading-indicator {
+  @include base-indicator;
+  @include use-icon(circle-o-notch);
+  @include animation(loading-rotate 2s infinite linear);
+}
+
+@mixin error-indicator {
+  @include base-indicator;
+  color: $invalid-color;
+  @include use-icon(meh-o);
+}
+
+@mixin null-indicator {
+  @include base-indicator;
+  color: $caution-color;
+  @include use-icon(empty-o);
+
+}
+
+
+@mixin text-base-indicator($size: $fs-large) {
+  opacity: 0.8;
+  color: $neutral-color;
+  @include text-align(center);
+  font-size: $size;
+  line-height: $size * $lh-ratio;
+}
+
+@mixin text-error-indicator {
+  @include text-base-indicator;
+  color: $invalid-color;
+}
+
+@mixin text-null-indicator {
+  @include text-base-indicator;
+  color: $caution-color;
+}
+
+@mixin respond-to-bigger-than($screen-size) {
+  @if $screen-size == small {
+    @media screen and (min-width: $small-screen) { @content; }
+  }
+  @else if $screen-size == medium {
+    @media screen and (min-width: $medium-screen) { @content; }
+  }
+  @else if $screen-size == normal {
+    @media screen and (min-width: $large-screen) { @content; }
+  }
+  @else {
+    @warn "Assuming no @media queries for unknown screen size: #{$screen-size}";
+    @content;
+  }
+}
+
+@mixin flex($direction, $horizontal-alignement: center, $vertical-alignement: center) {
+
+  display: flex;
+  @if $direction == row {
+
+    html[dir="ltr"] {
+      flex-direction: row;
+    }
+
+    html[dir="rtl"] {
+      flex-direction: row;
+    }
+
+    justify-content: $horizontal-alignement;
+    align-items: $vertical-alignement;
+  }
+  @else {
+    flex-direction: column;
+    justify-content: $vertical-alignement;
+    align-items: $horizontal-alignement;
+  }
+}
+
+@mixin flex-row($horizontal-alignement: center, $vertical-alignement: center) {
+  @include flex(row, $horizontal-alignement, $vertical-alignement);
+}
+
+@mixin flex-column($horizontal-alignement: center, $vertical-alignement: center) {
+  @include flex(column, $horizontal-alignement, $vertical-alignement);
+}

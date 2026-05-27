@@ -1,0 +1,78 @@
+- main_period_selector(:year)
+- last_time_of_year = Time.new(current_campaign.harvest_year, 12, 31, 20, 00)
+
+- main_toolbar do |t|
+  = t.edit resource if resource.updateable? && resource.variety == 'vitis'
+  = t.destroy if resource.destroyable?
+
+= main_informations attachment: true do
+  = render 'picture'
+  - if resource.variety == 'vitis'
+    = render 'vine_informations', resource: resource, last_time_of_year: last_time_of_year
+  - else
+    = render 'crop_informations', resource: resource, current_campaign: current_campaign
+  = labels_info(resource.labels)
+  .med-harvest
+    .med-info.ready-to-harvest
+      %span.title= :ready_to_harvest.tl
+      %span.value
+        %i.picto{class: "picto-#{resource.ready_to_harvest? ? :done : :clear}"}
+    - unless @reentry_possible.possible
+      .med-info.delay
+        %span.title= :re_entry_delay.tl
+        %span.value
+          %span= @reentry_possible.next_possible_date.l
+        - if @reentry_possible.period.duration == 8
+          %span
+            %span= :add_two_hours_reentry_delay.tl
+    - unless @harvest_possible.possible
+      .med-info.delay
+        %span.title= :allowed_harvest_on.tl
+        %span.value
+          %span= @harvest_possible.next_possible_date.l
+
+= cobbles do |c|
+  - if resource.variety == 'vitis'
+    - c.cobble(:vine_stock_indicators, title: :vine_stock_indicators.tl) do
+      = render 'vine_stock_indicator_cobbles', resource: resource, last_time_of_year: last_time_of_year
+
+  - c.cobble(:production_costs, title: :production_costs.tl) do
+    = render partial: 'backend/shared/production_costs', locals: { costs: resource.decorate.production_costs(current_campaign) }
+
+  - if resource.intervention_product_parameters.any?
+    - c.cobble(:intervention_product_parameters, title: :x_interventions.tl(count: resource.interventions.count)) do
+      = cobble_list(:intervention_product_parameters)
+
+  - c.cobble(:trackings, title: :x_trackings.tl(count: resource.trackings.count)) do
+    = cobble_toolbar do |t|
+      = t.new(params: {controller: :trackings, product_id: resource.id, active: true})
+    = cobble_list(:trackings)
+
+  - c.cobble(:yield_observations, title: :x_observations.tl(count: resource.yield_observations.count)) do
+    = cobble_toolbar do |t|
+      = t.new(params: {controller: :yield_observations, activity_id: resource.activity_production&.activity_id})
+    = cobble_list(:yield_observations)
+
+  - c.cobble(:issues, title: :x_issues.tl(count: resource.issues.count)) do
+    = cobble_toolbar do |t|
+      = t.new(params: {controller: :issues, target_id: resource.id, target_type: resource.class.name})
+    = cobble_list(:issues)
+
+  - if resource.inspections.any?
+    - render 'inspection_cobbles', c: c, resource: resource
+
+  - c.cobble :plant_countings, title: :x_countings.tl(count: resource.plant_countings.count) do
+    - if resource.activity.present?
+      = cobble_toolbar do |t|
+        = t.menu :new, icon: false do |menu|
+          - resource.activity.plant_density_abaci.each do |abacus|
+            - menu.item abacus.name, { action: :new, controller: :plant_countings, plant_id: resource.id, plant_density_abacus_id: abacus.id }, title: abacus.name
+    = cobble_list :plant_countings
+
+  - c.cobble(:inspections, title: :x_inspections.tl(count: resource.inspections.count)) do
+    -# FIXME Add activity in URL to get link working
+    -# = cobble_toolbar do |t|
+      = t.new(params: { controller: :inspections, product_id: resource.id })
+    = cobble_list(:inspections)
+
+  =# render partial: 'backend/shared/distributions', locals: {c: c}

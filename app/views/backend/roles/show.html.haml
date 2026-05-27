@@ -1,0 +1,14 @@
+- main_toolbar do |t|
+  = t.edit resource
+
+= cobbles do |c|
+
+  - c.cobble :general_informations do
+    = attributes_list do |l|
+      - l.attribute :name
+
+  - c.cobble :users do
+    = cobble_list :users
+
+  - c.cobble :rights do
+    = access_control_list(resource.rights)

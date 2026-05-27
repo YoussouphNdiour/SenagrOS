@@ -1,0 +1,261 @@
+- navigation resource, order: :full_name, naming_method: :label, scope: resource.nature.pluralize.to_sym
+
+- main_toolbar do |t|
+  = t.export(:entity_sheet, target:"_blank")
+
+  = t.edit resource
+  = t.destroy
+  - if resource.contact? && !resource.worker && !resource.client? && !resource.supplier? && !resource.transporter? && !resource.prospect?
+    = t.menu :add_a_worker.tl, icon: false do |menu|
+      - ProductNatureVariant.of_variety(:worker).order(:name).each do |a|
+        - menu.item a.name, { controller: :workers, action: :new, variant_id: a.id, person_id: resource.id, born_at: resource.born_at, redirect: request.fullpath}
+  = t.toggle resource, method: :post, label: resource.contact? ? :convert_into_organization.tl : :convert_into_contact.tl, data: { confirm: :are_you_sure.tl }, icon: false
+
+= main_informations attachment: true do
+  = render 'coordinates'
+  - if resource.worker
+    .info
+      %span.title= Entity.human_attribute_name(:worker)
+      %span.value= link_to(resource.worker.name, {controller: :workers, action: :show, id: resource.worker.id})
+  - subscriptions = resource.subscriptions.active
+  - if subscriptions.any?
+    .info
+      %span.title= :currently_subscribed_to.tl
+      %span.value= subscriptions.map { |subscription| link_to("#{subscription.nature.name} (#{subscription.number})", { controller: :subscriptions, action: :show, id: subscription.id }) }.to_sentence.html_safe
+  - if current_user.can? :read, :accounts
+    - [:client, :supplier, :employee].each do |nature|
+      - if resource.send(nature) && (account = resource.send("#{nature}_account"))
+        .info
+          %span.title= Entity.human_attribute_name("#{nature}_account")
+          %span.value= link_to(account.label, { controller: :accounts, action: :show, id: account.id })
+    - if resource.iban.present?
+      .info
+        %span.title= Entity.human_attribute_name("iban")
+        %span.value= resource.iban
+  - if resource.description?
+    %p= h(resource.description).gsub(/\n/, '<br/>').html_safe
+
+= janus do |j|
+  - j.face :timeline do
+    - content_for :entity_tools do
+      - if resource.contact?
+        - # , quote: :quote, document: :writing
+        - {outgoing_call: :call, outgoing_email: :email}.each do |nature, term|
+          %span.timeline-tool{class: "tl-#{nature.to_s.dasherize}"}
+            = link_to({controller: :tasks, action: :new, nature: nature, state: :done, entity_id: resource.id, executor_id: current_user.person_id, redirect: request.fullpath}, title: "new_#{term}".tl, class: "btn btn-#{nature.to_s.dasherize}") do
+              %i
+
+      -#
+        -#= modal(:new_attachment) do
+        -#   = form_tag() do
+        -#     .modal-body
+        -#       %h2= :upload.tl
+
+        -#       %h2= :link.tl
+        -#     .modal-footer
+        -#       = link_to(:add.tl, "#", class: "btn btn-default")
+        -#       = button_tag(:cancel.ta, data: {dismiss: "modal"}, class: "btn btn-default")
+        -# %span.timeline-tool{class: "tl-attachment"}
+        -#   = link_to({controller: :tasks, action: :new, resource_type: resource.class.name, resource_id: resource.id, state: :done, entity_id: resource.id, executor_id: current_user.person_id, redirect: request.fullpath}, title: "new_attachment".tl, class: "btn btn-attachment", data: {toggle: "modal", target: "#new-attachment"}) do
+        -#     %i
+    = timeline(resource, id: :entity) do |l|
+      - l.side :observations, at: :observed_at
+      - l.side :sale_opportunities, new: resource.client?, if: proc {|r| r.sale_opportunities.any? || r.client?}
+      - l.side :sales, new: (resource.client? ? { redirect: nil } : false) , if: proc {|r| r.sales.any? || r.client? }
+      - l.side :shipments, new: resource.client?, if: proc {|r| r.shipments.any? || r.client? }
+      - l.side :purchase_orders, new: resource.supplier?, if: proc { |r| r.purchase_orders.any? || r.supplier? }
+      - l.side :purchase_invoices, new: resource.supplier?, if: proc { |r| r.purchase_invoices.any? || r.supplier? }
+      - l.side :receptions, new: resource.supplier?, if: proc {|r| r.receptions.any? || r.supplier? }
+      - l.side :incoming_payments, new: false, if: proc {|r| r.incoming_payments.any? || r.client? }
+      - l.side :purchase_payments, new: false, if: proc {|r| r.purchase_payments.any? || r.supplier? }
+      - l.side :tasks, at: :due_at, new: false
+      - l.side :direct_links, at: :started_at
+      - l.side :indirect_links, new: false
+      - l.side :subscriptions, new: false
+      - l.side :events, at: :started_at, params: {controller: :events, nature: :meeting, participations: {"0" => {participant_id: resource.id, state: :accepted}, "1" => {participant_id: current_user.person_id, state: :accepted}}}
+      - l.side :issues, params: {target_type: "Entity", nature: "issue", gravity: 2, priority: 2, without_geolocation: 1}, at: :observed_at
+      - l.side :attachments, new: false
+      - l.side :versions, new: false
+  - j.face :cobbles do
+    = cobbles do |c|
+      - c.cobble :general_informations do
+        = attributes_list(resource, stamps: false) do |l|
+          - l.attribute :last_name
+          - l.attribute :first_name unless resource.first_name.blank?
+          - l.attribute :nature if resource.nature
+          - l.attribute :number
+          - l.attribute :active
+          - l.custom Entity.human_attribute_name(:country), image_tag("countries/#{resource.country}.png") + " " + resource.country.l unless resource.country.blank?
+          - l.attribute :siret_number if resource.siret_number?
+          - l.attribute :activity_code unless resource.activity_code.blank?
+          - l.attribute :vat_number unless resource.vat_number.blank?
+          - l.attribute :born_at unless resource.born_at.blank?
+          - l.attribute :dead_at unless resource.dead_at.blank?
+          - l.attribute :prospect
+          - l.attribute :client
+          - if resource.balance != 0
+            - l.attribute :balance, currency: true
+          - if resource.client
+            -#l.attribute :category, :label => :name, url: true
+            - l.attribute :first_met_at unless resource.first_met_at.blank?
+            - l.attribute :proposer, :label => :full_name unless resource.proposer.nil?
+            - l.attribute :vat_subjected
+            - l.attribute :reminder_submissive unless resource.reminder_submissive?
+            - l.attribute :authorized_payments_count unless resource.authorized_payments_count.blank?
+            - l.attribute :deliveries_conditions unless resource.deliveries_conditions.blank?
+            - l.attribute :client_account, url: true
+          - l.attribute :supplier
+          - if resource.supplier
+            - l.attribute :supplier_account, url: true
+          - l.attribute :transporter
+
+      -# if cash = resource.cash
+        - c.cobble(:cash_balance) do
+          - balance = cash.balance
+          .big-info{class: (balance < 0 ? :positive : balance > 0 ? :negative : :caution)}
+            %span.title= cash.name
+            %span.value= balance.l(currency: cash.currency)
+
+      - transactions_by_month_chart(resource, cobbler: c)
+
+      - c.cobble(:events, title: :x_events.tl(count: resource.participations.count)) do
+        = cobble_toolbar do |t|
+          = t.new params: {controller: :events, action: :new, nature: :meeting, participations: {"0" => {participant_id: resource.id, state: :accepted}, "1" => {participant_id: current_user.person_id, state: :accepted}}}
+        - if resource.participations.any?
+          = cobble_list(:event_participations)
+
+      - c.cobble(:issues, title: :x_issues.tl(count: resource.issues.count)) do
+        = cobble_toolbar do |t|
+          = t.new(params: {controller: :issues, target_id: resource.id, target_type: resource.class.name})
+        - if resource.issues.any?
+          = cobble_list(:issues)
+
+      - c.cobble(:entity_links, title: :x_entity_links.tl(count: EntityLink.of_entity(resource).count)) do
+        = cobble_toolbar do |t|
+          = t.new(params: {controller: :entity_links, entity_id: resource.id})
+        - if EntityLink.of_entity(resource).any?
+          = cobble_list(:links)
+
+      - c.cobble(:tasks, title: :x_tasks.tl(count: resource.tasks.count)) do
+        = cobble_toolbar do |t|
+          = t.new(params: {controller: :tasks, entity_id: resource.id, executor_id: current_user.person_id, state: :todo})
+        - if resource.tasks.any?
+          = cobble_list(:tasks)
+
+      - c.cobble(:sale_opportunities, title: :x_sale_opportunities.tl(count: resource.sale_opportunities.count)) do
+        = cobble_toolbar do |t|
+          = t.new(params: {controller: :sale_opportunities, third_id: resource.id})
+        - if resource.sale_opportunities.any?
+          = cobble_list(:sale_opportunities)
+
+      - c.cobble(:sales, title: :x_sales.tl(count: resource.sales.count)) do
+        = cobble_toolbar do |t|
+          = t.new(params: { controller: :sales, client_id: resource.id, redirect: nil })
+        - if resource.sales.any?
+          = cobble_list(:sales)
+
+      - c.cobble(:shipments, title: :x_shipments.tl(count: resource.shipments.count)) do
+        = cobble_toolbar do |t|
+          = t.new(params: {controller: :shipments, recipient_id: resource.id})
+        - if resource.shipments.any?
+          = cobble_list(:shipments)
+
+      - c.cobble(:incoming_payments, title: :x_incoming_payments.tl(count: resource.incoming_payments.count)) do
+        = cobble_toolbar do |t|
+          = t.new(params: {controller: :incoming_payments, :payer_id => resource.id})
+        - if resource.incoming_payments.any?
+          = cobble_list(:incoming_payments)
+
+      - c.cobble(:subscriptions, title: :x_subscriptions.tl(count: resource.subscriptions.count)) do
+        = cobble_toolbar do |t|
+          = t.new(params: {controller: :subscriptions, subscriber_id: resource.id, address_id: resource.default_mail_address_id})
+        - if resource.subscriptions.any?
+          = cobble_list(:subscriptions)
+
+      - c.cobble(:contracts, title: :x_contracts.tl(count: resource.contracts.count)) do
+        = cobble_toolbar do |t|
+          = t.new(params: {controller: :contracts, :supplier_id => resource.id})
+        - if resource.contracts.any?
+          = cobble_list(:contracts)
+
+      - c.cobble(:purchase_invoices, title: :x_purchase_invoices.tl(count: resource.purchase_invoices.count)) do
+        = cobble_toolbar do |t|
+          = t.new(params: {controller: :purchase_invoices, :supplier_id => resource.id})
+        - if resource.purchase_invoices.any?
+          = cobble_list(:purchase_invoices)
+
+      - c.cobble(:purchase_orders, title: :x_purchase_orders.tl(count: resource.purchase_orders.count)) do
+        = cobble_toolbar do |t|
+          = t.new(params: {controller: :purchase_orders, :supplier_id => resource.id})
+        - if resource.purchase_orders.any?
+          = cobble_list(:purchase_orders)
+
+      - c.cobble(:receptions, title: :x_receptions.tl(count: resource.receptions.count)) do
+        = cobble_toolbar do |t|
+          = t.new(params: {controller: :receptions, recipient_id: resource.id})
+        - if resource.receptions.any?
+          = cobble_list(:receptions)
+
+      - c.cobble(:purchase_payments, title: :x_purchase_payments.tl(count: resource.purchase_payments.count)) do
+        = cobble_toolbar do |t|
+          = t.new(params: {controller: :purchase_payments, :payee_id => resource.id})
+        - if resource.purchase_payments.any?
+          = cobble_list(:purchase_payments)
+
+      - c.cobble(:client_journal_entry_items, title: :x_client_journal_entry_items.tl(count: resource.client_journal_entry_items.count)) do
+        = cobble_toolbar do |t|
+          -#= t.new(params: {controller: :journal_entries})
+        - if resource.client_journal_entry_items.any?
+
+          - items = JournalEntryItem.joins(:entry).where(controller.class.entities_moves_client_conditions(params))
+          - totals = {}
+          - totals[:debit]  = items.sum(:absolute_debit)
+          - totals[:credit] = items.sum(:absolute_credit)
+          - totals[:balance_debit] = totals[:balance_credit] = 0.0
+          - totals["balance_#{totals[:debit] > totals[:credit] ? 'debit' : 'credit'}".to_sym] = (totals[:debit] - totals[:credit]).abs
+
+          = cobble_list(:client_journal_entry_items) do
+            - currency = Preference[:currency]
+            %tr.total
+              %th{colspan: 6}= :total.tl
+              %td.value= totals[:debit].l(currency: currency)
+              %td.value= totals[:credit].l(currency: currency)
+              %th
+            %tr.total
+              %th{colspan: 6}= :balance.tl
+              %td.value= totals[:balance_debit].l(currency: currency)
+              %td.value= totals[:balance_credit].l(currency: currency)
+              %th
+
+          - content_for 'cobble_client-journal-entry-items_meta_toolbar'.to_sym do
+            .active-list-actions
+              = mask_lettered_items_button('client_journal_entry_items-list')
+
+      - c.cobble(:supplier_journal_entry_items, title: :x_supplier_journal_entry_items.tl(count: resource.supplier_journal_entry_items.count)) do
+        = cobble_toolbar do |t|
+          -#= t.new(params: {controller: :journal_entries})
+        - if resource.supplier_journal_entry_items.any?
+
+          - items = JournalEntryItem.joins(:entry).where(controller.class.entities_moves_supplier_conditions(params))
+          - totals = {}
+          - totals[:debit]  = items.sum(:absolute_debit)
+          - totals[:credit] = items.sum(:absolute_credit)
+          - totals[:balance_debit] = totals[:balance_credit] = 0.0
+          - totals["balance_#{totals[:debit] > totals[:credit] ? 'debit' : 'credit'}".to_sym] = (totals[:debit] - totals[:credit]).abs
+
+          = cobble_list(:supplier_journal_entry_items) do
+            - currency = Preference[:currency]
+            %tr.total
+              %th{colspan: 6}= :total.tl
+              %td.value= totals[:debit].l(currency: currency)
+              %td.value= totals[:credit].l(currency: currency)
+              %th
+            %tr.total
+              %th{colspan: 6}= :balance.tl
+              %td.value= totals[:balance_debit].l(currency: currency)
+              %td.value= totals[:balance_credit].l(currency: currency)
+              %th
+
+          - content_for 'cobble_supplier-journal-entry-items_meta_toolbar'.to_sym do
+            .active-list-actions
+              = mask_lettered_items_button('supplier_journal_entry_items-list')

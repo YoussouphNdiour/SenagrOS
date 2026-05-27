@@ -1,0 +1,12 @@
+arb:
+  formats:
+    csv: "نص CSV"
+    doc: "على Microsoft Word 97/2000 / XP / 2003"
+    docx: "مايكروسوفت وورد 2007/2010"
+    # json: "JSON"
+    ods: "ODF جدول"
+    odt: "نص ODF"
+    pdf: "وثيقة PDF"
+    xls: "مايكروسوفت اكسل 97/2000 / XP / 2003"
+    xlsx: "مايكروسوفت اكسل 2007/2010"
+    # xml: "XML"

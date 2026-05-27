@@ -1,0 +1,9 @@
+.cell{data: {beehive_cell: cell.to_json}}
+  .cell-inner
+    .cell-title
+      = link_to("##{beehive.id}", data: {beehive_remove: "cell"}) do
+        %i
+      = cell[:type].tl
+    - cell[:options] ||= {}
+    = cell(cell[:type], { params: cell[:options][:params] }, class: 'cell-content')
+    .cell-bottom

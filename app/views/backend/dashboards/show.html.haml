@@ -1,0 +1,11 @@
+= render "menu"
+
+- main_toolbar do |t|
+  = t.edit(resource) if resource.editable?
+  = t.destroy
+
+- unless resource.description.blank?
+  = main_informations do
+    = resource.description
+
+= beehive("dashboard_#{resource.id}".to_sym)

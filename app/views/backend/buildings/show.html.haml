@@ -1,0 +1,12 @@
+- main_toolbar do |t|
+  = t.edit resource
+
+= cobbles do |c|
+  - c.cobble :details do
+    = product_mini_map
+    = attributes_list do |l|
+      - l.attribute :name
+      - l.attribute :description
+
+  - c.cobble :divisions do
+    = cobble_list(:divisions)

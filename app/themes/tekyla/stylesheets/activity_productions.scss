@@ -1,0 +1,23 @@
+.activity-production-cobbles {
+
+  .cobble.cobble-plant {
+    .list-settings ul {
+      top: auto;
+      bottom: 100%;
+      margin-bottom: 2px;
+    }
+  }
+}
+
+form {
+  .activity_production_custom_name{
+    input{
+      margin-right: 2em;
+    }
+    span:nth-child(3){
+      margin-right: 2em;
+      font-weight: bold;
+      position: relative;
+    }
+  }
+}

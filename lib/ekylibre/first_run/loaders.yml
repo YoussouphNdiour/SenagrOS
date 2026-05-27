@@ -1,0 +1,363 @@
+---
+# Base
+base:
+  ekylibre_settings:
+    path: 'manifest.yml'
+    max: 0
+  ekylibre_visuals:
+    path: 'alamano/background.jpg'
+  ekylibre_backup:
+    path: 'ekylibre/backup.zip'
+  ekylibre_accounts:
+    path: 'alamano/accounts.csv'
+  ekylibre_variants:
+    path: 'alamano/variants.ods'
+  ekylibre_issue_natures:
+    path: 'alamano/issue_natures.ods'
+  ekylibre_vegetative_stages:
+    path: 'alamano/vegetative_stages.ods'
+
+# Entities
+entities:
+  ekylibre_entities:
+    path: 'alamano/entities.csv'
+  la_graine_informatique_vinifera_entities:
+    format: :archive
+    path: 'entities.zip'
+    files:
+      - 'entities.csv'
+      - 'client_types_transcode.csv'
+      - 'client_price_types_transcode.csv'
+      - 'client_origins_transcode.csv'
+      - 'client_qualities_transcode.csv'
+      - 'client_evolutions_transcode.csv'
+      - 'custom_fields.csv'
+    in: 'vinifera'
+
+# Land parcels
+land_parcels:
+  cultivable_zones_georeadings:
+    format: :archive
+    path: 'cultivable_zones.zip'
+    type: ekylibre_georeadings
+    mimetype: application/vnd.ekylibre.georeading.polygon
+    files:
+      georeading.shp: 'cultivable_zones.shp'
+      georeading.dbf: 'cultivable_zones.dbf'
+      georeading.shx: 'cultivable_zones.shx'
+    in: 'alamano/georeadings'
+
+  zones_georeadings:
+    format: :archive
+    path: 'zones.zip'
+    type: ekylibre_georeadings
+    mimetype: application/vnd.ekylibre.georeading.polygon
+    files:
+      georeading.shp: 'zones.shp'
+      georeading.dbf: 'zones.dbf'
+      georeading.shx: 'zones.shx'
+    in: 'alamano/georeadings'
+
+  telepac_v2017_cap_statements:
+    path: 'telepac/2017/statement.xml'
+
+  telepac_v2018_cap_statements:
+    path: 'telepac/2018/statement.xml'
+
+  telepac_v2019_cap_statements:
+    path: 'telepac/2019/statement.xml'
+
+  telepac_v2020_cap_statements:
+    path: 'telepac/2020/statement.xml'
+
+  telepac_v2021_cap_statements:
+    path: 'telepac/2021/statement.xml'
+
+  telepac_v2022_cap_statements:
+    path: 'telepac/2022/statement.xml'
+  
+  telepac_v2023_cap_statements:
+    path: 'telepac/2023/statement.xml'
+  
+  telepac_v2024_cap_statements:
+    path: 'telepac/2024/statement.xml'
+
+  telepac_v2025_cap_statements:
+    path: 'telepac/2025/statement.xml'
+
+  telepac_v2021_cap_zip_statements:
+    path: 'telepac/2021/statements.zip'
+  
+  ekylibre_cultivable_zones:
+    path: 'alamano/cultivable_zones.csv'
+
+  ekylibre_plants:
+    path: 'alamano/plants.csv'
+
+  # VINITECA vines
+  viniteca_plant_zones:
+    format: :archive
+    path: 'vines.zip'
+    files:
+      - 'plant.shp'
+      - 'plant.dbf'
+      - 'plant.shx'
+      - 'plant.prj'
+      - 'varieties_transcode.csv'
+      - 'certifications_transcode.csv'
+      - 'cultivable_zones_transcode.csv'
+    in: 'viniteca'
+
+  # UNICOQUE orchards
+  unicoque_plant_zones:
+    format: :archive
+    path: 'plantation.zip'
+    files:
+      - 'plantation.shp'
+      - 'plantation.dbf'
+      - 'plantation.shx'
+      - 'plantation.prj'
+      - 'varieties_transcode.csv'
+    in: 'unicoque/plantation'
+
+buildings:
+  building_divisions_georeadings:
+    format: :archive
+    path: 'building_divisions.zip'
+    type: ekylibre_georeadings
+    mimetype: application/vnd.ekylibre.georeading.polygon
+    files:
+      georeading.shp: 'building_divisions.shp'
+      georeading.dbf: 'building_divisions.dbf'
+      georeading.shx: 'building_divisions.shx'
+    in: 'alamano/georeadings'
+
+  buildings_georeadings:
+    format: :archive
+    path: 'buildings.zip'
+    type: ekylibre_georeadings
+    mimetype: application/vnd.ekylibre.georeading.polygon
+    files:
+      georeading.shp: 'buildings.shp'
+      georeading.dbf: 'buildings.dbf'
+      georeading.shx: 'buildings.shx'
+    in: 'alamano/georeadings'
+
+  ekylibre_zones:
+    path: 'alamano/zones.csv'
+
+equipments:
+  equipments_georeadings:
+    format: :archive
+    path: 'equipments.zip'
+    type: ekylibre_georeadings
+    mimetype: application/vnd.ekylibre.georeading.polygon
+    files:
+      georeading.shp: 'equipments.shp'
+      georeading.dbf: 'equipments.dbf'
+      georeading.shx: 'equipments.shx'
+    in: 'alamano/georeadings'
+
+  geolocations_georeadings:
+    format: :archive
+    path: 'geolocations.zip'
+    type: ekylibre_georeadings
+    mimetype: application/vnd.ekylibre.georeading.point
+    files:
+      georeading.shp: 'geolocations.shp'
+      georeading.dbf: 'geolocations.dbf'
+      georeading.shx: 'geolocations.shx'
+    in: 'alamano/georeadings'
+
+  ekylibre_equipments:
+    path: 'alamano/equipments.csv'
+  equipments_pictures:
+    format: :pictures
+    path: 'alamano/equipments'
+    table: products
+    id_column: work_number
+
+workers:
+  ekylibre_workers:
+    path: 'alamano/workers.csv'
+  workers_pictures:
+    format: :pictures
+    path: 'alamano/workers'
+    table: products
+    id_column: work_number
+  ekylibre_worker_time_logs:
+    path: 'alamano/worker_time_logs.csv'
+  ekylibre_project_tasks:
+    path: 'alamano/projects.ods'
+  ekylibre_project_task_logs:
+    path: 'alamano/projects.ods'
+
+products:
+  ekylibre_matters:
+    path: 'alamano/matters.csv'
+  la_graine_informatique_vinifera_products:
+    format: :archive
+    path: 'products.zip'
+    files:
+      - 'products.csv'
+      - 'units_transcode.csv'
+      - 'variants_transcode.csv'
+    in: 'vinifera'
+
+animals:
+  upra_reproductors:
+    path: 'upra/liste_males_reproducteurs.txt'
+  synel_animals:
+    path: 'synel/animaux.csv'
+  synel_inventory:
+    path: 'synel/inventaire.csv'
+  ekylibre_animal_groups:
+    path: 'alamano/animal_groups.csv'
+  animal_groups_pictures:
+    format: :pictures
+    path: 'alamano/animal_groups'
+    table: products
+    id_column: work_number
+  ekylibre_animals:
+    path: 'alamano/animals.csv'
+  animals_pictures:
+    format: :pictures
+    path: 'alamano/animals'
+    table: products
+    id_column: work_number
+
+productions:
+  # Load budgets
+  ekylibre_budgets:
+    path: 'alamano/budgets.ods'
+
+analyses:
+  agro_systemes_soil_analyses:
+    path: 'agro_systemes/analyses_sol.csv'
+  agro_systemes_water_analyses:
+    path: 'agro_systemes/analyses_eau.txt'
+  ekylibre_soil_analyses:
+    path: 'alamano/analyses_sol.csv'
+  lilco_milk_analyses:
+    path: 'lilco/HistoIP_V.csv'
+  fiea_galactea:
+    path: 'galactea3/cl_all.csv'
+  bovins_croissance_cattle_performance_controls:
+    path: 'bovins_croissance/perf.csv'
+  milklic_individual_production:
+    path: 'milklic/lait_individuel.csv'
+
+sales:
+  ekylibre_sales:
+    path: 'alamano/sales.csv'
+    options:
+      attachments_path: 'alamano/sales'
+  la_graine_informatique_vinifera_sales:
+    path: 'vinifera/sales.csv'
+  ekylibre_incoming_payments:
+    path: 'alamano/incoming_payments.csv'
+
+deliveries:
+  caj_incoming_deliveries:
+    path: 'caj/appros.csv'
+  charentes_alliance_incoming_deliveries:
+    path: 'charentes_alliance/appros.csv'
+  charentes_alliance_outgoing_deliveries:
+    format: :archive
+    path: 'apports.zip'
+    files:
+      - 'apports.csv'
+      - 'silo_transcode.csv'
+    in: 'charentes_alliance'
+  unicoque_outgoing_deliveries:
+    path: 'unicoque/recolte.csv'
+
+purchases:
+  ekylibre_purchases:
+    path: 'alamano/purchases.csv'
+    options:
+      attachments_path: 'alamano/purchases'
+  ekylibre_payslips:
+    path: 'alamano/payslips.csv'
+    options:
+      attachments_path: 'alamano/payslips'
+  ekylibre_outgoing_payments:
+    path: 'alamano/outgoing_payments.csv'
+
+bank_statements:
+  ekylibre_bank_statements:
+    path: 'alamano/bank_statements.ods'
+  ekylibre_ofx_import:
+    path: 'alamano/ofx.zip'
+
+cash_transfers:
+  ekylibre_cash_transfers:
+    path: 'alamano/cash_transfers.csv'
+interventions:
+  # Import interventions from Ekylibre conventions
+  # Need to be reviewed
+  ekylibre_interventions:
+    path: 'alamano/interventions.csv'
+
+  # Import interventions from DAPLOS EDI
+  agroedi_daplos:
+    path: 'daplos/interventions.edi'
+  # Import interventions from viniteca
+  viniteca_interventions:
+    format: :archive
+    path: 'viniteca_intervention.zip'
+    files:
+      - 'variants_transcode.csv'
+      - 'issue_natures_transcode.csv'
+      - 'procedures_transcode.csv'
+      - 'interventions.csv'
+    in: 'viniteca'
+
+  ekylibre_incoming_harvests:
+    path: 'alamano/incoming_harvests.csv'
+
+  # Import interventions from isaculture files
+  isagri_isaculture_csv_import:
+    format: :archive
+    path: 'isaculture.zip'
+    files:
+      - 'procedures_transcode.csv'
+      - 'cultivable_zones_transcode.csv'
+      - 'variants_transcode.csv'
+      - 'units_transcode.csv'
+      - 'workers_transcode.csv'
+      - 'equipments_transcode.csv'
+      - 'interventions.csv'
+    in: 'isaculture'
+
+  ekylibre_rides:
+    format: :archive
+    path: 'rides.zip'
+    files:
+      - 'rides.shp'
+      - 'rides.dbf'
+      - 'rides.shx'
+      - 'rides.prj'
+    in: 'alamano/rides'
+
+accountancy:
+  isagri_isacompta_fixed_assets:
+    path: 'isacompta/fixed_assets.csv'
+  bordeaux_sciences_agro_istea_balance:
+    path: 'istea/balance.TXT'
+  bordeaux_sciences_agro_istea_journal_entries:
+    path: 'istea/journal_entries.TXT'
+  ekylibre_ofx_import:
+    path: 'crcmds/crcmds.zip'
+  ekylibre_fixed_assets:
+    path: 'alamano/fixed_assets.csv'
+  odicom_fec_txt:
+    path: 'odicom/fec.txt'
+  acom_fec_txt:
+    path: 'acom/fec.txt'
+  quadra_fec_txt:
+    path: 'quadra/fec.txt'
+  listo_od_txt:
+    path: 'listo/wages.csv'
+  ekylibre_associates:
+    path: 'alamano/associates.csv'

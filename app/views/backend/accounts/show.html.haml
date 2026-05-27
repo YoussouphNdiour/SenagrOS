@@ -1,0 +1,58 @@
+- navigation resource, order: :number, naming_method: :label
+
+- main_toolbar do |t|
+  = t.edit(resource)
+  = t.export :account_journal_entry_sheet,
+             item_label: :extract_account_as_pdf.tl,
+             key: Printers::AccountJournalEntrySheetPrinter.build_key(period: params[:period],
+                                                                      states: params[:states],
+                                                                      account: resource) do |menu|
+    - export_params = params.slice(:states, :lettering_state, :period, :started_on, :stopped_on)
+    - menu.item :extract_account_as_odt.tl, params: export_params, format: :odt
+  = t.destroy(resource)
+  = t.mark(resource) if resource.reconcilable?
+
+= cobbles do |c|
+  - c.cobble(:general_informations) do
+    = attributes_list do |l|
+      - l.attribute :number
+      - l.attribute :name
+      - l.attribute :reconcilable
+      - l.attribute :description
+
+  - c.cobble(:entities) do
+    = cobble_list(:entities)
+
+  - c.cobble(:product_nature_variants) do
+    = cobble_list(:product_nature_variants)
+
+  - c.cobble(:journal_entry_items) do
+    = kujaku do |k|
+      - k.text name: :b
+      - k.helper :journal_period_crit, :period, use_search_preference: true
+      - k.multi_choice :lettering_state, [[:account_lettered.tl, :lettered], [:partially_lettered.tl, :partially_lettered], [:unlettered.tl, :unlettered]], label: :lettering_state.tl
+      - k.helper :journal_entries_states_crit, use_search_preference: true
+
+    - items = JournalEntryItem.joins([:entry]).joins('LEFT OUTER JOIN "product_nature_variants" ON "product_nature_variants"."id" = "journal_entry_items"."variant_id"').where(eval(controller.class.account_moves_conditions))
+    - totals = {}
+    - totals[:debit]  = items.sum(:absolute_debit)
+    - totals[:credit] = items.sum(:absolute_credit)
+    - totals[:balance_debit] = totals[:balance_credit] = 0.0
+    - totals["balance_#{totals[:debit] > totals[:credit] ? 'debit' : 'credit'}".to_sym] = (totals[:debit] - totals[:credit]).abs
+
+    = cobble_list(:journal_entry_items) do
+      - currency = Preference[:currency]
+      %tr.total
+        %th{colspan: 6}= :total.tl
+        %td.value= totals[:debit].l(currency: currency)
+        %td.value= totals[:credit].l(currency: currency)
+        %th
+      %tr.total
+        %th{colspan: 6}= :balance.tl
+        %td.value= totals[:balance_debit].l(currency: currency)
+        %td.value= totals[:balance_credit].l(currency: currency)
+        %th
+
+    - content_for 'cobble_journal-entry-items_meta_toolbar'.to_sym do
+      .active-list-actions
+        = mask_lettered_items_button 'journal_entry_items-list'

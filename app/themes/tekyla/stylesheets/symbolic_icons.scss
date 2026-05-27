@@ -1,0 +1,66 @@
+//= depend_on variables
+//
+
+@mixin iconics($symbol-name) {
+  // buttons
+  a.btn.btn-#{$symbol-name} i,
+  button.btn-#{$symbol-name} i,
+  a.btn.btn-#{$symbol-name}.icn,
+  button.btn-#{$symbol-name}.icn,
+  // tables
+  .active-list table.list tr > .act > a.#{$symbol-name} > i,
+  .active-list table.list tr > .act > .icon.icon-#{$symbol-name},
+  .active-list[data-list-source] table.list tr > .act > a.#{$symbol-name} > i,
+  .active-list[data-list-source] table.list tr > .act[data-list-column="#{$symbol-name}"] > i,
+  table.list tr > .act > a.#{$symbol-name} > i,
+  // snippets
+  .snippet.snippet-#{$symbol-name} > .snippet-title > h3 > i,
+  // fieldset icon
+  .fieldset.#{$symbol-name} .fieldset-legend .title i,
+  // help content
+  .icon.icon-#{$symbol-name},
+  svg .icon.icon-#{$symbol-name},
+  // picto
+  .picto.picto-#{$symbol-name},
+  // timeline
+  .timeline .timestep .log-#{$symbol-name} .log-symbol,
+  // cobbles
+  .cobbles .cobbles-body .cobble.cobble-#{$symbol-name} .cobble-title i
+  {
+    @content;
+  }
+}
+
+@each $icon in $symbolic-icons {
+  $name: nth($icon, 1);
+  @if $name != "3d-rotation" {
+    @include iconics(nth($icon, 1)) {
+      &::before { content: nth($icon, 2); }
+      &.icn-after {
+        &::after {
+          content: nth($icon, 2);
+        }
+        &::before {
+          content: "";
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+// Adds synonyms
+@each $alias in $all-aliases {
+  @include iconics(nth($alias, 1)) {
+    &::before { content: icon-character(nth($alias, 2)); }
+    &.icn-after {
+        &::after {
+          content: icon-character(nth($alias, 2));
+        }
+        &::before {
+          content: "";
+          display: none;
+        }
+      }
+  }
+}

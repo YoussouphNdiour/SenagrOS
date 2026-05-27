@@ -1,0 +1,611 @@
+ita:
+  enumerize:
+    activity:
+      nature:
+        auxiliary: "Ausiliario"
+        main: "Principale"
+        standalone: "Indipendente, autonomo"
+      production_cycle:
+        annual: "Annuale"
+        perennial: "Perenne"
+    activity_budget_item:
+      computation_method:
+        per_campaign: "per campagna"
+        per_production: "per la produzione"
+        per_working_unit: "Per unità di lavoro"
+      direction:
+        expense: "Spese"
+        revenue: "Reddito"
+    activity_inspection_point_nature:
+      category:
+        deformity: "Deformità"
+        disease: "Malattia"
+        none: "Nessuna"
+    activity_production:
+      support_nature:
+        animal_group: "Gruppo di animali"
+        border: "Confine"
+        # buffer: "Buffer"
+        cultivation: "Coltivazione"
+        fallow_land: "terreni a riposo"
+        none: "Nessuna"
+    activity_tactic:
+      mode:
+        harvested: "Harvest data di semina"
+        sowed: "Data provvisoria di semina"
+    analysis:
+      retrieval_status:
+        controller_error: "Errore del controller"
+        error: "Errore"
+        internal_error: "Errore interno"
+        ok: "Ok"
+        sensor_error: "Errore sensore"
+    analysis_item:
+      indicator_datatype:
+        boolean: "Booleano"
+        choice: "Scelta"
+        decimal: "Decimale"
+        geometry: "Geometria"
+        integer: "Numero intero"
+        measure: "Misurare"
+        multi_polygon: "Multi poligono"
+        point: "Punto"
+        string: "Corda"
+    animal:
+      birth_date_completeness:
+        full_date: "Data completa"
+        month_year: "Mese anno"
+        year: "Anno"
+      end_of_life_reason:
+        calculated_date: "Data calcolato"
+        cutting_up: "Taglio"
+        death: "Morte"
+        slaughter: "Macello"
+      filiation_status:
+        certified: "Certificato"
+        uncertified: "Non certificato"
+        unknown: "Sconosciuto"
+    call_message:
+      nature:
+        incoming: "In arrivo"
+        outgoing: "Estroverso"
+    call_request:
+      nature:
+        incoming: "In arrivo"
+        outgoing: "Estroverso"
+    call_response:
+      nature:
+        incoming: "In arrivo"
+        outgoing: "Estroverso"
+    cash:
+      mode:
+        bban: "Bank Account Number di base (BBAN)"
+        # iban: "International Bank Account Number (IBAN)"
+      nature:
+        associate_account: "conto Associate"
+        bank_account: "conto bancario"
+        cash_box: "Cassa"
+    catalog:
+      usage:
+        cost: "Costo"
+        purchase: "Acquista"
+        sale: "Vendita"
+        stock: "Azione"
+        travel_cost: "Viaggio"
+    crumb:
+      nature:
+        hard_start: "Inizio difficile"
+        hard_stop: "Arresto rigido"
+        pause: "Pausa"
+        point: "Punto"
+        resume: "Curriculum vitae"
+        scan: "Scansione"
+        start: "Inizio"
+        # stop: "Stop"
+    custom_field:
+      nature:
+        boolean: "casella di controllo"
+        choice: "lista scelta"
+        date: "Data"
+        datetime: "Data e ora"
+        decimal: "Decimale"
+        text: "Testo"
+    debt_transfer:
+      nature:
+        purchase_regularization: "Acquisto regolarizzazione"
+        sale_regularization: "Vendita regolarizzazione"
+    delivery:
+      mode:
+        third: "Terzo"
+        transporter: "Con transporter"
+        us: "Da noi"
+    document_template:
+      archiving:
+        all: "Tutti di tipo" #?
+        all_of_template: "Tutti i template" #?
+        first: "Prima di tipo"
+        first_of_template: "Prima di template"
+        last: "Ultimo di tipo"
+        last_of_template: "Ultimo di template"
+        none: "Nessuno di tipo"
+        none_of_template: "Nessuno dei template"
+    entity:
+      nature:
+        contact: "contatto"
+        organization: "Organizzazione"
+    entity_address:
+      canal:
+        email: "E-mail"
+        # fax: "Fax"
+        mail: "posta"
+        mobile: "Cellulare"
+        phone: "Telefono"
+        website: "Sito web"
+    event_participation:
+      state:
+        accepted: "Accettato"
+        informative: "Informativo"
+        refused: "rifiutato"
+        waiting: "In attesa"
+    financial_year:
+      state:
+        # closed: "Closed"
+        # closing: "Closing"
+        # closure_in_preparation: "Closure in preparation"
+        # locked: "Locked"
+        # opened: "Opened"
+      tax_declaration_frequency:
+        monthly: "Mensile"
+        none: "Nessuna"
+        # quaterly: "Quaterly"
+        yearly: "Annuale"
+      tax_declaration_mode:
+        debit: "Addebito"
+        none: "Nessuna"
+        payment: "Pagamento"
+    fixed_asset:
+      depreciation_method:
+        graduated: "Laureato" #?
+        linear: "Lineare"
+        none: "Nessuna"
+        regressive: "Regressivo"
+        simplified_linear: "lineari semplificato" #?
+      depreciation_period:
+        monthly: "Mensile"
+        quarterly: "Trimestrale"
+        yearly: "Annuale"
+    gap:
+      direction:
+        loss: "Perdita"
+        profit: "Profitto"
+    georeading:
+      nature:
+        line: "linea" #?
+        linestring: "Stringa lineare"
+        point: "Punto"
+        polygon: "Poligono"
+    guide:
+      frequency:
+        daily: "Quotidiano"
+        # decadely: "Decadely"
+        hourly: "Ogni ora"
+        monthly: "Mensile"
+        none: "Nessuna"
+        weekly: "Settimanalmente"
+        yearly: "Annuale"
+    guide_analysis:
+      acceptance_status:
+        # errored: "Errored"
+        failed: "Fallito"
+        passed: "Passato"
+        passed_with_warnings: "Superato con avvisi"
+      status: #?
+        errored: "errored" #?
+        failed: "fallito" #?
+        passed: "Passato" #?
+        passed_with_warnings: "Superato con avvisi" #?
+    guide_analysis_point:
+      acceptance_status:
+        # errored: "Errored"
+        failed: "Fallito"
+        passed: "Passato"
+        passed_with_warnings: "Superato con avvisi"
+    import:
+      state:
+        aborted: "Abortito"
+        # errored: "Errored"
+        finished: "Finito"
+        in_progress: "In corso"
+        undone: "Disfatto"
+    intervention:
+      nature:
+        record: "Disco"
+        request: "Richiesta"
+      state:
+        done: "Fatto"
+        in_progress: "In corso"
+        rejected: "Respinto"
+        squeezed: "Spremuto" #?
+        undone: "Disfatto" #?
+        validated: "Convalidato"
+    intervention_parameter_reading:
+      indicator_datatype:
+        boolean: "Booleano"
+        choice: "Scelta"
+        decimal: "Decimale"
+        geometry: "Geometria"
+        integer: "Numero intero"
+        measure: "Misurare"
+        multi_polygon: "Multi poligono"
+        point: "Punto"
+        string: "Corda"
+    intervention_participation:
+      state:
+        done: "Fatto"
+        in_progress: "In corso"
+        validated: "Convalidato"
+    intervention_working_period:
+      nature:
+        intervention: "Intervento"
+        pause: "Pausa"
+        preparation: "Preparazione"
+        travel: "Viaggio"
+    journal:
+      nature:
+        bank: "Banca"
+        cash: "Contanti"
+        closure: "Chiusura"
+        fixed_assets: "Immobilizzazioni"
+        forward: "Portato avanti"
+        purchases: "acquisti"
+        result: "Risultato"
+        sales: "Vendite"
+        stocks: "Riserve"
+        various: "varie operazioni"
+    listing_node:
+      nature:
+        belongs_to: "Appartiene a"
+        boolean: "Booleano"
+        column: "Colonna"
+        custom: "Costume"
+        datetime: "Appuntamento"
+        has_many: "Ha molti"
+        numeric: "Numerico"
+        root: "Radice"
+        string: "Corda"
+    loan:
+      insurance_repayment_method:
+        initial: "Sulla base di capitale iniziale"
+        to_repay: "Sulla base di capitale di sinistra per rimborsare"
+      repayment_method:
+        constant_amount: "quantità costante"
+        constant_rate: "Tasso costante"
+      repayment_period:
+        month: "Mese"
+        semester: "Semestre"
+        trimester: "Trimestre"
+        year: "Anno"
+      shift_method:
+        anatocism: "anatocismo"
+        immediate_payment: "Pagamento immediato"
+    map_layer:
+      nature:
+        background: "Sfondo"
+        overlay: "Copertura"
+    naming_format_field_land_parcel:
+      field_name:
+        # activity: "Activity"
+        # campaign: "Campaign"
+        # cultivable_zone_code: "Cultivable zone code"
+        # cultivable_zone_name: "Cultivable zone name"
+        # production_mode: "Production mode"
+        # season: "Season"
+    notification:
+      level:
+        error: "Errore"
+        information: "Informazioni"
+        success: "Successo"
+        warning: "Avvertimento"
+    observation:
+      importance:
+        important: "Importante"
+        normal: "Normale"
+        notice: "Avviso"
+    parcel:
+      delivery_mode:
+        indifferent: "Indifferente" #?
+        third: "Trasportato da destinatario"
+        transporter: "Trasportato da transporter"
+        us: "Trasportato da noi"
+      nature:
+        incoming: "in arrivo"
+        internal: "Interno" #?
+        outgoing: "Estroverso"
+      state: #?
+        draft: "Bozza" #?
+        given: "Dato" #?
+        in_preparation: "In preparazione" #?
+        ordered: "Ordinato" #?
+        prepared: "Preparato" #?
+    parcel_item:
+      delivery_mode:
+        # third: "Transported by recipient"
+        # transporter: "Transported by transporter"
+        # us: "Transported by us"
+    plant_counting:
+      nature:
+        germination: "A germinazione"
+        sowing: "Alla semina"
+    preference:
+      nature:
+        accounting_system: "Sistema di contabilità"
+        boolean: "Booleano"
+        country: "Nazione"
+        currency: "Moneta"
+        decimal: "Decimale"
+        integer: "Numero intero"
+        language: "Lingua"
+        record: "Disco"
+        spatial_reference_system: "Sistema di riferimento spaziale"
+        string: "Corda"
+    product_enjoyment:
+      nature:
+        other: "Altro"
+        own: "Proprio"
+        unknown: "Sconosciuto"
+    product_linkage:
+      nature:
+        available: "A disposizione"
+        occupied: "Occupato"
+        unavailable: "Non disponibile"
+      point:
+        front: "Davanti"
+        rear: "Parte posteriore"
+    product_localization:
+      nature:
+        exterior: "Esterno"
+        interior: "Interno"
+        transfer: "Trasferimento"
+    product_membership:
+      nature:
+        exterior: "Esterno"
+        interior: "Interno"
+    product_movement:
+      description:
+        birth: "Nascita"
+        butchery: "La macelleria"
+        consumption: "Consumo"
+        death: "Morte"
+        loan: "Prestito"
+        purchase: "Acquista"
+        sale: "Saldi"
+    product_nature:
+      population_counting:
+        decimal: "Decimale"
+        integer: "Numero intero"
+        unitary: "Unitario"
+      type:
+        # VariantTypes::AnimalType: "Animals"
+        # VariantTypes::ArticleType: "Articles"
+        # VariantTypes::CropType: "Crops"
+        # VariantTypes::EquipmentType: "Equipments"
+        # VariantTypes::ServiceType: "Services"
+        # VariantTypes::WorkerType: "Workers"
+        # VariantTypes::ZoneType: "Zones"
+    product_nature_category:
+      pictogram:
+        bank: "Banca"
+        barn: "Fienile"
+        beaker: "Coppa"
+        bolt: "Bullone"
+        book: "Libro"
+        bug: "Insetto"
+        building: "Costruzione"
+        car: "Auto"
+        cc: "Cc"
+        cow: "Mucca"
+        credit_card: "Carta di credito"
+        # desktop: "Desktop"
+        drop: "Far cadere"
+        # fax: "Fax"
+        fish: "Pesce"
+        food: "Cibo"
+        gift: "Regalo"
+        group: "Gruppo"
+        home: "Casa"
+        land_parcels: "Appezzamenti"
+        laptop: "Il computer portatile"
+        leaf: "Foglia"
+        legal: "Legale"
+        lemon: "Limone"
+        light_bulb: "Lampadina"
+        male: "Maschio"
+        matter: "Importa"
+        # medkit: "Medkit"
+        money: "I soldi"
+        mushroom: "Fungo"
+        phone: "Telefono"
+        pill: "Pillola"
+        plane: "Aereo"
+        road: "Strada"
+        subscription: "Sottoscrizione"
+        tasks: "Compiti"
+        tractor: "Trattore"
+        truck: "Camion"
+        umbrella: "Ombrello"
+        undefined: "Non definito"
+        user: "Utente"
+        wheat: "Grano"
+        wrench: "Chiave inglese"
+      type:
+        # VariantCategories::AnimalCategory: "Animals"
+        # VariantCategories::ArticleCategory: "Articles"
+        # VariantCategories::CropCategory: "Crops"
+        # VariantCategories::EquipmentCategory: "Equipments"
+        # VariantCategories::ServiceCategory: "Services"
+        # VariantCategories::WorkerCategory: "Workers"
+        # VariantCategories::ZoneCategory: "Zones"
+    product_nature_category_taxation:
+      usage:
+        purchase: "Acquista"
+        sale: "Vendita"
+    product_nature_variant:
+      type:
+        # Variants::AnimalVariant: "Animals"
+        # Variants::ArticleVariant: "Articles"
+        # Variants::Articles::FertilizerArticle: "Fertilizers"
+        # Variants::Articles::PlantMedicineArticle: "Plant medicines"
+        # Variants::Articles::SeedAndPlantArticle: "Seeds and plants"
+        # Variants::CropVariant: "Crops"
+        # Variants::EquipmentVariant: "Equipments"
+        # Variants::ServiceVariant: "Services"
+        # Variants::WorkerVariant: "Workers"
+        # Variants::ZoneVariant: "Zones"
+    product_nature_variant_reading:
+      indicator_datatype:
+        boolean: "Booleano"
+        choice: "Scelta"
+        decimal: "Decimale"
+        geometry: "Geometria"
+        integer: "Numero intero"
+        measure: "Misurare"
+        multi_polygon: "Multi poligono"
+        point: "Punto"
+        string: "Corda"
+    product_ownership:
+      nature:
+        other: "Altro"
+        own: "Proprio"
+        unknown: "Sconosciuto"
+    product_reading:
+      indicator_datatype:
+        boolean: "Booleano"
+        choice: "Scelta"
+        decimal: "Decimale"
+        geometry: "Geometria"
+        integer: "Numero intero"
+        measure: "Misurare"
+        multi_polygon: "Multi poligono"
+        point: "Punto"
+        string: "Corda"
+    purchase:
+      reconciliation_state:
+        # accepted: "Accepted"
+        # reconcile: "Reconcile"
+        # to_reconcile: "To reconcile"
+      tax_payability:
+        at_invoicing: "A fatturazione"
+        at_paying: "A pagamento"
+    purchase_nature: #?
+      nature: #?
+        payslip: "Busta paga" #?
+        purchase: "Acquista" #?
+    registered_phytosanitary_product:
+      state:
+        # authorized: "Authorized"
+        # inherited: "Inherited"
+        # withdrawn: "Withdrawn"
+    registered_phytosanitary_usage:
+      state:
+        # authorized: "Authorized"
+        # provisional: "Provisional"
+        # withdrawn: "Withdrawn"
+    sale_item: #?
+      compute_from: #?
+        pretax_amount: "Importo lordo delle imposte" #?
+        unit_pretax_amount: "Unità importo lordo delle imposte" #?
+    sensor:
+      retrieval_mode:
+        integration: "Integrazione"
+        listening: "Ascolto"
+        requesting: "Richiesta"
+    sequence:
+      period:
+        cweek: "settimana commerciale"
+        month: "Mese"
+        number: "No periodicità"
+        year: "Anno"
+      usage:
+        affairs: "Affari"
+        analyses: "Analisi"
+        animals: "Animali"
+        campaigns: "Campagne"
+        cash_transfers: "Trasferimenti di denaro"
+        contracts: "Contratti"
+        debt_transfers: "Trasferimenti di debito"
+        deliveries: "Le consegne"
+        deposits: "Depositi"
+        documents: "Documenti"
+        entities: "Terzi"
+        fixed_assets: "Immobilizzazioni"
+        gaps: "Lacune"
+        incoming_payments: "Pagamenti in entrata"
+        inspections: "Ispezioni"
+        interventions: "Interventi"
+        inventories: "Rimanenze"
+        opportunities: "Opportunità"
+        outgoing_payment_lists: "Elenchi di pagamento in uscita"
+        outgoing_payments: "Pagamenti in uscita"
+        parcels: "Pacchi"
+        plant_countings: "Conteggio delle piante"
+        plants: "Piante"
+        product_nature_categories: "Categorie Natura del prodotto"
+        product_nature_variants: "La natura del prodotto Varianti"
+        product_natures: "Nature del prodotto"
+        products: "Prodotti"
+        purchases: "Acquisti"
+        sales: "Vendite"
+        sales_invoices: "Fatture di vendita"
+        subscriptions: "Sottoscrizioni"
+        tax_declarations: "Dichiarazioni fiscali"
+    subscription_nature: #?
+      entity_link_direction: #?
+        all: "bidirezionale" #?
+        direct: "Diretto" #?
+        indirect: "indiretto" #?
+      nature: #?
+        period: "Abbonamento per data" #?
+        quantity: "Abbonamento per numero" #?
+    synchronization_operation:
+      operation_name:
+        authenticate: "Autenticazione"
+        get_inventory: "Ottenere l’inventario"
+        get_urls: "Ottenere gli URL"
+      state:
+        aborted: "Abortito"
+        # errored: "Errored"
+        finished: "Finito"
+        in_progress: "In corso"
+        undone: "Disfatto"
+    task:
+      nature:
+        document: "scrittura" #?
+        incoming_call: "Chiamata in arrivo"
+        incoming_email: "e-mail in arrivo"
+        incoming_mail: "Posta in arrivo"
+        outgoing_call: "Chiamata in uscita"
+        outgoing_email: "e-mail in uscita"
+        outgoing_mail: "Posta in uscita"
+        quote: "Citazione" #?
+      state:
+        doing: "Fare"
+        done: "Fatto"
+        todo: "Fare"
+    tax: #?
+      nature: #?
+        amount: "Quantità" #?
+        percentage: "Percentuale" #?
+    tax_declaration:
+      mode:
+        debit: "Addebito"
+        payment: "Pagamento"
+    tracking:
+      usage_limit_nature:
+        best_before: "Data di scadenza"
+        no_limit: "Senza limite"
+        used_by: "Usato per data"
+    version:
+      event:
+        create: "Creare"
+        destroy: "Distruggere"
+        update: "Aggiornare"

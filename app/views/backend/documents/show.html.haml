@@ -1,0 +1,61 @@
+- if @document.nature == 'purchases_original'
+  - unless @document.attach_to_resource
+    - main_toolbar do |t|
+      = t.action :purchase_scan, label: :purchase_ai_convert_with_mindee.tl, "data-confirm" => :are_you_sure_you_want_to_convert_into_purchase_via_ocr.tl, method: :post, params: { id: @document.id, vendor: :mindee}, disabled: true
+      = t.action :purchase_scan, label: :purchase_ai_convert_with_mistral.tl, "data-confirm" => :are_you_sure_you_want_to_convert_into_purchase_via_ocr.tl, method: :post, params: { id: @document.id, vendor: :mistral}, disabled: Identifier.find_by_nature('mistral_api_key').nil?
+      = t.action :purchase_scan, label: :purchase_ai_convert_with_groq.tl, "data-confirm" => :are_you_sure_you_want_to_convert_into_purchase_via_ocr.tl, method: :post, params: { id: @document.id, vendor: :groq}, disabled: Identifier.find_by_nature('groq_api_key').nil?
+      = t.action :sale_scan, label: :sale_ai_convert_with_mistral.tl, "data-confirm" => :are_you_sure_you_want_to_convert_into_sale_via_ocr.tl, method: :post, params: { id: @document.id, vendor: :mistral}, disabled: Identifier.find_by_nature('mistral_api_key').nil?
+      = t.action :sale_scan, label: :sale_ai_convert_with_groq.tl, "data-confirm" => :are_you_sure_you_want_to_convert_into_sale_via_ocr.tl, method: :post, params: { id: @document.id, vendor: :groq}, disabled: Identifier.find_by_nature('groq_api_key').nil?
+= main_informations do   
+  - if @document.file.exists?
+    .picture
+      = link_to(backend_document_path(@document, format: @file_format), target: '_blank') do
+        - if @document.file_content_type == "application/zip"
+          %i.icon.icon-file-archive-o.default-zip
+        - elsif @document.file_content_type == "application/xml"
+          %i.icon.icon-file-code-o.default-zip
+        - else
+          = image_tag(backend_document_path(@document, format: :jpg))
+      .archived-at= @document.created_at.l
+      - if @document.template
+        .template-name= link_to(@document.template_name, backend_document_template_path(@document.template))
+
+  = attributes_list do |l|
+    - l.attribute :nature
+    - l.attribute :number
+    - l.attribute :key
+    - l.attribute :mandatory
+    - l.attribute :file_pages_count
+    - l.attribute :file_size
+    -# l.attribute :file_fingerprint
+    -# l.attribute :file_content_text
+
+  - if @document.mandatory
+    .controls
+      = button_tag :display_electronic_signature.tl, data: { toggle: 'modal', target: '#signature-modal' }, class: "btn btn-default", id: "lock-btn", type: 'button'
+
+      #signature-modal.modal.fade{ tabindex: '-1', role: 'dialog', 'aria-labelledby': 'indexModal', 'aria-hidden': 'true' }
+        .modal-dialog.modal-dialog-centered{ role: 'document' }
+          .modal-content
+            .modal-header.modal-header-generic
+              %button.close{ data: { dismiss: 'modal' }, 'aria-label': 'Close', type: 'button' }
+                %span
+                  %i.icon.icon-destroy{ 'aria-hidden': 'true' }
+              %b.modal-title= :electronic_signature.tl
+            .modal-signature-infos
+              = field_set(:fingerprint_sha256.tl) do
+                = @document.sha256_fingerprint
+              = field_set(:signature.tl) do
+                = @document.signature.gsub(/\n/, '<br />').html_safe
+            .modal-footer
+              = link_to :signature_check.tl, "#{FinancialYearArchive::PUBLIC_KEY_URL}?signature=#{@document.signature.gsub(/\n/, '¤').gsub(/\+/, '§')}", class: "btn btn-primary", target: '_blank'
+              %button.btn.btn-primary.no-icn{ type: 'button', 'data-dismiss': 'modal' }= :cancel.tl
+
+- if @document.metadata.present?
+  = cobbles do |c|
+    - c.cobble :ocr_level_2 do
+      = render 'ocr', document: @document
+    - c.cobble :ocr_level_1 do
+      .med-info
+        %span.title= :file_content_text.tl
+        %span.text= @document.file_content_text

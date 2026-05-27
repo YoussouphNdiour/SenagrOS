@@ -1,0 +1,63 @@
+jpn:
+  devise:
+    confirmations:
+      new:
+        resend_confirmation_instructions: "確認の指示を再送信"
+    mailer:
+      confirmation_instructions:
+        action: "アカウントの確認"
+        # greeting: "Welcome %{recipient}!"
+        instruction: "あなたは、以下のリンクからアカウントのメールを確認することができます。"
+        subject: "確認命令"
+      reset_password_instructions:
+        action: "私のパスワードを変更"
+        # greeting: "Hello %{recipient}!"
+        instruction: "誰かがパスワードを変更するためのリンクを要求している、とあなたは下のリンクを介してこれを行うことができます。"
+        instruction_2: "あなたがこれを要求していない場合は、このメールを無視してください。"
+        instruction_3: "あなたのパスワードは、上記のリンクにアクセスするまで変更し、新しいものを作成しません。"
+        subject: "パスワード命令をリセット"
+      signed_up:
+        confirm: "管理パネルでご確認ください。"
+        # details: "%{first_name} %{last_name} with email %{email} has just signed up."
+        subject: "新しいサインアップ"
+      unlock_instructions:
+        action: "アカウントのロックを解除"
+        # greeting: "Hello %{recipient}!"
+        instruction: "アカウントのロックを解除するには、以下のリンクをクリックしてください："
+        message: "アカウントが原因の試みに失敗記号の過剰にロックされています。"
+        subject: "命令のロックを解除"
+    passwords:
+      edit:
+        change_my_password: "私のパスワードを変更"
+        change_your_password: "パスワードを変更してください"
+        confirm_new_password: "新しいパスワードを確認"
+        new_password: "新しいパスワード"
+      new:
+        forgot_your_password: "パスワードをお忘れですか？"
+        send_me_reset_password_instructions: "パスワードのリセット手順を私に送ります"
+    registrations:
+      edit:
+        are_you_sure: "本気ですか？"
+        cancel_my_account: "アカウントをキャンセル"
+        leave_blank_if_you_don_t_want_to_change_it: "あなたはそれを変更したくない場合は空白のまま"
+        # title: "Edit %{resource}"
+        unhappy: "不幸"
+        update: "更新"
+        we_need_your_current_password_to_confirm_your_changes: "私たちはあなたの変更を確認するために現在のパスワードを必要とします"
+      new:
+        sign_up: "サインアップ"
+    sessions:
+      new:
+        sign_in: "サインイン"
+        sign_in_with_ekylibre: "Ekylibre.comでサインイン"
+    shared:
+      links:
+        didn_t_receive_confirmation_instructions: "確認メールがまだ届きませんか？"
+        didn_t_receive_unlock_instructions: "ロック解除命令を受信しませんでしたか？"
+        forgot_your_password: "パスワードをお忘れですか？"
+        sign_in: "サインイン"
+        # sign_in_with_provider: "Sign in with %{provider}"
+        sign_up: "サインアップ"
+    unlocks:
+      new:
+        resend_unlock_instructions: "ロック解除命令を再送信"

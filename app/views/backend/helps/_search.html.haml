@@ -1,0 +1,21 @@
+:ruby
+  article = "#{self.controller_name}-#{self.action_name}" # search
+  base_params = {controller: :help, action: :show}
+  base_params[:dialog] = params[:dialog] if params[:dialog]
+- cache("#{I18n.locale}-#{article}") do
+  .header
+    %h1= :help.tl
+  .content
+    - if article_exist?(article)
+      = article(article, "data-update" => "#help", url: base_params)
+    - else
+      %h1= :missing_help.tl
+      .help-error= :error_no_file.tl(article: article.to_s)
+- unless controller_path == "backend/helps"
+  #help-center
+    %a{ href: 'https://doc.ekylibre.com/fr/demarrage/', class: "btn btn-big btn-help", target:"_blank" }
+      %i
+      = :help_center.tl
+    %a{ href: 'https://discord.gg/BSpD6hq7qR', class: "btn btn-big btn-forum", target:"_blank" }
+      %i
+      = :forum.tl

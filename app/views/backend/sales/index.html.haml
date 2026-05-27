@@ -1,0 +1,28 @@
+= render 'backend/shared/financial_year_warning'
+
+= kujaku do |k|
+  - k.text
+  - sm = Sale.state_machine.states
+  - k.multi_choice :state, [:draft, :estimate, :aborted, :refused, :order, :invoice].map{|s| [sm[s].human_name, s] }, label: Sale.human_attribute_name(:state)
+  - k.helper :journal_period_crit
+  - k.choice :all, :unpaid, name: :nature
+  - responsibles = Entity.where(id: Sale.select(:responsible_id).distinct)
+  - if responsibles.any?
+    - k.helper do
+      %div.label-container
+        %label= Sale.human_attribute_name(:responsible)
+      = select_tag(:responsible_id, options_for_select([[]] + responsibles.collect{|u| [u.label, u.id]}, params[:responsible_id].to_i))
+  - providers = Sale.providers_vendors
+  - if providers.any?
+    - k.helper do
+      %div.label-container
+        %label= Sale.human_attribute_name(:providers)
+      = select_tag(:provider, options_for_select([[]] + providers.map(&:capitalize), params[:provider].to_s))
+
+- main_toolbar do |t|
+  = t.new variants: SaleNature.actives.reorder(:name).to_a.map{ |n| [n.name, {nature_id: n.id}] }
+  = t.new icon: :scanner, label: :sale_scan.tl, params: { controller: '/backend/documents', action: :new, nature: :purchases_original, redirect: nil }
+
+= main_list
+
+

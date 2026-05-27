@@ -1,0 +1,201 @@
+# frozen_string_literal: true
+
+# = Informations
+#
+# == License
+#
+# Ekylibre - Simple agricultural ERP
+# Copyright (C) 2008-2009 Brice Texier, Thibaud Merigon
+# Copyright (C) 2010-2012 Brice Texier
+# Copyright (C) 2012-2014 Brice Texier, David Joulin
+# Copyright (C) 2015-2023 Ekylibre SAS
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see http://www.gnu.org/licenses.
+#
+# == Table: parcel_items
+#
+#  activity_budget_id            :integer(4)
+#  analysis_id                   :integer(4)
+#  annotation                    :text
+#  conditioning_quantity         :decimal(20, 10)
+#  conditioning_unit_id          :integer(4)
+#  created_at                    :datetime         not null
+#  creator_id                    :integer(4)
+#  currency                      :string
+#  delivery_id                   :integer(4)
+#  delivery_mode                 :string
+#  equipment_id                  :integer(4)
+#  id                            :integer(4)       not null, primary key
+#  lock_version                  :integer(4)       default(0), not null
+#  merge_stock                   :boolean          default(FALSE)
+#  non_compliant                 :boolean
+#  non_compliant_detail          :string
+#  parcel_id                     :integer(4)       not null
+#  parted                        :boolean          default(FALSE), not null
+#  population                    :decimal(19, 4)
+#  product_enjoyment_id          :integer(4)
+#  product_id                    :integer(4)
+#  product_identification_number :string
+#  product_localization_id       :integer(4)
+#  product_movement_id           :integer(4)
+#  product_name                  :string
+#  product_ownership_id          :integer(4)
+#  product_work_number           :string
+#  project_budget_id             :integer(4)
+#  purchase_invoice_item_id      :integer(4)
+#  purchase_order_item_id        :integer(4)
+#  purchase_order_to_close_id    :integer(4)
+#  role                          :string
+#  sale_item_id                  :integer(4)
+#  shape                         :geometry({:srid=>4326, :type=>"multi_polygon"})
+#  source_product_id             :integer(4)
+#  source_product_movement_id    :integer(4)
+#  team_id                       :integer(4)
+#  transporter_id                :integer(4)
+#  type                          :string
+#  unit_pretax_sale_amount       :decimal(19, 4)
+#  unit_pretax_stock_amount      :decimal(19, 4)   default(0.0), not null
+#  updated_at                    :datetime         not null
+#  updater_id                    :integer(4)
+#  variant_id                    :integer(4)
+#
+class ShipmentItem < ParcelItem
+  belongs_to :shipment, inverse_of: :items, class_name: 'Shipment', foreign_key: :parcel_id
+
+  has_one :storage, through: :shipment
+  has_one :contract, through: :shipment
+
+  belongs_to :product
+  validates :source_product, presence: true
+
+  delegate :unit_pretax_amount, :pretax_amount, to: :sale_item, allow_nil: true
+  delegate :allow_items_update?, :remain_owner, :planned_at,
+           :ordered_at, :recipient, :in_preparation_at,
+           :prepared_at, :given_at,
+           :separated_stock?, :currency, to: :shipment, prefix: true
+
+  scope :with_nature, ->(nature) { joins(:shipment).merge(Shipment.with_nature(nature)) }
+
+  before_validation do
+    self.currency = shipment_currency if shipment
+    read_at = shipment ? shipment_prepared_at : Time.zone.now
+
+    # purchase contrat case
+    if variant && contract && contract.items.where(variant: variant).any?
+      item = contract.items.where(variant_id: variant.id).first
+      self.unit_pretax_amount ||= item.unit_pretax_amount if item && item.unit_pretax_amount
+    end
+
+    if sale_item
+      self.variant = sale_item.variant
+    elsif purchase_order_item
+      self.variant = purchase_order_item.variant
+    elsif source_product
+      self.variant = source_product.variant
+      self.population = source_product.population if population.nil? || population.zero?
+    end
+
+    # case of creation of a shipment item from a sale
+    if shipment&.sale.present? && variant.present?
+      s_items = shipment.sale.items.where(variant: variant)
+      if s_items.any?
+        self.sale_item_id = s_items.first.id
+      end
+    end
+
+    # Update product_id when a product is added in edit shipment
+    if product_id.nil?
+      self.product_id = source_product_id
+    end
+
+    true
+  end
+
+  ALLOWED = %w[
+    product_localization_id
+    product_movement_id
+    product_enjoyment_id
+    product_ownership_id
+    unit_pretax_stock_amount
+    unit_pretax_amount
+    pretax_amount
+    purchase_item_id
+    sale_item_id
+    updated_at
+    updater_id
+    delivery_mode
+  ].freeze
+
+  protect(allow_update_on: ALLOWED, on: %i[create destroy update]) do
+    !shipment_allow_items_update?
+  end
+
+  def prepared?
+    source_product.present?
+  end
+
+  def trade_item
+    sale_item
+  end
+
+  def catalog_item_sale_amount
+    date = self.shipment.planned_at.present? ? self.shipment.planned_at : self.shipment.created_at
+    catalog = Catalog.by_default!(:sale)
+    item = CatalogItem.active_at(date).find_by(catalog: catalog, variant: self.variant, unit: self.unit)
+    item.present? ? item.amount : 0
+  end
+
+  def base_unit_amount
+    coeff = self.conditioning_unit&.coefficient
+    amount = catalog_item_sale_amount
+    amount != 0 && coeff ? (amount / coeff).round(2) : 0
+  end
+
+  # Set started_at/stopped_at in tasks concerned by preparation of item
+  # It takes product in stock
+  def check
+    checked_at = shipment_prepared_at
+    state = true
+    check_outgoing(checked_at)
+    return state, msg unless state
+
+    save!
+  end
+
+  # Mark items as given, and so change enjoyer and ownership if needed at
+  # this moment.
+  def give
+    give_outgoing
+  end
+
+  protected
+
+    def check_outgoing(_checked_at)
+      update! product: source_product
+    end
+
+    def give_outgoing
+      if conditioning_quantity == source_product.population(at: shipment_given_at) && !shipment_remain_owner
+        ProductOwnership.create!(product: product, owner: shipment_recipient, started_at: shipment_given_at, originator: self)
+        ProductLocalization.create!(product: product, nature: :exterior, started_at: shipment_given_at, originator: self)
+        ProductEnjoyment.create!(product: product, enjoyer: shipment_recipient, nature: :other, started_at: shipment_given_at, originator: self)
+      end
+
+      ProductMovement.create!(product: product, delta: -1 * conditioning_quantity, started_at: shipment_given_at, originator: self)
+      # product deat_at update when give a unitary product in shipment
+      if product_is_unitary?
+        self.product.update_attribute(:dead_at, shipment_given_at)
+      end
+    end
+end

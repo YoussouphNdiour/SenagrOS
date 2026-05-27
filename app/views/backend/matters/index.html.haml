@@ -1,0 +1,17 @@
+= kujaku do |k|
+  - k.text
+  - k.helper :journal_period_crit
+  - k.choice :all, :consume, :available ,label: :stock_status.tl
+  - k.list :sub_nature,label: :options.tl, list_values: [:fertilizer, :plant_medicine, :seed_and_plant, :other].map{ |nature| [nature.to_s.pluralize.tl, nature.to_s.camelize] }
+  - if ProductLabelling.any?
+    - k.helper do
+      %label= Label.model_name.human
+      = select_tag(:label_id, options_for_select([[]] + Label.where(id: ProductLabelling.select(:label_id).uniq).map{ |l| [l.name, l.id] }, params[:label_id].to_i))
+
+- main_toolbar do |t|
+  = t.new params: { controller: :receptions, action: :new, redirect: nil }, label: :new_incoming_parcel.tl
+  = t.new params: { redirect: nil }
+%div.merge-matter-div
+  = link_to(:merge.tl, nil, class: "btn btn-primary merge-matter-btn")
+   
+= main_list

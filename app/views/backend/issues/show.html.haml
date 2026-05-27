@@ -1,0 +1,56 @@
+- main_toolbar do |t|
+  = t.edit resource
+  - if resource.can_close?
+    = t.close(resource, method: :post, "data-confirm" => are_you_sure_you_want_to(:close_issue))
+  - if resource.can_abort?
+    = t.abort(resource, method: :post, "data-confirm" => are_you_sure_you_want_to(:abort_issue))
+  - if resource.can_reopen?
+    = t.reopen(resource, method: :post, "data-confirm" => are_you_sure_you_want_to(:reopen_issue))
+  -# for event in resource.state_paths.events
+    - if resource.send("can_#{event}?")
+      = t.send(event, resource, method: :post, "data-confirm" => are_you_sure_you_want_to("#{event}_issue"))
+  = t.destroy
+
+= main_informations attachment: true do
+  - if resource.picture.exists?
+    .picture= image_tag(resource.picture.url(:identity))
+  = infos do
+    .med-info.important
+      %span.title= Issue.human_attribute_name(:state)
+      %span.value= lights(resource.status)
+    .med-info
+      %span.title= Issue.human_attribute_name(:gravity)
+      %span.value= resource.gravity.to_s + "/4"
+    .med-info
+      %span.title= Issue.human_attribute_name(:priority)
+      %span.value= resource.priority.to_s + "/4"
+    - if resource.target
+      .med-info.important
+        %span.title= Issue.human_attribute_name(:target)
+        %span.value= link_to resource.target.name, {controller: resource.target.class.base_class.name.tableize, action: :show, id: resource.target_id}
+  - if resource.description?
+    .med-info= resource.description
+
+= janus do |j|
+  - j.face :cobbles do
+    = cobbles do |c|
+      - if resource.geolocation
+        - c.cobble :map do
+          = visualization(view: {zoom: 18}) do |v|
+            - v.serie :main, [{name: "origine", shape: resource.geolocation}]
+            - v.points :geolocation, :main
+            - v.control :zoom, 18
+            - v.control :scale
+            - v.control :fullscreen
+            - v.control :layer_selector
+
+      - c.cobble(:interventions) do
+        = cobble_toolbar do |t|
+          = t.new(params: {controller: :interventions, issue_id: resource.id})
+        = cobble_list(:interventions)
+
+  - j.face :timeline do
+    = timeline(resource) do |l|
+      - l.side :observations, at: :observed_at
+      - l.side :interventions, at: :started_at
+      - l.side :versions, new: false

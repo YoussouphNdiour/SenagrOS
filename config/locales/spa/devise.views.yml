@@ -1,0 +1,63 @@
+spa:
+  devise:
+    confirmations:
+      new:
+        resend_confirmation_instructions: "Vuelva a enviar instrucciones de confirmación"
+    mailer:
+      confirmation_instructions:
+        action: "Confirmar mi cuenta"
+        # greeting: "Welcome %{recipient}!"
+        instruction: "Puede confirmar su cuenta de correo electrónico a través del siguiente enlace:"
+        subject: "Instrucciones de confirmación"
+      reset_password_instructions:
+        action: "Cambiar contraseña"
+        # greeting: "Hello %{recipient}!"
+        instruction: "Alguien ha pedido un enlace para cambiar su contraseña, y usted puede hacerlo a través del siguiente enlace."
+        instruction_2: "Si usted no ha solicitado este, por favor, ignora este mensaje."
+        instruction_3: "Su contraseña no cambiará hasta que acceda al enlace anterior y crear una nueva."
+        subject: "Restablecer las instrucciones de contraseña"
+      signed_up:
+        confirm: "Por favor, confirme que en el panel de administración."
+        # details: "%{first_name} %{last_name} with email %{email} has just signed up."
+        subject: "Nueva inscripción"
+      unlock_instructions:
+        action: "Desbloquear mi cuenta"
+        # greeting: "Hello %{recipient}!"
+        instruction: "Haga clic en el enlace de abajo para desbloquear su cuenta:"
+        message: "Su cuenta ha sido bloqueada debido a una cantidad excesiva de señal de éxito en los intentos."
+        subject: "Instrucciones de Desbloqueo"
+    passwords:
+      edit:
+        change_my_password: "Cambiar contraseña"
+        change_your_password: "Cambia tu contraseña"
+        confirm_new_password: "Confirmar nueva contraseña"
+        new_password: "Nueva contraseña"
+      new:
+        forgot_your_password: "¿Olvidaste tu contraseña?"
+        send_me_reset_password_instructions: "Envíame restablecer las instrucciones de contraseña"
+    registrations:
+      edit:
+        are_you_sure: "¿Estás seguro?"
+        cancel_my_account: "Cancelar mi cuenta"
+        leave_blank_if_you_don_t_want_to_change_it: "Dejar en blanco si no quieres cambiarlo"
+        # title: "Edit %{resource}"
+        unhappy: "Infeliz"
+        update: "Actualizar"
+        we_need_your_current_password_to_confirm_your_changes: "Necesitamos su contraseña actual para confirmar los cambios"
+      new:
+        sign_up: "Regístrate"
+    sessions:
+      new:
+        sign_in: "Registrarse"
+        sign_in_with_ekylibre: "Entra con Ekylibre.com"
+    shared:
+      links:
+        didn_t_receive_confirmation_instructions: "¿No ha recibido instrucciones para confirmar?"
+        didn_t_receive_unlock_instructions: "No recibir instrucciones de desbloqueo?"
+        forgot_your_password: "¿Olvidaste tu contraseña?"
+        sign_in: "Registrarse"
+        # sign_in_with_provider: "Sign in with %{provider}"
+        sign_up: "Regístrate"
+    unlocks:
+      new:
+        resend_unlock_instructions: "Reenvío de desbloquear las instrucciones"

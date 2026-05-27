@@ -1,0 +1,106 @@
+@import "flatpickr/dist/flatpickr";
+@import "flatpickr/dist/plugins/confirmDate/confirmDate";
+@import "flatpickr/dist/themes/material_blue";
+
+/********************************************
+ * Material blue theme adjustments
+ ********************************************/
+.flatpickr-calendar.arrowTop:after {
+  border-bottom-color: $base-color;
+}
+
+.flatpickr-calendar.arrowBottom:after {
+  border-top-color: $base-color;
+}
+
+.flatpickr-months .flatpickr-month {
+  background: $base-color;
+}
+
+.flatpickr-weekdays {
+  background: $base-color;
+}
+
+span.flatpickr-weekday {
+  background: $base-color;
+}
+
+.flatpickr-day.selected,
+.flatpickr-day.startRange,
+.flatpickr-day.endRange,
+.flatpickr-day.selected.inRange,
+.flatpickr-day.startRange.inRange,
+.flatpickr-day.endRange.inRange,
+.flatpickr-day.selected:focus,
+.flatpickr-day.startRange:focus,
+.flatpickr-day.endRange:focus,
+.flatpickr-day.selected:hover,
+.flatpickr-day.startRange:hover,
+.flatpickr-day.endRange:hover,
+.flatpickr-day.selected.prevMonthDay,
+.flatpickr-day.startRange.prevMonthDay,
+.flatpickr-day.endRange.prevMonthDay,
+.flatpickr-day.selected.nextMonthDay,
+.flatpickr-day.startRange.nextMonthDay,
+.flatpickr-day.endRange.nextMonthDay {
+  background: $base-color;
+  border-color: $base-color;
+}
+
+.flatpickr-day.selected.startRange + .endRange:not(:nth-child(7n+1)),
+.flatpickr-day.startRange.startRange + .endRange:not(:nth-child(7n+1)),
+.flatpickr-day.endRange.startRange + .endRange:not(:nth-child(7n+1)) {
+  -webkit-box-shadow: -10px 0 0 $base-color;
+  box-shadow: -10px 0 0 $base-color;
+}
+
+.flatpickr-day.week.selected {
+  -webkit-box-shadow: -5px 0 0 $base-color, 5px 0 0 $base-color;
+  box-shadow: -5px 0 0 $base-color, 5px 0 0 $base-color;
+}
+.flatpickr-current-month .numInputWrapper {
+    width: 8ch;
+}
+
+
+/********************************************
+ * Other fixes
+ ********************************************/
+.flatpickr-time input.flatpickr-hour, .flatpickr-time input.flatpickr-minute, .flatpickr-time input.flatpickr-second {
+  height: inherit; // Override reset rule
+  font-size: 18px;
+  padding: 0;
+}
+
+.flatpickr-calendar {
+  background-color: white;
+}
+
+.flatpickr-confirm {
+  background-color: $base-color;
+}
+
+.flatpickr-current-month .numInput {
+  text-align: left !important;
+}
+
+.flatpickr-time .numInput {
+  text-align: center !important;
+}
+
+.flatpickr-wrapper > input {
+  max-width: 100% !important;
+}
+
+.flatpickr-calendar {
+  &.year-hidden {
+    .numInputWrapper {
+      display: none;
+    }
+  }
+  &.day-names-hidden {
+    .flatpickr-weekdaycontainer {
+      display: none;
+    }
+  }
+}

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<procedures xmlns="http://www.ekylibre.org/XML/2013/procedures">
+  <procedure name="generic_transport_harvesting" categories="harvesting" actions="transportation" hidden="true">
+    <parameters>
+      <doer name="driver" filter="is worker" cardinality="*"/>
+      <tool name="tractor" filter="is motorized_vehicle" cardinality="*"/>
+      <tool name="trailer" filter="is equipment" cardinality="*"/>
+    </parameters>
+  </procedure>
+</procedures>

@@ -1,0 +1,16 @@
+- main_period_selector(:year)
+
+= beehive(:production) do |b|
+  - if current_campaign
+    - b.cell :activity_map, params: {visualization: :grain_yield}
+    - b.hbox do
+      - b.cell :pfi_interventions
+      - b.cell :elapsed_interventions_times_by_activities
+    - b.hbox do
+      - b.cell :cropping_plan
+
+- tour(:production) do |t|
+  - t.step(:production, element: "#side #production", on: :right)
+  - t.step(:quality, element: "#side #quality", on: :right)
+  - t.step(:field_distribution, element: "#side #field_distribution", on: :right)
+  - t.step(:supervision, element: "#side #supervision", on: :right)

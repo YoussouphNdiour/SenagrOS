@@ -1,0 +1,163 @@
+# frozen_string_literal: true
+
+# = Informations
+#
+# == License
+#
+# Ekylibre - Simple agricultural ERP
+# Copyright (C) 2008-2009 Brice Texier, Thibaud Merigon
+# Copyright (C) 2010-2012 Brice Texier
+# Copyright (C) 2012-2014 Brice Texier, David Joulin
+# Copyright (C) 2015-2023 Ekylibre SAS
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see http://www.gnu.org/licenses.
+#
+# == Table: products
+#
+#  activity_production_id       :integer(4)
+#  address_id                   :integer(4)
+#  birth_date_completeness      :string
+#  birth_farm_number            :string
+#  born_at                      :datetime
+#  category_id                  :integer(4)       not null
+#  codes                        :jsonb
+#  conditioning_unit_id         :integer(4)
+#  country                      :string
+#  created_at                   :datetime         not null
+#  creator_id                   :integer(4)
+#  custom_fields                :jsonb
+#  dead_at                      :datetime
+#  default_storage_id           :integer(4)
+#  derivative_of                :string
+#  description                  :text
+#  end_of_life_reason           :string
+#  father_country               :string
+#  father_identification_number :string
+#  father_variety               :string
+#  filiation_status             :string
+#  first_calving_on             :datetime
+#  fixed_asset_id               :integer(4)
+#  id                           :integer(4)       not null, primary key
+#  identification_number        :string
+#  initial_born_at              :datetime
+#  initial_container_id         :integer(4)
+#  initial_dead_at              :datetime
+#  initial_enjoyer_id           :integer(4)
+#  initial_father_id            :integer(4)
+#  initial_geolocation          :geometry({:srid=>4326, :type=>"st_point"})
+#  initial_mother_id            :integer(4)
+#  initial_movement_id          :integer(4)
+#  initial_owner_id             :integer(4)
+#  initial_population           :decimal(19, 4)   default(0.0)
+#  initial_shape                :geometry({:srid=>4326, :type=>"multi_polygon"})
+#  isacompta_analytic_code      :string(2)
+#  lock_version                 :integer(4)       default(0), not null
+#  member_variant_id            :integer(4)
+#  mother_country               :string
+#  mother_identification_number :string
+#  mother_variety               :string
+#  name                         :string           not null
+#  nature_id                    :integer(4)       not null
+#  number                       :string           not null
+#  origin_country               :string
+#  origin_identification_number :string
+#  originator_id                :integer(4)
+#  parent_id                    :integer(4)
+#  person_id                    :integer(4)
+#  picture_content_type         :string
+#  picture_file_name            :string
+#  picture_file_size            :integer(4)
+#  picture_updated_at           :datetime
+#  provider                     :jsonb            default("{}")
+#  reading_cache                :jsonb            default("{}")
+#  specie_variety               :jsonb            default("{}")
+#  team_id                      :integer(4)
+#  tracking_id                  :integer(4)
+#  type                         :string
+#  type_of_occupancy            :string
+#  updated_at                   :datetime         not null
+#  updater_id                   :integer(4)
+#  uuid                         :uuid
+#  variant_id                   :integer(4)       not null
+#  variety                      :string           not null
+#  work_number                  :string
+#  worker_group_item_id         :integer(4)
+#
+
+class BuildingDivision < SubZone
+  refers_to :variety, scope: :building_division
+  has_many :productions, class_name: 'ActivityProduction', foreign_key: :support_id
+
+  scope :of_production, lambda { |production|
+    where(activity_production: production)
+  }
+
+  def occupation_percentage
+    if content_localizations.any? && shape.present? && with_easement_capacity && occupation_area.to_d > 0
+      ((occupation_area / shape.area.to_f) * 100).round(2)
+    else
+      0
+    end
+  end
+
+  def occupation_area
+    if content_localizations.any? && shape.present? && with_easement_capacity
+      product_occupation = []
+      if easement_capacity_variety.present?
+        product_inside = Product.where(id: content_localizations.pluck(:product_id)).of_variety(easement_capacity_variety)
+      else
+        product_inside = Product.where(id: content_localizations.pluck(:product_id))
+      end
+      # compute in square meters all the product inside
+      product_inside.each do |content_localization|
+        product_occupation << (content_localization.variant.easement_area * content_localization.population)
+      end
+      # compute the percentage of occupation
+      product_occupation.compact.sum.to_s.to_f.round(2)
+    else
+      0
+    end
+  end
+
+  def occupation_population
+    ((occupation_percentage * 0.01) * occupation_capacity).round(2)
+  end
+
+  def occupation_capacity
+    if shape.present? && with_easement_capacity && easement_capacity_variety.present?
+      if content_localizations.any?
+        product_inside = Product.where(id: content_localizations.pluck(:product_id)).of_variety(easement_capacity_variety).first
+      else
+        product_inside = Product.of_variety(easement_capacity_variety).first
+      end
+      # compute in square meters all the product inside
+      if product_inside&.variant&.easement_area&.present?
+        (shape.area / product_inside.variant.easement_area.to_f).round(2)
+      else
+        0
+      end
+    else
+      0
+    end
+  end
+
+  def human_shape_area
+    if shape.present?
+      shape.area.in(:square_meter).round_l
+    else
+      0
+    end
+  end
+
+end

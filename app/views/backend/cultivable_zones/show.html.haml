@@ -1,0 +1,93 @@
+- main_toolbar do |t|
+  = t.edit resource
+  = t.export(:cultivable_zone_sheet, key: :work_number, target: "_blank")
+  = t.destroy
+
+- main_period_selector(:year)
+
+= main_informations attachment: true do
+  = mini_map(resource)
+  = infos do
+    .med-info
+      %span.title= CultivableZone.human_attribute_name(:work_number)
+      %span.value= resource.work_number
+    .med-info
+      %span.title= CultivableZone.human_attribute_name(:net_surface_area)
+      %span.value= resource.human_shape_area
+    - if resource.edge_length
+      .med-info
+        %span.title= :edge_length.tl
+        %span.value= resource.edge_length.l(round: 2, precision: 2)
+    - if resource.production_system
+      .med-info
+        %span.title= CultivableZone.human_attribute_name(:production_system)
+        %span.value= resource.human_production_system_name
+    - if resource.soil_nature
+      .med-info
+        %span.title= CultivableZone.human_attribute_name(:soil_nature)
+        %span.value= resource.human_soil_nature_name
+    - if resource.cadastral_land_parcels
+      .med-info
+        %span.title= :cadastral_land_parcels.tl
+        %span.value
+          %i.picto{ class: 'picto-land-parcels' }
+          = resource.cadastral_land_parcels.pluck(:section, :work_number).map { |section, work_number| "#{section}#{work_number}" }.to_sentence
+    - if resource.protected_water_zones
+      .med-info
+        %span.title= :protected_water_zones.tl
+        %span.value
+          %i.picto{ class: 'picto-water-protection' }
+          = resource.protected_water_zones.first.label
+    - if resource.natural_zones
+      .med-info
+        %span.title= :natural_zones.tl
+        %span.value
+          %i.picto{ class: 'picto-water-protection' }
+          = resource.natural_zones.first.name
+    - if resource.theoritical_soil_depths
+      .med-info
+        %span.title= :theoritical_soil_depths.tl
+        %span.value
+          %i.picto{ class: 'picto-blur-linear' }
+          = resource.theoritical_soil_depths.first.soil_depth.l(precision: 0)
+    - if resource.theoritical_water_capacities
+      .med-info
+        %span.title= :theoritical_water_capacities.tl
+        %span.value
+          %i.picto{ class: 'picto-water-arrow-up' }
+          = resource.theoritical_water_capacities.first.name
+    - if resource.last_soil_moisture.present?
+      .med-info
+        %span.title= :last_soil_moisture.tl(analysed_at: resource.last_soil_moisture[:analysed_at].l(format: "%d/%m/%y %HH"))
+        %span.value
+          %i.picto{ class: 'picto-water-arrow-down' }
+          = resource.last_soil_moisture[:value].l(precision: 0)
+    - if resource.last_soil_10cm_depth_surface_temperature.present?
+      .med-info
+        %span.title= :last_soil_10cm_depth_surface_temperature.tl(analysed_at: resource.last_soil_10cm_depth_surface_temperature[:analysed_at].l(format: "%d/%m/%y %HH"))
+        %span.value
+          %i.picto{ class: 'picto-blur-linear' }
+          = resource.last_soil_10cm_depth_surface_temperature[:value].l(precision: 0) 
+    - if resource.current_cultivations.any?
+      .med-info
+        %span.title= :current_cultivation.tl
+        %span.value
+          %i.picto{class: "plant"}
+          - list = resource.current_cultivations.collect { |c| link_to(c.name, {controller: c.type.tableize, action: :show, id: c.id}) }
+          = list.to_sentence.html_safe
+
+= cobbles do |c|
+  - if Preference[:weather_public_station].present?
+    - c.cobble :historical_weather do
+      = cell :historical_weather, params: { period: :weekly, campaign: current_campaign }
+  - c.cobble :ndvi do
+    = cell :ndvi, params: {cultivable_zone_id: resource.id}
+  - c.cobble(:productions) do
+    - disabled = Activity.count.zero?
+    %button{ class: "btn btn-default btn-default--parcel #{'disabled' if disabled}", id: "generate-land-parcel-btn", title: "#{:before_add_a_land_parcel.tl if disabled}", data: { cultivable_zone: resource.id} }
+      = :new.tl
+    = cobble_list(:productions)
+  -# c.cobble(:contained_products) do
+    = cobble_list(:contained_products)
+  -# c.cobble(:intervention_product_parameters) do
+    = cobble_list(:intervention_product_parameters)

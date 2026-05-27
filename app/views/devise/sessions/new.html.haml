@@ -1,0 +1,43 @@
+%h2
+  = t('.sign_in', :default => "Sign in")
+  = link_to("#", data: {toggle_visibility: "#config"}, class: "config", alt: :configure.tl) do
+    %i
+
+- demo_mode = Preference.value(:demo, false, :boolean)
+= form_for(resource, :as => resource_name, :url => session_path(resource_name)) do |f|
+
+  #config
+    .field.secondary
+      = label_tag :time_zone.tl
+      = select_tag :time_zone, options_for_select(ActiveSupport::TimeZone.all.map{|z| [z.to_s, z.tzinfo.identifier] }), "data-auto-timezone" => true
+
+    .field.secondary
+      = label_tag :locale.tl
+      = locale_selector_tag
+
+  .field
+    = f.label :email
+    = f.email_field :email, demo_mode ? { value: Preference.value(:demo_user) } : {}
+
+  .field
+    = f.label :password
+    = f.password_field :password, demo_mode ? { value: Preference.value(:demo_password) } : {}
+
+  - if devise_mapping.rememberable?
+    .field.field-remember-me
+      = f.check_box :remember_me
+      = f.label :remember_me
+
+  .field= f.submit t('.sign_in', default: "Sign in")
+
+  = render "devise/shared/links"
+
+  - if Devise.omniauth_providers.include? :ekylibre
+    .separator= :or.tl
+
+    .field= link_to t('.sign_in_with_ekylibre', :default => 'Sign in with Ekylibre.com'), user_ekylibre_omniauth_authorize_path, class: 'btn btn-primary btn-lg btn-block'
+
+  - if demo_mode && !flash[:alert]
+    #autologin
+      :javascript
+        $(document).ready(function(){ window.setTimeout(function(){ $('#autologin').closest('form').submit(); }, 300); });

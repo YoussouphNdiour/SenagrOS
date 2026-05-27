@@ -1,0 +1,9 @@
+- if resource.picture.exists?
+  .picture.picture-identity= image_tag(resource.picture.url(:identity))
+- elsif resource.shape
+  = product_mini_map
+- elsif resource.container && resource.container.shape
+  = product_mini_map(resource.container)
+- elsif resource.category.pictogram.present?
+  .picture.picture-identity
+    %i.picto{class: "picto-#{resource.category.pictogram}"}

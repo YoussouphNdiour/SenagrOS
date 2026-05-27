@@ -1,0 +1,9 @@
+- main_toolbar do |t|
+  = t.new params: { redirect: nil }
+
+= janus do |j|
+  - if resource_model.any?
+    - j.face :map do
+      = main_resources_map(async: true)
+  - j.face :list do
+    = main_list

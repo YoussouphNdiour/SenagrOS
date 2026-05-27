@@ -1,0 +1,270 @@
+$preview-modal-width: 80vw;
+$preview-modal-height: 80vh;
+
+$preview-modal-v_padding: 1vh;
+$preview-modal-h_padding: 1vw;
+
+$attachment-panel-height: 35px;
+
+$attachment-files-padding: $default-gap;
+
+
+$attachment-file-width: 200px;
+$attachment-full-panel-height: round($attachment-file-width * 2 / 3);
+$attachment-full-file-height: $attachment-full-panel-height - $attachment-files-padding * 2;
+$attachment-full-file-width: $attachment-full-file-height;
+
+
+$attachment-files-height: $lh-normal + $default-gap;
+
+$attachment-body-file-padding: 3px;
+$attachments-overlay: rgba(white, 0.7);
+
+
+@include keyframes(spin) {
+  0% {
+    @include transform(rotate(0deg));
+  }
+  100% {
+    @include transform(rotate(359deg));
+  }
+}
+
+.attachments {
+  min-height: $attachment-panel-height;
+
+  .attachments-body {
+
+    display: table;
+    width: 100%;
+
+    .attachments-upload {
+      i {
+        @include is-icon($fs-normal);
+        @include use-icon(paperclip);
+      }
+      background: transparent;
+      height: $attachment-panel-height;
+      line-height: $attachment-panel-height;
+      text-align: center;
+      vertical-align: top;
+      display: table-cell;
+      position: relative;
+      border: none;
+      min-width: 3%;
+      &, * {
+        color: $link-color;
+      }
+      input[type='file'] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        margin: 0;
+        opacity: 0;
+        overflow: hidden;
+        cursor: pointer;
+        line-height: $attachment-panel-height;
+      }
+    }
+
+    .attachment-btns {
+      display: table-cell;
+      width: 3%;
+      vertical-align: top;
+      *[data-attachments-expand] {
+        background: transparent;
+        position: relative;
+        overflow: hidden;
+        display: inline-block;
+
+        float: right;
+        height: $attachment-panel-height;
+        padding: 0;
+        width: 100%;
+        box-sizing: border-box;
+
+        border: none;
+        box-shadow: none;
+
+        i {
+          @include is-icon($fs-normal);
+          @include use-icon(expand);
+          color: $link-color;
+        }
+      }
+
+    }
+
+    .attachment-files {
+      display: inline-block;
+      min-height: $attachment-files-height;
+      position: relative;
+
+      z-index: 0;
+
+      .attachment-files-placeholder {
+        color: mix($neutral-color, white);
+        height: $attachment-panel-height;
+        line-height: $attachment-panel-height;
+      }
+
+      .attachment-files-bitrate {
+        color: #CCC;
+        right: 5px;
+        top: 0;
+        position: absolute;
+
+        height: $attachment-panel-height;
+        line-height: $attachment-panel-height;
+        z-index: -1;
+      }
+
+      .file {
+        display: inline-block;
+        // height: $attachment-files-height;
+        background: white;
+        // border: 1px solid #CCC;
+        @include box-shadow(0 0 round($default-gap * 0.5) rgba(black, 0.15));
+        margin: ($attachment-files-padding * 0.75) ($attachment-files-padding * 0.5);
+        width: $attachment-file-width;
+        @include box-sizing(border-box);
+        @include transition(height 0.4s);
+        .file-body {
+          display: block;
+          background-size: cover;
+          background-repeat: no-repeat;
+          background-position: 0 0;
+          cursor: pointer;
+          .file-actions {
+            @include float(right);
+            background: $attachments-overlay;
+            height: $attachment-files-height;
+            @include box-sizing(border-box);
+            *[data-attachment-destroy] {
+              display: inline-block;
+              box-sizing: border-box;
+              border: none;
+              text-align: center;
+              background: transparent;
+              padding: (0.25 * $default-gap) ($default-gap * 0.6) ;
+              text-shadow: 0 0 2px #FFF;
+              i {
+                @include is-icon;
+                @include use-icon(clear);
+                color: $active-color;
+                @include box-shadow(none);
+              }
+            }
+          }
+          .file-name {
+            display: block;
+            background: $attachments-overlay;
+            height: $attachment-files-height;
+            line-height: $attachment-files-height - $default-gap;
+            vertical-align: middle;
+            padding: (0.5*$default-gap) $default-gap;
+            box-sizing: border-box;
+            @include ellipsis();
+            text-shadow: 0 0 2px #FFF;
+            cursor: pointer;
+          }
+          .file-progress-bar {
+            height: 3px;
+            width: 100%;
+            .file-progress {
+              height: inherit;
+              background: $active-color;
+              width: 0%;
+            }
+          }
+        }
+
+        &.loading {
+          .file-actions {
+            *[data-attachment-destroy] {
+              i {
+                @include use-icon(spinner);
+                @include animation(spin 1s infinite steps(8));
+                @include inline-block;
+              }
+            }
+          }
+        }
+
+        &.failed {
+          .file-name {
+            &, * {
+              color: $invalid-color;
+              font-variant: italic;
+            }
+          }
+          .file-actions {
+            *[data-attachment-destroy] {
+              i {
+                @include use-icon(warning);
+                color: $invalid-color;
+              }
+            }
+          }
+        }
+
+      }
+    }
+  }
+
+  &.expanded {
+    min-height: $attachment-full-panel-height;
+    .attachments-body {
+      min-height: $attachment-full-panel-height;
+      .attachment-btns {
+        *[data-attachments-expand] {
+          i {
+            @include use-icon(compress);
+          }
+        }
+      }
+      .attachment-files {
+        .file {
+          position: relative;
+          height: $attachment-full-file-height;
+          .file-body {
+            width: 100%;
+            height: 100%;
+            .file-actions {
+              position: absolute;
+              top: 0;
+              right: 0;
+            }
+            .file-name {
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              right: 0;
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+[data-attachment-thumblink-target] {
+  .modal-dialog {
+    width: $preview-modal-width + $preview-modal-h_padding * 2;
+  }
+
+  .modal-body {
+    padding: $preview-modal-v_padding $preview-modal-h_padding;
+    width: $preview-modal-width;
+    height: $preview-modal-height;
+  }
+
+  iframe {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+  }
+}
+
+

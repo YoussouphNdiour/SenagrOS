@@ -1,0 +1,18 @@
+- main_toolbar do |t|
+  = t.new params: { redirect: nil }
+
+= janus do |j|
+  - j.face :list do
+    = main_list
+  - if resource_model.any?
+    - j.face :map do
+      - cache resource_model.all do
+        = visualization({box: {height: "100%"}, async_url: backend_visualizations_cultivable_zones_visualizations_path, optional_data_url: backend_visualizations_cadastral_parcels_visualizations_path }, class: 'map-fullwidth') do |v|
+          - v.control :zoom
+          - v.control :scale
+          - v.control :fullscreen
+          - v.control :layer_selector
+          - if resource_model.first.shape_centroid.present?
+            - v.center resource_model.first.shape_centroid
+  
+

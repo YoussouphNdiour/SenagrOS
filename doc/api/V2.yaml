@@ -1,0 +1,2668 @@
+openapi: 3.0.0
+info:
+  description: |
+    # Overview
+
+    The ekylibre API is organized around REST. Our API has predictable resource-oriented URLs, accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard HTTP response codes, authentication, and verbs.
+
+    ## Localizing
+
+    By defaut, labels and errors are translated to user preffered locale. It can be override, by passing `locale: <locale>` to request body, or by setting the Accept-Language headers.
+    Availables values are `['fra', 'eng']`.
+
+    ## Auth
+
+    If you have a farm with user, you can use the authentication_token directly in headers by concat with space `simple-token` `#user_email` `#authentication_token`
+
+    Example 
+
+    ```json
+    Authorization: simple-token demo@ekylibre.org y_geHxfwwDtLwi3bTomE
+    ```
+
+    If you don't know your token, you can use the `POST` `/tokens` path to grad an existing `#authentication_token` or create a new one if not exist with `#user_email` and `#user_password` as a value for query parameters.
+
+    ```json
+    POST /tokens, query_parameters { email: #user_email, password: #user_password }
+    ```
+  title: Ekylibre
+  contact:
+    name: Ekylibre developers
+    email: dev@ekylibre.com
+    url: 'https://ekylibre.com'
+  version: '2.0'
+  license:
+    name: AGPLv3
+    url: 'https://github.com/ekylibre/ekylibre/blob/main/LICENSE'
+  termsOfService: 'https://ekylibre.com/terms/'
+servers:
+  - url: 'https://demo-innovation.ekylibre.io/api/v2'
+    variables: {}
+    description: Staging external
+  - url: 'http://demo.ekylibre.lan:3000/api/v2'
+    description: Local
+paths:
+  /tokens:
+    post:
+      tags:
+        - Auth
+      summary: create token
+      operationId: Gettoken
+      parameters:
+        - $ref: '#/components/parameters/email'
+        - $ref: '#/components/parameters/password'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  token:
+                    type: string
+                    minLength: 1
+                required:
+                  - token
+                x-examples:
+                  example-1:
+                    token: y_geHxfwwDtLwi3bTomE
+              examples:
+                example-1:
+                  value:
+                    token: y_geHxfwwDtLwi3bTomE
+      deprecated: false
+      description: Creates a new token.
+  '/tokens/{id}':
+    delete:
+      tags:
+        - Auth
+      summary: Destroy token
+      operationId: Destroytoken
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                description: ''
+                type: object
+                properties:
+                  token:
+                    type: string
+                    minLength: 1
+                required:
+                  - token
+                x-examples:
+                  example-1:
+                    token: y_geHxfwwDtLwi3bTomE
+              examples:
+                example-1:
+                  value:
+                    token: y_geHxfwwDtLwi3bTomE
+      deprecated: false
+      description: Destroy a token.
+    parameters:
+      - schema:
+          type: string
+          example: y_geHxfwwDtLwi3bTomE
+        name: id
+        in: path
+        required: true
+        description: token
+  '/farm_profiles/{harvest_year}':
+    get:
+      summary: Get Farm profiles
+      operationId: get_farm_profiles
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/Content-Type'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  general_informations:
+                    type: object
+                    properties:
+                      harvest_year:
+                        type: integer
+                      farm_name:
+                        type: string
+                      farm_siret:
+                        type: string
+                      farm_ape:
+                        type: string
+                      farm_legal_position:
+                        type: string
+                      farm_default_address:
+                        type: string
+                      farm_default_address_lat:
+                        type: string
+                      farm_default_address_lon:
+                        type: string
+                      farm_associates:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            full_name:
+                              type: string
+                            started_at:
+                              type: string
+                      farm_soil_analysis:
+                        type: object
+                        properties:
+                          analysed_at:
+                            type: string
+                          geolocation:
+                            type: string
+                          soil_nature:
+                            type: string
+                          potential_hydrogen:
+                            type: string
+                          organic_matter_concentration:
+                            type: string
+                      farm_telepac_sau:
+                        type: string
+                      farm_fallow_area:
+                        type: string
+                      farm_meadow_area:
+                        type: string
+                      farm_big_crop_area:
+                        type: string
+                  weather_informations:
+                    type: object
+                    properties:
+                      watering_intervention:
+                        type: string
+                      yearly_weather_day_items:
+                        type: integer
+                      yearly_weather_provider:
+                        type: string
+                      yearly_rain:
+                        type: string
+                      yearly_min_temp:
+                        type: string
+                      yearly_max_temp:
+                        type: string
+                      first_frozen_day:
+                        type: string
+                      last_frozen_day:
+                        type: string
+                      yearly_min_frozen_temp:
+                        type: string
+                  biodiversity_informations:
+                    type: object
+                    properties:
+                      edges_total_length:
+                        type: number
+                      biodiversity_area:
+                        type: number
+                  crop_rotations_n:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        variety:
+                          type: string
+                        net_surface_area:
+                          type: string
+                        color:
+                          type: string
+                  crop_rotations_n_1:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        variety:
+                          type: string
+                        net_surface_area:
+                          type: string
+                        color:
+                          type: string
+                  crop_rotations_n_2:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        variety:
+                          type: string
+                        net_surface_area:
+                          type: string
+                        color:
+                          type: string
+                x-examples:
+                  Example 1:
+                    general_informations:
+                      harvest_year: 2023
+                      farm_name: GAEC JOULIN
+                      farm_siret: '32627372900011'
+                      farm_ape: 0111Z
+                      farm_legal_position: GAEC
+                      farm_default_address: 'GAEC JOULIN, 8 rue du bouil bleu, 17250 SAINT-PORCHAIRE, France'
+                      farm_default_address_lat: '45.8268358'
+                      farm_default_address_lon: '-0.7856846'
+                      farm_associates:                                             
+                        - full_name: "Christian JOULIN"
+                          started_at: "25/10/1983"
+                        - full_name: "Dominique JOULIN"
+                          started_at: "25/10/1994"
+                        - full_name: "Laurent JOULIN"
+                          started_at: "25/10/1994"
+                      farm_soil_analysis:
+                        analysed_at: "16/08/2013 00:00"
+                        geolocation: "{\"type\":\"Point\",\"coordinates\":[-0.832678606291108,45.816705017488]}",
+                        soil_nature: "clay_limestone_soil"
+                        potential_hydrogen: "8.0"
+                        organic_matter_concentration: "3.3 percent"
+                      farm_telepac_sau: '112,10 ha'
+                      farm_fallow_area: 0
+                      farm_meadow_area: 11.01
+                      farm_big_crop_area: 94.66
+                    weather_informations:
+                      watering_intervention: par mm / ha irrigué ? par mm au global ?
+                      yearly_weather_day_items: 365
+                      yearly_weather_provider: 'Météo France | Station : FR17308001 - ST AGNANT'
+                      yearly_rain: '472,00 mm'
+                      yearly_min_temp: '10,14 °C'
+                      yearly_max_temp: '19,65 °C'
+                      first_frozen_day: "26/11/2023 06:00"
+                      last_frozen_day: "06/03/2023 08:00"
+                      yearly_min_frozen_temp: "-3,80 °C"
+                    biodiversity_informations:
+                      edges_total_length: 2978.73
+                      biodiversity_area: 0.3928
+                    crop_rotations_n:
+                      - name: "Maïs grain"
+                        variety: "zea_mays"
+                        net_surface_area: "21 ha"
+                        color: "Yellow"
+                      - name: "Blé tendre d’hiver"
+                        variety: "triticum_aestivum"
+                        net_surface_area: "11 ha"
+                        color: "Wheat"
+                    crop_rotations_n_1:
+                      - name: "Maïs grain"
+                        variety: "zea_mays"
+                        net_surface_area: "21 ha"
+                        color: "Yellow"
+                      - name: "Blé tendre d’hiver"
+                        variety: "triticum_aestivum"
+                        net_surface_area: "11 ha"
+                        color: "Wheat"
+                    crop_rotations_n_2:
+                      - name: "Maïs grain"
+                        variety: "zea_mays"
+                        net_surface_area: "21 ha"
+                        color: "Yellow"
+                      - name: "Blé tendre d’hiver"
+                        variety: "triticum_aestivum"
+                        net_surface_area: "11 ha"
+                        color: "Wheat"
+              examples:
+                Response for demo farm for year 2022:
+                  value:
+                    general_informations:
+                      harvest_year: 2022
+                      farm_name: GAEC JOULIN
+                      farm_siret: '32627372900011'
+                      farm_ape: 0111Z
+                      farm_legal_position: GAEC
+                      farm_default_address: 'GAEC JOULIN, 8 rue du bouil bleu, 17250 SAINT-PORCHAIRE, France'
+                      farm_default_address_lat: '45.8268358'
+                      farm_default_address_lon: '-0.7856846'
+                      farm_telepac_sau: '112,10 ha'
+                    weather_informations:
+                      watering_intervention: par mm / ha irrigué ? par mm au global ?
+                      yearly_weather_day_items: 365
+                      yearly_weather_provider: 'Météo France | Station : FR17308001 - ST AGNANT'
+                      yearly_rain: '472,00 mm'
+                      yearly_min_temp: '10,14 °C'
+                      yearly_max_temp: '19,65 °C'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  errors:
+                    type: string
+                    x-stoplight:
+                      id: 1hfuwunnyy725
+      deprecated: false
+      security: []
+      description: Returns data about of farm profiles
+      tags:
+        - Farm profiles
+    parameters:
+      - $ref: '#/components/parameters/harvest_year'
+  '/cultivable_zones/{uuid}':
+    put:
+      summary: Update a cultivable zone
+      operationId: put_cultivable_zones
+      responses:
+        '200':
+          description: OK
+        '201':
+          description: Created
+        '':
+          $ref: '#/components/responses/Created'
+      description: Update a cultivable zone
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CultivableZone'
+            examples:
+              example-1:
+                value:
+                  uuid: adb71533-5250-4164-80fc-adaf6f84dce4
+                  shape: 'SRID=4326;MULTIPOLYGON (((-0.792163257283729 45.8212392141659, -0.791904819365336 45.8212103045779, -0.791480654542158 45.8212221132556, -0.791101405009501 45.8211429977115, -0.79069849642266 45.821064450282, -0.791605612418384 45.8202552159891, -0.792163257283729 45.8212392141659)))'
+                  name: ZC 152
+        description: ''
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/Content-Type'
+      tags:
+        - Cultivable zones
+    parameters:
+      - schema:
+          type: string
+          format: uuid
+          example: '"adb71533-5250-4164-80fc-adaf6f84dce4"'
+        name: uuid
+        in: path
+        required: true
+  /cultivable_zones:
+    post:
+      summary: Create a cultivable zone
+      operationId: post_cultivable_zones
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/Content-Type'
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CultivableZone'
+            examples:
+              example:
+                value:
+                  name: Zone 1
+                  work_number: ZC01
+                  shape: 'SRID=4326;MULTIPOLYGON (((-0.792163257283729 45.8212392141659, -0.791904819365336 45.8212103045779, -0.791480654542158 45.8212221132556, -0.791101405009501 45.8211429977115, -0.79069849642266 45.821064450282, -0.791605612418384 45.8202552159891, -0.792163257283729 45.8212392141659)))'
+          application/xml:
+            schema:
+              type: object
+              properties: {}
+          multipart/form-data:
+            schema:
+              type: object
+              properties: {}
+        required: true
+      deprecated: false
+      security: []
+      description: Create a new cultivable zone with name and shape.
+      responses:
+        '200':
+          description: OK
+      tags:
+        - Cultivable zones
+    get:
+      summary: List of Cultivable zones
+      operationId: get_cultivable_zones
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CultivableZone'
+              examples:
+                example:
+                  value:
+                    - uuid: e64cfa83-8f67-4be0-ba96-db7a9659a675
+                      work_number: ZC04
+                      name: Raguenaud
+                      shape:
+                        feature: 'SRID=4326;MULTIPOLYGON (((-0.792163257283729 45.8212392141659, -0.791904819365336 45.8212103045779, -0.791480654542158 45.8212221132556, -0.791101405009501 45.8211429977115, -0.79069849642266 45.821064450282, -0.791605612418384 45.8202552159891, -0.792163257283729 45.8212392141659)))'
+                        properties: {}
+                      shape_to_geojson: '{"type":"MultiPolygon","coordinates":[[[[-0.792163257283729,45.8212392141659],[-0.791904819365336,45.8212103045779],[-0.791480654542158,45.8212221132556],[-0.791101405009501,45.8211429977115],[-0.79069849642266,45.821064450282],[-0.791605612418384,45.8202552159891],[-0.792163257283729,45.8212392141659]]]]}'
+                    - uuid: c27fb3d8-bc75-413f-88de-2fe6dc62c341
+                      work_number: ZC05
+                      name: Le terrier
+                      shape:
+                        feature: 'SRID=4326;MULTIPOLYGON (((-0.792399590855693 45.8188374022447, -0.792865365477503 45.8195537456412, -0.792992985339246 45.8197481895666, -0.793614987390093 45.820722192761, -0.79335919994024 45.8207644364383, -0.793020321298577 45.8206933822684, -0.792744016705707 45.8205834866754, -0.791813666589333 45.8191694002046, -0.791835035631219 45.8190790430171, -0.792399590855693 45.8188374022447)))'
+                        properties: {}
+                      shape_to_geojson: '{"type":"MultiPolygon","coordinates":[[[[-0.792399590855693,45.8188374022447],[-0.792865365477503,45.8195537456412],[-0.792992985339246,45.8197481895666],[-0.793614987390093,45.820722192761],[-0.79335919994024,45.8207644364383],[-0.793020321298577,45.8206933822684],[-0.792744016705707,45.8205834866754],[-0.791813666589333,45.8191694002046],[-0.791835035631219,45.8190790430171],[-0.792399590855693,45.8188374022447]]]]}'
+        '422':
+          description: Unprocessable Entity (WebDAV)
+      deprecated: false
+      security: []
+      description: Returns a list of cultivable zones
+      tags:
+        - Cultivable zones
+    parameters: []
+  '/interventions/{id}':
+    put:
+      summary: ''
+      operationId: put-interventionss
+      responses:
+        '200':
+          description: OK
+        '':
+          $ref: '#/components/responses/Updated'
+      tags:
+        - Interventions
+      description: 'Update an intervention. Nested objects can be destroyed with the key/value "_destroy":"1"'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InterventionCreate'
+            examples:
+              example-1:
+                value:
+                  procedure_name: all_in_one_sowing
+                  working_periods_attributes:
+                    - started_at: '2015-05-07T09:48+0000'
+                      stopped_at: '2015-05-07T10:48+0000'
+                  inputs_attributes:
+                    - product_id: 305
+                      reference_name: seeds
+                      quantity_value: 120
+                      quantity_handler: items_count
+        description: ''
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/Content-Type'
+    parameters:
+      - schema:
+          type: integer
+        name: id
+        in: path
+        required: true
+        description: Intervention id
+  /interventions:
+    post:
+      tags:
+        - Interventions
+      summary: Create intervention
+      operationId: Postintervention
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/Content-Type'
+      requestBody:
+        description: ''
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InterventionCreate'
+            example:
+              provider:
+                data:
+                  zero_id: 0
+                id: 0
+                name: zero
+                vendor: ekylibre
+              procedure_name: all_in_one_sowing
+              working_periods_attributes:
+                - started_at: '2015-05-07T09:48+0000'
+                  stopped_at: '2015-05-07T10:48+0000'
+              inputs_attributes:
+                - product_id: 305
+                  reference_name: seeds
+                  quantity_value: 120
+                  quantity_handler: items_count
+              tools_attributes:
+                - product_id: 261
+                  reference_name: sower
+                  readings_attributes:
+                    - measure_value_value: 0
+                      indicator_name: hour_counter
+                      measure_value_unit: hour
+              group_parameters_attributes:
+                - reference_name: zone
+                  targets_attributes:
+                    - product_id: 1219
+                      reference_name: land_parcel
+                  outputs_attributes:
+                    - variant_id: 162
+                      reference_name: plant
+                      variety: zea_mais
+                      quantity_population: 1
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+      deprecated: false
+      security: []
+      description: Creates a new intervention object.
+    get:
+      tags:
+        - Interventions
+      summary: Interventions
+      operationId: Getinterventions
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - schema:
+            type: string
+            enum:
+              - request
+              - record
+          in: query
+          name: nature
+          description: Filter interventions by nature
+        - schema:
+            type: string
+            format: email
+            example: test@ekylibre.com
+          in: query
+          name: contact_email
+          description: Filter interventions by entity email
+        - schema:
+            type: string
+            format: email
+            example: test@ekylibre.com
+          in: query
+          name: user_email
+          description: Filter interventions by doer email
+        - schema:
+            type: boolean
+            enum:
+              - 'true'
+              - 'false'
+          in: query
+          name: with_interventions
+          description: Filter interventions by relation to planned intervention
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Intervention'
+              examples:
+                example-1:
+                  value:
+                    - id: 1
+                      nature: record
+                      procedure_name: sowing_without_plant_output
+                      number: '1'
+                      name: Semis simple (sans gestion des cultures) n°1
+                      started_at: '2014-10-29T09:00:00.000+01:00'
+                      stopped_at: '2014-10-29T12:00:00.000+01:00'
+                      description: ' - Import Ekylibre interventions on 24/11/2020 14:41 - N° : 4'
+                      state: done
+                      working_duration: 7200
+                      costing:
+                        total: 0
+                        inputs: 0
+                        doers: 0
+                        tools: 0
+                        receptions: 0
+                      parameters:
+                        - id: 3
+                          role: target
+                          name: land_parcel
+                          label: Parcelle
+                          product:
+                            id: 6
+                            name: Blé tendre d’hiver 2015 Enclouse des chatâigniers
+                        - id: 2
+                          role: input
+                          name: seeds
+                          label: Semences
+                          product:
+                            id: 311
+                            name: Semence de blé Rubisko
+                        - id: 1
+                          role: doer
+                          name: driver
+                          label: Conducteur
+                          product:
+                            id: 295
+                            name: David JOULIN
+                        - id: 4
+                          role: tool
+                          name: tractor
+                          label: Tracteur
+                          product:
+                            id: 252
+                            name: Tracteur CASE-IH 533
+                        - id: 5
+                          role: tool
+                          name: sower
+                          label: Semoir
+                          product:
+                            id: 259
+                            name: Semoir grains
+        '422':
+          description: Unprocessable Entity (WebDAV)
+      deprecated: false
+      security: []
+      description: 'Returns a list of interventions you’ve previously created. '
+    parameters:
+      - schema:
+          type: string
+        name: ''
+        in: path
+        required: true
+  /variants:
+    get:
+      tags:
+        - Product nature variants
+      summary: Variants
+      operationId: Getvariants
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                type: array
+                description: ''
+                minItems: 1
+                uniqueItems: true
+                x-examples:
+                  example-1:
+                    - id: 1
+                      name: Vache
+                      number: '000001'
+                      variety: bos
+                      derivative_of: null
+                      nature_abilities:
+                        - consume(mix)
+                        - consume(poaceae)
+                        - consume(silage)
+                        - consume(water)
+                        - move
+                        - produce(animal)
+                        - produce(excrement)
+                        - produce(milk)
+                      reference_name: breeding_cow
+                    - id: 2
+                      name: Taurillon
+                      number: '000002'
+                      variety: bos
+                      derivative_of: null
+                      nature_abilities:
+                        - consume(mix)
+                        - consume(poaceae)
+                        - consume(silage)
+                        - consume(water)
+                        - move
+                        - produce(excrement)
+                      reference_name: breeding_cow
+                items:
+                  $ref: '#/components/schemas/Variants'
+              examples:
+                example-1:
+                  value:
+                    - id: 1
+                      name: Vache
+                      number: '000001'
+                      variety: bos
+                      derivative_of: null
+                      nature_abilities:
+                        - consume(mix)
+                        - consume(poaceae)
+                        - consume(silage)
+                        - consume(water)
+                        - move
+                        - produce(animal)
+                        - produce(excrement)
+                        - produce(milk)
+                      reference_name: breeding_cow
+                    - id: 2
+                      name: Taurillon
+                      number: '000002'
+                      variety: bos
+                      derivative_of: null
+                      nature_abilities:
+                        - consume(mix)
+                        - consume(poaceae)
+                        - consume(silage)
+                        - consume(water)
+                        - move
+                        - produce(excrement)
+                      reference_name: breeding_cow
+      deprecated: false
+      security: []
+      description: 'Returns a list of variants you’ve previously created. '
+  /products:
+    get:
+      tags:
+        - Products
+      summary: Products
+      operationId: Getproducts
+      parameters:
+        - name: product_type
+          in: query
+          required: true
+          style: form
+          explode: true
+          schema:
+            type: string
+            example: Worker
+            enum:
+              - Worker
+              - Equipment
+              - LandParcel
+              - BuildingDivision
+              - Plant
+              - Matter
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/modified_since'
+      deprecated: false
+      security: []
+      description: 'Returns a list of products you’ve previously created. '
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Product'
+            examples:
+              example-1:
+                value:
+                  id: 1235
+                  name: Blé dur 2015 (1)
+                  number: P00000001234
+                  variety: grain
+                  abilities:
+                    - feed(animal)
+                  born_at: '2021-01-22T09:13:00.000+01:00'
+                  derivative_of: triticum_durum
+                  variant_unit_name: Tonne
+                  shape_svg: '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserve_aspect_ratio="xMidYMid meet" width="180" height="180" view_box="-0.215623 -47.432218 0.0008970000000000089 0.00023600000000101318"><path d="M-0.214726,47.432151L-0.214751,47.432218L-0.215623,47.432058L-0.215594,47.431982L-0.214726,47.432151Z"/></svg>'
+                  population: '-1.0'
+                  unit_name: Tonne
+                  container_name: Silo à grain
+                  variant_id: 1
+  /profile:
+    get:
+      tags:
+        - Users
+      summary: User
+      operationId: Getuser
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+      responses:
+        '200':
+          description: ''
+          headers: {}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Profile'
+              examples:
+                example-1:
+                  value:
+                    first_name: Démo
+                    last_name: Ekylibre
+                    email: demo@ekylibre.com
+                    language: fra
+                    administrator: false
+                    role:
+                      id: 1
+                      name: Ouvrier de l’exploitation
+                      rights: '{"interventions"=>["read", "write"]}'
+                    worker_id: 587
+      deprecated: false
+      security: []
+      description: Return the user information of the current user.
+    put:
+      summary: ''
+      operationId: put-profile
+      responses:
+        '200':
+          $ref: '#/components/responses/Updated'
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/Content-Type'
+      description: Update user profile
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProfileUpdated'
+            examples:
+              example-1:
+                value:
+                  first_name: Démo
+                  last_name: Ekylibre
+                  email: demo@ekylibre.com
+                  language: fra
+              example-2:
+                value:
+                  last_name: Ekylibre
+                  email: demo@ekylibre.com
+              example-3:
+                value:
+                  first_name: Démo
+        description: ''
+      tags:
+        - Users
+  /lexicon/registered_phytosanitary_cropsets:
+    get:
+      summary: List registered phytosanitary cropsets
+      tags:
+        - Registered phytosanitary cropset
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  updated_at:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RegisteredPhytosanitaryCropset'
+              examples:
+                Default response:
+                  value:
+                    updated_at: 22/06/2021
+                    data:
+                      - id: '30'
+                        name: ephy_raspberry_brush
+                        label:
+                          fra: Framboisier
+                        crop_names:
+                          - rubus
+                        crop_labels:
+                          fra: 'Framboisier, mûres (Rubus sp.), mûres des haies'
+                        record_checksum: 439258896
+                When modified_since bigger than updated_at:
+                  value:
+                    updated_at: 22/06/2021
+                    data: []
+                Default response with pagination:
+                  value:
+                    pagination:
+                      elements: 100
+                      page: 1
+                      total_elements: 78376
+                      page_count: 784
+                    updated_at: 22/06/2021
+                    data:
+                      - id: '30'
+                        name: ephy_raspberry_brush
+                        label:
+                          fra: Framboisier
+                        crop_names:
+                          - rubus
+                        crop_labels:
+                          fra: 'Framboisier, mûres (Rubus sp.), mûres des haies'
+                        record_checksum: 439258896
+      operationId: get-lexicon-registered_phytosanitary_cropsets
+      description: Returns a list of registered phytosanitary cropsets.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/pagination'
+        - schema:
+            type: integer
+            default: 100
+          in: query
+          name: per_page
+          description: Determine the number of elements per page
+        - schema:
+            type: integer
+            default: 1
+          in: query
+          name: page
+          description: Select page
+        - $ref: '#/components/parameters/Content-Type'
+        - $ref: '#/components/parameters/modified_since'
+  /lexicon/registered_phytosanitary_usages:
+    get:
+      summary: List registered phytosanitary usages
+      tags:
+        - Registered phytosanitary usages
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  updated_at:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RegisteredPhytosanitaryUsage'
+              examples:
+                Default response with pagination:
+                  value:
+                    pagination:
+                      elements: 100
+                      page: 1
+                      total_elements: 783567
+                      page_count: 784
+                    updated_at: 22/06/2021
+                    data:
+                      - id: '20141124083922341465'
+                        product_id: 2180899
+                        ephy_usage_phrase: Vigne*Trt Part.Aer.*Mildiou(s)
+                        crop:
+                          fra: Vigne
+                        species:
+                          - vitis
+                        target_name:
+                          fra: Mildious
+                        description: null
+                        treatment:
+                          fra: Trt Part.Aer
+                        dose_quantity: '5.0'
+                        dose_unit: kilogram_per_square_meter
+                        dose_unit_name: kg/ha
+                        dose_unit_factor: 0.0001
+                        pre_harvest_delay: 1728000
+                        pre_harvest_delay_bbch: null
+                        applications_count: 2
+                        application_frequency: 691200
+                        development_stage_min: 66
+                        development_stage_max: 85
+                        usage_conditions: null
+                        untreated_buffer_aquatic: 50
+                        untreated_buffer_arthropod: null
+                        untreated_buffer_plants: null
+                        decision_date: '2018-12-28'
+                        state: authorized
+                        record_checksum: -1655317004
+                When modified_since bigger than updated_at:
+                  value:
+                    updated_at: 22/06/2021
+                    data: []
+      operationId: get-lexicon-registered_phytosanitary_usages
+      description: Returns a list of registered phytosanitary usages.
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/Content-Type'
+        - schema:
+            type: string
+            default: 'true'
+          in: query
+          name: paginate
+          description: Activate pagination ("true"/"false")
+          required: true
+        - schema:
+            type: string
+          in: query
+          name: per_page
+          description: Determine the number of elements per page
+        - schema:
+            type: string
+          in: query
+          name: page
+          description: Select page
+        - $ref: '#/components/parameters/modified_since'
+        - schema:
+            type: string
+            default: 'false'
+          in: query
+          name: user_product
+          description: Filters phytosanitary usages according to the user's product
+          required: true
+          style: form
+  /lexicon/registered_phytosanitary_risks:
+    get:
+      summary: List registered phytosanitary risks
+      tags:
+        - Registered phytosanitary risks
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  updated_at:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RegisteredPhytosanitaryRisk'
+              examples:
+                Default response with pagination:
+                  value:
+                    pagination:
+                      elements: 100
+                      page: 1
+                      total_elements: 783567
+                      page_count: 784
+                    updated_at: 22/06/2021
+                    data:
+                      - product_id: 2030302
+                        risk_code: R10
+                        risk_phrase: Inflammable
+                        record_checksum: 620049256
+                Default response:
+                  value:
+                    updated_at: 22/06/2021
+                    data:
+                      - product_id: 2030302
+                        risk_code: R10
+                        risk_phrase: Inflammable
+                        record_checksum: 620049256
+                When modified_since bigger than updated_at:
+                  value:
+                    updated_at: string
+                    data: []
+      operationId: get-lexicon-registered_phytosanitary_risks
+      description: 'Returns a list of registered phytosanitary risks. '
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/pagination'
+        - $ref: '#/components/parameters/Content-Type'
+        - $ref: '#/components/parameters/modified_since'
+        - schema:
+            type: integer
+          in: query
+          name: per_page
+          description: Determine the number of elements per page
+        - schema:
+            type: integer
+          in: query
+          name: page
+          description: Select page
+  /lexicon/registered_phytosanitary_products:
+    get:
+      summary: List registered phytosanitary products
+      tags:
+        - Registered phytosanitary products
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  updated_at:
+                    type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RegisteredPhytosanitaryProducts'
+              examples:
+                Default response with pagination:
+                  value:
+                    pagination:
+                      elements: 100
+                      page: 1
+                      total_elements: 783567
+                      page_count: 784
+                    updated_at: 22/06/2021
+                    data:
+                      - id: 8800032
+                        reference_name: 8800032_heptafer_1
+                        name: HEPTAFER 1
+                        other_name: null
+                        natures: []
+                        active_compounds:
+                          - Iron sulphate 99.0 %
+                        france_maaid: '8800032'
+                        mix_category_codes:
+                          - 1
+                        in_field_reentry_delay: 21600
+                        state: withdrawn
+                        started_on: '1988-02-01'
+                        stopped_on: null
+                        allowed_mentions: null
+                        restricted_mentions: null
+                        operator_protection_mentions: null
+                        firm_name: SARVAL
+                        product_type: PPP
+                        record_checksum: -916011564
+                Default response:
+                  value:
+                    updated_at: 22/06/2021
+                    data:
+                      - id: 8800032
+                        reference_name: 8800032_heptafer_1
+                        name: HEPTAFER 1
+                        other_name: null
+                        natures: []
+                        active_compounds:
+                          - Iron sulphate 99.0 %
+                        france_maaid: '8800032'
+                        mix_category_codes:
+                          - 1
+                        in_field_reentry_delay: 21600
+                        state: withdrawn
+                        started_on: '1988-02-01'
+                        stopped_on: null
+                        allowed_mentions: null
+                        restricted_mentions: null
+                        operator_protection_mentions: null
+                        firm_name: SARVAL
+                        product_type: PPP
+                        record_checksum: -916011564
+                When modified_since bigger than updated_at:
+                  value:
+                    updated_at: string
+                    data: []
+      operationId: get-lexicon-registered_phytosanitary_products
+      description: 'Returns a list of registered phytosanitary products. '
+      parameters:
+        - $ref: '#/components/parameters/Authorization'
+        - $ref: '#/components/parameters/Content-Type'
+        - $ref: '#/components/parameters/pagination'
+        - schema:
+            type: string
+          in: query
+          name: per_page
+          description: Determine the number of elements per page
+        - schema:
+            type: string
+          in: query
+          name: page
+          description: Select page
+        - $ref: '#/components/parameters/modified_since'
+        - schema:
+            type: string
+            default: 'false'
+          in: query
+          name: user_product
+          description: Filters phytosanitary products according to the user's product
+          required: true
+          style: form
+components:
+  schemas:
+    InterventionCreate:
+      title: InterventionCreate
+      type: object
+      example:
+        provider:
+          data:
+            zero_id: 0
+          id: 0
+          name: zero
+          vendor: ekylibre
+        procedure_name: all_in_one_sowing
+        working_periods_attributes:
+          - started_at: '2015-05-07T09:48+0000'
+            stopped_at: '2015-05-07T10:48+0000'
+        inputs_attributes:
+          - product_id: 305
+            reference_name: seeds
+            quantity_value: 120
+            quantity_handler: items_count
+        tools_attributes:
+          - product_id: 261
+            reference_name: sower
+            readings_attributes:
+              - measure_value_value: 0
+                indicator_name: hour_counter
+                measure_value_unit: hour
+        group_parameters_attributes:
+          - reference_name: zone
+            targets_attributes:
+              - product_id: 1219
+                reference_name: land_parcel
+            outputs_attributes:
+              - variant_id: 162
+                reference_name: plant
+                variety: zea_mais
+                quantity_population: 1
+      x-examples:
+        example-1:
+          value:
+            provider:
+              data:
+                zero_id: 0
+              id: 0
+              name: zero
+              vendor: ekylibre
+            procedure_name: all_in_one_sowing
+            working_periods_attributes:
+              - started_at: '2015-05-07T09:48+0000'
+                stopped_at: '2015-05-07T10:48+0000'
+            inputs_attributes:
+              - product_id: 305
+                reference_name: seeds
+                quantity_value: 120
+                quantity_handler: items_count
+            tools_attributes:
+              - product_id: 261
+                reference_name: sower
+                readings_attributes:
+                  - measure_value_value: 0
+                    indicator_name: hour_counter
+                    measure_value_unit: hour
+            group_parameters_attributes:
+              - reference_name: zone
+                targets_attributes:
+                  - product_id: 1219
+                    reference_name: land_parcel
+                outputs_attributes:
+                  - variant_id: 162
+                    reference_name: plant
+                    variety: zea_mais
+                    quantity_population: 1
+      properties:
+        provider:
+          $ref: '#/components/schemas/Provider'
+        procedure_name - copy:
+          type: string
+        description:
+          type: string
+        actions:
+          type: array
+          items:
+            type: string
+        working_periods_attributes:
+          type: array
+          description: ''
+          items:
+            $ref: '#/components/schemas/WorkingPeriodsAttribute'
+        inputs_attributes:
+          type: array
+          description: ''
+          items:
+            $ref: '#/components/schemas/InputsAttribute'
+        outputs_attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/OutputsAttribute'
+        targets_attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/TargetsAttribute'
+        tools_attributes:
+          type: array
+          description: ''
+          items:
+            $ref: '#/components/schemas/ToolsAttribute'
+        doers_attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/DoersAttribute'
+        group_parameters_attributes:
+          type: array
+          description: ''
+          items:
+            $ref: '#/components/schemas/GroupParametersAttribute'
+    Provider:
+      title: Provider
+      type: object
+      example:
+        data:
+          zero_id: 0
+        id: 0
+        name: zero
+        vendor: ekylibre
+      properties:
+        data:
+          $ref: '#/components/schemas/Data'
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+        vendor:
+          type: string
+      required:
+        - name
+        - vendor
+    Data:
+      title: Data
+      required:
+        - zero_id
+      type: object
+      properties:
+        zero_id:
+          type: integer
+          format: int32
+      example:
+        zero_id: 0
+    WorkingPeriodsAttribute:
+      title: WorkingPeriodsAttribute
+      type: object
+      example:
+        started_at: '2015-05-07T09:48+0000'
+        stopped_at: '2015-05-07T10:48+0000'
+      properties:
+        id:
+          type: integer
+        started_at:
+          type: string
+        stopped_at:
+          type: string
+        _destroy:
+          type: string
+    InputsAttribute:
+      title: InputsAttribute
+      type: object
+      example:
+        product_id: 305
+        reference_name: seeds
+        quantity_value: 120
+        quantity_handler: items_count
+      properties:
+        id:
+          type: integer
+          format: int32
+        product_id:
+          type: integer
+          format: int32
+        reference_name:
+          type: string
+        quantity_value:
+          type: number
+        quantity_handler:
+          type: string
+        _destroy:
+          type: string
+    ToolsAttribute:
+      title: ToolsAttribute
+      type: object
+      example:
+        product_id: 261
+        reference_name: sower
+        readings_attributes:
+          - measure_value_value: 0
+            indicator_name: hour_counter
+            measure_value_unit: hour
+      properties:
+        id:
+          type: integer
+          format: int32
+        product_id:
+          type: integer
+          format: int32
+        reference_name:
+          type: string
+        readings_attributes:
+          type: array
+          description: ''
+          items:
+            $ref: '#/components/schemas/ReadingsAttribute'
+        _destroy:
+          type: string
+    ReadingsAttribute:
+      title: ReadingsAttribute
+      type: object
+      example:
+        measure_value_value: 0
+        indicator_name: hour_counter
+        measure_value_unit: hour
+      properties:
+        measure_value_value:
+          type: number
+        indicator_name:
+          type: string
+        measure_value_unit:
+          type: string
+    GroupParametersAttribute:
+      title: GroupParametersAttribute
+      type: object
+      example:
+        reference_name: zone
+        targets_attributes:
+          - product_id: 1219
+            reference_name: land_parcel
+        outputs_attributes:
+          - variant_id: 162
+            reference_name: plant
+            variety: zea_mais
+            quantity_population: 1
+      properties:
+        id:
+          type: integer
+        reference_name:
+          type: string
+        targets_attributes:
+          type: array
+          description: ''
+          items:
+            $ref: '#/components/schemas/TargetsAttribute'
+        outputs_attributes:
+          type: array
+          description: ''
+          items:
+            $ref: '#/components/schemas/OutputsAttribute'
+        doers_attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/DoersAttribute'
+        inputs_attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/InputsAttribute'
+        tools_attributes:
+          type: array
+          items:
+            $ref: '#/components/schemas/ToolsAttribute'
+        _destroy:
+          type: string
+    TargetsAttribute:
+      title: TargetsAttribute
+      type: object
+      example:
+        product_id: 1219
+        reference_name: land_parcel
+      properties:
+        id:
+          type: integer
+          format: int32
+        product_id:
+          type: integer
+          format: int32
+        reference_name:
+          type: string
+        _destroy:
+          type: string
+    OutputsAttribute:
+      title: OutputsAttribute
+      type: object
+      example:
+        variant_id: 162
+        reference_name: plant
+        variety: zea_mais
+        quantity_population: 1
+      properties:
+        variant_id:
+          type: integer
+          format: int32
+        reference_name:
+          type: string
+        specie_variety_name:
+          type: string
+        quantity_population:
+          type: integer
+          format: int32
+        id:
+          type: number
+        _destroy:
+          type: string
+    Metadata:
+      title: Metadata
+      type: object
+      example:
+        procedure_nature: animal_moving
+        name: animal_moving
+        scanned_code: 1015421
+        quantity: 1
+        unit: unity
+      properties:
+        procedure_nature:
+          type: string
+        name:
+          type: string
+        scanned_code:
+          type: integer
+          format: int32
+        quantity:
+          type: integer
+          format: int32
+        unit:
+          type: string
+    Intervention:
+      type: object
+      x-examples:
+        example-1:
+          id: 9
+          nature: record
+          procedure_name: plowing
+          number: '8'
+          name: 'Plowing #8'
+          started_at: '2012-10-03T08:30:00.000Z'
+          stopped_at: '2012-10-03T12:30:00.000Z'
+          description: null
+          state: done
+          working_duration: 14400
+          request_intervention_id: null
+          costing:
+            total: 0
+            inputs: 0
+            doers: 0
+            tools: 0
+            receptions: 0
+          parameters:
+            - id: 30
+              group_id: null
+              intervention_id: 9
+              role: doer
+              name: driver
+              label: Driver
+              product_id: 79
+              working_zone: null
+              quantity_handler: null
+              quantity_indicator_name: null
+              quantity_population: 0
+              quantity_unit_name: null
+              quantity_value: null
+            - id: 31
+              group_id: null
+              intervention_id: 9
+              role: tool
+              name: tractor
+              label: Tractor / Self propelled
+              product_id: 29
+              working_zone: null
+              quantity_handler: null
+              quantity_indicator_name: null
+              quantity_population: 1
+              quantity_unit_name: null
+              quantity_value: null
+            - id: 32
+              group_id: null
+              intervention_id: 9
+              role: target
+              name: cultivation
+              label: Cultivation
+              product_id: 83
+              working_zone:
+                feature: 'SRID=4326;MULTIPOLYGON (((-0.796809196472168 45.8269227686334, -0.79651951789856 45.8257153564987, -0.795301795005798 45.8259060022611, -0.794320106506348 45.8240368979822, -0.796240568161011 45.823562135501, -0.796680450439453 45.8240705424138, -0.79751193523407 45.8253078957196, -0.798069834709167 45.8259471218497, -0.798091292381287 45.8262386962433, -0.797989368438721 45.8264592450906, -0.797780156135559 45.8266349359199, -0.796809196472168 45.8269227686334)))'
+                properties: {}
+              quantity_handler: null
+              quantity_indicator_name: null
+              quantity_population: 5.3806
+              quantity_unit_name: null
+              quantity_value: null
+            - id: 33
+              group_id: null
+              intervention_id: 9
+              role: tool
+              name: plow
+              label: Plough
+              product_id: 31
+              working_zone: null
+              quantity_handler: null
+              quantity_indicator_name: null
+              quantity_population: 1
+              quantity_unit_name: null
+              quantity_value: null
+          working_periods:
+            - id: 1
+              intervention_id: 9
+              started_at: '2012-10-03T08:30:00.000Z'
+              stopped_at: '2012-10-03T12:30:00.000Z'
+              duration: 14400
+              created_at: '2014-11-04T18:31:09.285Z'
+              updated_at: '2014-11-04T18:31:37.378Z'
+              creator_id: 1
+              updater_id: 1
+              intervention_participation_id: null
+      properties:
+        id:
+          type: number
+        nature:
+          type: string
+          enum:
+            - request
+            - record
+        procedure_name:
+          type: string
+        number:
+          type: string
+        name:
+          type: string
+        started_at:
+          type: string
+          format: date-time
+        stopped_at:
+          type: string
+          format: date-time
+        description:
+          type: string
+        parameters:
+          type: array
+          uniqueItems: true
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/InterventionParameter'
+        state:
+          type: string
+          enum:
+            - in_progress
+            - done
+            - validated
+            - rejected
+          description: ("in_progree"/"done"/"validated")
+        working_duration:
+          type: number
+          description: working duration in seconds
+        costs:
+          $ref: '#/components/schemas/InterventionCosting'
+        working_periods:
+          type: array
+          items:
+            $ref: '#/components/schemas/InterventionWorkingPeriod'
+      title: ''
+    InterventionParameter:
+      type: object
+      x-examples:
+        Example 1:
+          id: 32
+          group_id: null
+          intervention_id: 9
+          role: target
+          name: cultivation
+          label: Cultivation
+          product_id: 83
+          working_zone:
+            feature: 'SRID=4326;MULTIPOLYGON (((-0.796809196472168 45.8269227686334, -0.79651951789856 45.8257153564987, -0.795301795005798 45.8259060022611, -0.794320106506348 45.8240368979822, -0.796240568161011 45.823562135501, -0.796680450439453 45.8240705424138, -0.79751193523407 45.8253078957196, -0.798069834709167 45.8259471218497, -0.798091292381287 45.8262386962433, -0.797989368438721 45.8264592450906, -0.797780156135559 45.8266349359199, -0.796809196472168 45.8269227686334)))'
+            properties: {}
+          quantity_handler: null
+          quantity_indicator_name: null
+          quantity_population: 5.3806
+          quantity_unit_name: null
+          quantity_value: null
+          usage_id: null
+        Example 2:
+          id: 30
+          group_id: null
+          intervention_id: 9
+          role: doer
+          name: driver
+          label: Driver
+          product_id: 79
+          working_zone: null
+          quantity_handler: null
+          quantity_indicator_name: null
+          quantity_population: 0
+          quantity_unit_name: null
+          quantity_value: null
+          usage_id: null
+        Example 3:
+          id: 31
+          group_id: null
+          intervention_id: 9
+          role: tool
+          name: tractor
+          label: Tractor / Self propelled
+          product_id: 29
+          working_zone: null
+          quantity_handler: null
+          quantity_indicator_name: null
+          quantity_population: 1
+          quantity_unit_name: null
+          quantity_value: null
+          usage_id: null
+        Example 4:
+          id: 0
+          group_id: 0
+          intervention_id: 0
+          role: string
+          name: string
+          label: string
+          product_id: 0
+          working_zone:
+            feature: string
+            properties: {}
+          quantity_handler: net_volume
+          quantity_value: 2.6
+          quantity_unit_name: liter
+          quantity_indicator_name: net_volume
+          usage_id: '20220419151438243073'
+      properties:
+        id:
+          type: integer
+        group_id:
+          type: integer
+          nullable: true
+        intervention_id:
+          type: integer
+        role:
+          type: string
+        name:
+          type: string
+        label:
+          type: string
+        product_id:
+          type: integer
+        working_zone:
+          type: object
+          nullable: true
+          properties:
+            feature:
+              type: string
+            properties:
+              type: object
+        quantity_handler:
+          type: string
+          nullable: true
+        quantity_indicator_name:
+          type: string
+          nullable: true
+        quantity_population:
+          type: number
+          nullable: true
+        quantity_unit_name:
+          type: string
+          nullable: true
+        quantity_value:
+          type: number
+          nullable: true
+        usage_id:
+          type: string
+          nullable: true
+      title: ''
+    InterventionTarget:
+      description: ''
+      type: object
+      properties:
+        id:
+          type: number
+        intervention_id:
+          type: number
+        product_id:
+          type: number
+        variant_id:
+          type: number
+        quantity_population: {}
+        reference_name:
+          type: string
+          minLength: 1
+        position:
+          type: number
+        created_at:
+          type: string
+          minLength: 1
+        updated_at:
+          type: string
+          minLength: 1
+        creator_id: {}
+        updater_id: {}
+        lock_version:
+          type: number
+        working_zone:
+          type: string
+          minLength: 1
+        event_participation_id: {}
+        outcoming_product_id: {}
+        new_container_id: {}
+        new_group_id: {}
+        new_variant_id: {}
+        quantity_handler: {}
+        quantity_value:
+          type: string
+          minLength: 1
+        quantity_unit_name:
+          type: string
+          minLength: 1
+        quantity_indicator_name:
+          type: string
+          minLength: 1
+        group_id: {}
+        new_name: {}
+        component_id: {}
+        assembly_id: {}
+        currency:
+          type: string
+          minLength: 1
+        unit_pretax_stock_amount:
+          type: string
+          minLength: 1
+        dead:
+          type: boolean
+        identification_number: {}
+        batch_number: {}
+        usage_id: {}
+        allowed_entry_factor: {}
+        allowed_harvest_factor: {}
+        imputation_ratio:
+          type: string
+          minLength: 1
+        reference_data:
+          type: object
+          properties: {}
+          required: []
+        using_live_data:
+          type: boolean
+        applications_frequency: {}
+        specie_variety:
+          type: object
+          properties: {}
+          required: []
+      required:
+        - id
+        - intervention_id
+        - product_id
+        - variant_id
+        - reference_name
+        - position
+        - created_at
+        - updated_at
+        - lock_version
+        - working_zone
+        - quantity_value
+        - quantity_unit_name
+        - quantity_indicator_name
+        - currency
+        - unit_pretax_stock_amount
+        - dead
+        - imputation_ratio
+        - reference_data
+        - using_live_data
+        - specie_variety
+      x-examples:
+        example-1:
+          id: 3
+          intervention_id: 1
+          product_id: 6
+          variant_id: 81
+          quantity_population: null
+          reference_name: land_parcel
+          position: 1
+          created_at: '2020-11-24T15:41:00.712+01:00'
+          updated_at: '2020-11-24T15:41:00.712+01:00'
+          creator_id: null
+          updater_id: null
+          lock_version: 0
+          working_zone: '{"type":"MultiPolygon","coordinates":[[[[-0.795813610326211,45.8205957862591],[-0.79513097566005,45.8206244957228],[-0.79445801755721,45.8206476008046],[-0.794281490309339,45.8206578988386],[-0.794085637474177,45.8206775704671],[-0.793883069844914,45.8207180611793],[-0.793699717113797,45.8207647283451],[-0.793476079904901,45.8208216421079],[-0.793376218682723,45.820840961487],[-0.79322992423779,45.8208686373126],[-0.792689532008635,45.8210891058195],[-0.792821551014375,45.8213111278754],[-0.793046319560421,45.8217412277263],[-0.793235013002678,45.8221230169453],[-0.793433331998412,45.8225432815801],[-0.79363030833737,45.8228811262426],[-0.793812112941897,45.8231619747002],[-0.794289578075544,45.8239404144451],[-0.794564940198568,45.8244828611297],[-0.794610526286388,45.824509219059],[-0.795361631767107,45.8243684312051],[-0.796427773642651,45.8241703243376],[-0.796735284499057,45.8241139731345],[-0.796587882761538,45.8239402184613],[-0.796376938482635,45.8236807675673],[-0.796288807752084,45.8235665176527],[-0.796226457546871,45.8234634710852],[-0.796204108153026,45.8233703201435],[-0.796198306348361,45.8232694471842],[-0.796205503794167,45.8231812812963],[-0.796281806622721,45.8227833798389],[-0.796354098133949,45.822359807768],[-0.796379982292342,45.8221798015553],[-0.796420800461729,45.8220194124411],[-0.796448637836325,45.8219468807304],[-0.796506706238386,45.8218366206637],[-0.796609677762292,45.8216742811101],[-0.796667559442298,45.8216078931083],[-0.796741619325665,45.8215388818335],[-0.796884608739418,45.8214342928924],[-0.796981023449488,45.8213710618059],[-0.79717729692529,45.8212538260653],[-0.797339125554787,45.8211509582915],[-0.797421195292797,45.8210811252535],[-0.797508183685882,45.8209847089986],[-0.79751032635519,45.8209575250831],[-0.797203376418586,45.820831360075],[-0.796972388676841,45.8207400331013],[-0.796780795286281,45.8206784542921],[-0.796639180256121,45.8206431168879],[-0.796451232204463,45.8205975874953],[-0.796285406116673,45.8205829853426],[-0.796039968963344,45.8205828323007],[-0.795813610326211,45.8205957862591]]]]}'
+          event_participation_id: null
+          outcoming_product_id: null
+          new_container_id: null
+          new_group_id: null
+          new_variant_id: null
+          quantity_handler: null
+          quantity_value: '97290.5444'
+          quantity_unit_name: square_meter
+          quantity_indicator_name: net_surface_area
+          group_id: null
+          new_name: null
+          component_id: null
+          assembly_id: null
+          currency: EUR
+          unit_pretax_stock_amount: '0.0'
+          dead: false
+          identification_number: null
+          batch_number: null
+          usage_id: null
+          allowed_entry_factor: null
+          allowed_harvest_factor: null
+          imputation_ratio: '1.0'
+          reference_data: {}
+          using_live_data: true
+          applications_frequency: null
+          specie_variety: {}
+    Product:
+      description: ''
+      type: object
+      x-examples:
+        example-1:
+          id: 1235
+          name: Blé dur 2015 (1)
+          number: P00000001234
+          variety: grain
+          abilities:
+            - feed(animal)
+          born_at: '2021-01-22T09:13:00.000+01:00'
+          derivative_of: triticum_durum
+          variant_unit_name: Tonne
+          shape_svg: '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserve_aspect_ratio="xMidYMid meet" width="180" height="180" view_box="-0.215623 -47.432218 0.0008970000000000089 0.00023600000000101318"><path d="M-0.214726,47.432151L-0.214751,47.432218L-0.215623,47.432058L-0.215594,47.431982L-0.214726,47.432151Z"/></svg>'
+          population: '-1.0'
+          unit_name: Tonne
+          container_name: Silo à grain
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+          minLength: 1
+        number:
+          type: string
+          minLength: 1
+        variety:
+          type: string
+          minLength: 1
+        abilities:
+          type: array
+          items:
+            type: object
+        born_at:
+          type: string
+          minLength: 1
+        derivative_of:
+          type: string
+          minLength: 1
+        shape_svg:
+          type: string
+        population:
+          type: string
+          minLength: 1
+          description: Product quantity in stock (only for matter)
+        unit_name:
+          type: string
+          description: Name of the packaging (only for matter)
+        container_name:
+          type: string
+          description: name of the storage place (only for matter and equipment)
+        france_maaid:
+          type: string
+          description: reference number (only for plant protection products)
+      required:
+        - id
+        - name
+        - number
+        - variety
+        - abilities
+        - born_at
+        - derivative_of
+        - population
+    Variants:
+      description: ''
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+          minLength: 1
+        number:
+          type: string
+          minLength: 1
+        variety:
+          type: string
+          minLength: 1
+        derivative_of: {}
+        nature_abilities:
+          type: array
+          items:
+            required: []
+            properties: {}
+        reference_name:
+          type: string
+      required:
+        - id
+        - name
+        - number
+        - variety
+        - nature_abilities
+      x-examples:
+        example-1:
+          id: 1
+          name: Vache
+          number: '000001'
+          variety: bos
+          derivative_of: null
+          nature_abilities:
+            - consume(mix)
+            - consume(poaceae)
+            - consume(silage)
+            - consume(water)
+            - move
+            - produce(animal)
+            - produce(excrement)
+            - produce(milk)
+          reference_name: breeding_cow
+          value:
+            id: 1
+            name: Vache
+            number: '000001'
+            variety: bos
+            derivative_of: null
+            nature_abilities:
+              - consume(mix)
+              - consume(poaceae)
+              - consume(silage)
+              - consume(water)
+              - move
+              - produce(animal)
+              - produce(excrement)
+              - produce(milk)
+            reference_name: breeding_cow
+      x-tags:
+        - ' Product nature variants'
+    Profile:
+      title: Profile
+      type: object
+      x-examples:
+        example-1:
+          value:
+            first_name: Démo
+            last_name: Ekylibre
+            email: demo@ekylibre.com
+            language: fra
+            administrator: false
+            role:
+              id: 1
+              name: Ouvrier de l’exploitation
+              rights: '{"interventions"=>["read", "write"]}'
+            worker_id: 587
+      x-tags:
+        - Users
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        language:
+          type: string
+        administrator:
+          type: boolean
+        role:
+          type: object
+          properties:
+            id:
+              type: integer
+            name:
+              type: string
+            rights:
+              type: string
+          required:
+            - id
+            - name
+        worker_id:
+          type: integer
+      required:
+        - first_name
+        - last_name
+        - email
+        - language
+        - administrator
+        - worker_id
+    ProfileUpdated:
+      title: ProfileUpdated
+      type: object
+      x-examples:
+        example-1:
+          value:
+            first_name: Démo
+            last_name: Ekylibre
+            email: demo@ekylibre.com
+            language: fra
+      x-tags:
+        - Users
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        language:
+          type: string
+    InterventionCosting:
+      description: ''
+      type: object
+      x-examples:
+        example-1:
+          total: 24177.63
+          inputs: 24079.41
+          doers: 35.22
+          tools: 63
+          receptions: 0
+          value:
+            total: 24177.63
+            inputs: 24079.41
+            doers: 35.22
+            tools: 63
+            receptions: 0
+      properties:
+        total:
+          type: number
+          readOnly: true
+        inputs:
+          type: number
+          readOnly: true
+        doers:
+          type: number
+          readOnly: true
+        tools:
+          type: number
+          readOnly: true
+        receptions:
+          type: number
+          readOnly: true
+    DoersAttribute:
+      description: ''
+      type: object
+      properties:
+        id:
+          type: number
+        product_id:
+          type: number
+        reference_name:
+          type: string
+          minLength: 1
+        _destroy:
+          type: string
+          minLength: 1
+      required:
+        - id
+        - product_id
+        - reference_name
+        - _destroy
+      x-examples:
+        example-1:
+          id: 1
+          product_id: 1
+          reference_name: doer
+          _destroy: '1'
+    RegisteredPhytosanitaryCropset:
+      title: RegisteredPhytosanitaryCropset
+      type: object
+      x-examples:
+        example-1:
+          value:
+            id: '30'
+            name: ephy_raspberry_brush
+            label:
+              fra: Framboisier
+            crop_names:
+              - rubus
+            crop_labels:
+              fra: 'Framboisier, mûres (Rubus sp.), mûres des haies'
+            record_checksum: 439258896
+      description: ''
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        label:
+          type: object
+          properties:
+            fra:
+              type: string
+        crop_names:
+          type: array
+          items:
+            type: string
+        crop_labels:
+          type: object
+          properties:
+            fra:
+              type: string
+        record_checksum:
+          type: number
+      x-tags:
+        - Registered phytosanitary cropsets
+    RegisteredPhytosanitaryRisk:
+      title: RegisteredPhytosanitaryRisk
+      type: object
+      x-examples:
+        example-1:
+          value:
+            product_id: 2030302
+            risk_code: R10
+            risk_phrase: Inflammable
+            record_checksum: 620049256
+      description: ''
+      x-tags:
+        - Registered phytosanitary risks
+      properties:
+        product_id:
+          type: number
+        risk_code:
+          type: string
+        risk_phrase:
+          type: string
+        record_checksum:
+          type: number
+    RegisteredPhytosanitaryUsage:
+      title: RegisteredPhytosanitaryUsage
+      type: object
+      x-examples:
+        example-1:
+          value:
+            id: '20141124083922341465'
+            product_id: 2180899
+            ephy_usage_phrase: Vigne*Trt Part.Aer.*Mildiou(s)
+            crop:
+              fra: Vigne
+            species:
+              - vitis
+            target_name:
+              fra: Mildious
+            description: null
+            treatment:
+              fra: Trt Part.Aer.
+            dose_quantity: '5.0'
+            dose_unit: kilogram_per_square_meter
+            dose_unit_name: kg/ha
+            dose_unit_factor: 0.0001
+            pre_harvest_delay: 1728000
+            pre_harvest_delay_bbch: null
+            applications_count: 2
+            application_frequency: 691200
+            development_stage_min: 66
+            development_stage_max: 85
+            usage_conditions: null
+            untreated_buffer_aquatic: 50
+            untreated_buffer_arthropod: null
+            untreated_buffer_plants: null
+            decision_date: '2018-12-28'
+            state: authorized
+            record_checksum: -1655317004
+      description: ''
+      properties:
+        id:
+          type: string
+        product_id:
+          type: number
+        ephy_usage_phrase:
+          type: string
+        crop:
+          type: object
+          properties:
+            fra:
+              type: string
+        species:
+          type: array
+          items:
+            type: string
+        target_name:
+          type: object
+          properties:
+            fra:
+              type: string
+        description: {}
+        treatment:
+          type: object
+          properties:
+            fra:
+              type: string
+        dose_quantity:
+          type: string
+        dose_unit:
+          type: string
+        dose_unit_name:
+          type: string
+        dose_unit_factor:
+          type: number
+        pre_harvest_delay:
+          type: number
+          description: seconds
+        pre_harvest_delay_bbch:
+          type: number
+          description: seconds
+        applications_count:
+          type: number
+        application_frequency:
+          type: number
+        development_stage_min:
+          type: number
+        development_stage_max:
+          type: number
+        usage_conditions: {}
+        untreated_buffer_aquatic:
+          type: number
+        untreated_buffer_arthropod: {}
+        untreated_buffer_plants: {}
+        decision_date:
+          type: string
+        state:
+          type: string
+        record_checksum:
+          type: number
+      x-tags:
+        - Registered phytosanitary usages
+    RegisteredPhytosanitaryProducts:
+      title: RegisteredPhytosanitaryProducts object
+      type: object
+      x-examples:
+        example-1:
+          value:
+            id: '20141124083922341465'
+            product_id: 2180899
+            ephy_usage_phrase: Vigne*Trt Part.Aer.*Mildiou(s)
+            crop:
+              fra: Vigne
+            species:
+              - vitis
+            target_name:
+              fra: Mildious
+            description: null
+            treatment:
+              fra: Trt Part.Aer.
+            dose_quantity: '5.0'
+            dose_unit: kilogram_per_square_meter
+            dose_unit_name: kg/ha
+            dose_unit_factor: 0.0001
+            pre_harvest_delay: 1728000
+            pre_harvest_delay_bbch: null
+            applications_count: 2
+            application_frequency: 691200
+            development_stage_min: 66
+            development_stage_max: 85
+            usage_conditions: null
+            untreated_buffer_aquatic: 50
+            untreated_buffer_arthropod: null
+            untreated_buffer_plants: null
+            decision_date: '2018-12-28'
+            state: authorized
+            record_checksum: -1655317004
+      description: ''
+      x-tags:
+        - Registered phytosanitary products
+      properties:
+        id:
+          type: number
+        reference_name:
+          type: string
+        name:
+          type: string
+        other_name:
+          type: string
+        natures:
+          type: array
+          items:
+            type: string
+        active_compounds:
+          type: array
+          items:
+            type: string
+        france_maaid:
+          type: string
+        mix_category_codes:
+          type: array
+          items:
+            type: number
+        in_field_reentry_delay:
+          type: number
+          description: seconds
+        state:
+          type: string
+        started_on:
+          type: string
+        stopped_on:
+          type: string
+        allowed_mentions: {}
+        restricted_mentions: {}
+        operator_protection_mentions: {}
+        firm_name:
+          type: string
+        product_type:
+          type: string
+        record_checksum:
+          type: number
+    Pagination:
+      title: Pagination object
+      type: object
+      x-examples:
+        example-1:
+          value:
+            elements: 100
+            page: 1
+            total_elements: 78340
+            page_count: 784
+      description: ''
+      properties:
+        elements:
+          type: number
+        page:
+          type: number
+        total_elements:
+          type: number
+        page_count:
+          type: number
+    CultivableZone:
+      title: CultivableZone
+      x-stoplight:
+        id: r1hdmyl8pk4nz
+      type: object
+      x-examples:
+        example-1:
+          id: 52
+          uuid: e64cfa83-8f67-4be0-ba96-db7a9659a675
+          shape:
+            feature: 'SRID=4326;MULTIPOLYGON (((-0.792163257283729 45.8212392141659, -0.791904819365336 45.8212103045779, -0.791480654542158 45.8212221132556, -0.791101405009501 45.8211429977115, -0.79069849642266 45.821064450282, -0.791605612418384 45.8202552159891, -0.792163257283729 45.8212392141659)))'
+            properties: {}
+          shape_to_geojson: '{"type":"MultiPolygon","coordinates":[[[[-0.792163257283729,45.8212392141659],[-0.791904819365336,45.8212103045779],[-0.791480654542158,45.8212221132556],[-0.791101405009501,45.8211429977115],[-0.79069849642266,45.821064450282],[-0.791605612418384,45.8202552159891],[-0.792163257283729,45.8212392141659]]]]}'
+          name: Raguenaud
+          work_number: ZC04
+      properties:
+        id:
+          type: integer
+          format: int32
+          readOnly: true
+        uuid:
+          type: string
+          format: uuid
+          readOnly: true
+        shape:
+          type: string
+          format: json-pointer
+        name:
+          type: string
+        work_number:
+          type: string
+        shape_to_geojson:
+          type: string
+          format: json-pointer
+          readOnly: true
+      description: ''
+    InterventionWorkingPeriod:
+      type: object
+      x-examples:
+        Example 1:
+          id: 1
+          intervention_id: 9
+          started_at: '2012-10-03T08:30:00.000Z'
+          stopped_at: '2012-10-03T12:30:00.000Z'
+          duration: 14400
+          created_at: '2014-11-04T18:31:09.285Z'
+          updated_at: '2014-11-04T18:31:37.378Z'
+          creator_id: 1
+          updater_id: 1
+          intervention_participation_id: null
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        intervention_id:
+          type: integer
+        started_at:
+          type: string
+          format: date-time
+        stopped_at:
+          type: string
+          format: date-time
+        duration:
+          type: integer
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        creator_id:
+          type: integer
+          readOnly: true
+        updater_id:
+          type: integer
+          readOnly: true
+        intervention_participation_id:
+          type: integer
+          nullable: true
+  responses:
+    Created:
+      description: Resource successfully created
+      content:
+        application/json:
+          schema:
+            properties:
+              id:
+                type: string
+          examples:
+            example-1:
+              value:
+                id: string
+      headers: {}
+    Not-found:
+      description: Resource not found.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  type: string
+    Bad-authorization:
+      description: ''
+      content:
+        application/json:
+          schema:
+            description: ''
+            type: object
+            properties:
+              message:
+                type: string
+                minLength: 1
+            required:
+              - message
+            x-examples:
+              example-1:
+                message: Bad authorization.
+          examples:
+            example-1:
+              value:
+                message: Bad authorization.
+    Updated:
+      description: Resource successfully updated
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+          examples:
+            example-1:
+              value:
+                id: string
+    Forbidden:
+      description: ''
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              errors:
+                type: array
+                items:
+                  type: string
+      headers: {}
+  parameters:
+    Authorization:
+      name: Authorization
+      in: header
+      schema:
+        type: string
+        example: simple-token demo@ekylibre.org y_geHxfwwDtLwi3bTomE
+        default: simple-token admin@ekylibre.org dKV1CHsWsxx9GoxN619S
+      description: authorization
+      required: true
+    Content-Type:
+      name: Content-Type
+      in: header
+      required: true
+      schema:
+        type: string
+        default: application/json
+        example: application/json
+      description: content type
+    modified_since:
+      name: modified_since
+      in: query
+      required: false
+      schema:
+        type: string
+        format: date
+        example: 27/02/2021
+      description: modified since
+    pagination:
+      name: paginate
+      in: query
+      schema:
+        type: string
+        default: 'true'
+      description: Activate pagination ("true"/"false")
+    harvest_year:
+      name: harvest_year
+      in: path
+      required: true
+      schema:
+        type: integer
+        format: int32
+        enum:
+          - 2022
+          - 2023
+          - 2024
+          - 2021
+          - 2020
+        example: 2022
+      description: a year corresponding to harvest year
+    email:
+      name: email
+      in: query
+      required: true
+      schema:
+        type: string
+        format: email
+        example: admin@ekylibre.org
+      description: Email of an existing user in Ekylibre instance
+    password:
+      name: password
+      in: query
+      required: true
+      schema:
+        type: string
+        format: password
+      description: Password of an existing user in Ekylibre instance
+  securitySchemes: {}
+tags:
+  - name: Auth
+  - name: Farm profiles
+  - name: Interventions
+  - name: Plants
+  - name: Product nature variants
+  - name: Products
+  - name: Users

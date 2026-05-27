@@ -1,0 +1,105 @@
+# Require whichever elevator you're using below here...
+#
+# require 'apartment/elevators/generic'
+# require 'apartment/elevators/domain'
+require 'apartment/elevators/subdomain'
+require 'apartment/adapters/postgresql_adapter'
+#
+# Apartment Configuration
+#
+Apartment.configure do |config|
+  # These models will not be multi-tenanted,
+  # but remain in the global (public) namespace
+  #
+  # An example might be a Customer or Tenant model that stores each tenant information
+  # ex:
+  #
+  # config.excluded_models = %w{Tenant}
+  #
+  config.excluded_models = %w[]
+
+  # use postgres schemas?
+  config.use_schemas = true
+
+  # use raw SQL dumps for creating postgres schemas? (only applies with use_schemas set to true)
+  config.use_sql = true
+
+  # Postgis default Schema must be "postgis"
+  config.persistent_schemas = %w[postgis lexicon]
+
+  # add the Rails environment to database names?
+  # config.prepend_environment = false
+  # config.append_environment = false
+  # supply list of database names for migrations to run on
+
+  config.tenant_names = -> { Ekylibre::Tenant.list }
+end
+
+module Apartment
+  module Elevators
+    # Special elevator which permit to switch on header "X-Tenant"
+    class Header < Apartment::Elevators::Generic
+      def parse_tenant_name(request)
+        return nil unless request.env['HTTP_X_TENANT']
+        request.env.each do |k, v|
+          # puts "#{k.to_s.rjust(30).yellow}: #{v.to_s.red}"
+        end
+        # puts request.env.keys.inspect.red
+        request.env['HTTP_X_TENANT']
+      end
+    end
+
+    class SecuredSubdomain < Apartment::Elevators::Subdomain
+      def call(env)
+        super
+      rescue ::Apartment::TenantNotFound
+        request = Rack::Request.new(env)
+        Rails.logger.error "Apartment Tenant not found: #{subdomain(request.host)}"
+        return [404, { 'Content-Type' => 'text/html' }, [File.read(Rails.root.join('public', '404.html'))]]
+      end
+    end
+  end
+
+  module Adapters
+    class PostgresqlSchemaAdapter < Apartment::Adapters::AbstractAdapter
+      protected
+
+      def connect_to_new(tenant = nil)
+        return reset if tenant.nil?
+
+        raise ActiveRecord::StatementInvalid, "Could not establish connection to database for schema #{tenant}" unless Apartment.connection.active?
+        # end
+
+        unless Apartment.connection.schema_exists? tenant
+          raise TenantNotFound, "Could not find schema #{tenant}. Search path: [#{full_search_path}]"
+        end
+
+        @current = tenant.to_s
+        Apartment.connection.schema_search_path = full_search_path
+
+        # rescue *rescuable_exceptions
+        #   raise TenantNotFound, "One of the following schema(s) is invalid: \"#{tenant}\" #{full_search_path}"
+      end
+    end
+
+    class PostgresqlSchemaFromSqlAdapter < PostgresqlSchemaAdapter
+      PSQL_DUMP_BLACKLISTED_STATEMENTS << /CREATE SCHEMA/i
+      PSQL_DUMP_BLACKLISTED_STATEMENTS << /\\restrict/i
+      PSQL_DUMP_BLACKLISTED_STATEMENTS << /\\unrestrict/i
+    end
+  end
+end
+
+if ENV['TENANT']
+  Rails.application.config.middleware.use Apartment::Elevators::Generic, proc { |_request| ENV['TENANT'] }
+elsif Rails.env.test?
+  Rails.application.config.middleware.use Apartment::Elevators::Generic, proc { |_request| 'test' }
+elsif ENV['ELEVATOR'] == 'header'
+  Rails.application.config.middleware.use Apartment::Elevators::Header
+else
+  Rails.application.config.middleware.use Apartment::Elevators::SecuredSubdomain
+end
+
+if ENV['HOST_SUBDOMAIN_NAME'].present?
+  Apartment::Elevators::SecuredSubdomain.excluded_subdomains = ENV['HOST_SUBDOMAIN_NAME']
+end

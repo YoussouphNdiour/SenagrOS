@@ -1,0 +1,245 @@
+# frozen_string_literal: true
+
+# = Informations
+#
+# == License
+#
+# Ekylibre - Simple agricultural ERP
+# Copyright (C) 2008-2009 Brice Texier, Thibaud Merigon
+# Copyright (C) 2010-2012 Brice Texier
+# Copyright (C) 2012-2014 Brice Texier, David Joulin
+# Copyright (C) 2015-2023 Ekylibre SAS
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see http://www.gnu.org/licenses.
+#
+# == Table: purchases
+#
+#  accounted_at                             :datetime
+#  affair_id                                :integer(4)
+#  amount                                   :decimal(19, 4)   default(0.0), not null
+#  command_mode                             :string
+#  confirmed_at                             :datetime
+#  contract_id                              :integer(4)
+#  created_at                               :datetime         not null
+#  creator_id                               :integer(4)
+#  currency                                 :string           not null
+#  custom_fields                            :jsonb
+#  delivery_address_id                      :integer(4)
+#  description                              :text
+#  estimate_reception_date                  :datetime
+#  id                                       :integer(4)       not null, primary key
+#  invoiced_at                              :datetime
+#  journal_entry_id                         :integer(4)
+#  lock_version                             :integer(4)       default(0), not null
+#  nature_id                                :integer(4)
+#  number                                   :string           not null
+#  ordered_at                               :datetime
+#  payment_at                               :datetime
+#  payment_delay                            :string
+#  planned_at                               :datetime
+#  pretax_amount                            :decimal(19, 4)   default(0.0), not null
+#  quantity_gap_on_invoice_journal_entry_id :integer(4)
+#  reconciliation_state                     :string
+#  reference_number                         :string
+#  responsible_id                           :integer(4)
+#  state                                    :string           not null
+#  supplier_id                              :integer(4)       not null
+#  tax_payability                           :string           not null
+#  type                                     :string
+#  undelivered_invoice_journal_entry_id     :integer(4)
+#  updated_at                               :datetime         not null
+#  updater_id                               :integer(4)
+#
+
+class Purchase < ApplicationRecord
+  include Attachable
+  include Customizable
+  attr_readonly :currency, :nature_id
+  enumerize :tax_payability, in: %i[at_paying at_invoicing], default: :at_invoicing
+  enumerize :reconciliation_state, in: %i[to_reconcile accepted reconcile], default: :to_reconcile
+  enumerize :payment_delay, in: ['1 week', '30 days', '30 days, end of month', '60 days', '60 days, end of month']
+  refers_to :currency
+  belongs_to :delivery_address, class_name: 'EntityAddress'
+  belongs_to :nature, class_name: 'PurchaseNature'
+  belongs_to :payee, class_name: 'Entity', foreign_key: :supplier_id
+  belongs_to :supplier, class_name: 'Entity'
+  belongs_to :responsible, class_name: 'User'
+  belongs_to :contract
+  has_many :parcels, class_name: 'Reception'
+  has_many :items, class_name: 'PurchaseItem', dependent: :destroy, inverse_of: :purchase
+  has_many :products, -> { uniq }, through: :items
+  has_many :fixed_assets, through: :items
+  has_one :supplier_payment_mode, through: :supplier
+  # [VALIDATORS[ Do not edit these lines directly. Use `rake clean:validations`.
+  validates :accounted_at, :confirmed_at, :estimate_reception_date, :invoiced_at, :ordered_at, :payment_at, :planned_at, timeliness: { on_or_after: -> { Time.new(1, 1, 1).in_time_zone }, on_or_before: -> { Time.zone.now + 100.years } }, allow_blank: true
+  validates :amount, :pretax_amount, presence: true, numericality: { greater_than: -1_000_000_000_000_000, less_than: 1_000_000_000_000_000 }
+  validates :command_mode, :reference_number, length: { maximum: 500 }, allow_blank: true
+  validates :currency, :payee, :supplier, :tax_payability, presence: true
+  validates :description, length: { maximum: 500_000 }, allow_blank: true
+  validates :number, :state, presence: true, length: { maximum: 500 }
+  # ]VALIDATORS]
+  validates :number, :state, length: { allow_nil: true, maximum: 60 }
+  validates :created_at, :state, :nature, :type, presence: true
+  validates :number, uniqueness: true
+  validates :invoiced_at, financial_year_writeable: true, ongoing_exchanges: true, allow_blank: true
+  validates_associated :items
+  validates_delay_format_of :payment_delay
+
+  alias_attribute :third_id, :supplier_id
+
+  acts_as_numbered
+  accepts_nested_attributes_for :items, reject_if: proc { |item| item[:variant_id].blank? && item[:variant].blank? }, allow_destroy: true
+
+  delegate :with_accounting, to: :nature
+  delegate :third_attribute, to: :class
+  scope :with_nature, ->(id) { where(nature_id: id) }
+
+  scope :invoiced_between, lambda { |started_at, stopped_at|
+    where(invoiced_at: started_at..stopped_at)
+  }
+
+  scope :of_supplier, ->(supplier) { where(supplier_id: (supplier.is_a?(Entity) ? supplier.id : supplier)) }
+
+  scope :invoiced_between, lambda { |started_at, stopped_at|
+    where(invoiced_at: started_at..stopped_at)
+  }
+
+  before_validation(on: :create) do
+    self.currency ||= nature.currency if nature
+  end
+
+  before_validation do
+    self.state ||= :draft
+    self.created_at ||= Time.zone.now
+    self.planned_at ||= self.created_at
+    if payment_delay.blank? && supplier && supplier.supplier_payment_delay
+      self.payment_delay = supplier.supplier_payment_delay
+    end
+
+    self.pretax_amount = items.reject(&:marked_for_destruction?).sum(&:pretax_amount)
+    self.amount = items.reject(&:marked_for_destruction?).sum(&:amount)
+  end
+
+  validate do
+    errors.add(:invoiced_at, :before, restriction: Time.zone.now.l) if invoiced_at && invoiced_at > Time.zone.now
+  end
+
+  after_validation do
+    self.payment_at = if payment_delay.blank?
+                        invoiced_at || self.planned_at
+                      elsif errors[:payment_delay].none?
+                        Delay.new(payment_delay).compute(invoiced_at || self.planned_at)
+                      end
+  end
+
+  after_create do
+    supplier.add_event(:purchase_creation, updater.person) if updater
+  end
+
+  def self.third_attribute
+    :supplier
+  end
+
+  def self.affair_class
+    PurchaseAffair
+  end
+
+  def default_currency
+    currency || nature.currency
+  end
+
+  def precision
+    Onoma::Currency.find(currency).precision
+  end
+
+  def refresh
+    save
+  end
+
+  def third
+    send(third_attribute)
+  end
+
+  def has_content?
+    items.any?
+  end
+
+  def opened_financial_year?
+    FinancialYear.on(invoiced_at)&.opened?
+  end
+
+  def invoiced_during_financial_year_closure_preparation?
+    FinancialYear.on(invoiced_at)&.closure_in_preparation?
+  end
+
+  def purchased?
+    (order? || invoice?)
+  end
+
+  # Computes an amount (with or without taxes) of the undelivered products
+  # - +column+ can be +:amount+ or +:pretax_amount+
+  def undelivered(column)
+    sum  = send(column)
+    sum -= parcels.sum(column)
+    sum.round(2)
+  end
+
+  # Save the last date when the purchase was confirmed
+  def confirm(confirmed_at = nil)
+    # no more usage of state machine
+    # return false unless can_confirm?
+    reload
+    self.confirmed_at ||= confirmed_at || Time.zone.now
+    save!
+    super
+  end
+
+  def label
+    number # tc('label', :supplier => self.supplier.full_name.to_s, :address => self.delivery_address.mail_coordinate.to_s)
+  end
+
+  # Prints human name of current state
+  def state_label
+    self.class.state_machine.state(state.to_sym).human_name
+  end
+
+  def supplier_address
+    if supplier.default_mail_address
+      return supplier.default_mail_address.mail_coordinate
+    end
+
+    nil
+  end
+
+  def client_address
+    Entity.of_company.default_mail_address.mail_coordinate
+  end
+
+  def sepable?
+    cash_mode = OutgoingPaymentMode.mode_sepa.first
+
+    cash_mode &&
+      currency == cash_mode.cash.currency &&
+      payee.iban.present? &&
+      payee.bank_account_holder_name.present?
+  end
+
+  def invoice?
+    state == 'invoice'
+  end
+
+  def taxes_amount
+    amount - pretax_amount
+  end
+end

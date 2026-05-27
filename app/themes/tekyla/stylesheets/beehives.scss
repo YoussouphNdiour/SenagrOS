@@ -1,0 +1,240 @@
+$min-width: round($mini-screen * 0.3);
+
+$spacing: round($default-gap * 0.8);
+$configuring-min-height: 400px;
+.beehive {
+  padding: $spacing;
+  background: $desktop-background;
+  overflow: auto;
+
+  &:-webkit-full-screen {
+    width: 100%;
+    height: 100%;
+  }
+
+  .beehive-tools {
+    display: none;
+    padding: $default-gap;
+    margin: $spacing;
+    background: #EEE;
+  }
+
+  .box {
+    $min-height: 200px;
+    $cell-border-width: 1px;
+    $cell-border-color: #CCC;
+    $cell-border: $cell-border-width solid $cell-border-color;
+
+    $cell-title-vertical-padding: round($default-gap*1.1*1.2);
+    $cell-title-horizontal-padding: round($default-gap*1.3*1.2);
+    clear: both;
+
+    .cell {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      // @include inline-block;
+      @include float(left);
+      display: block;
+      vertical-align: top;
+
+      .cell-inner {
+        background: white;
+        border: $cell-border;
+        margin: $spacing;
+        @include border-radius($default-border-radius);
+        @include normal-shadow;
+        @include transition(box-shadow 0.4s);
+
+        .cell-title {
+          color: $neutral-color;
+          font-weight: bold;
+          padding: $cell-title-vertical-padding $cell-title-horizontal-padding;
+          background: #EEE;
+          @include border-top-radius($default-border-radius - $cell-border-width);
+          @include text-align(left);
+          // border-top: 2px solid $active-color;
+          border-bottom: $cell-border;
+          @include ellipsis;
+          i {
+            color: $text-color;
+            @include is-icon($fs-normal);
+            @include use-icon(bookmark);
+          }
+          a[data-beehive-remove="cell"] {
+            @include float(right);
+            display: none;
+            width: $fs-normal;
+            @include text-align(center);
+            i {
+              @include is-icon($fs-normal);
+              @include use-icon(clear);
+            }
+          }
+        }
+
+        .cell-header {
+          position: relative;
+          i[data-cell="info"] {
+            position: absolute;
+            top: -30px;
+            right: 30px;
+            font-family: Agric;
+            color: #5c85d5;
+            font-size: x-large;
+            @include use-icon(info-outline);
+          }
+          i[data-cell="info"]:hover{
+            cursor: pointer;
+          }
+        }
+
+        .cell-footer {
+          color: $neutral-color;
+          font-weight: bold;
+          padding: 9px 25px;
+          text-align: right;
+        }
+
+        .cell-content {
+          // padding: $cell-title-vertical-padding $cell-title-horizontal-padding;
+          height: auto;
+          overflow: auto;
+
+          > .toolbar {
+            @include margin-left($default-gap);
+          }
+        }
+
+        .cell-bottom {
+          clear: both;
+        }
+      }
+
+      &.dragging, &.ui-sortable-helper {
+        width: auto;
+        .cell-inner {
+          width: auto;
+          @include box-shadow(0 0 ($default-gap) rgba(black, 0.2))
+        }
+      }
+
+
+      &.loading, &.errored, &.blank {
+        > .cell-inner > .cell-content {
+          text-align: center;
+          padding: 3 * $fs-normal;
+          cursor: default;
+        }
+      }
+
+
+    }
+
+
+    .box-bottom {
+      clear: both;
+    }
+
+
+
+  }
+
+  [data-beehive-task="new-box"] {
+    display: none;
+    clear: both;
+    margin: 2*$spacing $spacing $spacing;
+    padding: 2*$spacing;
+    @include text-align(center);
+  }
+
+  .beehive-bottom {
+    clear: both;
+  }
+
+  &.configuring {
+    [data-beehive-task="new-box"] {
+      display: block;
+    }
+    .beehive-tools {
+      display: block;
+      *[data-beehive-task="new-cell"] {
+        i {
+          @include is-icon;
+          @include use-icon(plus);
+        }
+      }
+      *[data-beehive-task="reset"] {
+        i {
+          @include is-icon;
+          html[dir="ltr"] & { @include use-icon(rotate-left); }
+          html[dir="rtl"] & { @include use-icon(rotate-right); }
+        }
+      }
+    }
+    .box {
+      border: 2px dashed #DDD;
+      margin: $default-gap;
+      min-height: $configuring-min-height;
+      .cell {
+        .cell-title {
+          cursor: move;
+          a[data-beehive-remove="cell"] {
+            display: block;
+          }
+        }
+        &.cell-placeholder {
+          background: rgba($success-color, 0.2);
+          height: $configuring-min-height;
+        }
+      }
+    }
+  }
+
+}
+
+.beehive .box .cell, *[data-cell], *[data-async-content] {
+  .cell-indicator {
+    color: $neutral-color;
+    @include is-icon(6 * $fs-normal);
+    @include inline-block;
+    line-height: 1.4 * 6 * $fs-normal;
+  }
+
+  &.loading {
+    @include text-align(center);
+    .cell-indicator {
+      @include loading-indicator;
+    }
+  }
+
+  &.errored {
+    @include text-align(center);
+    .cell-message {
+      @include text-error-indicator;
+    }
+    .cell-indicator {
+      @include error-indicator;
+    }
+  }
+
+  &.blank {
+    @include text-align(center);
+    .cell-message {
+      @include text-null-indicator;
+    }
+    .cell-indicator {
+      @include null-indicator;
+    }
+  }
+}
+
+
+@for $i from 2 through 16 {
+  @media screen and (min-width: round($i*$min-width) + 1px) {
+    .cell:first-child:nth-last-child(#{$i}),
+    .cell:first-child:nth-last-child(#{$i}) ~ .cell {
+      width: floor(100000% / $i) / 1000;
+    }
+  }
+}

@@ -1,0 +1,636 @@
+$spacing: round($default-ratio * $default-gap);
+$vertical-spacing: round($spacing / $default-ratio);
+$nested-field-border: $menu-border-width solid mix($menu-border-color, white);
+
+.fieldset {
+  // @include border-radius($default-border-radius);
+  padding: 0;
+  margin: $spacing;
+  $fieldset-border: $menu-border;
+  border: $fieldset-border;
+  // @include incrust-shadow;
+  $size: $fs-normal;
+  background: white;
+
+  &.active {
+    border-color: $active-color;
+
+    .fieldset-legend {
+      background-color: rgba($active-color, 0.12);
+    }
+  }
+
+  .fieldset-legend {
+    padding: $vertical-spacing $spacing;
+
+    *, label, span {
+      color: $neutral-color;
+      font-size: $size;
+      line-height: round($lh-ratio * $size);
+    }
+
+    font-weight: bold;
+    vertical-align: middle;
+
+    .title {
+      i {
+        @include is-icon;
+        @include inline-block;
+        @include use-icon(file);
+        color: $neutral-color;
+        @include margin-right(round($size/4));
+      }
+    }
+
+    .buttons {
+      @include inline-block;
+      @include float(right);
+
+      > * {
+        @include margin-left(round(0.6 * $spacing));
+      }
+
+      .toggle {
+        $tool-size: round(0.95 * $fs-normal);
+        width: $tool-size;
+        height: $tool-size;
+        @include is-icon();
+        margin: round(($size - $tool-size)/2) 0 0;
+      }
+
+      .remove {
+        $tool-size: round(0.95 * $fs-normal);
+        width: $tool-size;
+        height: $tool-size;
+        @include is-icon();
+        @include use-icon(times);
+        margin: round(($size - $tool-size)/2) 0 0;
+      }
+    }
+
+    &:hover span {
+      color: $base-color;
+      @include transition(color 0.2s linear);
+    }
+  }
+
+  .fieldset-fields {
+    margin: 0;
+    padding: $vertical-spacing $spacing;
+
+    h3 {
+      font-weight: bold;
+      margin-top: $spacing;
+    }
+
+    input[type="date"] {
+      //override reset width
+      width: auto;
+    }
+
+    .input {
+      padding: round($fs-normal*0.2) 0;
+      margin: round($fs-normal*0.1) 0;
+
+      .control-label {
+        width: 25%;
+        @include float(left);
+        line-height: $lh-normal;
+        @include inline-block;
+        @include margin-right(round($fs-normal/2));
+
+        &.required {
+          abbr {
+            color: $invalid-color;
+          }
+        }
+      }
+    }
+
+    textarea {
+      width: 70%;
+      resize: vertical;
+    }
+
+    //input{
+    //  max-width: 65%;
+    //}
+
+    tr.nested-fields, tbody.nested-fields {
+      input {
+        max-width: 100%;
+
+        &[type="number"] {
+          width: 5em;
+        }
+      }
+    }
+
+    & > .fieldset {
+      @include margin-left(0);
+      @include margin-right(0);
+    }
+
+  }
+
+  &.subfieldset {
+    &.collapsed {
+      .buttons .toggle {
+        @include use-icon(plus-square-o);
+      }
+  
+      .fieldset-fields {
+        display: none;
+      }
+    }
+  
+    &.not-collapsed .buttons .toggle {
+      @include use-icon(minus-square-o);
+    }
+  
+    &.error.collapsed .fieldset-legend {
+      &, *, label, span {
+        color: $invalid-color;
+      }
+    }
+  }
+
+  &.collapsed {
+    .buttons .toggle {
+      @include use-icon(plus-square-o);
+    }
+
+    .fieldset-fields {
+      display: none;
+    }
+  }
+
+  &.not-collapsed .buttons .toggle {
+    @include use-icon(minus-square-o);
+  }
+
+  &.error.collapsed .fieldset-legend {
+    &, *, label, span {
+      color: $invalid-color;
+    }
+  }
+
+}
+
+
+input, textarea, select {
+  &.special {
+    background: $highlight-color;
+  }
+}
+
+.help-inline {
+  display: inline-block;
+  *display: inline;
+  @include padding-left(5px);
+  vertical-align: middle;
+  *zoom: 1;
+  color: $invalid-color;
+}
+
+.selector {
+  @include inline-block;
+  @include button-group;
+
+  .selector-search, input[data-selector] {
+    display: inline;
+    margin-bottom: 0;
+  }
+}
+
+.input-append, .btn-group-dropdown {
+  @include button-group;
+}
+
+
+$controls-margin-left: round($label-width * 1.1);
+$large-controls-margin-left: round($large-label-width * 1.1);
+
+.control-group {
+  margin: round($fs-normal/4) 0;
+  padding: round($fs-normal/4) 0;
+
+  // @include clearfix;
+  clear: both;
+
+  .control-label {
+    max-width: $label-width;
+    @include float(left);
+    line-height: $lh-normal;
+    margin: round($fs-normal/4) $spacing;
+    @include display(block);
+    @include ellipsis;
+
+    &.required {
+      abbr {
+        color: $invalid-color;
+      }
+    }
+
+    &.large-control-label {
+      max-width: $large-label-width;
+    }
+  }
+
+  width: auto;
+
+  .controls {
+    position: relative;
+    @include margin-left($controls-margin-left);
+    max-width: 100% - $controls-margin-left;
+    //input, select, textarea {
+    //  max-width: 100% - $controls-margin-left;
+    //}
+    .input-append {
+      width: 100%;
+    }
+
+    .preview.picture {
+      margin-bottom: $spacing;
+      @include margin-left(0);
+    }
+
+    &.large-controls {
+      @include margin-left($large-controls-margin-left);
+      max-width: 100% - $large-controls-margin-left;
+    }
+
+    & .lights, .lights-message {
+      margin-left: 10px;
+    }
+
+    & .lights-message.warning {
+      color: rgba(255, 136, 17, 0.8);
+    }
+
+    & .lights-message.go {
+      color: rgba(101, 169, 7, 0.8);
+    }
+
+    & .lights-message.stop {
+      color: rgba(216, 30, 8, 0.8);
+    }
+  }
+
+  &.vertical{
+    .control-label {
+      max-width: unset;
+      width: 100%;
+      &.required {
+        abbr {
+          float: unset;
+        }
+      }
+    }
+
+    .controls {
+      @include margin-left(11px);
+    }
+  }
+
+  //  &.selector .controls .input {
+  //    @include toolbar;
+  //   }
+  .help-block {
+    &, * {
+      margin-top: round(0.3 * $spacing);
+      font-size: $fs-small;
+      font-style: italic;
+      line-height: $lh-ratio * 1em;
+
+      em {
+        font-style: normal;
+      }
+    }
+  }
+
+  &.hidden {
+    display: none;
+  }
+
+  &.special {
+    background: #CE8;
+    @include border-radius($default-border-radius);
+  }
+}
+
+.input-append {
+  @include button-group;
+
+  .btn {
+    font-size: 0;
+
+    i {
+      margin-left: 0;
+      margin-right: 0;
+    }
+  }
+}
+
+span.rad, label.radio, span.radio {
+  padding: 0 round($fs-normal * 0.7) 0 0;
+  @include margin-left(round($fs-normal/2));
+
+  * {
+    vertical-align: middle;
+  }
+
+  &:first-child {
+    @include margin-left(0);
+  }
+
+  input {
+    @include margin-right(round($fs-normal * 0.4));
+  }
+}
+
+
+.inline-form {
+  @include inline-block;
+}
+
+$form-actions-height: 48px;
+.form-actions {
+  display: block;
+  margin: 0;
+  padding: $fs-normal;
+  vertical-align: middle;
+  @include text-align(center);
+  // @include gradient-vertical(rgba(black, 0.05), rgba(black, 0.03), rgba(black, 0.06)));
+  background: white;
+  border-top: 1px solid #DDD;
+  border-bottom: 1px solid #DDD;
+
+  &:first-child {
+    border-top: none;
+  }
+
+  & > input, & > .btn {
+    @include inline-block;
+    margin-left: $fs-normal !important;
+
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+
+  .cobble & {
+    border-bottom: none;
+  }
+}
+
+
+.nested-fields {
+  .nested-remove {
+    @include display(block);
+    font-size: 0;
+
+    i {
+      @include is-icon;
+      @include use-icon(times);
+    }
+  }
+}
+
+div.nested-fields {
+  position: relative;
+
+  .nested-remove {
+    position: absolute;
+    z-index: 4;
+    @include right($spacing);
+    top: $spacing * 0.9;
+  }
+}
+
+
+.nested-association {
+  border: $nested-field-border;
+  margin-bottom: $fs-normal;
+  clear: both;
+  @include border-radius($default-border-radius);
+
+  div.nested-fields {
+    padding: 1px 0;
+    border-top: $nested-field-border;
+
+    &:first-child {
+      border-top: none;
+      @include border-top-radius($default-border-radius);
+    }
+
+    &:last-child {
+      @include border-bottom-radius($default-border-radius);
+    }
+
+    &:nth-of-type(2n) {
+      background: rgba($active-color, 0.03);
+    }
+
+    &:nth-of-type(2n+1) {
+      background: rgba(white, 0.75);
+    }
+  }
+
+  .links {
+    border-top: $nested-field-border;
+    padding: round(0.5 * $spacing);
+    background: #F7F7F7;
+    @include border-bottom-radius($default-border-radius);
+
+    &:first-child {
+      border-top: none;
+    }
+
+    .nested-add {
+      @include margin-left($controls-margin-left);
+    }
+  }
+
+  .nested-association {
+    margin: $spacing;
+  }
+}
+
+
+.tt-input,
+.tt-hint {
+  width: 30vh;
+}
+
+.tt-hint {
+  color: #999
+}
+
+.tt-menu {
+  @include menu-box;
+
+  .tt-suggestion {
+    padding: $menu-item-vertical-padding $menu-item-horizontal-padding;
+    font-size: $fs-normal;
+    line-height: $menu-text-height;
+    height: $menu-text-height;
+
+    &:hover {
+      outline: none;
+      cursor: pointer;
+      background: background-hover($menu-background);
+    }
+
+    &.tt-cursor {
+      background: background-hover($menu-background);
+    }
+
+    p {
+      margin: 0;
+    }
+  }
+}
+
+.filter-form {
+  > * {
+    margin: 0px 3px;
+  }
+
+  input[type='submit'] {
+    margin: 0px 3px;
+  }
+}
+
+.label-inline {
+  padding-left: $default-gap;
+  padding-right: $default-gap;
+  @include inline-block;
+}
+
+#financial-year-dates {
+  color: #e61e1a;
+  margin-left: 45px;
+}
+
+.form-field {
+  .multiplicator {
+    margin-top: 25px;
+    margin-right: 10px;
+
+    &--equal-spacing {
+      margin-left: 10px;
+    }
+  }
+}
+
+.form-errors {
+  .errors-messages {
+    list-style: disc;
+    padding-left: 2em;
+  }
+
+  .close {
+    font-size: 16px !important;
+  }
+}
+
+.allocated-budget span {
+  align-self: center;
+  color: #999;
+}
+
+.error {
+  color: #D0311B !important;
+}
+
+.amount_allocated {
+  display: flex;
+
+  .control-group {
+    flex: 0 0 42%;
+    display: flex;
+    justify-content: space-between;
+
+    .controls {
+      margin-left: 0 !important;
+    }
+  }
+
+  .allocated-budget {
+    align-self: center;
+    color: #999;
+    font-style: italic;
+  }
+
+  p {
+    margin-right: 4px;
+  }
+}
+
+.inline-date-fields {
+  span.addon {
+    border: 1px solid #dedede;
+    padding: 5px;
+    font-size: 12px;
+    background: #EEE;
+
+    &:first-child {
+      border-radius: 3px 0 0 3px;
+    }
+  }
+
+  & > div > input {
+    border-radius: 0;
+    margin: 1px -5px 1px -4px !important;
+    padding: 3px !important;
+
+    &:last-child {
+      border-radius: 0 3px 3px 0;
+    }
+  }
+}
+
+.filter-form {
+  > * {
+    margin: 0px 3px;
+  }
+
+  input[type='submit'] {
+    margin: 0px 3px;
+  }
+}
+
+.added-details {
+  font-size: 11px;
+  text-align: right;
+  font-style: italic;
+}
+
+td.with-details {
+  padding: 20px 7px 0px 7px;
+}
+
+.action-form {
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+
+    a {
+      pointer-events: none;
+    }
+  }
+}
+
+.radio-btn-form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0px;
+  & input {
+    margin-right: 5px;
+  }
+  & span:not(:last-child) {
+    margin-right: 20px;
+  }
+}

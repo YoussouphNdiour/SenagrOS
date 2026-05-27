@@ -1,0 +1,729 @@
+@import "bootstrap/labels";
+
+$preview-modal-height: 80vh;
+.big-infos .med-info .evaluation .picto {
+  color: #ffce00;
+  font-size: 35px;
+}
+
+.compare-planned-realised {
+  display: block;
+  margin-top: 10px
+}
+
+
+.panel-body {
+  .med-harvest {
+    display: flex;
+    .ready-to-harvest {
+      display: flex;
+      width: 20%;
+      align-items: center;
+    }
+    .delay {
+      width: 33%
+    }
+  }
+}
+
+#compare-planned-with-realised {
+  .modal-body {
+    h4 {
+      font-weight: bold;
+    }
+    .target-and-activity {
+      display: flex;
+      .intervention-activities {
+        a {
+          margin-right: 10px
+        }
+      }
+      .targets {
+        margin-left: 15px;
+        .warning {
+          color: orange;
+        }
+      }
+    }
+    .blocks {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 15px;
+      .block {
+        .block-title {
+          text-align: center;
+        }
+        .calendar-img {
+          width: 30px;
+          position: relative;
+          left: -15px;
+          top: 58px;
+        }
+      }
+    }
+
+    .interventions-datas {
+      margin-top: 50px;
+
+      .title {
+        color: grey;
+        border-bottom: 1px solid grey;
+      }
+
+      .intervention-details {
+        margin-top: 50px;
+        .details-block {
+          display: flex;
+          justify-content: space-around;
+          margin-left: 50px;
+          margin-top: 10px;
+          .content {
+            display: inline-block;
+            width: 33%;
+            .picto {
+              font-size: 25px;
+              color: #8c8c8c;
+              line-height: normal;
+            }
+            .warning {
+              color: orange;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+#intervention-form {
+  .control-group .selector-choices-list li {
+    padding-right: 200px;
+    position: relative;
+
+    .amount-part {
+      position: absolute;
+      right: 0;
+      width: 175px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      font-weight: bold;
+      text-align: right;
+      padding-right: 2px;
+
+    }
+  }
+}
+
+.cobble-general-information .cobble-content .big-infos {
+  .actionner-cobble {
+    .info {
+      span {
+        text-align: left
+      }
+    }
+    .value {
+      font-size: 19px;
+      line-height: 23px;
+      height: 25px;
+    }
+  }
+}
+
+.interventions-modal {
+  .evaluation-part {
+    display: inline-block;
+    margin-right: 10%;
+    p {
+      display: inline-block;
+      margin-right: 10px;
+    }
+    .picto {
+      font-size: 20px;
+      color: #ffce00;
+    }
+  }
+  .controls .selector .items-menu .items-list {
+    max-width: 800px;
+  }
+}
+
+.interventions-modal {
+  .intervention-activities {
+    padding: $default-gap;
+
+    .label {
+      margin-right: round($default-gap * 1.4);
+    }
+  }
+  .indicators {
+    @include flex-row(space-around);
+    flex-wrap: wrap;
+
+    .med-info {
+      @include flex-column();
+      flex: 1 50%;
+      padding: 0;
+      margin-top: round($default-gap * 1.4);
+
+      .value {
+        line-height: $fs-awesome;
+      }
+    }
+
+    .med-info.total-cost {
+      font-weight: bold;
+    }
+  }
+
+  .blocks {
+    @include flex-row(flex-start, flex-start);
+    flex-wrap: wrap;
+    padding: $default-gap;
+
+    .block {
+      flex: 1 50%;
+      margin: $fs-normal 0;
+
+      .block-title {
+        border-bottom: $menu-border;
+        padding-bottom: $default-gap;
+        font-size: $fs-normal;
+        font-weight: bold;
+      }
+
+      .data {
+        padding: $default-gap;
+        @include flex-row(flex-start, center);
+        .details {
+          display: inherit;
+          .working-time {
+            margin-left: 15px;
+            .quantity {
+              font-size: 15px;
+              margin-left: 5px;
+            }
+            .picto {
+              font-size: 25px;
+              color: #8c8c8c;
+            }
+          }
+        }
+      }
+
+      .data-title {
+        font-weight: bold;
+      }
+
+      .picture .picto {
+        font-size: $fs-huge;
+        line-height: initial;
+      }
+    }
+  }
+}
+
+.taskboard.interventions-taskboard {
+
+  .taskboard-column {
+
+    &.requests {
+      border: $menu-border-width dashed $text-color;
+      & .tasks {
+        border-top: $menu-border-width dashed $text-color;
+      }
+    }
+  }
+
+  .task {
+    .task-datas {
+      width: 100%;
+    }
+    .completely_filled {
+      margin-left: round($default-gap * 1.4);
+      color: $success-color;
+      font-size: $fs-large;
+      min-width: initial;
+      line-height: initial;
+    }
+
+    &-data.doers {
+      background-color: $darkened-blue-grey;
+      color: $white;
+    }
+
+    .task-indicators {
+      display: flex;
+      justify-content: flex-end;
+      flex-basis: 100%;
+
+      .task-calendar {
+        .calendar-img {
+          width: 25px;
+        }
+      }
+      .provided-by-zero {
+        margin-top: 6px;
+        i {
+           font-size: 30px;
+        }
+      }
+    }
+  }
+}
+
+.delete-modal {
+  .modal-intervention {
+    padding: 0 1em;
+  }
+}
+
+.beta {
+  @include is-icon($fs-normal);
+  @include use-icon(flask);
+
+  color: $brand-warning;
+  margin: 10px;
+}
+
+.nested-parameters {
+  position: relative;
+  .errors {
+    position: absolute;
+    top: $spacing * 0.9;
+    @include right(40px);
+    & > * {
+      display: none;
+    }
+  }
+
+  .links {
+    position: relative;
+
+    .display-info {
+      position: absolute;
+
+      .status {
+        @include margin-left(10px);
+        display: inline-block;
+        border: 1px solid $neutral-color;
+        border-radius: 100%;
+        width: $lh-small;
+        height: $lh-small;
+
+        &[data-display-status=valid] {
+          background-color: lighten($brand-success, 10%);
+        }
+        &[data-display-status=incomplete] {
+          background-color: lighten($brand-warning, 10%);
+        }
+        &[data-display-status=invalid] {
+          background-color: lighten($brand-danger, 10%);
+        }
+      }
+    }
+  }
+}
+
+.edit_intervention,
+.new_intervention {
+  .has-intervention-participations {
+    position: absolute;
+    top: $fs-large * 1.3;
+    left: $fs-awesome * 2.5;
+    line-height: 0;
+    font-size: $fs-huge;
+    cursor: pointer;
+  }
+
+  .has-intervention-participations:hover {
+    color: $darkened-blue-grey;
+  }
+
+  .has-intervention-participations.picto {
+    &.picto-timer::before,
+    &.picto-timer-off::before {
+      margin-left: $default-gap;
+   }
+  }
+
+  .reception-form {
+    .purchase-items-array {
+      margin-top: $default-gap * 2;
+      margin-left:  $default-gap * 2;
+    }
+
+    .header-line{
+      @include flex-row(flex-start);
+      list-style-type: none;
+      border-bottom: solid 1px #DDD;
+      padding-bottom: $default-gap;
+    }
+    .item-line {
+      @include flex-row(flex-start);
+      padding-bottom: $default-gap;
+      padding-top: $default-gap;
+      border-bottom: solid 1px #DDD;
+    }
+
+    .item-name, .header-name{
+      width: 60%;
+    }
+
+    .item-quantity, .header-quantity{
+      width: 10%;
+      input{
+        width: 90%;
+      }
+    }
+
+    .item-conditioning-unit, .header-conditioning-unit{
+      width: 10%;
+    }
+
+    .item-unit-pretax-amount, .header-unit-pretax-amount{
+      width: 10%;
+      color: $lightened-grey;
+    }
+
+    .item-amount, .header-amount{
+      width: 10%;
+      color: $lightened-grey;
+    }
+  }
+
+  .nested-inputs .nested-product-parameter {
+    .product-parameter-cost {
+      margin-left: 28%;
+    }
+
+    .product-parameter-cost-value {
+      font-weight: bold;
+    }
+  }
+
+  .nested-product-parameter .nested-readings {
+    margin: 0;
+    border: none;
+  }
+
+  .nested-cultivation .land-parcel-plant-selector {
+    .controls label {
+      margin-right: 1em;
+    }
+  }
+}
+
+.product_parameters .cast {
+  padding: 0;
+  padding-left: $default-gap;
+  display: flex;
+
+  .picture {
+    flex: 0 0 4%;
+    margin: $default-gap 0;
+    margin-right: $default-gap;
+    border: unset;
+    box-shadow: unset;
+    & > div, & > img {
+      padding: 4px;
+      border: $menu-border;
+      box-shadow: 0 0 $default-gap rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  .details {
+    flex: 1 1 auto;
+    padding: $default-gap 0;
+  }
+}
+
+.product_parameters .periods {
+  flex: 0 0 auto;
+  @include flex-row(center, stretch);
+  height: $fs-awesome * 1.7;
+
+  .period,
+  .total {
+    @include flex-column();
+    border-left: solid 1px #ddd;
+    padding: 0 1em;
+  }
+
+  .period-type {
+    @include flex-row();
+
+    .period-icon {
+      margin-right: 1em;
+      width: $fs-huge * 1.1;
+    }
+
+    .period-label {
+      font-weight: bold;
+      font-size: $fs-normal * 1.1;
+    }
+  }
+
+  .total {
+    background-color: rgba(black, 0.03);
+    min-width: 10em;
+
+    .total-label {
+      height: $fs-huge * 1.1;
+      font-size: $fs-large;
+      font-weight: bold;
+    }
+
+    .computation * {
+      font-size: 16px !important;
+    }
+  }
+
+  .cost {
+    @include flex-column();
+    padding: 0 !important;
+
+    .computation * {
+      font-size: $fs-normal !important;
+    }
+
+    .origin {
+      font-size: $fs-small;
+    }
+  }
+}
+
+#working-periods #working_periods-field .working-period-errors {
+  margin-left: 28%
+}
+
+.btn-group.intervention-duplication {
+  margin-left: 4px !important;
+}
+
+#duplicate_date{
+  width: 20ex;
+}
+
+#duplicate-modal {
+  .errors {
+    border: 1px solid rgba(216, 30, 8, 0.22);
+    background: rgba(216, 30, 8, 0.2);
+    color: #c91c07;
+    border-radius: 2px;
+    padding: 3px;
+  }
+  .targets {
+    border-top: 1px solid #e5e5e5;
+    border-bottom: 1px solid #e5e5e5;
+    padding: 5px;
+  }
+  .product-target {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    padding: 5px;
+    .control-group .controls {
+      margin-left: 0px;
+      .selector {
+        width: 360px;
+      }
+    }
+  }
+  .picto {
+    font-size: 40px;
+    line-height: 35px;
+  }
+  .picture {
+    height: 35px;
+  }
+  .parameters {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    .procedure {
+      width: 100%;
+      max-width: 364px;
+      line-height: 11px;
+      h2 {
+        font-weight: 900;
+      }
+    }
+    .parameter-type {
+      display: inline-table;
+      width: 50%;
+      .title {
+        border-bottom: 1px solid #e5e5e5;
+      }
+      .parameter-element {
+        display: flex;
+        margin-top: 7px;
+        .control-group .controls {
+          margin-left: 0px;
+          max-width: 100%;
+        }
+        .picto {
+          font-size: 55px;
+          line-height: 53px;
+        }
+        .picture {
+          height: 54px;
+        }
+      }
+    }
+  }
+  .inputs-outputs {
+    display: block;
+    .parameter-type {
+      width: 100%;
+      .input-part, .output-part {
+        display: flex;
+        .intervention_input_product {
+          min-width: 43%;
+        }
+        .intervention_quantity_quantity {
+          width: 10%;
+          input {
+            max-width: 72% !important;
+          }
+        }
+        .intervention_quantity_unit {
+          width: 15%;
+          input {
+            max-width: 72% !important;
+          }
+        }
+      }
+      .procedure {
+        max-width: none;
+      }
+    }
+  }
+}
+
+.allowed-mentions {
+  img {
+    height: 25px;
+    padding: 3px;
+    border: 1px solid lightgrey;
+    border-radius: 3px;
+  }
+
+}
+
+#product-authorization-message, #usage-authorization-message {
+  color: #f44336;
+}
+
+.usage-infos-container {
+  display: none;
+  position: relative;
+  width: 99%;
+  margin: 5px auto;
+  border: 1px solid $neutral-color;
+
+  .usage-infos-header {
+    width: calc(100% - 20px);
+    border-bottom: 1px solid $neutral-color;
+    padding: 10px;
+    color: $neutral-color;
+    font-weight: bolder;
+
+    & i {
+      color: $neutral-color;
+      @include is-icon(20px);
+      @include use-icon(info-outline);
+    }
+  }
+
+  .usage-infos-body {
+    margin: 5px;
+  }
+
+  .usage-infos-line {
+    padding: $default-gap;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .usage-infos-line-item {
+    width: 20%;
+    display: flex;
+    justify-content: space-between;
+
+    &--full-width {
+      width: 100%;
+      justify-content: unset;
+
+      & .usage-infos-line-item-label {
+        min-width: fit-content;
+      }
+
+      & .usage-infos-line-item-data {
+        margin-left: 1rem;
+        flex-grow: 1;
+      }
+    }
+  }
+
+  .usage-infos-line-item-label {
+    color: $neutral-color;
+  }
+
+}
+
+.harvest-warning {
+  display: inline-block;
+  color: red;
+  .picto {
+    font-size: 32px;
+  }
+  span {
+    color: red;
+    padding-right: 10px;
+  }
+  span, .picto {
+    color: red;
+  }
+}
+
+.input-authorization__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  float: right;
+
+  .input-authorization__text {
+    margin-right: 35px;
+  }
+}
+
+.authorization-disclaimer {
+  margin: round($fs-normal/4) $spacing;
+  padding: round($fs-normal/4) 0;
+  font-style: italic;
+}
+
+
+.intervention-request-selector {
+  div:not(:first-child){
+    margin-top: 10px;
+    padding-top: 5px;
+    border-top: 1px;
+    border-style: solid;
+    border-color: gray;
+  }
+  ul {
+      display: inline-block;
+      li {
+          list-style-type: none !important;
+          span.title {
+              font-weight: bold;
+          }
+      }
+  }
+}
+
+.show-map-input{
+  margin: $default-gap * 2;
+}

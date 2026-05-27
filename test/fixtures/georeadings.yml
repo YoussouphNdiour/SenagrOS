@@ -1,0 +1,77 @@
+# = Informations
+#
+# == License
+#
+# Ekylibre - Simple agricultural ERP
+# Copyright (C) 2008-2009 Brice Texier, Thibaud Merigon
+# Copyright (C) 2010-2012 Brice Texier
+# Copyright (C) 2012-2014 Brice Texier, David Joulin
+# Copyright (C) 2015-2023 Ekylibre SAS
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see http://www.gnu.org/licenses.
+#
+# == Table: georeadings
+#
+#  content      :geometry({:srid=>4326, :type=>"geometry"}) not null
+#  created_at   :datetime         not null
+#  creator_id   :integer(4)
+#  description  :text
+#  id           :integer(4)       not null, primary key
+#  lock_version :integer(4)       default(0), not null
+#  name         :string           not null
+#  nature       :string           not null
+#  number       :string
+#  updated_at   :datetime         not null
+#  updater_id   :integer(4)
+#
+---
+georeadings_001:
+  content: SRID=4326;Polygon ((-0.66741943359371 45.619800720955, -0.78002929687592
+    45.6927513729087, -0.87341308593753 45.6332461398123, -0.74157714843754 45.5602179571505,
+    -0.66467285156255 45.5698323584928, -0.66741943359371 45.619800720955))
+  created_at: 2014-10-31 17:19:32.000000000 Z
+  creator_id: 1
+  id: 1
+  lock_version: 0
+  name: 'Polygon #1'
+  nature: polygon
+  number: GR1
+  updated_at: 2014-10-31 17:19:32.000000000 Z
+  updater_id: 1
+georeadings_002:
+  content: SRID=4326;Polygon ((-0.66741943359371 45.619800720955, -0.78002929687592
+    45.6927513729087, -0.87341308593753 45.6332461398123, -0.74157714843754 45.5602179571505,
+    -0.66467285156255 45.5698323584928, -0.66741943359371 45.619800720955))
+  created_at: 2014-10-31 17:19:32.000000000 Z
+  creator_id: 1
+  id: 2
+  lock_version: 0
+  name: 'Polygon #1 bis'
+  nature: polygon
+  number: GR2
+  updated_at: 2014-10-31 17:19:32.000000000 Z
+  updater_id: 1
+georeadings_003:
+  content: SRID=4326;LineString (-0.66741943359371 45.619800720955, -0.78002929687592
+    45.6927513729087, -0.87341308593753 45.6332461398123, -0.74157714843754 45.5602179571505,
+    -0.66467285156255 45.5698323584928)
+  created_at: 2014-10-31 17:19:32.000000000 Z
+  creator_id: 1
+  id: 3
+  lock_version: 0
+  name: 'Line #1'
+  nature: linestring
+  number: GR3
+  updated_at: 2014-10-31 17:19:32.000000000 Z
+  updater_id: 1

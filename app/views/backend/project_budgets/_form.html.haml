@@ -1,0 +1,6 @@
+= field_set do
+  = f.input :name
+  = f.input :description
+  = f.custom_fields
+  - if AnalyticSegment.where(name: 'project_budgets').exists?
+    = f.input :isacompta_analytic_code

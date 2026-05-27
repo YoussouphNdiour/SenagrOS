@@ -52,13 +52,13 @@ export default function BudgetForm({ budget, errors, mode }: BudgetFormProps) {
 
         <form aria-label={mode === 'new' ? 'Nouveau budget' : 'Modifier le budget'} onSubmit={handleSubmit}>
           <div className="flex flex-col gap-5">
-            <FormField label="Nom" required htmlFor="budget-name" error={Array.isArray(errors.name) ? errors.name[0] : (errors.name as string | undefined)}>
+            <FormField label="Nom" required htmlFor="budget-name" error={Array.isArray(errors.name) ? errors.name[0] : errors.name}>
               <input id="budget-name" type="text" required value={name} onChange={e => setName(e.target.value)}
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
             </FormField>
 
-            <FormField label="Description" htmlFor="budget-description" error={Array.isArray(errors.description) ? errors.description[0] : (errors.description as string | undefined)}>
+            <FormField label="Description" htmlFor="budget-description" error={Array.isArray(errors.description) ? errors.description[0] : errors.description}>
               <textarea id="budget-description" value={description} onChange={e => setDescription(e.target.value)} rows={4}
                 className="w-full rounded-lg px-3 py-2 text-sm outline-none resize-y"
                 style={{ border: '1px solid var(--color-border)', background: 'var(--color-bg)', color: 'var(--color-text)' }} />
@@ -68,7 +68,7 @@ export default function BudgetForm({ budget, errors, mode }: BudgetFormProps) {
               label="Code analytique isacompta"
               help="2 caractères max"
               htmlFor="budget-analytique"
-              error={Array.isArray(errors.isacompta_analytic_code) ? errors.isacompta_analytic_code[0] : (errors.isacompta_analytic_code as string | undefined)}
+              error={Array.isArray(errors.isacompta_analytic_code) ? errors.isacompta_analytic_code[0] : errors.isacompta_analytic_code}
             >
               <input id="budget-analytique" type="text" maxLength={2} value={analytique}
                 onChange={e => setAnalytique(e.target.value)} placeholder="ex: MA"

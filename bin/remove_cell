@@ -1,0 +1,38 @@
+#!/usr/bin/env ruby
+require 'active_support/core_ext'
+require 'optparse'
+require 'pathname'
+require 'fileutils'
+
+STDOUT.sync = true
+
+@simulate = false
+
+def execute(command)
+  puts command
+  system(command) unless @simulate
+end
+
+cell = ARGV.shift
+
+unless $PROGRAM_NAME =~ /^(.\/)?bin\//
+  puts 'Script must be started from Rails root.'
+  exit 0
+end
+
+raise 'Not cell given' if cell.blank?
+
+root = Pathname.new('.')
+
+records = cell
+record = records.singularize
+puts "Removes #{record}"
+
+files = ["app/controllers/backend/cells/#{cell}_cells_controller.rb",
+         "app/helpers/backend/cells/#{cell}_cells_helper.rb",
+         "app/views/backend/cells/#{cell}_cells",
+         "test/controllers/backend/#{cell}_cells_controller_test.rb"]
+
+for file in files
+  execute("git rm -fr #{file}") if File.exist?(file)
+end

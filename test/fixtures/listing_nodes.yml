@@ -1,0 +1,133 @@
+# = Informations
+#
+# == License
+#
+# Ekylibre - Simple agricultural ERP
+# Copyright (C) 2008-2009 Brice Texier, Thibaud Merigon
+# Copyright (C) 2010-2012 Brice Texier
+# Copyright (C) 2012-2014 Brice Texier, David Joulin
+# Copyright (C) 2015-2023 Ekylibre SAS
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see http://www.gnu.org/licenses.
+#
+# == Table: listing_nodes
+#
+#  attribute_name       :string
+#  condition_operator   :string
+#  condition_value      :string
+#  created_at           :datetime         not null
+#  creator_id           :integer(4)
+#  depth                :integer(4)       default(0), not null
+#  exportable           :boolean          default(TRUE), not null
+#  id                   :integer(4)       not null, primary key
+#  item_listing_id      :integer(4)
+#  item_listing_node_id :integer(4)
+#  item_nature          :string
+#  item_value           :text
+#  key                  :string
+#  label                :string           not null
+#  lft                  :integer(4)
+#  listing_id           :integer(4)       not null
+#  lock_version         :integer(4)       default(0), not null
+#  name                 :string           not null
+#  nature               :string           not null
+#  parent_id            :integer(4)
+#  position             :integer(4)
+#  rgt                  :integer(4)
+#  sql_type             :string
+#  updated_at           :datetime         not null
+#  updater_id           :integer(4)
+#
+---
+listing_nodes_001:
+  created_at: 2014-10-31 17:19:32.000000000 Z
+  creator_id: 1
+  depth: 0
+  exportable: true
+  id: 1
+  key: k7808663264735959d
+  label: Entities
+  listing_id: 1
+  lock_version: 0
+  name: entity
+  nature: root
+  updated_at: 2014-10-31 17:19:32.000000000 Z
+  updater_id: 1
+listing_nodes_002:
+  attribute_name: first_name
+  created_at: 2014-10-31 17:19:32.000000000 Z
+  creator_id: 1
+  depth: 0
+  exportable: true
+  id: 2
+  key: k557222636710691d
+  label: First name
+  listing_id: 1
+  lock_version: 0
+  name: entity.first_name
+  nature: column
+  parent_id: 1
+  sql_type: string
+  updated_at: 2014-10-31 17:19:32.000000000 Z
+  updater_id: 1
+listing_nodes_003:
+  attribute_name: addresses
+  created_at: 2014-10-31 17:19:32.000000000 Z
+  creator_id: 1
+  depth: 0
+  exportable: true
+  id: 3
+  key: k3049773318823211d
+  label: Addresses
+  listing_id: 1
+  lock_version: 0
+  name: address_0
+  nature: has_many
+  parent_id: 1
+  updated_at: 2014-10-31 17:19:32.000000000 Z
+  updater_id: 1
+listing_nodes_004:
+  attribute_name: coordinate
+  created_at: 2014-10-31 17:19:32.000000000 Z
+  creator_id: 1
+  depth: 0
+  exportable: true
+  id: 4
+  key: k4171358212843227d
+  label: Coordinate
+  listing_id: 1
+  lock_version: 0
+  name: address_0.coordinate
+  nature: column
+  parent_id: 3
+  sql_type: string
+  updated_at: 2014-10-31 17:19:32.000000000 Z
+  updater_id: 1
+listing_nodes_005:
+  attribute_name: canal
+  created_at: 2014-10-31 17:19:32.000000000 Z
+  creator_id: 1
+  depth: 0
+  exportable: true
+  id: 5
+  key: k9380294020455736d
+  label: Canal
+  listing_id: 1
+  lock_version: 0
+  name: address_0.canal
+  nature: column
+  parent_id: 3
+  sql_type: string
+  updated_at: 2014-10-31 17:19:32.000000000 Z
+  updater_id: 1

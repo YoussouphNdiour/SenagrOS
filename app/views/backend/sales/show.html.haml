@@ -1,0 +1,73 @@
+- main_toolbar do |t|
+  - exports = []
+  - exports << :sales_invoice_shipment if resource.parcels.any? && resource.invoice?
+  - exports << :sales_invoice if resource.invoice?
+  - exports << :sales_order if resource.order?
+  - exports << :sales_estimate if resource.estimate? || resource.draft? || resource.refused?
+  = t.export(*exports, key: :number, target: "_blank")
+  = tool_to :email_client.ta, { action: :email_client, controller: :sales, id: resource.id }, tool: :email
+  = t.duplicate resource, method: :post, params: {redirect: nil}
+  - if current_user.can?(:write, :outgoing_deliveries) && resource.can_generate_parcel?
+    - shipment_items_attributes = resource.items.map do |item|
+      - item_product = item.variant.products.order(born_at: :desc).first
+      - { source_product_id: item_product, conditioning_quantity: item.undelivered_quantity, conditioning_unit_id: item.conditioning_unit, unit_pretax_sale_amount: item.unit_pretax_amount}
+    = t.new(resource, params: { controller: :shipments, shipment: { sale_id: resource.id, recipient_id: resource.client.id, delivery_address_id: resource.delivery_address_id, items_attributes: shipment_items_attributes } }, label: :create_shipment.tl)
+  - if resource.invoice?
+    = t.cancel(resource, label: :cancel_with_voucher.tl, title: :cancel_with_voucher.tl) if resource.cancellable?
+  = t.edit resource if resource.updateable?
+  = t.destroy if resource.destroyable?
+
+= main_state_bar(resource)
+
+= main_informations attachment: true do
+  = attributes_list do |l|
+    - l.attribute :client, :label => :label, url: true
+    - l.attribute :number
+    - l.attribute :reference_number
+    - l.attribute :initial_number if resource.invoice?
+    - l.attribute :state_label
+    - l.attribute :responsible, :label => :full_name
+    - l.attribute :confirmed_at if resource.confirmed_at?
+    - l.attribute :invoiced_at if resource.invoiced_at?
+    - l.attribute :credited_sale, url: true if resource.invoice? && resource.credited_sale
+    - l.attribute :payment_delay
+    - l.attribute :nature
+    - l.attribute :currency unless resource.currency == Preference[:currency]
+    - l.attribute :description if resource.description?
+    - l.attribute :address, :label => :coordinate
+    -# l.attribute :delivery_address, :label => :coordinate
+    - l.attribute :invoice_address, :label => :coordinate
+    - l.attribute(:journal_entry, url: true) if resource.journal_entry
+    - l.attribute :undelivered_invoice_journal_entry, url: true if resource.undelivered_invoice_journal_entry
+    - l.attribute :quantity_gap_on_invoice_journal_entry, url: true if resource.quantity_gap_on_invoice_journal_entry
+    - l.attribute(:affair, label: :number, url: true) if resource.affair
+    - l.attribute :letter_format
+    - if resource.letter_format?
+      - l.attribute :subject
+      - l.attribute :function_title
+      - l.attribute :introduction
+      - l.attribute :conclusion
+    - l.attribute :last_email_at if resource.last_email_at?
+
+= cobbles do |c|
+  - c.cobble :items, title: Sale.human_attribute_name(:items) do
+    = cobble_list :items do
+      %tr.total
+        %th.items-list-colspanned{colspan: 5}= :total.tl
+        %td= resource.pretax_amount.l(currency: resource.currency)
+        %td= resource.amount.l(currency: resource.currency)
+
+  - if resource.subscriptions.any?
+    - c.cobble :subscriptions, title: :x_subscriptions.tl(count: resource.subscriptions.count) do
+      = cobble_list :subscriptions
+
+  - c.cobble(:affair, title: Sale.human_attribute_name(:affair)) do
+    = affair_of(resource, default: 'IncomingPayment', url_options: { incoming_payment: { responsible_id: resource.responsible_id, mode_id: resource.client.client_payment_mode&.id, paid_at: resource.payment_at, to_bank_at: resource.payment_at } })
+
+  - if resource.parcels.any?
+    - c.cobble :shipments do
+      = cobble_list :shipments
+
+  - if resource.credits.any?
+    - c.cobble :credits do
+      = cobble_list :credits

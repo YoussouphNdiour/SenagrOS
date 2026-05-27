@@ -1,0 +1,7 @@
+.big-info
+  %span.title= :ocr_informations.tl
+= infos do
+  - document.metadata.each do |k, h|
+    .med-info
+      %span.title= k.to_s
+      %span.text= h.deep_symbolize_keys

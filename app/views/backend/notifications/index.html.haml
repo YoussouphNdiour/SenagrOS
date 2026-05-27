@@ -1,0 +1,32 @@
+- if @unread_notifications.any?
+  - main_toolbar do |t|
+    = t.destroy label: :mark_all_as_read.tl, redirect: params[:redirect], icon: 'check-all'
+
+- if @notifications.any?
+  .active-list
+    %table.list
+      %thead
+        %tr
+          %td
+          %th= Notification.human_attribute_name(:message)
+          %th
+          %th= Notification.human_attribute_name(:done)
+      %tbody
+        - @notifications.includes(:target).each do |notification|
+          %tr{ data: { read_status: notification.read_at.present? ? 'read' : 'unread' } }
+            %td.act
+              - unless notification.read_at
+                = link_to(backend_notification_path(notification), method: :delete, title: :mark_as_read.tl) do
+                  %i.icon.icon-check-all
+            %td
+              - if notification.target_url.present? || notification.target.present?
+                = link_to(notification.human_message, backend_notification_path(notification))
+              - else
+                = notification.human_message
+            %td.center.notification__state
+              %i.icon{ class: notification_icon_class(notification) }
+            %td{title: notification.created_at.l}
+              = :notification_time.tl(time: distance_of_time_in_words_to_now(notification.created_at))
+- else
+  .placeholding-message
+    %p= :no_notifications.tl

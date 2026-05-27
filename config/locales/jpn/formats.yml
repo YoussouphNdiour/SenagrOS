@@ -1,0 +1,12 @@
+jpn:
+  formats:
+    csv: "CSVテキスト"
+    doc: "Microsoft Word 97/2000 / XP / 2003"
+    docx: "Microsoft Wordの2007/2010"
+    # json: "JSON"
+    ods: "ODFスプレッドシート"
+    odt: "ODFテキスト"
+    pdf: "PDF文書"
+    xls: "でMicrosoft Excel 97/2000 / XP / 2003"
+    xlsx: "Microsoft Excelの2007/2010"
+    # xml: "XML"

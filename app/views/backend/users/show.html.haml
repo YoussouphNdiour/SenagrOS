@@ -1,0 +1,24 @@
+- main_toolbar do |t|
+  = t.edit resource
+  - if resource != current_user
+    - if resource.locked?
+      = t.unlock resource, method: :post
+    - else
+      = t.lock resource, method: :post
+
+= cobbles do |c|
+  - c.cobble :general_informations do
+    = attributes_list do |l|
+      - l.attribute :last_name
+      - l.attribute :first_name
+      - l.attribute :administrator
+      - l.attribute :person, url: true
+      - l.attribute :role, url: true
+      - l.attribute :locked
+      - l.attribute :commercial
+      - l.attribute :employment
+      - l.attribute :team, label: :name
+
+  - unless resource.administrator?
+    - c.cobble :rights do
+      = access_control_list(resource.rights)

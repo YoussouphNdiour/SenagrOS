@@ -1,0 +1,47 @@
+current directory: /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/charlock_holmes-0.7.7/ext/charlock_holmes
+/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/bin/ruby -I /System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/lib/ruby/2.6.0 -r ./siteconf20260515-39245-c8wva0.rb extconf.rb
+checking for -licui18n... no
+
+
+***************************************************************************************
+*********** icu required (brew install icu4c or apt-get install libicu-dev) ***********
+***************************************************************************************
+*** extconf.rb failed ***
+Could not create Makefile due to some reason, probably lack of necessary
+libraries and/or headers.  Check the mkmf.log file for more details.  You may
+need configuration options.
+
+Provided configuration options:
+	--with-opt-dir
+	--without-opt-dir
+	--with-opt-include
+	--without-opt-include=${opt-dir}/include
+	--with-opt-lib
+	--without-opt-lib=${opt-dir}/lib
+	--with-make-prog
+	--without-make-prog
+	--srcdir=.
+	--curdir
+	--ruby=/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/bin/$(RUBY_BASE_NAME)
+	--with-icu-dir
+	--without-icu-dir
+	--with-icu-include
+	--without-icu-include=${icu-dir}/include
+	--with-icu-lib
+	--without-icu-lib=${icu-dir}/lib
+	--with-icu-i18n-config
+	--without-icu-i18n-config
+	--with-pkg-config
+	--without-pkg-config
+	--with-icu-io-config
+	--without-icu-io-config
+	--with-icu-uc-config
+	--without-icu-uc-config
+	--with-icui18nlib
+	--without-icui18nlib
+
+To see why this extension failed to compile, please check the mkmf.log which can be found here:
+
+  /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/extensions/universal-darwin-24/2.6.0/charlock_holmes-0.7.7/mkmf.log
+
+extconf failed, exit code 1

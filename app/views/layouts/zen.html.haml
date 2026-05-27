@@ -1,0 +1,29 @@
+!!! 5
+%html{xmlns: "http://www.w3.org/1999/xhtml", 'xmlns:svg' => 'http://www.w3.org/2000/svg', 'xmlns:xlink' => 'http://www.w3.org/1999/xlink', dir: t("i18n.dir"), lang: t("i18n.iso2"), "xml:lang" => t("i18n.iso2"), class: :zen, data: {lang_iso3: I18n.locale}}
+  %head
+    = title_tag
+    = csrf_meta_tags
+    = viewport_tag
+    = icon_tags
+    -#= plugins_link_tag
+    = theme_link_tag
+    = javascript_pack_tag :legacy
+    = javascript_pack_tag :application
+    = javascript_include_tag :application, "data-turbolinks-track" => "reload"
+  %body.body-zen
+    #wrap
+      #main
+        %header.header
+          = yield :before_title if content_for? :before_title
+          = heading_toolbar_tag
+          = heading_tag
+          = yield :help_zone if content_for? :help_zone
+        #content
+          = extensions_tag(:content_top)
+          = subheading_tag
+          = notifications_tag
+          = view_toolbar_tag
+          = meta_toolbar_tag
+          = main_toolbar_tag
+          #core= yield
+    = yield :popover

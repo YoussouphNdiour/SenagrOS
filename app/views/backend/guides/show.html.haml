@@ -1,0 +1,17 @@
+- main_toolbar do |t|
+  = t.run  resource, method: :post
+  = t.edit resource
+
+= cobbles do |c|
+  - c.cobble :general_informations do
+    = attributes_list do |l|
+      - l.attribute :name
+      - l.attribute :active
+      - l.attribute :nature
+      - l.attribute :external
+
+  - c.cobble :evolution do
+    = cell :guide_evolution, params: {id: resource.id}
+
+  - c.cobble :analyses do
+    = cobble_list :analyses

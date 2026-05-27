@@ -1,0 +1,132 @@
+- main_toolbar do |t|
+  = t.edit resource
+
+= janus do |j|
+  - j.face :list do
+    = cobbles do |c|
+      - c.cobble :general_informations do
+        = infos do
+          - unless resource.pacage_number.blank?
+            .med-info
+              %span.title= CapStatement.human_attribute_name(:pacage_number)
+              %span.value= resource.pacage_number
+          .med-info
+            %span.title= CapStatement.human_attribute_name(:campaign)
+            %span.value= resource.campaign.name
+          - unless resource.farm_name.blank?
+            .med-info
+              %span.title= CapStatement.human_attribute_name(:farm_name)
+              %span.value= resource.farm_name
+          - unless resource.siret_number.blank?
+            .med-info
+              %span.title= CapStatement.human_attribute_name(:siret_number)
+              %span.value= resource.siret_number
+          - if resource.declarant
+            .med-info
+              %span.title= CapStatement.human_attribute_name(:declarant)
+              %span.value= resource.declarant.full_name
+          .med-info
+            %span.title= :net_surface_area.tl
+            %span.value= resource.human_net_surface_area
+          .med-info
+            %span.title= :number_of_cap_islets.tl
+            %span.value= resource.cap_islets.count
+          .med-info
+            %span.title= :number_of_cap_land_parcels.tl
+            %span.value= resource.cap_land_parcels.count
+          - if resource.cap_neutral_areas.count > 0
+            .med-info
+              %span.title= :number_of_cap_neutral_areas.tl
+              %span.value= resource.cap_neutral_areas.count
+      -# c.cobble(:cap_islets) do
+        #= cobble_list(:cap_islets)
+      - c.cobble(:cap_land_parcels) do
+        = cobble_list(:cap_land_parcels)
+
+  :ruby
+    b = CapIslet.bounding_box(resource.cap_islets)
+    if b.present?
+      h = RegisteredHydrographicItem.in_bounding_box(b.join(', '))
+      z = RegisteredCadastralBuilding.in_bounding_box(b.join(', '))
+    else
+      h = RegisteredHydrographicItem.none
+      z = RegisteredCadastralBuilding.none
+    end
+
+  - if resource.cap_land_parcels.any?
+    - j.face :map do
+      - cache resource.cap_land_parcels + resource.cap_islets + h.pluck(:name) + z.pluck(:centroid) do
+        :ruby
+          land_parcels = resource.cap_land_parcels.collect do |p|
+            next unless p.shape
+
+            popup_content = []
+            popup_content << {label: CapLandParcel.human_attribute_name(:net_surface_area), value: p.human_shape_area}
+            popup_content << render('popup', plant: p)
+
+            { name: "#{p.land_parcel_number} - #{p.cap_islet.islet_number}", shape: p.shape, main_crop_code: p.main_crop_code, popup: {header: true, content: popup_content} }
+          end
+
+          # SNA dataset
+          neutral_areas = resource.cap_neutral_areas.map do |p|
+            next if p.shape.nil?
+
+            popup_content = []
+            if p.shape_area > 0.0.in_square_meter
+              popup_content << {label: CapLandParcel.human_attribute_name(:net_surface_area), value: p.human_shape_area}
+            end
+            popup_content << {label: CapNeutralArea.human_attribute_name(:category), value: p.category}
+            popup_content << {label: CapNeutralArea.human_attribute_name(:nature), value: p.nature}
+
+            {
+              name: p.number,
+              neutral_area_category: p.category,
+              shape: p.shape,
+              popup: { content: popup_content }
+            }
+          end
+
+          islets = resource.cap_islets.collect do |p|
+            next unless p.shape
+            popup_content = []
+            popup_content << {label: CapIslet.human_attribute_name(:net_surface_area), value: p.human_shape_area}
+            popup_content << render('popup', plant: p)
+
+            {name: p.islet_number, shape: p.shape, popup: {header: true, content: popup_content} }
+          end
+
+          if z.count > 0
+            buildings_shape = ApplicationRecord.connection.execute(
+              "SELECT ST_AsGeoJSON(ST_COLLECT(buildings.shape)) AS shape
+                FROM (#{z.select(:shape).to_sql}) AS buildings;").first["shape"]
+            building_zones = [{name: "Building", shape: ::Charta.new_geometry(buildings_shape).buffer(50)}]
+          else
+            building_zones = []
+          end
+
+          if h.count > 0
+            water_hydro_items_shape = ApplicationRecord.connection.execute(
+              "SELECT ST_AsGeoJSON(ST_COLLECT(hydro.shape)) AS shape
+                FROM (#{h.select(:shape).to_sql}) AS hydro;").first["shape"]
+
+            water_hydro_items_zones = [{name: "Rivers", shape: ::Charta.new_geometry(water_hydro_items_shape).buffer(50)}]
+          else
+            water_hydro_items_zones = []
+          end
+
+        = visualization({box: {height: "100%"}}, class: 'map-fullwidth') do |v|
+          - v.serie :land_parcels, land_parcels
+          - v.serie :islets, islets
+          - v.serie :waters, water_hydro_items_zones
+          - v.serie :building_zones, building_zones
+          - v.serie :neutral_area_category, neutral_areas
+          - v.categories :neutral_area_category, :neutral_area_category, without_ghost_label: true
+          - v.simple :cap_islets, :islets
+          - v.simple :waters, :waters, fill_color: 'blue'
+          -#- v.simple :water_lakes, :water_lakes, fill_color: 'blue' if water_lakes_shape
+          - v.simple :building_zones, :building_zones, fill_color: 'yellow', without_ghost_label: true
+          - v.categories :main_crop_code, :land_parcels
+          - v.control :zoom
+          - v.control :scale
+          - v.control :fullscreen
+          - v.control :layer_selector

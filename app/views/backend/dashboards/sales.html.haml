@@ -1,0 +1,8 @@
+- current_financial_year = params[:current_financial_year] || current_user.current_financial_year&.id
+- main_financial_year_selector(current_financial_year) if current_financial_year
+
+= beehive do |b|
+  - b.cell :trade_counts
+  - b.hbox do
+    - b.cell :last_sales
+    - b.cell :revenues_by_product_nature

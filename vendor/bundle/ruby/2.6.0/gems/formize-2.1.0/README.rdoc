@@ -1,0 +1,69 @@
+= Formize
+{<img src="https://badge.fury.io/rb/formize.png" alt="Gem Version" />}[http://badge.fury.io/rb/formize]
+{<img src="https://api.travis-ci.org/ekylibre/formize.png?branch=master"/>}[https://travis-ci.org/ekylibre/formize]
+{<img src="https://gemnasium.com/ekylibre/formize.png"/>}[https://gemnasium.com/ekylibre/formize]
+
+Form helpers. Will be integrated with SimpleForm.
+
+== Installation
+
+Add to your Gemfile these fllowing lines:
+  gem "jquery-rails" # Need to be explicitly specified
+  gem "formize"
+
+== Assets and configurations
+Formize comes with basic scripts and stylesheets which must be included in the layout (at least at the start).
+
+=== In Rails 3.0.x
+Formize requires the gem +jquery-rails+, so if you don't already use it:
+  rails generate jquery:install --ui
+
+Then install +formize+ in your app like +jquery-rails+:
+  rails generate formize:install
+
+These previous commands install all the needed files in your +public/+ directory. 
+Then the files can be included with an helper:
+  # app/views/layouts/application.html.erb
+  <%= formize_include_tag -%>
+
+=== In Rails ≥ 3.1
+With the asset pipeline, there is no need to run generators or copy files. So for stylesheets:
+  # app/assets/stylesheets/application.css
+  *= require formize
+
+And for javascripts:
+  # app/assets/javascripts/application.js
+  *= require formize
+
+==== Default configuration file
+To install the default configuration file (config/initializers/formize.rb), the generator must be run:
+  rails generate formize:install
+
+== Usage
+
+TODO: Rewrite examples
+
+=== Date
+
+=== Datetime
+
+=== Unroll (replacement of ComboBox)
+
+=== MonoChoice (dynamic selector)
+
+
+== Contributing to Formize {<img src="https://secure.travis-ci.org/ekylibre/formize.png"/>}[http://travis-ci.org/ekylibre/formize]
+ 
+* Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet
+* Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it
+* Fork the project
+* Start a feature/bugfix branch
+* Commit and push until you are happy with your contribution
+* Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
+* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
+
+== Copyright
+
+Copyright (c) 2011 Brice Texier. See LICENSE.txt for
+further details.
+

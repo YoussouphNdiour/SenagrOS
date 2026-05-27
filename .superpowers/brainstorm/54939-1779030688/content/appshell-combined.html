@@ -1,0 +1,118 @@
+<h2>AppShell B+C — Topbar + Sidebar</h2>
+<p class="subtitle">Topbar pour le contexte global (ferme, campagne, utilisateur) — Sidebar large pour la navigation entre modules</p>
+
+<div class="mockup">
+  <div class="mockup-header">Aperçu — Dashboard SenagrOS</div>
+  <div class="mockup-body" style="padding:0">
+    <div style="display:flex;flex-direction:column;height:420px;font-size:11px;background:#F7F3EE">
+
+      <!-- TOPBAR -->
+      <div style="background:#1e3a16;height:44px;display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:28px;height:28px;background:#6B9E3F;border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px">S</div>
+          <span style="color:#fff;font-weight:700;font-size:13px">SenagrOS</span>
+        </div>
+        <div style="width:1px;height:20px;background:#2d5a20;margin:0 4px"></div>
+        <!-- Campagne selector -->
+        <div style="display:flex;align-items:center;gap:6px;background:#2d5a20;border-radius:4px;padding:4px 10px">
+          <span style="color:#9dc96b;font-size:9px;text-transform:uppercase;letter-spacing:0.5px">Campagne</span>
+          <span style="color:#fff;font-weight:600;font-size:11px">Hivernage 2024 ▾</span>
+        </div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:10px">
+          <!-- Notifications -->
+          <div style="width:28px;height:28px;border-radius:50%;border:1px solid #3d6130;display:flex;align-items:center;justify-content:center;color:#9dc96b;font-size:10px;position:relative">
+            🔔
+            <div style="position:absolute;top:2px;right:2px;width:8px;height:8px;background:#e74c3c;border-radius:50%;border:1px solid #1e3a16"></div>
+          </div>
+          <!-- Avatar -->
+          <div style="display:flex;align-items:center;gap:6px">
+            <div style="width:28px;height:28px;background:#4a7a3a;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px;font-weight:600">YN</div>
+            <div style="color:#fff;font-size:10px;line-height:1.3">
+              <div style="font-weight:600">Yoûssouph N.</div>
+              <div style="color:#9dc96b;font-size:9px">Administrateur</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- BODY -->
+      <div style="display:flex;flex:1;overflow:hidden">
+
+        <!-- SIDEBAR -->
+        <div style="width:200px;background:#2D4A22;display:flex;flex-direction:column;padding:16px 0;flex-shrink:0">
+          <div style="padding:0 12px;font-size:9px;color:#6B9E3F;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;font-weight:600">Navigation</div>
+
+          <a style="display:flex;align-items:center;gap:10px;margin:1px 8px;padding:8px 10px;background:#3d6130;border-radius:5px;color:#fff;text-decoration:none;font-weight:600;font-size:11px">
+            <span>⊞</span> Dashboard
+          </a>
+          <a style="display:flex;align-items:center;gap:10px;margin:1px 8px;padding:8px 10px;border-radius:5px;color:#9dc96b;text-decoration:none;font-size:11px">
+            <span>⚙</span> Interventions
+          </a>
+          <a style="display:flex;align-items:center;gap:10px;margin:1px 8px;padding:8px 10px;border-radius:5px;color:#9dc96b;text-decoration:none;font-size:11px">
+            <span>◈</span> Parcelles
+          </a>
+          <a style="display:flex;align-items:center;gap:10px;margin:1px 8px;padding:8px 10px;border-radius:5px;color:#9dc96b;text-decoration:none;font-size:11px">
+            <span>◱</span> Productions
+          </a>
+          <a style="display:flex;align-items:center;gap:10px;margin:1px 8px;padding:8px 10px;border-radius:5px;color:#9dc96b;text-decoration:none;font-size:11px">
+            <span>₿</span> Comptabilité
+          </a>
+
+          <div style="margin:12px 12px 8px;border-top:1px solid #3d6130;padding-top:10px">
+            <div style="font-size:9px;color:#6B9E3F;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;font-weight:600">Outils</div>
+            <a style="display:flex;align-items:center;gap:10px;margin:1px 0;padding:6px 10px;border-radius:5px;color:#6d9460;text-decoration:none;font-size:10px">
+              <span>⚙</span> Paramètres
+            </a>
+          </div>
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div style="flex:1;padding:16px;overflow:auto">
+          <div style="font-size:15px;font-weight:700;color:#2D4A22;margin-bottom:14px">Dashboard — Ferme SenagrOS</div>
+
+          <!-- KPI row -->
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px">
+            <div style="background:#fff;border-radius:6px;padding:10px;border-left:3px solid #6B9E3F">
+              <div style="font-size:9px;color:#888;margin-bottom:4px">CAMPAGNE</div>
+              <div style="font-weight:700;color:#2D4A22;font-size:12px">Hivernage 2024</div>
+            </div>
+            <div style="background:#fff;border-radius:6px;padding:10px;border-left:3px solid #6B9E3F">
+              <div style="font-size:9px;color:#888;margin-bottom:4px">SURFACES</div>
+              <div style="font-weight:700;color:#2D4A22;font-size:14px">142 ha</div>
+            </div>
+            <div style="background:#fff;border-radius:6px;padding:10px;border-left:3px solid #f39c12">
+              <div style="font-size:9px;color:#888;margin-bottom:4px">INTERVENTIONS ACTIVES</div>
+              <div style="font-weight:700;color:#2D4A22;font-size:14px">3</div>
+            </div>
+            <div style="background:#fff;border-radius:6px;padding:10px;border-left:3px solid #3498db">
+              <div style="font-size:9px;color:#888;margin-bottom:4px">PLANIFIÉES</div>
+              <div style="font-weight:700;color:#2D4A22;font-size:14px">7</div>
+            </div>
+          </div>
+
+          <!-- Map + Weather -->
+          <div style="display:grid;grid-template-columns:2fr 1fr;gap:8px">
+            <div style="background:#fff;border-radius:6px;height:120px;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:10px;border:1px solid #e8e4df">
+              🗺 Carte des parcelles
+            </div>
+            <div style="background:#fff;border-radius:6px;height:120px;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:10px;border:1px solid #e8e4df">
+              ☁️ Météo Dakar
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top:20px">
+  <h3>Structure technique</h3>
+  <ul style="color:var(--text-secondary);line-height:2">
+    <li><strong>Topbar</strong> : logo, sélecteur de campagne, notifications, avatar utilisateur</li>
+    <li><strong>Sidebar 200px</strong> : liens modules avec icône Lucide + label, section Outils en bas</li>
+    <li><strong>Composant <code>AppShell.tsx</code></strong> : wrapper Inertia qui entoure toutes les pages React</li>
+    <li><strong>Lien actif</strong> : détecté via <code>usePage().url</code> d'Inertia</li>
+  </ul>
+</div>
+
+<p class="subtitle" style="margin-top:16px">Ce layout te convient ? Je passe à l'implémentation ou tu veux ajuster quelque chose (couleurs, largeur sidebar, contenu topbar) ?</p>

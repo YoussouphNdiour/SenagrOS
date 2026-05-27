@@ -1,0 +1,27 @@
+- content_for(:heading_toolbar) do
+  .btn-group
+    = link_to("##{beehive.id}", data: {beehive_task: "configure"}, class: "btn btn-dashboard") do
+      = :configure.tl
+    = link_to("##{beehive.id}", data: {beehive_task: "fullscreen"}, class: "btn btn-arrows-alt", title: :fullscreen.tl) do
+      %i
+
+.beehive{id: beehive.id, data: {beehive: beehive.name, beehive_save_url: url_for(controller: "/backend/beehives", action: :update, id: beehive.name), beehive_reset_url: url_for(controller: "/backend/beehives", action: :reset, id: beehive.name)}}
+  .beehive-tools
+    .btn-group
+      = select_tag(:cell, options_for_select(beehive.available_cells))
+      = link_to("##{beehive.id}", data: {beehive_task: "new-cell"}, class: "btn") do
+        %i
+        = :add.tl
+    = link_to("##{beehive.id}", data: {beehive_task: "reset"}, class: "btn") do
+      %i
+      = :reset.tl
+  - beehive.layout(current_user)[:boxes].each_with_index do |box, box_index|
+    .box.box-horizontal{data: {beehive_box: box_index}}
+      - box[:cells].each_with_index do |cell, _index|
+        - if beehive.available_cell_types.include?(cell[:type].to_s)
+          = render "backend/shared/beehive/cell", cell: cell, beehive: beehive
+  = link_to("##{beehive.id}", class: "btn btn-new new-box", data: {beehive_task: "new-box"}) do
+    %i
+    = :new_box.tl
+  .beehive-bottom
+

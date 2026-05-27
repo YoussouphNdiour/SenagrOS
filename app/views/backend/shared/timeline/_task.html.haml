@@ -1,0 +1,34 @@
+.log.log-with-content{class: "log-#{task.nature.to_s.dasherize}"}
+  .log-avatar= image_tag step.author.avatar_url(size: avatar_size)
+  .log-wrapper
+    .log-symbol
+    .log-heading
+      %span.log-status= lights(task.status)
+      = link_to(backend_task_path(task, redirect: request.fullpath), method: :delete, class: "log-action log-action-destroy", data: {confirm: :are_you_sure.tl}) do
+        %i
+        = :destroy.tl
+      - defaults[:entity] = link_to(task.entity.full_name, backend_entity_path(task.entity))
+      = link_to(edit_backend_task_path(task, redirect: request.fullpath), class: "log-action log-action-edit") do
+        %i
+        = :edit.tl
+      - if task.outgoing_call?
+        = :timeline_outgoing_call.th(defaults)
+      - elsif task.incoming_call?
+        = :timeline_incoming_call.th(defaults)
+      - elsif task.outgoing_mail? || task.outgoing_email?
+        = :timeline_outgoing_mail.th(defaults)
+      - elsif task.incoming_mail? || task.incoming_email?
+        = :timeline_incoming_mail.th(defaults)
+      - else
+        = :timeline_task.th(defaults)
+
+    - unless task.description.blank?
+      .log-body
+        .log-content= preserve(task.description)
+
+    - if task.sale_opportunity
+      .log-footer
+        = link_to({controller: :sale_opportunities, action: :show, id: task.sale_opportunity_id}) do
+          %i.icon.icon-file-text-o
+          = task.sale_opportunity.name
+

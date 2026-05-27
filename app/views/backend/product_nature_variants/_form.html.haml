@@ -1,0 +1,61 @@
+:ruby
+  if nature = f.object.nature
+    nature.frozen_indicators.each do |indicator|
+      unless f.object.readings.detect { |r| r.indicator_name.to_s == indicator.name.to_s }
+        f.object.readings.build(indicator_name: indicator.name, indicator_datatype: indicator.datatype)
+      end
+    end
+
+    units_scope = { references_for_dimensions: nature.compatible_dimensions }
+  end
+
+  variant_type = f.object.variant_type
+  scope = if variant_type.present?
+            { of_type: f.object.variant_type }
+          else
+            {}
+          end
+
+- if f.object.nature.present?
+  = field_set do
+    = f.referenced_association :nature, label: :product_nature.tl, controller: '/backend/product_natures', source: { scope: scope }, disabled: true
+    = f.referenced_association :category, label: :product_nature_category.tl ,controller: '/backend/product_nature_categories', source: { scope: scope }
+    = f.variety scope: nature, child_scope: f.object.products
+    = f.input :name
+    = f.input :work_number
+    = f.input :gtin
+    = f.input :active
+    - if f.object.article?
+      .control-group
+        = label_tag(:create_zero_intial_stock, :create_zero_intial_stock.tl, class: 'control-label' )
+        .controls
+          = check_box_tag(:create_zero_intial_stock, true, params['create_zero_intial_stock'].to_boolean)
+          %p.help-block= :product_will_be_imported_with_zero_stock.tl
+    :ruby
+      default_unit_updateable = f.object.default_unit_updateable?
+      default_unit_scope = { is_reference_units: true }
+      if (base_unit = f.object.class.restricted_base_unit_list).any?
+        default_unit_scope.merge!( of_names: base_unit )
+      end
+    = f.input(:default_unit, wrapper: :append) do
+      = f.input(:default_quantity, disabled: !default_unit_updateable, wrapper: :simplest, error: false)
+      = f.referenced_association(:default_unit, controller: '/backend/units', source: { scope: default_unit_scope }, new: false, disabled: !default_unit_updateable, wrapper: :simplest)
+      = f.error(:default_quantity)
+    = f.input :unit_name
+    - if params[:subdivision] == 'plant_medicine_articles' || f.object.is_a?(Variants::Articles::PlantMedicineArticle)
+      - value = RegisteredPhytosanitaryProduct.find_by_reference_name(f.object.reference_name)
+      = field :france_maaid.tl, selector_tag(:phyto_product_id, { controller: "/backend/registered_phytosanitary_products", action: :unroll }, { value: value&.id || f.object.france_maaid }, { disabled: f.object.phytosanitary_product.present? })
+    = f.picture
+    = f.custom_fields
+  - if f.object.variety == 'seed'
+    = flash_message_tag(:warning, :fill_thousand_grains_count.tl)
+  - if f.object.readings.any?
+    = field_set(:indicators) do
+      = f.nested_association(:readings, new: false)
+
+  - if f.object.of_variety? :equipment
+    = field_set(:components) do
+      = f.nested_association(:components, collection: f.object.components.select { |c| c.parent_id.nil? })
+- else
+  = field_set do
+    = f.referenced_association :nature, controller: '/backend/product_natures', source: { scope: scope }

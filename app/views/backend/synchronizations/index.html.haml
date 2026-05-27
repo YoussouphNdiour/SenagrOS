@@ -1,0 +1,17 @@
+.active-list
+  %table.list
+    %thead
+      %tr
+        %th.col= ApplicationRecord.human_attribute_name(:name)
+        %th.act{data: {list_column: :refresh}}
+          %i
+        %th.spe
+
+    %tbody
+      %tr
+        %td= :cooperative_cartodb.tl
+        %td.act
+          = link_to({action: :run, id: :cooperative_cartodb}, method: :post, class: "refresh") do
+            %i
+            = :run.ta
+        %td

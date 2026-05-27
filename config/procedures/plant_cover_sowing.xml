@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<procedures xmlns="http://www.ekylibre.org/XML/2013/procedures">
+  <procedure name="plant_cover_sowing" categories="crop_protection" actions="sowing, soil_structure_stabilisation">
+    <parameters>
+      <target name="cultivation" filter="(is plant or is land_parcel) and has indicator shape">
+        <attribute name="working_zone" default-value="PRODUCT.shape" if="PRODUCT?"/>
+      </target>
+      <input name="seeds" filter="is seed">
+        <handler name="population"/>
+        <handler indicator="net_mass" unit="kilogram"
+                 if="population_counting_is(PRODUCT, :decimal) > 0 and grain_indicators_present(PRODUCT) == 1"
+                 backward="seed_population(POPULATION, PRODUCT, :kilogram, PRODUCT)"
+                 forward="VALUE / seed_population(1, PRODUCT, :kilogram, PRODUCT)"/>
+        <handler indicator="items_count" unit="unity"
+                 if="grain_indicators_present(PRODUCT) == 1"
+                 backward="seed_population(POPULATION, PRODUCT, :unity, PRODUCT)"
+                 forward="VALUE / seed_population(1, PRODUCT, :unity, PRODUCT)"/>
+        <handler indicator="grains_count" unit="thousand"
+                 if="grain_indicators_present(PRODUCT) == 1"
+                 backward="seed_population(POPULATION, PRODUCT, :thousand, PRODUCT)"
+                 forward="VALUE / seed_population(1, PRODUCT, :thousand, PRODUCT)"/>
+        <handler indicator="mass_area_density" unit="kilogram_per_hectare"
+                 if="grain_indicators_present(PRODUCT) == 1 and sum_working_zone_areas(cultivation) != 0"
+                 backward="(seed_population(POPULATION, PRODUCT, :kilogram, PRODUCT)) / sum_working_zone_areas(cultivation, :hectare)"
+                 forward="(VALUE * sum_working_zone_areas(cultivation, :hectare)) / seed_population(1, PRODUCT, :kilogram, PRODUCT)"/>
+        <handler indicator="grains_area_density" unit="unity_per_square_meter"
+                 if="grain_indicators_present(PRODUCT) == 1 and sum_working_zone_areas(cultivation) != 0"
+                 backward="(seed_population(POPULATION, PRODUCT, :unity, PRODUCT)) / sum_working_zone_areas(cultivation, :square_meter)"
+                 forward="(VALUE * sum_working_zone_areas(cultivation, :square_meter)) / seed_population(1, PRODUCT, :unity, PRODUCT)"/>
+        <handler name="grains_area_density_in_thousand_per_hectare" indicator="grains_area_density" unit="thousand_per_hectare"
+                 if="grain_indicators_present(PRODUCT) == 1 and sum_working_zone_areas(cultivation) != 0"
+                 backward="(seed_population(POPULATION, PRODUCT, :thousand, PRODUCT)) / sum_working_zone_areas(cultivation, :hectare)"
+                 forward="(VALUE * sum_working_zone_areas(cultivation, :hectare)) / seed_population(1, PRODUCT, :thousand, PRODUCT)"/>
+      </input>
+      <doer name="driver" filter="is worker and can drive(equipment)" cardinality="*"/>
+      <doer name="doer" filter="is worker" cardinality="*"/>
+      <tool name="tractor" filter="is motorized_vehicle and (can tow(equipment) or can sow)" cardinality="*"/>
+      <tool name="tool" filter="is equipment and can sow" cardinality="*"/>
+    </parameters>
+  </procedure>
+</procedures>

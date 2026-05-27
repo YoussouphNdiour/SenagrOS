@@ -1,0 +1,114 @@
+= modal_header(intervention.name)
+
+.modal-body{ data: { intervention_id: intervention.id }}
+  .big-infos
+    .big-info{ style: "width: 50%;" }
+      %span.title= Intervention.human_attribute_name(:started_at)
+      %span.value{ style: "font-size: 32px;" }
+        %i.picto.picto-clock-o
+        = resource.started_at.l(format: :compact)
+    .big-info{ style: "width: 50%;" }
+      %span.title= Intervention.human_attribute_name(:stopped_at)
+      %span.value{ style: "font-size: 32px;" }
+        %i.picto.picto-clock-o
+        = resource.stopped_at.l(format: :compact)
+    .big-info{ style: "width: 50%;" }
+      %span.title= Intervention.human_attribute_name(:working_duration)
+      %span.value{ style: "font-size: 32px;" }
+        %i.picto.picto-timelapse
+        = human_duration(resource.working_duration)
+    .big-info{ style: "width: 50%;" }
+      %span.title= :total_cost.tl
+      %span.value{ style: "font-size: 32px;" }
+        %i.picto.picto-money
+        - currency = Onoma::Currency.find(resource.currency)
+        = resource.total_cost.round(currency.precision).l(currency: currency.name)
+
+
+  - if intervention.activities.any?
+    .intervention-activities
+      - intervention.activities.each do |activity|
+        = link_to({ action: :show, controller: :activities, id: activity.id}, style: "background-color: #{activity.color}; color: #{contrasted_color(activity.color)}", class: 'label') do
+          = activity.name
+  .blocks
+    - if intervention.targets.any?
+      .block
+        %h3.block-title= Intervention.human_attribute_name(:targets)
+
+        - intervention.targets.each do |target|
+          - title = target.product.name
+          - detail = target.product.nature.name
+          - if target.product.has_indicator? :shape
+            - detail << ' - ' + target.working_zone_area.l unless target.working_zone_area.nil?
+          = add_detail_to_modal_block(title, detail, {icon: 'picto-land-parcels'})
+
+    - if intervention.doers.any?
+      .block
+        %h3.block-title= Intervention.human_attribute_name(:doers)  + ' | ' + resource.cost(:doer).round(currency.precision).l(currency: currency.name)
+
+        - intervention.doers.each do |doer|
+          - title = doer.product.name
+          - detail = doer.name
+          = add_detail_to_modal_block(title, detail, doer, {icon: 'picto-male'})
+
+    - %i(inputs outputs).each do |parameter_type|
+      - if intervention.send(parameter_type).any?
+        .block
+          - if parameter_type == :inputs
+            %h3.block-title= Intervention.human_attribute_name(parameter_type) + ' | ' + resource.cost(:input).round(currency.precision).l(currency: currency.name)
+          - else
+            %h3.block-title= Intervention.human_attribute_name(parameter_type)
+          - intervention.send(parameter_type).each do |quantified_parameter|
+            - target = parameter_type == :inputs ? quantified_parameter.product.presence : quantified_parameter.variant
+            - title = target.name
+            - detail = quantity_info(quantified_parameter)
+
+            = add_detail_to_modal_block(title, detail, { icon: 'picto-matter' })
+            - if parameter_type == :inputs
+              .registered-phytosanitary-usage-block
+                - unless quantified_parameter.usage.nil?
+                  %p
+                    = succeed " : " do
+                      %span.title= t(:usage)
+                    %span.value= quantified_parameter.usage.ephy_usage_phrase
+                    - authorization_calculator = Interventions::Phytosanitary::InterventionInputAuthorizationCalculator.for_intervention(intervention)
+                    - vote, messages = authorization_calculator.authorization_state(quantified_parameter, intervention)
+                    - if vote == :allowed
+                      %span.value= :allowed.tl
+                    - elsif vote == :forbidden
+                      %span.value= :forbidden.tl
+                      %span.value= messages.uniq.join(', ')
+                -# For PFI check value
+                - if quantified_parameter.pfi_input
+                  %span.title= :pfi_treatment_ratio.tl
+                  %span.value= link_to(quantified_parameter.pfi_input.pfi_value.round(2), quantified_parameter.pfi_input.check_url, target: :_blank)
+
+    - if intervention.tools.any?
+      .block
+        %h3.block-title= :equipments.tl + ' | ' + resource.cost(:tool).round(currency.precision).l(currency: currency.name)
+
+        - intervention.tools.each do |tool|
+          - title = tool.product.name
+          - detail = tool.product.nature.name
+          = add_detail_to_modal_block(title, detail, tool, {icon: "picto-tractor", natures: [:travel, :intervention]})
+
+    - if intervention.receptions.any?
+      .block
+        %h3.block-title= :service_deliveries.tl + ' | ' + resource.receptions_cost.round(currency.precision).l(currency: currency.name)
+        - intervention.receptions.each do |reception|
+          - title = reception.sender.name
+          - detail = ''
+          = add_detail_to_modal_block(title, detail, { icon: 'picto-recent-actors' })
+
+
+
+.modal-footer
+  - displayed_state = intervention.state.tl
+  - displayed_state = intervention.nature.l if intervention.nature.to_sym == :request
+
+  - if next_state.present?
+    = dropdown_menu_button(displayed_state, class: "btn btn-primary change-status dropup", icon: false, force_menu: true, disable_with: tl(:please_wait)) do |menu|
+      - menu.item(next_state[0], change_state_backend_interventions_path(:intervention => { :interventions_ids => [intervention.id].to_json, state: next_state[1].to_sym, redirect: false }), method: :post) if next_state
+
+  = link_to :see_details.tl, backend_intervention_path(intervention), class: 'btn btn-default'
+  = link_to :edit.tl, edit_backend_intervention_path(intervention), class: 'btn btn-default'

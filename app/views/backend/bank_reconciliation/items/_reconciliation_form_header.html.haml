@@ -1,0 +1,62 @@
+.buttons
+  = button_tag(:reset.tl, type: :button, "data-confirm": :are_you_sure.tl, class: "btn btn-default", id: "reset_reconciliation", disabled: is_disabled)
+  
+  = dropdown_menu_button :payment_gap, icon: false do |menu|
+    - journal_url_params.each do |regul_journal|
+      - menu.item regul_journal[:name],                                                  |
+                  backend_bank_reconciliation_gaps_path(regul_journal.except(:name)),    |
+                  method: :POST,                                                         |
+                  tabindex: -1,                                                          |
+                  class: 'from-selected-bank from-selected-journal gap-creation',        |
+                  title: regul_journal[:name]                                            |
+
+  = dropdown_menu_button :new_payslip_payment, icon: false do |menu|
+    - Entity.employees.each do |employee|
+      - menu.item employee.full_name,                                                                                   |
+                create_payslip_payment_backend_bank_statement_items_path(payee_id: employee.id, redirect: url_for(url_redirect_params)), |
+                tabindex: -1,                                                                                  |
+                method: :get,                                                                                  |
+                class: 'from-selected-bank',                                                                   |
+                title: employee.full_name
+
+  = dropdown_menu_button :new_payslip_contribution_payment, icon: false do |menu|
+    - Entity.payslip_contributors.each do |entity|
+      - menu.item entity.full_name,                                                                                   |
+                create_payslip_contribution_payment_backend_bank_statement_items_path(payee_id: entity.id, redirect: url_for(url_redirect_params)),
+                tabindex: -1,
+                method: :get,
+                class: 'from-selected-bank',
+                title: entity.full_name
+  
+  = dropdown_menu_button :new_tax_payment, icon: false do |menu|
+    - TaxPayment.nature.values.each do |nature|
+      - menu.item I18n.t("enumerize.tax_payment.nature.#{nature.to_sym}"),                                                                                   |
+                create_vat_payment_backend_bank_statement_items_path(nature: nature, redirect: url_for(url_redirect_params)),
+                tabindex: -1,
+                method: :get,
+                class: 'from-selected-bank',
+                title: :nature.tl
+
+  = dropdown_menu_button :new_purchase, icon: false do |menu|
+    - purchase_natures.each do |nature|
+      - menu.item nature.name,                                                                                   |
+                  new_backend_quick_purchase_path(nature_id: nature.id, redirect: url_for(url_redirect_params)), |
+                  tabindex: -1,                                                                                  |
+                  method: :get,                                                                                  |
+                  class: 'from-selected-bank',                                                                   |
+                  title: nature.name                                                                             |
+  
+  = dropdown_menu_button :new_sale, icon: false do |menu|
+    - sale_natures.each do |nature|
+      - menu.item nature.name,                                                                                  | 
+                  new_backend_quick_sale_path(nature_id: nature.id, redirect: url_for(url_redirect_params)),    |
+                  tabindex: -1,                                                                                 |
+                  method: :get,                                                                                 |
+                  class: 'from-selected-bank',                                                                  |
+                  title: nature.name                                                                            |
+    
+.details
+  %input#set_period{ type: 'daterange', value: :date_range.tl(from: @period_start, to: @period_end) }
+  %label
+    %input#hide-lettered{ type: :checkbox, checked: true }
+    = :hide_lettered_lines.tl

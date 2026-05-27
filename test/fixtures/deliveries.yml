@@ -1,0 +1,192 @@
+# = Informations
+#
+# == License
+#
+# Ekylibre - Simple agricultural ERP
+# Copyright (C) 2008-2009 Brice Texier, Thibaud Merigon
+# Copyright (C) 2010-2012 Brice Texier
+# Copyright (C) 2012-2014 Brice Texier, David Joulin
+# Copyright (C) 2015-2023 Ekylibre SAS
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see http://www.gnu.org/licenses.
+#
+# == Table: deliveries
+#
+#  annotation              :text
+#  created_at              :datetime         not null
+#  creator_id              :integer(4)
+#  custom_fields           :jsonb
+#  driver_id               :integer(4)
+#  id                      :integer(4)       not null, primary key
+#  lock_version            :integer(4)       default(0), not null
+#  mode                    :string
+#  number                  :string
+#  reference_number        :string
+#  responsible_id          :integer(4)
+#  started_at              :datetime
+#  state                   :string           not null
+#  stopped_at              :datetime
+#  transporter_id          :integer(4)
+#  transporter_purchase_id :integer(4)
+#  updated_at              :datetime         not null
+#  updater_id              :integer(4)
+#
+---
+deliveries_001:
+  created_at: 2014-10-31 17:19:32.000000000 Z
+  creator_id: 1
+  id: 1
+  lock_version: 0
+  mode: transporter
+  number: TR0001
+  state: in_preparation
+  transporter_id: 6
+  updated_at: 2014-10-31 17:19:32.000000000 Z
+  updater_id: 1
+deliveries_002:
+  created_at: 2014-10-31 17:19:32.000000000 Z
+  creator_id: 1
+  id: 2
+  lock_version: 0
+  mode: transporter
+  number: TR0002
+  state: in_preparation
+  transporter_id: 6
+  updated_at: 2014-10-31 17:19:32.000000000 Z
+  updater_id: 1
+deliveries_003:
+  created_at: 2014-11-05 15:14:00.931117000 Z
+  creator_id: 1
+  id: 3
+  lock_version: 0
+  mode: transporter
+  number: TR00000001
+  responsible_id: 9
+  started_at: 2014-11-05 15:14:00.754740000 Z
+  state: finished
+  transporter_id: 4
+  updated_at: 2014-11-05 15:14:00.931117000 Z
+  updater_id: 1
+deliveries_004:
+  created_at: 2015-09-17 13:21:47.142356000 Z
+  id: 4
+  lock_version: 0
+  mode: third
+  number: AUTO00000005
+  state: finished
+  updated_at: 2015-09-17 13:21:47.142356000 Z
+deliveries_005:
+  created_at: 2015-09-17 13:21:47.142356000 Z
+  id: 5
+  lock_version: 0
+  mode: third
+  number: AUTO00000007
+  state: finished
+  updated_at: 2015-09-17 13:21:47.142356000 Z
+deliveries_006:
+  created_at: 2015-09-17 13:21:47.142356000 Z
+  id: 6
+  lock_version: 0
+  mode: third
+  number: AUTO00000006
+  state: finished
+  updated_at: 2015-09-17 13:21:47.142356000 Z
+deliveries_007:
+  created_at: 2015-09-17 13:21:47.142356000 Z
+  id: 7
+  lock_version: 0
+  mode: third
+  number: AUTO00000008
+  state: finished
+  updated_at: 2015-09-17 13:21:47.142356000 Z
+deliveries_008:
+  created_at: 2015-09-17 13:21:47.142356000 Z
+  id: 8
+  lock_version: 0
+  mode: third
+  number: AUTO00000009
+  state: finished
+  updated_at: 2015-09-17 13:21:47.142356000 Z
+deliveries_009:
+  created_at: 2015-09-17 13:21:47.142356000 Z
+  id: 9
+  lock_version: 0
+  mode: third
+  number: AUTO00000010
+  state: finished
+  updated_at: 2015-09-17 13:21:47.142356000 Z
+deliveries_010:
+  created_at: 2015-09-17 13:21:47.142356000 Z
+  id: 10
+  lock_version: 0
+  mode: third
+  number: AUTO00000011
+  state: finished
+  updated_at: 2015-09-17 13:21:47.142356000 Z
+deliveries_011:
+  created_at: 2015-09-17 13:21:47.142356000 Z
+  id: 11
+  lock_version: 0
+  mode: third
+  number: AUTO00000012
+  state: finished
+  updated_at: 2015-09-17 13:21:47.142356000 Z
+deliveries_012:
+  created_at: 2015-09-17 13:21:47.142356000 Z
+  id: 12
+  lock_version: 0
+  mode: third
+  number: AUTO00000013
+  state: finished
+  updated_at: 2015-09-17 13:21:47.142356000 Z
+deliveries_013:
+  created_at: 2015-09-17 13:21:47.142356000 Z
+  id: 13
+  lock_version: 0
+  mode: third
+  number: AUTO00000014
+  state: finished
+  updated_at: 2015-09-17 13:21:47.142356000 Z
+deliveries_014:
+  created_at: 2015-09-17 13:21:47.142356000 Z
+  id: 14
+  lock_version: 0
+  mode: third
+  number: AUTO00000015
+  state: finished
+  updated_at: 2015-09-17 13:21:47.142356000 Z
+deliveries_015:
+  created_at: 2015-09-17 13:21:47.142356000 Z
+  id: 15
+  lock_version: 0
+  mode: third
+  number: AUTO00000003
+  state: finished
+  updated_at: 2015-09-17 13:21:47.142356000 Z
+deliveries_016:
+  annotation: ''
+  created_at: 2015-09-17 13:31:53.237055000 Z
+  creator_id: 1
+  driver_id: 14
+  id: 16
+  lock_version: 5
+  mode: us
+  number: TR00000002
+  reference_number: ''
+  responsible_id: 14
+  started_at: 2015-09-10 08:50:00.000000000 Z
+  state: finished
+  stopped_at: 2015-09-10 08:55:00.000000000 Z
+  updated_at: 2015-09-17 13:43:12.650930000 Z
+  updater_id: 1

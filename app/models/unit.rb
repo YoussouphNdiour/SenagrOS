@@ -1,0 +1,199 @@
+# frozen_string_literal: true
+
+# = Informations
+#
+# == License
+#
+# Ekylibre - Simple agricultural ERP
+# Copyright (C) 2008-2009 Brice Texier, Thibaud Merigon
+# Copyright (C) 2010-2012 Brice Texier
+# Copyright (C) 2012-2014 Brice Texier, David Joulin
+# Copyright (C) 2015-2023 Ekylibre SAS
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see http://www.gnu.org/licenses.
+#
+# == Table: units
+#
+#  base_unit_id   :integer(4)
+#  coefficient    :decimal(20, 10)  default(1.0), not null
+#  created_at     :datetime
+#  creator_id     :integer(4)
+#  description    :text
+#  dimension      :string           not null
+#  id             :integer(4)       not null, primary key
+#  lock_version   :integer(4)       default(0), not null
+#  name           :string           not null
+#  provider       :jsonb
+#  reference_name :string
+#  symbol         :string
+#  type           :string           not null
+#  updated_at     :datetime
+#  updater_id     :integer(4)
+#  work_code      :string
+#
+
+class Unit < ApplicationRecord
+  include Providable
+  # INFO to convert unit or price, see service UnitComputation
+  BASE_UNIT_PER_DIMENSION = { none: 'unity',
+                              volume: 'liter',
+                              mass: 'kilogram',
+                              surface_area: 'square_meter',
+                              distance: 'meter',
+                              time: 'second',
+                              energy: 'joule' }.freeze
+
+  STOCK_INDICATOR_PER_DIMENSION = { volume: 'net_volume',
+                                    mass: 'net_mass',
+                                    surface_area: 'net_surface_area',
+                                    distance: 'net_length',
+                                    time: 'usage_duration',
+                                    energy: 'energy' }.freeze
+
+  has_many :budget_items, class_name: 'ActivityBudgetItem', foreign_key: :unit_id
+  has_many :catalog_items
+  has_many :variants, class_name: 'ProductNatureVariant', foreign_key: :default_unit_id
+  has_many :sale_items, foreign_key: :conditioning_unit_id
+  has_many :purchase_items, foreign_key: :conditioning_unit_id
+  has_many :reception_items, foreign_key: :conditioning_unit_id
+  has_many :shipment_items, foreign_key: :conditioning_unit_id
+  has_many :products, foreign_key: :conditioning_unit_id
+  has_many :derivative_units, class_name: 'Unit', foreign_key: :base_unit_id
+  belongs_to :base_unit, class_name: 'ReferenceUnit'
+
+  enumerize :type, in: %w[ReferenceUnit Conditioning]
+  enumerize :dimension, in: BASE_UNIT_PER_DIMENSION.keys
+
+  # [VALIDATORS[ Do not edit these lines directly. Use `rake clean:validations`.
+  validates :coefficient, presence: true, numericality: { greater_than: -10_000_000_000, less_than: 10_000_000_000 }
+  validates :description, length: { maximum: 500_000 }, allow_blank: true
+  validates :dimension, presence: true
+  validates :name, presence: true, length: { maximum: 500 }
+  validates :reference_name, :symbol, :work_code, length: { maximum: 500 }, allow_blank: true
+  # ]VALIDATORS]
+  validates :symbol, uniqueness: true, allow_blank: true
+  validates :name, uniqueness: true
+
+  BASE_UNIT_PER_DIMENSION.keys.each do |dimension|
+    scope "of_#{dimension}", -> { where(dimension: dimension) }
+  end
+  scope :multiple_of, ->(x) { where('coefficient % ? = 0', x) }
+  scope :of_dimension_multiple_of, ->(dimension, x) { send("of_#{dimension}").multiple_of(x) }
+  scope :of_names, ->(*names) { where(reference_name: names) }
+  scope :of_dimensions, ->(*dimensions) { where(dimension: dimensions) }
+  scope :of_reference, -> { where(reference_name: BASE_UNIT_PER_DIMENSION.values) }
+  scope :references_for_dimensions, ->(*dimensions) { of_reference.of_dimensions(*dimensions) }
+  scope :is_reference_units, -> { where(type: "ReferenceUnit")}
+  scope :imported, -> { where.not(reference_name: nil) }
+  scope :of_variant, ->(variant_id) { where(id: CatalogItem.where(variant_id: variant_id).pluck(:unit_id).uniq) }
+
+  protect allow_update_on: %i[name work_code description symbol updated_at provider], form_reachable: true do
+    reference_name.present? || associated?
+  end
+
+  before_validation do
+    self.dimension = base_unit.dimension if base_unit
+  end
+
+  def format_coefficient
+    coefficient.to_f.l(precision: 0)
+  end
+
+  def of_dimension?(dim)
+    dim.to_sym == dimension.to_sym
+  end
+
+  def associated?
+    catalog_items.any? || sale_items.any? || purchase_items.any? || reception_items.any? || shipment_items.any? || products.any? || derivative_units.any?
+  end
+
+  def onoma_reference_name
+    self.is_a?(Conditioning) ? self.base_unit.reference_name : self.reference_name
+  end
+
+  class << self
+    def import_from_nomenclature(reference_name)
+      unless item = Onoma::Unit.find(reference_name)
+        raise ArgumentError.new("The unit #{reference_name.inspect} is unknown")
+      end
+
+      attributes = {
+        name: item.human_name,
+        reference_name: item.name,
+        symbol: item.symbol,
+        coefficient: item.dimension == :volume ? item.a * 1_000 : item.a.to_d,
+        base_unit: import_from_nomenclature(BASE_UNIT_PER_DIMENSION[item.dimension]),
+        dimension: item.dimension,
+        type: 'ReferenceUnit'
+      }
+      create!(attributes)
+    end
+
+    def import_from_lexicon(ref_or_symbol)
+      if unit = Unit.find_by_reference_name(ref_or_symbol) || Unit.find_by_symbol(ref_or_symbol)
+        return unit
+      end
+      unless item = MasterPackaging.find_by_reference_name(ref_or_symbol) || MasterUnit.find_by_reference_name(ref_or_symbol) || MasterUnit.find_by_symbol(ref_or_symbol)
+        raise ArgumentError.new("The unit #{ref_or_symbol.inspect} is not present in Lexicon Unit or Packaging")
+      end
+
+      attributes = send("#{item.class.name.downcase}_attributes", item)
+      create!(attributes)
+    end
+
+    def load_defaults(**_options)
+      BASE_UNIT_PER_DIMENSION.keys.each do |dim|
+        MasterUnit.of_dimension(dim).each do |unit|
+          import_from_lexicon(unit.reference_name)
+        end
+      end
+    end
+
+    def import_all_from_nomenclature
+      Onoma::Unit.list.select { |u| BASE_UNIT_PER_DIMENSION.keys.include?(u.dimension) && u.dimension == u.base_dimension.to_sym && u.d == 1 }.each do |unit|
+        import_from_nomenclature(unit.name)
+      end
+    end
+
+    private
+
+      # unit MasterUnit
+      def masterunit_attributes(unit)
+        normalized_language = ((Preference[:language].include?('fra') || Preference[:language].include?('eng') ) ? Preference[:language] : 'eng' )
+        base_unit_name = BASE_UNIT_PER_DIMENSION[unit.dimension.to_sym]
+        base_unit = base_unit_name == unit.reference_name ? nil : import_from_lexicon(base_unit_name)
+
+        { name: unit.translation&.send(normalized_language) || unit.reference_name,
+          reference_name: unit.reference_name,
+          symbol: unit.symbol,
+          base_unit: base_unit,
+          coefficient: unit.a,
+          dimension: unit.dimension,
+          type: 'ReferenceUnit' }
+      end
+
+      # unit MasterPackaging
+      def masterpackaging_attributes(unit)
+        normalized_language = ((Preference[:language].include?('fra') || Preference[:language].include?('eng') ) ? Preference[:language] : 'eng' )
+        { name: unit.translation&.send(normalized_language) || unit.reference_name,
+          reference_name: unit.reference_name,
+          # uniqueness of symbol
+          # symbol: unit.capacity_unit.symbol,
+          base_unit: import_from_lexicon(unit.capacity_unit),
+          coefficient: unit.capacity,
+          dimension: unit.capacity_unit.dimension,
+          type: 'Conditioning' }
+      end
+  end
+end

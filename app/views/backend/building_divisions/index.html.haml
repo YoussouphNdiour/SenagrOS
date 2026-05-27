@@ -1,0 +1,8 @@
+- main_toolbar do |t|
+  = t.new params: { redirect: nil }
+
+= beehive do |b|
+  - b.hbox do
+    - b.cell :stock_container_map
+  - b.hbox do
+    = main_list

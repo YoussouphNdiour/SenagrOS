@@ -1,0 +1,19 @@
+= janus do |j|
+  - j.face :map, title: :map do
+    :ruby
+      geolocations = Product.of_working_set(:wine_tanks).collect do |tank|
+        {
+          name: tank.name,
+          nature: tank.nature_name,
+          shape: tank.shape
+        }
+      end
+    = visualization(box: {height: "100%"}) do |v|
+      - v.serie :geolocations, geolocations
+      - v.categories :nature, :geolocations
+      - v.control :zoom
+      - v.control :scale
+      - v.control :fullscreen
+      - v.control :layer_selector
+  - j.face :list do
+    = main_list

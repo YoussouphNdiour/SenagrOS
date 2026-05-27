@@ -1,0 +1,267 @@
+# frozen_string_literal: true
+
+# = Informations
+#
+# == License
+#
+# Ekylibre - Simple agricultural ERP
+# Copyright (C) 2008-2009 Brice Texier, Thibaud Merigon
+# Copyright (C) 2010-2012 Brice Texier
+# Copyright (C) 2012-2014 Brice Texier, David Joulin
+# Copyright (C) 2015-2023 Ekylibre SAS
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see http://www.gnu.org/licenses.
+#
+# == Table: parcel_items
+#
+#  activity_budget_id            :integer(4)
+#  analysis_id                   :integer(4)
+#  annotation                    :text
+#  conditioning_quantity         :decimal(20, 10)
+#  conditioning_unit_id          :integer(4)
+#  created_at                    :datetime         not null
+#  creator_id                    :integer(4)
+#  currency                      :string
+#  delivery_id                   :integer(4)
+#  delivery_mode                 :string
+#  equipment_id                  :integer(4)
+#  id                            :integer(4)       not null, primary key
+#  lock_version                  :integer(4)       default(0), not null
+#  merge_stock                   :boolean          default(FALSE)
+#  non_compliant                 :boolean
+#  non_compliant_detail          :string
+#  parcel_id                     :integer(4)       not null
+#  parted                        :boolean          default(FALSE), not null
+#  population                    :decimal(19, 4)
+#  product_enjoyment_id          :integer(4)
+#  product_id                    :integer(4)
+#  product_identification_number :string
+#  product_localization_id       :integer(4)
+#  product_movement_id           :integer(4)
+#  product_name                  :string
+#  product_ownership_id          :integer(4)
+#  product_work_number           :string
+#  project_budget_id             :integer(4)
+#  purchase_invoice_item_id      :integer(4)
+#  purchase_order_item_id        :integer(4)
+#  purchase_order_to_close_id    :integer(4)
+#  role                          :string
+#  sale_item_id                  :integer(4)
+#  shape                         :geometry({:srid=>4326, :type=>"multi_polygon"})
+#  source_product_id             :integer(4)
+#  source_product_movement_id    :integer(4)
+#  team_id                       :integer(4)
+#  transporter_id                :integer(4)
+#  type                          :string
+#  unit_pretax_sale_amount       :decimal(19, 4)
+#  unit_pretax_stock_amount      :decimal(19, 4)   default(0.0), not null
+#  updated_at                    :datetime         not null
+#  updater_id                    :integer(4)
+#  variant_id                    :integer(4)
+#
+class ParcelItem < ApplicationRecord
+  attr_readonly :parcel_id
+  attr_accessor :product_nature_variant_id
+  enumerize :delivery_mode, in: %i[transporter us third none], predicates: { prefix: true }, scope: true, default: :us
+  belongs_to :analysis
+  belongs_to :parcel, inverse_of: :items
+  belongs_to :localization, inverse_of: :shipment_items, class_name: 'ProductLocalization', foreign_key: :source_product_id, primary_key: :product_id
+  # belongs_to :reception, inverse_of: :items, class_name: 'Reception', foreign_key: :parcel_id
+  belongs_to :purchase_order_item, foreign_key: 'purchase_order_item_id', class_name: 'PurchaseItem'
+  belongs_to :purchase_invoice_item, foreign_key: 'purchase_invoice_item_id', class_name: 'PurchaseItem'
+  belongs_to :product
+  belongs_to :sale_item, inverse_of: :shipment_items # for a sale order who create shipments
+  belongs_to :delivery
+  belongs_to :transporter, class_name: 'Entity'
+  belongs_to :source_product, class_name: 'Product'
+  belongs_to :source_product_movement, class_name: 'ProductMovement', dependent: :destroy
+  belongs_to :variant, class_name: 'ProductNatureVariant'
+  belongs_to :equipment, class_name: 'Product'
+  belongs_to :conditioning_unit, class_name: 'Unit'
+  has_one :nature, through: :variant
+  has_one :product_enjoyment, as: :originator, dependent: :destroy
+  has_one :product_localization, as: :originator, dependent: :destroy
+  has_one :product_movement, as: :originator, dependent: :destroy
+  has_one :product_ownership, as: :originator, dependent: :destroy
+  has_many :storings, class_name: 'ParcelItemStoring', inverse_of: :parcel_item, foreign_key: :parcel_item_id, dependent: :destroy
+  has_many :products, through: :storings
+
+  # [VALIDATORS[ Do not edit these lines directly. Use `rake clean:validations`.
+  validates :annotation, length: { maximum: 500_000 }, allow_blank: true
+  validates :conditioning_quantity, numericality: { greater_than: -10_000_000_000, less_than: 10_000_000_000 }, allow_blank: true
+  validates :currency, :non_compliant_detail, :product_identification_number, :product_name, :product_work_number, :role, length: { maximum: 500 }, allow_blank: true
+  validates :merge_stock, :non_compliant, inclusion: { in: [true, false] }, allow_blank: true
+  validates :parted, inclusion: { in: [true, false] }
+  validates :population, :unit_pretax_sale_amount, numericality: { greater_than: -1_000_000_000_000_000, less_than: 1_000_000_000_000_000 }, allow_blank: true
+  validates :unit_pretax_stock_amount, presence: true, numericality: { greater_than: -1_000_000_000_000_000, less_than: 1_000_000_000_000_000 }
+  # ]VALIDATORS]
+
+  validates :variant, presence: true
+
+  validates :population, presence: true
+
+  alias_attribute :quantity, :population
+  alias_attribute :unit, :conditioning_unit
+
+  accepts_nested_attributes_for :products
+  accepts_nested_attributes_for :storings, allow_destroy: true
+
+  delegate :draft?, :given?, to: :reception, prefix: true, allow_nil: true
+  delegate :draft?, :in_preparation?, :prepared?, :given?, to: :shipment, prefix: true
+  delegate :separated_stock?, :currency, to: :parcel, prefix: true, allow_nil: true
+  delegate :unit_name, to: :variant
+  delegate :dimension, :of_dimension?, to: :unit
+
+  scope :of_role, ->(role) { where(role: role) }
+
+  before_validation do
+    if variant
+      catalog_item = variant.catalog_items.of_usage(:stock)
+      if catalog_item.any? && catalog_item.first.pretax_amount != 0.0
+        self.unit_pretax_stock_amount ||= catalog_item.first.pretax_amount
+      end
+    end
+
+    if source_product
+      self.conditioning_unit ||= source_product.conditioning_unit
+    end
+
+    if conditioning_unit
+      self.conditioning_quantity ||= 1.0
+      self.quantity ||= UnitComputation.convert_into_variant_population(variant, conditioning_quantity, conditioning_unit) if variant
+      self.quantity ||= UnitComputation.convert_into_variant_population(source_product.variant, conditioning_quantity, conditioning_unit) if source_product
+    end
+
+    self.quantity ||= 0
+
+    true
+  end
+
+  before_save :update_quantity_with_conditioning_quantity
+
+  validate do
+    computed_population = storings.map(&:quantity).reduce(&:+) || 0
+    if product_is_unitary? && computed_population > 1
+      errors.add(:population, 'activerecord.errors.messages.unitary_in_parcel'.t)
+    end
+  end
+
+  ALLOWED = %w[
+    product_localization_id
+    product_movement_id
+    product_enjoyment_id
+    product_ownership_id
+    unit_pretax_stock_amount
+    purchase_order_item_id
+    purchase_invoice_item_id
+    sale_item_id
+    updated_at
+    updater_id
+  ].freeze
+
+  def stock_amount
+    population * unit_pretax_stock_amount
+  end
+
+  def status
+    prepared? ? :go : variant.present? ? :caution : :stop
+  end
+
+  def prepared?
+    false
+  end
+
+  def product_is_identifiable?
+    [variant, source_product].reduce(false) do |acc, product_input|
+      acc || Maybe(product_input).identifiable?.or_else(false)
+    end
+  end
+
+  def product_is_unitary?
+    [variant, source_product].reduce(false) do |acc, product_input|
+      acc || Maybe(product_input).population_counting_unitary?.or_else(false)
+    end
+  end
+
+  def name
+    Maybe(source_product || variant || products).name.or_else(nil)
+  end
+
+  def purchase_order_number
+    return nil if purchase_order_item.nil?
+
+    purchase_order_item.purchase.number
+  end
+
+  def purchase_invoice_number
+    return nil if purchase_invoice_item.nil?
+
+    purchase_invoice_item.purchase.number
+  end
+
+  private
+
+    def update_quantity_with_conditioning_quantity
+      return unless conditioning_quantity_changed?
+
+      self.quantity = conditioning_quantity
+    end
+
+  protected
+
+    def check_incoming(checked_at)
+      product_params = {}
+      no_fusing = parcel_separated_stock? || product_is_unitary?
+
+      product_params[:name] = product_name
+      product_params[:name] ||= "#{variant.name} (#{parcel.number})"
+      product_params[:description] = annotation
+      product_params[:identification_number] = product_identification_number
+      product_params[:initial_born_at] = [checked_at, parcel_given_at].compact.min
+
+      self.product = existing_product_in_storage unless no_fusing || storage.blank?
+
+      self.product ||= variant.create_product(product_params)
+      # FIXME: bad fix for date collision between incoming parcel creation and intervention creation.
+      self.product.born_at = product_params[:initial_born_at]
+
+      return false, self.product.errors if self.product.errors.any?
+
+      true
+    end
+
+    def check_outgoing(_checked_at)
+      update! product: source_product
+    end
+
+    def existing_reception_product_in_storage(storing)
+      similar_products = Product.where(variant: variant, conditioning_unit: storing.conditioning_unit)
+
+      similar_products.find do |p|
+        location = p.localizations.last.container
+        owner = p.owner
+        location == storing.storage && owner == Entity.of_company
+      end
+    end
+
+    def existing_product_in_storage
+      similar_products = Product.where(variant: variant)
+
+      similar_products.find do |p|
+        location = p.localizations.last.container
+        owner = p.owner
+        location == storage && owner == Entity.of_company
+      end
+    end
+end

@@ -1,0 +1,65 @@
+- main_period_selector(:year)
+
+- main_toolbar do |t|
+  = t.edit resource
+  = t.new(params: {controller: :issues, target_id: resource.id, target_type: resource.class.name}, tool: 'new-issue')
+  = t.destroy
+
+= cobbles do |c|
+  - c.cobble :general_informations do
+    = infos do
+      .med-info.important
+        :ruby
+          sex_icon = if resource.sex == 'male'
+                       'mars'
+                     elsif resource.sex == 'female'
+                       'venus'
+                     else
+                       'sex'
+                     end
+        %span.title= resource.class.human_attribute_name(:work_number)
+        %span.value
+          %i.picto{class: "picto-#{sex_icon}"}
+          = resource.work_number
+      .med-info
+        %san.title= resource.class.human_attribute_name(:members)
+        %span.value
+          %i.picto{class: "picto-group"}
+          - viewed_at = Time.zone.now.change(year: current_campaign.harvest_year)
+          = resource.members_at(viewed_at)&.count.to_i
+      .med-info
+        %span.title= resource.class.human_attribute_name(:daily_nitrogen_production)
+        %span.value
+          %i.picto{class: "picto-trash-o"}
+          = resource.daily_nitrogen_production.round(2).l
+
+  - if resource.activity_production&.usage == :milk && Analysis.of_nature(:cow_milk_analysis).any?
+    - started_at = Time.zone.now.change(year: current_campaign.harvest_year) - 1.year
+    - stopped_at = Time.zone.now.change(year: current_campaign.harvest_year)
+    - c.cobble :last_analyses do
+      = cell :last_analyses, params: {nature: :cow_milk_analysis, started_at: started_at, stopped_at: stopped_at}
+
+  - c.cobble(:interventions) do
+    = cobble_list(:interventions)
+
+  - c.cobble(:animals) do
+    = cobble_list(:animals)
+
+  :ruby
+    count = 0
+    map = visualization do |v|
+      if resource.container
+        if shape = resource.container.shape
+          v.serie resource.container.id, [{name: resource.container.name, shape: shape}]
+          v.simple resource.container.name , resource.container.id, fill_color: cycle(theme_colors)
+          count += 1
+        end
+      end
+      v.control :zoom
+      v.control :scale
+      v.control :fullscreen
+      v.control :layer_selector
+    end
+  - if count > 0
+    - c.cobble :container do
+      = map

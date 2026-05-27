@@ -1,0 +1,16 @@
+- main_toolbar do |t|
+  = t.edit resource
+  - if resource.in_progress?
+    = t.abort resource, method: :post, data: { confirm: :are_you_sure.tl }
+  - else
+    = t.run resource, method: :post, class: 'primary'
+
+= main_informations do
+  = attributes_list text_ellipsis: true do |l|
+    - l.attribute :importer, url: true
+    - l.attribute :state
+    - l.attribute :imported_at
+    - l.attribute :archive_file_name
+    - l.attribute :archive_content_type
+    - l.attribute :file_size
+  = render 'progress', import: resource

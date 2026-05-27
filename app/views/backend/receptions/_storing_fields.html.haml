@@ -1,0 +1,34 @@
+- storing ||= f.object
+- variant = Maybe(storing.parcel_item.variant)
+- storage_name = storing.storage ? storing.storage.name : nil
+- conditioning_coefficient = storing.conditioning_unit && variant.is_some? ? UnitComputation.convert_into_variant_default_unit(variant.get, 1, storing.conditioning_unit) : nil
+- conditioning_unit = storing.conditioning_unit ? storing.conditioning_unit.name : nil
+
+.nested-fields.storing-fields
+  .remove-action-container
+    .nested-remove.act
+      - if f.object.destroyable?
+        = link_to_remove_association(content_tag(:i) + h(:destroy.tl), f, 'data-no-turbolink' => true, class: 'destroy remove remove-item')
+  .storing-calculation
+    .storing-conditionning
+      = f.referenced_association :conditioning_unit, input_html: { class: 'reception-conditionning', disabled: params[:mode] == 'prefilled', data: { filters_url: unroll_filters_by_catalog_items_backend_units_path, conditioning_data_url: conditioning_data_backend_units_path, variant_selector: 'input.parcel-item-variant', coefficient: conditioning_coefficient, interpolate_data_attribute: conditioning_unit, required: true } }, new: { controller: :conditionings, action: :new_on_the_go }
+
+    .storing-quantifier
+      = f.input :conditioning_quantity, wrapper: :append do
+        = f.input_field :conditioning_quantity, class: 'storing-quantity', placeholder: '0', data: { trade_component: 'quantity', required: true, 'when-item': 'unitary', 'when-set-value': 1, 'when-prop-value': 'readonly', 'when-scope': 'target' }
+
+
+  .storing-area
+    = f.label :storage.tl, class: "control-label", required: true
+    = f.referenced_association :storage, source: :storage, label: false, new: false, input_html: { class: "parcel-item-storage", data: { storage_name: storage_name }, required: true }
+
+  .current-stock
+    .merchandise-current-stock
+      %span.stock-label= :current_stock.tl
+      %span.stock-value= variant.current_stock_per_storage(storing.storage).or_else(0)
+      %span.stock-unit= variant.unit_name.or_else("")
+
+    .merchandise-stock-after-reception
+      %span.stock-label= :stock_after_order.tl
+      %span.stock-value= f.object.decorate.merchandise_stock_after_reception(variant.current_stock_per_storage(storing.storage).or_else(0))
+      %span.stock-unit= f.object.decorate.merchandise_stock_unit(variant.unit_name.or_else(""))

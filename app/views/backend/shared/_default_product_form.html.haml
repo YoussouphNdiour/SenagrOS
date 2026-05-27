@@ -1,0 +1,6 @@
+= field_set(:identification) do
+  - if params[:external]
+    = f.referenced_association :default_storage
+  = f.picture
+  = f.input :description
+  = f.referenced_association :tracking

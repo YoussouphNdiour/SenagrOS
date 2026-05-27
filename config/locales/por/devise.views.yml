@@ -1,0 +1,63 @@
+por:
+  devise:
+    confirmations:
+      new:
+        resend_confirmation_instructions: "Reenviar instruções de confirmação"
+    mailer:
+      confirmation_instructions:
+        action: "Confirmar minha conta"
+        greeting: "Bem vindo %{recipient}!"
+        instruction: "Você pode confirmar sua conta através do link abaixo:"
+        subject: "Instruções de confirmação"
+      reset_password_instructions:
+        action: "Mudar senha"
+        greeting: "Olá %{recipient}!"
+        instruction: "Você requisitou a mudança da senha, você pode fazer o mesmo através do link abaixo."
+        instruction_2: "Se você não requisitou isto, por favor desconsidere o email."
+        instruction_3: "Sua senha não vai ser mudada até acessar o link e criar uma nova.."
+        subject: "Instruções para resetar senha"
+      signed_up:
+        confirm: "Por favor, confirme-a no painel de administração."
+        # details: "%{first_name} %{last_name} with email %{email} has just signed up."
+        subject: "Nova inscrição"
+      unlock_instructions:
+        action: "Desbloquear minha conta"
+        greeting: "Ola %{recipient}!"
+        instruction: "Clique no link abaixo para desbloquear sua conta:"
+        message: "Sua conta foi bloqueada devido a um número excessivo de tentativas de login."
+        subject: "Instruções de desbloqueio"
+    passwords:
+      edit:
+        change_my_password: "Modificar minha senha"
+        change_your_password: "Modificar a senha"
+        confirm_new_password: "Confirmar a nova senha"
+        new_password: "Nova senha"
+      new:
+        forgot_your_password: "Esqueceu sua senha?"
+        send_me_reset_password_instructions: "Me envie instruções para resetar a senha"
+    registrations:
+      edit:
+        are_you_sure: "Você tem certeza?"
+        cancel_my_account: "Cancelar minha conta"
+        leave_blank_if_you_don_t_want_to_change_it: "Deixe em branco se não quiser modificar"
+        title: "Editar %{resource}"
+        unhappy: "Infeliz"
+        update: "Atualizar"
+        we_need_your_current_password_to_confirm_your_changes: "nós precisamos da sua senha atual para confirmar as mudanças"
+      new:
+        sign_up: "Registrar-se"
+    sessions:
+      new:
+        sign_in: "Entrar"
+        sign_in_with_ekylibre: "Entrar com Ekylibre.com"
+    shared:
+      links:
+        didn_t_receive_confirmation_instructions: "Não recebeu as instruções de confirmação?"
+        didn_t_receive_unlock_instructions: "Não recebeu as instruções de desbloqueio?"
+        forgot_your_password: "Esqueceu sua senha?"
+        sign_in: "Entrar"
+        sign_in_with_provider: "Entrar com %{provider}"
+        sign_up: "Registrar-se"
+    unlocks:
+      new:
+        resend_unlock_instructions: "Reenviar instruções de desbloqueio"

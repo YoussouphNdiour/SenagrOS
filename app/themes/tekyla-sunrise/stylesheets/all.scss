@@ -1,0 +1,10 @@
+/*
+ * This is a manifest file that'll be compiled into screen.css, which will include all the files
+ * listed below.
+ *
+ *= require_self
+ */
+
+$base-color: #F26018;
+
+@import "themes/tekyla/all";

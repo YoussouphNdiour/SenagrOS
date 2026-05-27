@@ -1,0 +1,35 @@
+- main_toolbar do |t|
+  = t.edit resource
+
+= cobbles do |c|
+  - c.cobble :general_informations do
+    = infos do
+      .med-info
+        %span.title= CapIslet.human_attribute_name(:islet_number)
+        %span.value= resource.islet.islet_number
+      .med-info
+        %span.title= CapLandParcel.human_attribute_name(:land_parcel_number)
+        %span.value= resource.land_parcel_number
+      .med-info
+        %span.title= CapLandParcel.human_attribute_name(:campaign)
+        %span.value= resource.campaign_name
+      .med-info
+        %span.title= CultivableZone.human_attribute_name(:net_surface_area)
+        %span.value= resource.net_surface_area.in(:hectare).round(2).l(precision: 2)
+      .med-info
+        %span.title= CapLandParcel.human_attribute_name(:main_crop_code)
+        %span.value= resource.main_crop_code
+      .med-info
+        %span.title= CapLandParcel.human_attribute_name(:main_crop_seed_production)
+        %span.value= resource.main_crop_seed_production.l
+  - c.cobble :resource_map, title: :map.tl do
+    = visualization do |v|
+      - v.serie resource.id, [{name: resource.land_parcel_number, shape: resource.shape}]
+      - options = {fill_opacity: 0}
+      - options[:fill_opacity] = 0.9
+      - options[:fill_color] = cycle(theme_colors)
+      - v.simple resource.land_parcel_number, resource.id, options
+      - v.control :zoom
+      - v.control :scale
+      - v.control :fullscreen
+      - v.control :layer_selector

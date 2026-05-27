@@ -1,0 +1,21 @@
+= field_set do
+  = f.input :name
+  = f.input :number, required: false, placeholder: f.object.unique_predictable_number
+  = f.input :active
+  = f.variety derivative_of: true, child_scope: f.object.variants
+  = f.input :population_counting, as: :radio_buttons
+  = f.picture
+  = f.input :subscribing, show: "#subscribing-options"
+  #subscribing-options
+    = f.referenced_association :subscription_nature
+    = f.input :subscription_years_count
+    = f.input :subscription_months_count
+    = f.input :subscription_days_count
+  = f.input :description
+  = f.custom_fields
+
+= field_set(:definition) do
+  = f.abilities_list
+  = f.items_list :frozen_indicators_list, of: :indicators
+  = f.items_list :variable_indicators_list, of: :indicators
+  = f.items_list :linkage_points_list, of: "product_natures#linkage_points"

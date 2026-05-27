@@ -1,0 +1,23 @@
+- main_toolbar do |t|
+  = t.edit resource
+
+= cobbles do |c|
+  - c.cobble :general_informations do
+    = infos do
+      = resource_info(:number)
+      = resource_info(:name)
+      - if resource.polygon?
+        = resource_info(:net_surface_area) do |area|
+          = area.round(3).l
+  - c.cobble :resource_map, title: :map.tl do
+    = visualization do |v|
+      - v.serie resource.id, [{name: resource.number, shape: resource.content}]
+      - options = {fill_opacity: 0}
+      - if resource.polygon?
+        - options[:fill_opacity] = 0.9
+        - options[:fill_color] = cycle(theme_colors)
+      - v.simple resource.number, resource.id, options
+      - v.control :zoom
+      - v.control :scale
+      - v.control :fullscreen
+      - v.control :layer_selector

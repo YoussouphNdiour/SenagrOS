@@ -1,0 +1,95 @@
+jpn:
+  devise:
+    confirmations:
+      confirmed: "アカウントが正常に確認されました。あなたは今で署名されます。"
+      send_instructions: "あなたは数分でアカウントを確認する方法についての手順を記載したメールが届きます。"
+      send_paranoid_instructions: "あなたのメールアドレスが私達のデータベースに存在する場合、あなたは数分でアカウントを確認する方法についての手順を記載したメールが届きます。"
+    failure:
+      already_authenticated: "あなたは既に署名されます。"
+      inactive: "あなたのアカウントはまだ活性化されませんでした。"
+      invalid: "無効なメールアドレスまたはパスワード。"
+      invalid_token: "無効な認証トークン。"
+      invited: "あなたは保留中の招待状を持って、アカウントの作成を完了するためにそれを受け入れます。"
+      locked: "あなたのアカウントがロックされています。"
+      not_approved: "あなたのアカウントはまだ管理者によって承認されていません。"
+      not_found_in_database: "無効なメールアドレスまたはパスワード。"
+      timeout: "セッションが継続するには、もう一度ログインしてください、期限が切れて。"
+      unauthenticated: "あなたはログインまたは継続する前にサインアップする必要があります。"
+      unconfirmed: "続行する前にアカウントを確認する必要があります。"
+    invitations:
+      edit:
+        header: "あなたのパスワードを設定"
+        submit_button: "私のパスワードを設定"
+      invitation_removed: "あなたの招待状を除去しました。"
+      invitation_token_invalid: "提供招待トークンが有効ではありません！"
+      new:
+        header: "招待状を送信"
+        submit_button: "招待状を送信"
+      no_invitations_remaining: "残りませ招待状はありません"
+      # send_instructions: "An invitation email has been sent to %{email}."
+      updated: "パスワードが正常に設定されました。あなたは今で署名されます。"
+      updated_not_active: "パスワードが正常に設定されました。"
+    mailer:
+      confirmation_instructions:
+        subject: "確認命令"
+      invitation_instructions:
+        accept: "招待に応じます"
+        # accept_until: "This invitation will be due in %{due_date}."
+        # hello: "Hello %{first_name} %{last_name},"
+        ignore: "あなたが招待を受諾しない場合は、このメールを無視してください。 <br />あなたのアカウントには、上記のリンクにアクセスするまで作成し、パスワードを設定されません。"
+        # someone_invited_you: "Someone has invited you to %{url}, you can accept it through the link below."
+        subject: "招待命令"
+      registrations:
+        approved:
+          # accepted: "An administrator has approved your registration on %{url}, you can now sign in through the link below."
+          # hello: "Hello %{first_name} %{last_name},"
+          sign_in: "ここにサインインします。"
+          subject: "アカウントは承認されました！"
+        signed_up:
+          subject: "新規登録"
+      reset_password_instructions:
+        subject: "パスワード命令をリセット"
+      unlock_instructions:
+        subject: "命令のロックを解除"
+    omniauth_callbacks:
+      # failure: "Could not authenticate you from %{kind} because “%{reason}”."
+      # success: "Successfully authenticated from %{kind} account."
+    passwords:
+      no_token: "あなたは、パスワードリセットのメールから来ることなく、このページにアクセスすることはできません。パスワード再設定のメールから来ない場合は、あなたが提供する完全なURLを使用していることを確認してください。"
+      send_instructions: "あなたは数分であなたのパスワードをリセットする方法についての手順を記載したメールが届きます。"
+      send_paranoid_instructions: "あなたのメールアドレスが私達のデータベースに存在する場合、あなたは数分であなたのメールアドレスにパスワード回復リンクを受信します。"
+      updated: "パスワードが正常に変更されました。あなたは今で署名されます。"
+      updated_not_active: "パスワードが正常に変更されました。"
+    registrations:
+      destroyed: "さようなら！アカウントが正常にキャンセルされました。私たちはすぐにまたお会いしたいと考えています。"
+      signed_up: "ようこそ！あなたが正常にサインアップしています。"
+      signed_up_but_inactive: "あなたが正常にサインアップしています。アカウントがまだアクティブ化されていないためしかし、私たちはあなたをサインインできませんでした。"
+      signed_up_but_locked: "あなたが正常にサインアップしています。アカウントがロックされているため、しかし、私たちはあなたをサインインできませんでした。"
+      signed_up_but_unconfirmed: "確認リンクを含むメッセージは、あなたのメールアドレスに送信されました。アカウントを有効にするためのリンクを開いてください。"
+      update_needs_confirmation: "あなたは成功し、アカウントを更新したが、我々は、新しいメールアドレスを確認する必要があります。あなたの電子メールをチェックし、新しいメールアドレスを確認し確定するために確認リンクをクリックしてください。"
+      updated: "あなたは成功し、アカウントを更新しました。"
+      user:
+        signed_up_but_not_approved: "あなたが正常にサインアップしているが、あなたのアカウントはまだ管理者によって承認されていません"
+    sessions:
+      signed_in: "正常に署名しました。"
+      signed_out: "正常にログアウトしました。"
+    unlocks:
+      send_instructions: "あなたは数分でアカウントのロックを解除する方法についての手順を記載したメールが届きます。"
+      send_paranoid_instructions: "あなたのアカウントが存在する場合は、数分でロックを解除する方法についての手順を記載したメールが届きます。"
+      unlocked: "アカウントが正常にロックが解除されました。継続するにはログインしてください。"
+  errors:
+    messages:
+      already_confirmed: "すでに確認された、ログインしてみてください"
+      # confirmation_period_expired: "needs to be confirmed within %{period}, please request a new one"
+      expired: "有効期限が切れている、新しいものをリクエストしてください"
+      not_found: "見つかりません"
+      not_locked: "ロックされていませんでした"
+      not_saved:
+        # one: "1 error prohibited this %{resource} from being saved:"
+        # other: "%{count} errors prohibited this %{resource} from being saved:"
+  time:
+    formats:
+      devise:
+        mailer:
+          invitation_instructions:
+            accept_until_format: "％のB％dの、％Yの％I：％Mを％P"

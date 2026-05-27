@@ -1,0 +1,140 @@
+%li.cast
+  - actor = product_parameter.product
+  - intervention = product_parameter.intervention
+  - product = product_parameter.product
+  - variant = product_parameter.variant
+  - usage = product_parameter.relevant_usage
+  - spray_mix_volume_area_density = resource.spray_mix_volume_area_density
+  - if actor
+    .picture
+      - if actor.picture.file?
+        = image_tag(actor.picture.url(:thumb))
+      - else
+        .picto{class: "picto-#{actor.pictogram}"}
+
+    .details
+      %h3
+        = link_to(actor.name, {controller: actor.class.table_name, action: :show, id: actor.id})
+        = lights('stop') if product_parameter.dead && product_parameter.product.dead_at
+      %p= product_parameter.name
+      %p= product_parameter.model_name.human
+      - if actor.is_a?(Product) && !actor.population_counting_unitary? && variant && product_parameter.quantity_value
+        %p
+          - if product_parameter.product.france_maaid.present? && product_parameter.is_a?(InterventionInput)
+            %p
+              - pesticide = RegisteredPhytosanitaryProduct.where(france_maaid: product_parameter.product.france_maaid).first
+              %span.value= (pesticide.present? ? pesticide.proper_name : '')
+            %p
+              %span.title= :quantity.tl
+              %span.badge.red= product_parameter.input_quantity_per_area.round_l
+              - if spray_mix_volume_area_density
+                %br
+                %span.title= Onoma::Indicator[:spray_mix_volume_area_density].human_name
+                %span.badge.blue= spray_mix_volume_area_density.round_l
+            - unless usage.nil?
+              %p
+                = succeed " : " do
+                  %span.title= t(:usage)
+                %span.value= usage.ephy_usage_phrase
+                - authorization_calculator = Interventions::Phytosanitary::InterventionInputAuthorizationCalculator.for_intervention(intervention)
+                - vote, messages = authorization_calculator.authorization_state(product_parameter, intervention)
+                - if vote == :allowed
+                  %span.value= :allowed.tl
+                - elsif vote == :forbidden
+                  %span.value= :forbidden.tl
+                  %span.value= messages.compact.uniq.join(', ')
+
+              -# For PFI check value
+              - if product_parameter.pfi_input && !variant.phytosanitary_product&.adjuvant?
+                %span.title= :pfi_treatment_ratio.tl
+                %span.value= link_to(product_parameter.pfi_input.pfi_value.round(2), product_parameter.pfi_input.check_url, target: :_blank)
+
+              - if frequency = usage.applications_frequency
+                %p
+                  %span.title= :next_application_possible_on.tl
+                  %span.value= (resource.stopped_at + frequency).to_datetime.l
+
+              - if usage.usage_conditions
+                %p
+                  %span.title.smr= :usage_conditions.tl
+                  %span.value= picto_tag('info-circle', color: '#3f70ce', pointer: true, data: { toggle: 'modal', target: "#usage-conditions-modal-#{product_parameter.id}" })
+                = render 'usage_conditions_modal', id: product_parameter.id, usage: usage
+
+              - if !@has_working_zone_shape
+                %p
+                  %span.title
+                    = :phyto_validation_done_with_total_zone.tl
+
+          - else
+            = quantity_info(product_parameter)
+
+  - elsif variant
+    .picture
+      - if variant.picture.file?
+        = image_tag(variant.picture.url(:thumb))
+      - elsif pictogram = variant.pictogram
+        .picto{class: "picto-#{pictogram}"}
+      - elsif pictogram = variant.category.pictogram
+        .picto{class: "picto-#{pictogram}"}
+      - else
+        .picto{class: 'picto-question'}
+
+    .details
+      %h3= link_to(variant.name, {controller: variant.class.table_name, action: :show, id: variant.id})
+      %p= product_parameter.name
+      %p= product_parameter.model_name.human
+      - if !variant.population_counting_unitary?
+        %p= :x_thing.tl(x: (product_parameter.quantity_value || 0).round(2).l(precision: 0),
+                        thing: variant.unit_name.mb_chars.downcase)
+
+  - else
+    .picture
+      .picto{class: 'picto-question'}
+    .details
+      %h3= product_parameter.name
+      %p= product_parameter.model_name.human
+
+
+  - if intervention.participations.empty? || (product.decorate.not_worker_or_equipment? && product.decorate.no_participation?(intervention.id))
+    = add_working_period_cost(product_parameter, nature: :intervention)
+  - else
+    - participation = product_parameter.participation if product_parameter.is_a?(InterventionDoer)
+    - is_equipment = product.try(:tractor?) || product.try(:self_prepelled_equipment?)
+    .periods
+      - if (participation.present? && participation.has_period_with_nature?(nature: :preparation))
+        - comp = product_parameter.cost_amount_computation(nature: :preparation)
+        - unless comp.failed? || comp.none? || comp.quantity.zero?
+          .period
+            .period-type
+              = image_tag('intervention_participations/action-preparation.svg', class: "period-icon")
+              %h3{ class: "period-label" }= t('enumerize.intervention_working_period.nature.preparation')
+            = add_working_period_cost(product_parameter, nature: :preparation)
+
+      - if participation.present? && participation.has_period_with_nature?(nature: :travel) || product.try(:tractor?)
+        - comp = product_parameter.cost_amount_computation(nature: :travel)
+        - unless comp.failed? || comp.none? || comp.quantity.zero?
+          .period
+            .period-type
+              = image_tag('intervention_participations/action-travel.svg', class: "period-icon")
+              %h3{ class: "period-label" }= t('enumerize.intervention_working_period.nature.travel')
+            = add_working_period_cost(product_parameter, nature: :travel)
+
+      - if (participation.present? && participation.has_period_with_nature?(nature: :intervention)) || product.is_a?(Equipment)
+        - comp = product_parameter.cost_amount_computation(nature: :intervention)
+        - unless comp.failed? || comp.none? || comp.quantity.zero?
+          .period
+            .period-type
+              = image_tag('intervention_participations/action-intervention.svg', class: "period-icon")
+              %h3{ class: "period-label" }= t('enumerize.intervention_working_period.nature.intervention')
+            = add_working_period_cost(product_parameter, nature: :intervention)
+
+      - if participation.present? || is_equipment || product.is_a?(Equipment)
+        .total
+          %h3{ class: "total-label" }= t('labels.total')
+
+          - if product.is_a?(Worker)
+            = add_total_working_period(product_parameter)
+          - elsif product.try(:tractor?)
+            = add_total_working_period(product_parameter, natures: %i[travel intervention])
+          - else
+            = add_total_working_period(product_parameter, natures: %i[intervention])

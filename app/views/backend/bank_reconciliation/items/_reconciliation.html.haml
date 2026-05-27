@@ -1,0 +1,25 @@
+= hidden_field_tag :cash_id, cash_id
+#reconciliation-list.reconciliation-list{ data: { currency_precision: precision } }
+  .top-part
+    = render 'reconciliation_form_header',               |
+              journal_url_params: journal_url_params,    |
+              purchase_natures: purchase_natures,        |
+              sale_natures: sale_natures,                |
+              payslip_natures: payslip_natures,        |
+              url_redirect_params: url_redirect_params,  |
+              is_disabled: is_disabled                   |
+
+  .list
+    = render 'reconciliation_form_list',                      |
+              period_items: period_items,                     |
+              cash_id: cash_id,                               |
+              initial_balance_debit: initial_balance_debit,   |
+              initial_balance_credit: initial_balance_credit  |
+
+  .totals
+    = render 'reconciliation_form_total',                     |
+              add_line_button: add_line_button,               |
+              cash_id: cash_id,                               |
+              precision: precision,                           |
+              initial_balance_credit: initial_balance_credit  |
+

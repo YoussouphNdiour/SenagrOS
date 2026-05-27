@@ -1,0 +1,130 @@
+eng:
+  about:
+    authors: ["Brice Texier", "Jean-Jacques Vangramberen"]
+    dir: "ltr"
+    iso2: "en"
+    name: "English"
+  boolean:
+    human:
+      false_class: "False"
+      true_class: "True"
+    polar:
+      false_class: "Yes"
+      true_class: "No"
+  date:
+    abbr_day_names: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+    abbr_month_names: ["", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+    day_names: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+    formats:
+      default: "%m/%d/%Y"
+      legal: "%d %B %Y"
+      long: "%B %d, %Y"
+      month: "%B %Y"
+      month_letter: "%d %B %Y"
+      month_name: "%B"
+      short: "%b %d"
+      short_month: "%m/%Y"
+    month_names: ["", "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
+  datetime:
+    distance_in_words:
+      about_x_hours:
+        one: "about 1 hour"
+        other: "about %{count} hours"
+      about_x_months:
+        one: "about 1 month"
+        other: "about %{count} months"
+      about_x_years:
+        one: "about 1 year"
+        other: "about %{count} years"
+      almost_x_years:
+        one: "almost 1 year"
+        other: "almost %{count} years"
+      half_a_minute: "half a minute"
+      less_than_x_minutes:
+        one: "less than a minute"
+        other: "less than %{count} minutes"
+      less_than_x_seconds:
+        one: "less than 1 second"
+        other: "less than %{count} seconds"
+      over_x_years:
+        one: "over 1 year"
+        other: "over %{count} years"
+      x_days:
+        one: "1 day"
+        other: "%{count} days"
+      x_minutes:
+        one: "1 minute"
+        other: "%{count} minutes"
+      x_months:
+        one: "1 month"
+        other: "%{count} months"
+      x_seconds:
+        one: "1 second"
+        other: "%{count} seconds"
+    periods:
+      day: "Daily planification"
+      month: "Monthly planification"
+      today: "Today"
+      week: "Weekly planification"
+      year: "Annual planification"
+    relative_distance_in_words:
+      in_sometime: "in %{distance}"
+      sometime_ago: "%{distance} ago"
+  http:
+    errors:
+      internal_server_error:
+        hint: "The application encounters problems. Administrators have been notified for this problem."
+        title: "We're sorry, but something went wrong"
+      maintenance:
+        hint: "As part of stabilizing our system and improving our quality of service, our platform is currently under maintenance.<br>
+               We apologize in advance for the inconvenience and invite you to log in later.<br>
+               The Ekylibre team"
+        title: "The service is under maintenance"
+      not_found:
+        hint: "You may have mistyped the address or the page may have moved."
+        title: "The page you were looking for doesn't exist"
+      unprocessable_entity:
+        hint: "Maybe you tried to change something you didn't have access to."
+        title: "The change you wanted was rejected"
+  number:
+    currency:
+      format:
+        delimiter: ","
+        format: "%u%n"
+        negative_format: "-%u%n"
+        precision: 2
+        separator: "."
+        unit: "⁈"
+    format:
+      delimiter: ","
+      precision: 3
+      separator: "."
+    human:
+      format:
+        delimiter: ""
+        precision: 1
+    percentage:
+      format:
+        delimiter: ""
+    precision:
+      format:
+        delimiter: ""
+  rank: "#%{number}"
+  support:
+    array:
+      last_word_connector: " and "
+      sentence_connector: "and"
+      two_words_connector: " and "
+      words_connector: ", "
+  time:
+    am: "am"
+    formats:
+      compact: "%m/%d/%Y %H:%M"
+      default: "%b. %d, %Y at %H:%M:%S"
+      full: "%m/%d/%Y %H:%M:%S"
+      long: "%B %d, %Y %H:%M"
+      short: "%d %b %H:%M"
+    js_formats:
+      compact: "MM/DD/YYYY HH:mm"
+      full: "MM/DD/YYYY HH:mm:ss"
+    pm: "pm"

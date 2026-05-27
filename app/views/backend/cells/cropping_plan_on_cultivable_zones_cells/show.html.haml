@@ -1,0 +1,25 @@
+- activities = Activity.of_campaign(@campaigns || []).of_families(:plant_farming).order(:id)
+- if @campaigns && activities && activities.any?
+  :ruby
+    activities_serie = []
+    productions_serie = []
+    supports_serie = []
+    for activity in activities
+      y = activity.net_surface_area(@campaigns).to_d(:hectare).to_s.to_f
+      next if y.zero?
+      color = activity.color
+      activities_serie << { name: activity.name, y: y, color: color }
+      activity.productions.of_campaign(@campaigns).order(:id).each do |production|
+        y = production.net_surface_area.to_d(:hectare).to_s.to_f
+        next if y.zero?
+        productions_serie << { name: production.name, y: y, color: ligthen(color, 0.3) }
+      end
+    end
+
+    series = []
+    series << {name: Activity.model_name.human, data: activities_serie, size: "50%", data_labels: {color: 'white', distance: -30} }
+    series << {name: ActivityProduction.model_name.human, data: productions_serie, size: "75%", inner_size: "50%", data_labels: {enabled: false}}
+
+  = pie_highcharts(series, tooltip: {point_format: '{point.y: 1.1f} Ha'}, title: @campaigns.name)
+- else
+  = no_data

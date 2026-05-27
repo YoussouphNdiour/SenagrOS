@@ -1,0 +1,779 @@
+fra:
+  enumerize:
+    account: #?
+      nature: #?
+        auxiliary: "Auxiliaire" #?
+        general: "General" #?
+    activity:
+      distribution_key:
+        equipment_intervention_duration: "Temps de travail des équipements"
+        gross_margin: "Marge brute"
+        percentage: "Pourcentage"
+      nature:
+        auxiliary: "Auxiliaire"
+        main: "Principale"
+        standalone: "Indépendante"
+      production_campaign:
+        at_cycle_end: "Celle de la fin de cycle (Année N+1)"
+        at_cycle_start: "Celle du début de cycle (Année N)"
+      production_cycle:
+        annual: "Annuelle"
+        perennial: "Pérenne"
+    activity_budget_item:
+      computation_method:
+        per_campaign: "Par campagne"
+        per_production: "Par production"
+        per_working_unit: "Par unité d’œuvre"
+      direction:
+        expense: "Frais"
+        revenue: "Revenu"
+      nature:
+        dynamic: "Dynamique"
+        static: "Statique"
+    activity_inspection_point_nature:
+      category:
+        deformity: "Malformation"
+        disease: "Maladie"
+        none: "Aucune"
+    activity_production:
+      support_nature:
+        animal_group: "Groupe d’animaux"
+        border: "Bordure"
+        buffer: "Zone tampon"
+        cultivation: "Culture"
+        headland_cultivation: "Culture avec tournières"
+        fallow_land: "Jachère"
+        none: "Aucun"
+    activity_tactic:
+      mode:
+        harvested: "Date de récolte prévisionnelle"
+        sowed: "Date de semis prévisionnelle ou de début de campagne annuelle de production"
+    analysis:
+      retrieval_status:
+        controller_error: "Erreur de contrôleur"
+        error: "Erreur"
+        internal_error: "Erreur interne"
+        ok: "OK"
+        sensor_error: "Erreur de capteur"
+    analysis_item:
+      indicator_datatype:
+        boolean: "Booléen"
+        choice: "Choix"
+        decimal: "Décimal"
+        geometry: "Géométrie"
+        integer: "Entier"
+        measure: "Mesure"
+        multi_polygon: "Multi polygone"
+        point: "Point"
+        string: "Chaîne"
+    animal:
+      birth_date_completeness:
+        full_date: "Date complète"
+        month_year: "Mois et année"
+        year: "Année"
+      end_of_life_reason:
+        calculated_date: "Date calculée"
+        cutting_up: "Equarrissage"
+        death: "Mort"
+        slaughter: "Abattage"
+      filiation_status:
+        certified: "Certifié"
+        uncertified: "Non certifié"
+        unknown: "Inconnu"
+    associate:
+      associate_nature:
+        owner: "Associé | Actionnaire - Pleine propriété"
+        usufructuary: "Associé | Actionnaire - Usufruitier"
+        bare_owner: "Associé | Actionnaire - Nu propriétaire"
+    call_message:
+      nature:
+        incoming: "Nouveau"
+        outgoing: "Sortant"
+    call_request:
+      nature:
+        incoming: "Nouveau"
+        outgoing: "Sortant"
+    call_response:
+      nature:
+        incoming: "Nouveau"
+        outgoing: "Sortant"
+    cash:
+      mode:
+        bban: "Relevé d’identité bancaire (RIB)"
+        iban: "IBAN"
+      nature:
+        associate_account: "Compte courant d’associé"
+        bank_account: "Compte bancaire"
+        cash_box: "Caisse"
+    catalog:
+      usage:
+        cost: "Coûts d’usage"
+        purchase: "Achat"
+        sale: "Vente"
+        stock: "Stock"
+        travel_cost: "Déplacement"
+    crop_group:
+      target:
+        land_parcel: Parcelle
+        plant: Culture
+    crumb:
+      nature:
+        hard_start: "Dur début"
+        hard_stop: "Disque arrêt"
+        # pause: "Pause"
+        # point: "Point"
+        resume: "CV"
+        scan: "Balayage"
+        start: "Démarrer"
+        stop: "Arrêtez"
+    custom_field:
+      nature:
+        boolean: "Case à cocher"
+        choice: "Liste de choix"
+        date: "Date"
+        datetime: "Date et heure"
+        decimal: "Chiffre (décimal)"
+        text: "Texte"
+    cvi_cadastral_plant:
+      state:
+        planted: "Plantées"
+        removed_with_authorization: "Arrachées avec autorisation"
+      type_of_occupancy:
+        owner: "Propriétaire"
+        tenant_farming: "Fermage"
+    cvi_land_parcel:
+      state:
+        planted: "Plantées"
+        removed_with_authorization: "Arrachées avec autorisation"
+    cvi_cultivable_zone:
+      land_parcels_status:
+        not_started: "Non commencé"
+        started: "En cours"
+        completed: "Terminé"
+    cvi_statement:
+      state:
+        converted: "Parcellaire converti"
+        to_convert: "Parcellaire à convertir"
+    debt_transfer:
+      nature:
+        purchase_regularization: "Régularisation d'achat"
+        sale_regularization: "Régularisation de vente"
+    delivery:
+      mode:
+        third: "Par le tiers"
+        transporter: "Par tranporteur"
+        us: "Par nos soins"
+    document_template:
+      archiving:
+        first: "Premier du type"
+        first_of_template: "Premier du modèle"
+        last: "Dernier du type"
+        last_of_template: "Dernier du modèle"
+        none: "Aucun du type"
+        none_of_template: "Aucun du modèle"
+    entity:
+      nature:
+        contact: "Contact"
+        organization: "Organisation"
+      client_payment_delay: #?
+        1 week: "à réception" #?
+        30 days: "30 jours" #?
+        30 days, end of month: "30 jours fin du mois" #?
+        60 days: "60 jours" #?
+        60 days, end of month: "60 jours fin du mois" #?
+      supplier_payment_delay: #?
+        1 week: "à réception" #?
+        30 days: "30 jours" #?
+        30 days, end of month: "30 jours fin du mois" #?
+        60 days: "60 jours" #?
+        60 days, end of month: "60 jours fin du mois" #?
+    entity_address:
+      canal:
+        email: "E-mail"
+        fax: "Fax"
+        mail: "Adresse postale"
+        mobile: "Téléphone portable"
+        phone: "Téléphone fixe"
+        website: "Site web"
+    event_participation:
+      state:
+        accepted: "Accepté"
+        informative: "Pour information"
+        refused: "Refusé"
+        waiting: "En attente de réponse"
+    financial_year:
+      state:
+        closed: "Clôturé"
+        closing: "Clôture en cours"
+        closure_in_preparation: "Clôture en préparation"
+        locked: "Verrouillé"
+        opened: "Ouvert"
+      tax_declaration_frequency:
+        monthly: "Mensuelle"
+        none: "Aucune"
+        quaterly: "Trimestrielle"
+        yearly: "Annuelle"
+      tax_declaration_mode:
+        debit: "Débits"
+        none: "Aucun"
+        payment: "Encaissements"
+    fixed_asset:
+      depreciation_method:
+        linear: "Linéaire"
+        none: "Aucune"
+        regressive: "Dégressive"
+        simplified_linear: "Linéaire simplifiée" #?
+      depreciation_period:
+        monthly: "Mensuelle"
+        quarterly: "Trimestrielle"
+        yearly: "Annuelle"
+    gap:
+      direction:
+        loss: "Perte"
+        profit: "Profit"
+    georeading:
+      nature:
+        line: "Ligne" #?
+        linestring: "LINESTRING"
+        point: "Point"
+        polygon: "Polygone"
+    guide:
+      frequency:
+        daily: "Tous les jours"
+        decadely: "Par décade"
+        hourly: "Horaire"
+        monthly: "Mensuel"
+        none: "Aucun"
+        weekly: "Hebdomadaire"
+        yearly: "Annuel"
+    guide_analysis:
+      acceptance_status:
+        errored: "Erroné"
+        failed: "Échoué"
+        passed: "Passé"
+        passed_with_warnings: "Passé avec des avertissements"
+    guide_analysis_point:
+      acceptance_status:
+        errored: "Erroné"
+        failed: "Échoué"
+        passed: "Passé"
+        passed_with_warnings: "Passé avec des avertissements"
+    import:
+      state:
+        aborted: "Avorté"
+        errored: "Erroné"
+        finished: "Fini"
+        in_progress: "En cours"
+        undone: "En attente"
+    intervention:
+      nature:
+        record: "Réalisée"
+        request: "Planifiée"
+      state:
+        done: "Terminée"
+        in_progress: "En cours"
+        rejected: "Rejetée"
+        validated: "Validée"
+    intervention_parameter_reading:
+      indicator_datatype:
+        boolean: "Booléen"
+        choice: "Choix"
+        decimal: "Décimal"
+        geometry: "Géométrie"
+        integer: "Entier"
+        measure: "Mesure"
+        multi_polygon: "Multi polygone"
+        # point: "Point"
+        string: "Chaîne"
+    intervention_parameter_setting:
+      nature:
+        spraying: Réglage de la pulvérisation
+    intervention_participation:
+      state:
+        done: "Terminé"
+        in_progress: "En cours"
+        validated: "Validé"
+    intervention_template:
+      workflow_unit:
+        hectare_per_hour: "Ha/H"
+        plant_per_hour: "Plante ou Pied/H"
+    intervention_working_period:
+      nature:
+        intervention: "Intervention"
+        pause: "Pause"
+        preparation: "Préparation"
+        travel: "Déplacement"
+    journal:
+      nature:
+        bank: "Banque"
+        cash: "Caisse"
+        closure: "Clôture"
+        fixed_assets: "Immobilisations"
+        forward: "Report à nouveaux"
+        payslip: "Paie"
+        purchases: "Achats"
+        result: "Résultat"
+        sales: "Ventes"
+        stocks: "Réserves"
+        various: "Opérations diverses"
+    listing_node:
+      nature:
+        belongs_to: "Appartient à"
+        boolean: "Booléen"
+        column: "Colonne"
+        custom: "Coutume"
+        # datetime: "Datetime"
+        has_many: "A beaucoup"
+        numeric: "Numérique"
+        root: "Racine"
+        string: "Chaîne"
+    loan:
+      insurance_repayment_method:
+        initial: "Fraction du capital initial"
+        to_repay: "Fraction du capital à rembourser restant"
+      repayment_method:
+        constant_amount: "Montant constant"
+        constant_rate: "Pourcentage constant"
+      repayment_period:
+        month: "Mois"
+        semester: "Semestre"
+        trimester: "Trimestre"
+        year: "Année"
+      shift_method:
+        anatocism: "Capitalisation des intérêts (anatocisme)"
+        immediate_payment: "Paiement immédiat des intérêts"
+      state:
+        draft: "Brouillon"
+        ongoing: "En cours"
+        repaid: "Remboursé"
+    map_layer:
+      nature:
+        background: "Fond"
+        overlay: "Calque"
+    analytic_segment:
+      name:
+        activities: "Activités"
+        project_budgets: "Budgets internes"
+        teams: "Équipes"
+        equipments: "Équipements"
+    naming_format_field_land_parcel:
+      field_name:
+        activity: "Activité"
+        activity_rank_number: "N° ordre Parcelle (/Activité)"
+        campaign: "Campagne (YYYY) - ex 2022"
+        campaign_short_year: "Campagne (YY) - ex 22"
+        cultivable_zone_rank_number: "N° ordre Activité (/Zone Cultivable)"
+        cultivable_zone_code: "Code de la zone cultivable"
+        cultivable_zone_name: "Nom de la zone cultivable"
+        production_mode: "Mode de production"
+        season: "Saisonnalité"
+        free_field: "Champ libre"
+    notification:
+      level:
+        error: "Erreur"
+        information: "Information"
+        success: "Succès"
+        warning: "Attention"
+    observation:
+      importance:
+        important: "Importante"
+        normal: "Normale"
+        notice: "Faible"
+    parcel:
+      delivery_mode:
+        third: "Par le tiers"
+        transporter: "Par tranporteur"
+        us: "Par nos soins"
+      nature:
+        incoming: "Entrant"
+        outgoing: "Sortant"
+    parcel_item:
+      delivery_mode:
+        third: "Par le tiers"
+        transporter: "Par tranporteur"
+        us: "Par nos soins"
+    payslip_nature:
+      nature:
+        net_salary: "Salaire net"
+        social_expense: "Charge sociale"
+    plant_counting:
+      nature:
+        germination: "À la levée"
+        sowing: "Au semis"
+    preference:
+      nature:
+        accounting_system: "Système de comptabilité"
+        boolean: "Booléen"
+        country: "Pays"
+        currency: "Devise"
+        decimal: "Décimal"
+        integer: "Entier"
+        language: "Langue"
+        record: "Enregistrement"
+        spatial_reference_system: "Système de référence spatiale"
+        string: "Chaîne"
+    product:
+      type_of_occupancy:
+        owner: "Propriétaire"
+        rent: "Fermage"
+        sharecropper: "Métayage"
+    product_enjoyment:
+      nature:
+        other: "Autre"
+        own: "Posséder"
+        unknown: "Inconnu"
+    product_linkage:
+      nature:
+        available: "Disponible"
+        occupied: "Occupé"
+        unavailable: "Indisponible"
+      point:
+        front: "Avant"
+        rear: "Arrière"
+    product_localization:
+      nature:
+        exterior: "Extérieur"
+        interior: "Intérieur"
+        transfer: "Transfert"
+    product_membership:
+      nature:
+        exterior: "Extérieur"
+        interior: "Intérieur"
+    product_movement:
+      description:
+        birth: "Naissance"
+        butchery: "Boucherie"
+        consumption: "Consommation"
+        death: "Mort"
+        loan: "Pension"
+        purchase: "Achat"
+        sale: "Vente"
+    product_nature:
+      population_counting:
+        decimal: "Décimal"
+        integer: "Entier"
+        unitary: "Unitaire"
+      type:
+        VariantTypes::AnimalType: "Animaux"
+        VariantTypes::ArticleType: "Articles stockables"
+        VariantTypes::CropType: "Cultures"
+        VariantTypes::EquipmentType: "Équipements"
+        VariantTypes::ServiceType: "Services"
+        VariantTypes::WorkerType: "Équipiers"
+        VariantTypes::ZoneType: "Zones"
+    product_nature_category:
+      pictogram:
+        bank: "Banque"
+        barn: "Grange"
+        beaker: "Gobelet"
+        bolt: "Boulon"
+        book: "Livre"
+        bug: "Punaise"
+        building: "Bâtiment"
+        car: "Voiture"
+        cc: "Cc"
+        cow: "Vache"
+        credit_card: "Carte de crédit"
+        desktop: "Bureau"
+        drop: "Laissez tomber"
+        # fax: "Fax"
+        fish: "Poisson"
+        food: "Aliments"
+        gift: "Cadeau"
+        group: "Groupe"
+        home: "Accueil"
+        land_parcels: "Les parcelles"
+        laptop: "Portable"
+        leaf: "Feuille"
+        legal: "Légal"
+        lemon: "Citron"
+        light_bulb: "Ampoule"
+        male: "Mâle"
+        matter: "Matière"
+        # medkit: "Medkit"
+        money: "Argent"
+        mushroom: "Champignon"
+        phone: "Téléphone"
+        pill: "Pilule"
+        plane: "Avion"
+        road: "Route"
+        subscription: "Abonnement"
+        tasks: "Les tâches"
+        tractor: "Tracteur"
+        truck: "Un camion"
+        umbrella: "Parapluie"
+        undefined: "Indéfini"
+        user: "Utilisateur"
+        wheat: "Blé"
+        wrench: "Clé"
+      type:
+        VariantCategories::AnimalCategory: "Animaux"
+        VariantCategories::ArticleCategory: "Articles"
+        VariantCategories::CropCategory: "Cultures"
+        VariantCategories::EquipmentCategory: "Équipements"
+        VariantCategories::ServiceCategory: "Services"
+        VariantCategories::WorkerCategory: "Équipiers"
+        VariantCategories::ZoneCategory: "Zones"
+    product_nature_category_taxation:
+      usage:
+        purchase: "Achat"
+        sale: "Vente"
+    product_nature_variant:
+      default_unit_name:
+        joule: "Joule"
+        kilogram: "Kilogramme"
+        liter: "Litre"
+        meter: "Mètre"
+        second: "Seconde"
+        square_meter: "Mètre carré"
+        unity: "Unité"
+      type:
+        Variants::AnimalVariant: "Animaux"
+        Variants::ArticleVariant: "Articles stockables"
+        Variants::Articles::FarmProductArticle: "Produits de l'exploitation"
+        Variants::Articles::FertilizerArticle: "Engrais"
+        Variants::Articles::PlantMedicineArticle: "Produits phytosanitaires"
+        Variants::Articles::SeedAndPlantArticle: "Semences et plants"
+        Variants::CropVariant: "Cultures"
+        Variants::EquipmentVariant: "Équipements"
+        Variants::Equipments::FixedEquipmentEquipment: "Équipements fixes"
+        Variants::Equipments::MotorizedEquipmentEquipment: "Équipements motorisés"
+        Variants::Equipments::ToolEquipment: "Outils"
+        Variants::Equipments::TrailedEquipmentEquipment: "Équipements tractés"
+        Variants::ServiceVariant: "Services"
+        Variants::WorkerVariant: "Équipiers"
+        Variants::ZoneVariant: "Zones"
+    product_nature_variant_reading:
+      indicator_datatype:
+        boolean: "Booléen"
+        choice: "Choix"
+        decimal: "Décimal"
+        geometry: "Géométrie"
+        integer: "Entier"
+        measure: "Mesure"
+        multi_polygon: "Multi polygone"
+        # point: "Point"
+        string: "Chaîne"
+    product_ownership:
+      nature:
+        other: "Autre"
+        own: "Posséder"
+        unknown: "Inconnu"
+    product_reading:
+      indicator_datatype:
+        boolean: "Booléen"
+        choice: "Choix"
+        decimal: "Décimal"
+        geometry: "Géométrie"
+        integer: "Entier"
+        measure: "Mesure"
+        multi_polygon: "Multi polygone"
+        # point: "Point"
+        string: "Chaîne"
+    project:
+      nature:
+        direct_earning: "Profit"
+        indirect_earning: "Coût"
+    project_task:
+      billing_method:
+        elapsed_time: "Temps passé"
+        fixed: "Fixe"
+      forecast_duration_unit:
+        day: "Jour"
+        hour: "Heure"
+    purchase:
+      payment_delay: #?
+        1 week: "à réception" #?
+        30 days: "30 jours" #?
+        30 days, end of month: "30 jours fin du mois" #?
+        60 days: "60 jours" #?
+        60 days, end of month: "60 jours fin du mois" #?
+      reconciliation_state:
+        accepted: "Accepté"
+        reconcile: "Rapproché"
+        to_reconcile: "À rapprocher"
+      tax_payability:
+        at_invoicing: "À la facturation (débit)"
+        at_paying: "Au paiement"
+    purchase_nature: #?
+      nature: #?
+        payslip: "Fiche de paie" #?
+        purchase: "Achat" #?
+    sale_contract_item:
+      quantity_unit:
+        day: "Jour"
+        fixed: "Fixe"
+        hour: "Heure"
+    sale:
+      payment_delay:
+        1 week: "à réception"
+        30 days: "30 jours"
+        30 days, end of month: "30 jours fin du mois"
+        60 days: "60 jours"
+        60 days, end of month: "60 jours fin du mois"
+    purchase_order: #?
+      command_mode: #?
+        fax: "Fax" #?
+        letter: "Courrier" #?
+        mail: "Email" #?
+        market_place: "Boutique WEB" #?
+        oral: "Verbal" #?
+        sms: "SMS" #?
+    registered_phytosanitary_product:
+      state:
+        authorized: "Autorisé"
+        inherited: "Hérité"
+        withdrawn: "Retiré"
+    registered_phytosanitary_usage:
+      state:
+        authorized: "Autorisé"
+        provisional: "Provisoire"
+        withdrawn: "Retiré"
+    ride:
+      nature:
+        work: "Travail"
+        road: "Route"
+    ride_set:
+      nature:
+        work: "Travail"
+        road: "Route"
+    saas_subscriptions:
+      status:
+        active: "Actif"
+        past_due: "En retard"
+        unpaid: "Impayée"
+        canceled: "Annulée"
+        incomplete: "Incomplete"
+        incomplete_expired: "Incomplete expirée"
+        trialing: "Période d'essai"
+    sale: #?
+      payment_delay: #?
+        1 week: "à réception" #?
+        30 days: "30 jours" #?
+        30 days, end of month: "30 jours fin du mois" #?
+        60 days: "60 jours" #?
+        60 days, end of month: "60 jours fin du mois" #?
+    sale_item: #?
+      compute_from: #?
+        pretax_amount: "Montant avant impôts" #?
+        unit_pretax_amount: "Unité montant avant impôts" #?
+    sale_nature: #?
+      payment_delay: #?
+        1 week: "à réception" #?
+        30 days: "30 jours" #?
+        30 days, end of month: "30 jours fin du mois" #?
+        60 days: "60 jours" #?
+        60 days, end of month: "60 jours fin du mois" #?
+    sensor:
+      retrieval_mode:
+        integration: "Intégration"
+        listening: "Direct"
+        requesting: "Automatique"
+    sequence:
+      period:
+        cweek: "Semaine"
+        month: "Mois"
+        number: "Pas de périodicité"
+        year: "Année"
+      usage:
+        affairs: "Affaires"
+        analyses: "Analyses"
+        animals: "Animaux"
+        campaigns: "Campagnes de productions"
+        cash_transfers: "Virements internes"
+        contracts: "Contrats"
+        debt_transfers: "Transferts de dettes"
+        deliveries: "Livraisons"
+        deposits: "Remises en banque"
+        documents: "Documents"
+        entities: "Tiers"
+        fixed_assets: "Immobilisations"
+        gaps: "Écarts"
+        incoming_payments: "Encaissements"
+        inspections: "Agréages"
+        interventions: "Interventions"
+        inventories: "Inventaires"
+        opportunities: "Opportunités"
+        outgoing_payment_lists: "Listes de paiement sortant"
+        outgoing_payments: "Décaissements"
+        parcels: "Colis"
+        payslips: "Salaires"
+        payslip_contributions: "Charges sociales"
+        plant_countings: "Comptage des plantes"
+        plants: "Cultures"
+        product_nature_categories: "Catégories comptables"
+        product_nature_variants: "Articles"
+        product_natures: "Profils fonctionnels"
+        products: "Produits"
+        purchases: "Achats"
+        ride: "Sections d'un trajet"
+        ride_sets: "Trajets géolocalisés"
+        sales: "Ventes"
+        sale_contracts: "Contrats de vente"
+        sales_invoices: "Factures de ventes"
+        subscriptions: "Abonnements"
+        tax_declarations: "Déclarations fiscales"
+        tax_payments: "Paiements TVA"
+        wine_incoming_harvest: "Réception de vendange"
+    synchronization_operation:
+      operation_name:
+        authenticate: "Authentification"
+        get_inventory: "Récupération de l'inventaire"
+        get_urls: "Récupération des URL"
+      state:
+        aborted: "Avorté"
+        errored: "Erroné"
+        finished: "Fini"
+        in_progress: "En cours"
+        undone: "En attente"
+    task:
+      nature:
+        incoming_call: "Appel entrant"
+        incoming_email: "Courriel entrant"
+        incoming_mail: "Courrier entrant"
+        outgoing_call: "Appel sortant"
+        outgoing_email: "Courriel sortant"
+        outgoing_mail: "Courrier sortant"
+      state:
+        doing: "En cours"
+        done: "Terminé"
+        todo: "À faire"
+    tax_declaration:
+      mode:
+        debit: "Débit"
+        payment: "Paiement"
+    tax_payment:
+      nature:
+        advance_payment: "Acompte"
+        incoming_payment: "Remboursement"
+        outgoing_payment: "Paiement"
+      state:
+        draft: "Brouillon"
+        validated: "Validée"
+    tracking:
+      usage_limit_nature:
+        best_before: "Date Limite d’Utilisation Optimale (DLUO)"
+        no_limit: "Aucune limite"
+        used_by: "Date Limite de Consommation (DLC)"
+    unit:
+      dimension:
+        none: "Aucune"
+        volume: "Volume"
+        mass: "Masse"
+        surface_area: "Surface"
+        distance: "Distance"
+        time: "Temps"
+        energy: "Energie"
+    version:
+      event:
+        create: "Créer"
+        destroy: "Détruire"
+        update: "Mettre à jour"
+    worker_contract:
+      distribution_key:
+        gross_margin: "Marge brute"
+        percentage: "Pourcentage"
+      nature:
+        permanent_worker: "Main d'oeuvre permanente"
+        temporary_worker: "Main d'oeuvre temporaire"
+        external_staff: "Main d'oeuvre extérieure"

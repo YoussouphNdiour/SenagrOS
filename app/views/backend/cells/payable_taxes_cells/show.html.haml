@@ -1,0 +1,29 @@
+- taxes = Tax.all
+- if taxes.any?
+  :ruby
+    stopped_at = Time.zone.now
+    started_at = (stopped_at - 1.year).beginning_of_month
+
+    series = []
+    date = started_at
+    periods = {}
+    while date < stopped_at
+      periods[date.l(format: "%b %Y")] = [date, date.end_of_month]
+      date = date + 1.month
+    end
+
+    taxes.each do |tax|
+      next unless tax.purchase_items.any? || tax.sale_items.any?
+      data = []
+
+      periods.each do |_name, period|
+        sum_vat_collected = tax.sale_items.between(period[0], period[1]).reorder('sales.invoiced_at').map(&:taxes_amount).compact.sum
+        sum_vat_deducted = tax.purchase_items.between(period[0], period[1]).reorder('purchases.invoiced_at').map(&:taxes_amount).compact.sum
+        data << (sum_vat_collected.to_s.to_f - sum_vat_deducted.to_s.to_f)
+      end
+      series << {name: tax.short_label, data: data }
+    end
+
+  = spline_highcharts(series, legend: { align: 'center', border_width: 0 }, x_axis: { title: {text: :months.tl}, categories: periods.keys}, y_axis: {title: {text: :amounts_in_currency.tl(currency: Preference[:currency])}})
+- else
+  = no_data

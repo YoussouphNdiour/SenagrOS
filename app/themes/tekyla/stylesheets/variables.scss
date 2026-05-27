@@ -1,0 +1,181 @@
+@import "agric/list";
+$symbolic-icons: $agric-icons;
+
+$golden-ratio: 1.61803398875;
+$default-ratio: $golden-ratio;
+
+// Basic colors
+$white: #FFFFFF !default;
+$black: #000000 !default;
+$blue-grey: #607D8B !default;
+
+// Font sizes
+$fs-ratio:   1.2 !default;
+$fs-small:     11px !default;
+$fs-normal:    13px !default;
+$fs-large:     18px !default;
+$fs-medium:    20px !default;
+$fs-huge:      27px !default;
+$fs-very-huge: 41px !default;
+$fs-awesome:   61px !default;
+
+// Line heights
+$lh-ratio: 1.618 !default;
+$lh-small:     round($lh-ratio * $fs-small);
+$lh-normal:    round($lh-ratio * $fs-normal);
+$lh-large:     round($lh-ratio * $fs-large);
+$lh-huge:      round($lh-ratio * $fs-huge);
+$lh-very-huge: round($lh-ratio * $fs-very-huge);
+$lh-awesome:   round($lh-ratio * $fs-awesome);
+
+// Fingertip
+$fingertip-height: 32px !default;
+$fingertip-height: 2 * round($fingertip-height / 2) !default;
+
+// Colors
+$base-color:         #688ED8 !default;
+$invalid-color:      #D81E08 !default;
+$caution-color:      #FF8811 !default;
+$success-color:      #65A907 !default;
+$highlight-color:    #FFEE80 !default;
+$desktop-background: mix($black, $white, 3%) !default;
+$neutral-color:      mix($black, $white, 45%) !default;
+$text-color:         mix($black, $white, 80%) !default;
+$mapbar-background-color: $white !default;
+$active-color:       $base-color !default;
+$link-color:         $active-color;
+$active-link-color:  darken($base-color, 10%) !default;
+$title-color:        darken($base-color, 40%) !default;
+$selection-color:  $active-color;
+$base-font-color:  $text-color !default;
+$base-font-reversed-color: $white !default;
+$default-border-color: #DDD;
+$lighten-border-color: mix($black, $white, 6%) !default;
+
+// Basic colors
+$darkened-white: mix($black, $white, 2%) !default;
+$lightened-black: mix($black, $white, 60%) !default;
+$lightened-grey: mix($black, $white, 30%) !default;
+$darkened-grey: mix($black, $white, 40%) !default;
+$darkened-blue-grey: darken($blue-grey, 10%) !default;
+
+$brand-primary: $base-color;
+$brand-success: $success-color;
+$brand-info: $neutral-color;
+$brand-warning: $caution-color;
+$brand-danger: $invalid-color;
+
+$background-debit-balance: #FCFCFC;
+$background-credit-balance: #f2f5f7;
+
+
+$hover-transparency: 0.92 !default;
+$hover-mask: transparentize($neutral-color, $hover-transparency);
+
+$neutral-background: change-color($neutral-color, $lightness: 94%) !default;
+$input-background:   $desktop-background;
+$light-color: mix($base-color, $desktop-background, 50%);
+
+// Text-shadow
+$default-text-shadow-color: mix($black, $white, 33.33%);
+$default-text-shadow-h-offset: 0px;
+$default-text-shadow-v-offset: 0px;
+$default-text-shadow-blur: 1px;
+$default-text-shadow-spread: false;
+
+// Menu colors
+$menu-background: mix($neutral-background, $white, 55%) !default;
+$menu-border-color: mix($menu-background, $black, 90%);
+$menu-border-width: floor($fs-normal / 10);
+$menu-border: $menu-border-width solid $menu-border-color;
+$menu-width: $fs-normal * 15;
+$menu-padding: 3 * $menu-border-width;
+$menu-height:  $fingertip-height;
+$menu-text-height: 2 * round($default-ratio * $fs-normal / 2);
+$menu-item-vertical-padding: ($menu-height - $menu-text-height)/2;
+$menu-item-horizontal-padding: round($default-ratio * $menu-item-vertical-padding);
+
+
+$default-border-radius: round($fs-normal * 0.2);
+/* Variation from center to  */
+$default-lightness-variation: 3%;
+$default-gap: round($fs-normal * 0.55);
+$cell-background: mix($desktop-background, $base-color, 82%);
+$cell-background-current: mix($desktop-background, $base-color, 62%);
+
+// Page
+$narrow-page-width: 120ex;
+
+// Forms
+$input-border: $menu-border-width solid mix($desktop-background, $neutral-color, 60%);
+$label-width: 25% !default;
+$large-label-width: 45% !default;
+
+// Tables
+$row-border: $menu-border-width solid darken($menu-background, 2 * $default-lightness-variation);
+
+// Map
+$map-button-size: round(2 * $fs-normal);
+
+// Buttons
+$buttons-aliases: ("abort" "times") ("action" "cog") ("backup" "backward") ("beaker" "flask") ("cancel" "undo") ("checked" "check") ("close" "lock") ("column" "columns") ("confirm" "check") ("configure" "wrench") ("correct" "edit") ("destroy" "times") ("create" "plus") ("delete" "times") ("divide" "expand") ("down" "arrow-down") ("drop" "tint") ("duplicate" "copy") ("duplication_list" "copy") ("edit" "edit") ("exclude" "minus-circle") ("extract" "download") ("filter" "filter") ("firefox" "chevron-down") ("help" "life-ring") ("import" "upload") ("include" "plus-circle") ("index" "bars") ("invoice" "file-text-o") ("letter" "pencil") ("load" "refresh") ("logout" "power-off") ("mail" "envelope") ("merge" "compress") ("new" "plus") ("pick" "plus") ("play" "play") ("point" "check") ("print" "print") ("reconciliation" "compress") ("reflect" "cog") ("refuse" "times") ("register" "plus") ("renew" "retweet") ("reopen" "unlock") ("reset" "refresh") ("restore" "chevron-left") ("ship" "truck") ("show" "print") ("sort" "sort") ("suspend" "pause") ("table" "table") ("takeover" "play") ("unchecked" "square-o") ("unmark" "eraser") ("up" "arrow-up") ("update" "edit") ("increment" "plus-circle") ("decrement" "minus-circle") ("remove" "clear")
+
+                                   ("delay" "timelapse") ("document" "briefcase") ("economics" "line-chart") ("general-informations" "book") ("sales" "bar-chart") ("stock" "exchange") ("stocks" "warehouse-full") ("movement" "exchange") ("accountancy" "calculator") ("coordinates" "map-marker") ("amount" "money") ("vegetable" "wheat") ("genealogy" "sitemap") ("animal" "cow") ("entity" "user") ("entities" "people") ("indicators" "dashboard") ("analytics" "cogs") ("measure_options" "dashboard") ("string_options" "comment") ("decimal_options" "circle-o") ("choice_options" "list") ("products" "wheat") ("identification" "barcode") ("animal_identification" "barcode") ("productions" "farm") ("nature" "wrench") ("variant" "sitemap") ("subscriptions" "stack-exchange") ("casting" "bullhorn") ("people" "group") ("next" "chevron-right") ("previous" "chevron-left")
+                                    ("observation" "comment") ("human_resources" "user-cowboy") ("event" "calendar") ("task" "check-square-o") ("entity-link" "link") ("incoming-payment" "credit-card") ("outgoing-payment" "credit-card") ("issue" "bug") ("incoming-call" "call") ("outgoing-call" "phone") ("incoming-email" "envelope-o") ("outgoing-email" "envelope") ("quote" "calculator") ("sale-opportunity" "file-text") ("sale" "bar-chart") ("purchase" "shopping-cart") ("product-ownership" "key") ("product-localization" "map-marker") ("product-phase" "label") ("attachment" "paperclip")
+                                    ("map" "map-marker") ("chart" "bar-chart") ("timeline" "history") ("cobbles" "view-stream") ("sell" "bar-chart") ("settings" "wrench") ("shipment" "local-shipping") ("schedulings" "calendar") ("tools" "magic") ("purchases" "shopping-cart") ("purchase-order" "shopping-cart") ("purchase-invoice" "money") ("purchase-payment" "credit-card") ("reception" "truck") ("relationships" "people") 
+
+                                    ("veterinary_booklet" "medkit") ("animal_husbandry_register" "cow") ("doer" "male") ("exchange_accountancy_file_fr" "file") ("input" "matter") ("manure_management_plan" "land-parcels") ("provisional_manure_management_plan" "land-parcels")  ("vine_phytosanitary_register" "flask") ("general_ledger" "money") ("income_statement" "money")  ("tool" "tractor") ("wine_bottling_register" "bottles") ("wine_detention_register" "flask") ("wine_manipulation_register" "bottle");
+
+$buttons-states: hover whited active disabled normal;
+$buttons-radius: $default-border-radius;
+$button-vertical-padding: round($fs-normal*0.20) !default;
+$button-horizontal-padding: round($fs-normal*0.70) !default;
+$button-line-height: round($lh-normal) !default;
+$button-content-height: $button-vertical-padding * 2 + $button-line-height;
+$button-height: $button-content-height + $menu-border-width * 2;
+$chat-btn-height: 60px;
+
+
+$all-aliases: $buttons-aliases;
+
+$passive-bg: $menu-background;
+$active-bg: $base-color;
+
+// Font families
+$sans-font-family: 'Lato', 'Open Sans', 'Droid Sans', 'Liberation Sans', Helvetica, sans-serif !default;
+$condensed-font-family: 'Lato', 'Open Sans Condensed', 'Open Sans', 'Droid Sans', 'Liberation Sans', Helvetica, sans-serif !default;
+$awesome-font-family: $condensed-font-family;
+$base-font-family:   $sans-font-family !default;
+$header-font-family: $base-font-family;
+$body-font-family:   $base-font-family;
+
+// Other framework compatibilities
+$body-font-size: $fs-normal;
+$em-base: $fs-normal;
+$primary-color: $base-color;
+$topbar-height: $fingertip-height !default;
+$topbar-icon-size: round($fs-normal * 1.2);
+$global-radius: $default-border-radius;
+$include-html-classes: false;
+
+$font-size-small: $fs-small;
+$font-size-base: $fs-normal;
+$font-size-large: $fs-large;
+
+// Screen widths
+$small-screen:   768px;
+$mini-screen:   1024px;
+$medium-screen: 1280px;
+$large-screen:  1440px;
+
+// Layouts
+$zen-horizontal-padding: 8vw;
+$zen-vertical-padding: 8vh;
+$zen-header-font-size: $fs-very-huge;
+$zen-header-line-height: $lh-very-huge;
+$zen-height: 100vh - 2 * $zen-vertical-padding;
+$zen-width: 100vw - 2 * $zen-horizontal-padding;
+
+$fixed-footer-line-height: 30px;
+
+@import "bootstrap/variables";

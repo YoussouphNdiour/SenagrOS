@@ -1,0 +1,101 @@
+"xcrun clang -o conftest -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/universal-darwin24 -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/backward -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0 -I. -I/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/include -I/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libassuan/2.5.6/include -I/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT    -g -Os -pipe -DHAVE_GCC_ATOMIC_BUILTINS -fno-typed-memory-operations -fno-typed-cxx-new-delete -DUSE_FFI_CLOSURE_ALLOC conftest.c  -L. -L/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/lib -L/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/lib -L/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libassuan/2.5.6/lib -L/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/lib -L. -L/AppleInternal/Library/BuildRoots/4b66fb3c-7dd0-11ef-b4fb-4a83e32a47e1/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.1.Internal.sdk/usr/local/lib    /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/lib/libgpgme.a /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libassuan/2.5.6/lib/libassuan.a /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/lib/libgpg-error.a -lruby.2.6   "
+ld: warning: search path '/AppleInternal/Library/BuildRoots/4b66fb3c-7dd0-11ef-b4fb-4a83e32a47e1/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.1.Internal.sdk/usr/local/lib' not found
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: int main(int argc, char **argv)
+4: {
+5:   return 0;
+6: }
+/* end */
+
+"xcrun clang -o conftest -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/universal-darwin24 -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/backward -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0 -I. -I/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/include -I/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libassuan/2.5.6/include -I/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT    -g -Os -pipe -DHAVE_GCC_ATOMIC_BUILTINS -fno-typed-memory-operations -fno-typed-cxx-new-delete -DUSE_FFI_CLOSURE_ALLOC conftest.c  -L. -L/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/lib -L/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/lib -L/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libassuan/2.5.6/lib -L/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/lib -L. -L/AppleInternal/Library/BuildRoots/4b66fb3c-7dd0-11ef-b4fb-4a83e32a47e1/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.1.Internal.sdk/usr/local/lib    /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/lib/libgpgme.a /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libassuan/2.5.6/lib/libassuan.a /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/lib/libgpg-error.a -lruby.2.6 -Wl,-Bstatic -lgpgme -Wl,-Bdynamic  "
+ld: unknown options: -Bstatic -Bdynamic 
+clang: error: linker command failed with exit code 1 (use -v to see invocation)
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: int main(void) { return 0; }
+/* end */
+
+have_header: checking for gpgme.h... -------------------- yes
+
+"xcrun clang -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/universal-darwin24 -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/backward -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0 -I. -I/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/include -I/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libassuan/2.5.6/include -I/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT    -g -Os -pipe -DHAVE_GCC_ATOMIC_BUILTINS -fno-typed-memory-operations -fno-typed-cxx-new-delete -DUSE_FFI_CLOSURE_ALLOC   -c conftest.c"
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <gpgme.h>
+/* end */
+
+--------------------
+
+checking for gpgme >= 1.1.3... -------------------- yes
+
+"xcrun clang -o conftest -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/universal-darwin24 -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/backward -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0 -I. -I/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/include -I/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libassuan/2.5.6/include -I/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT    -g -Os -pipe -DHAVE_GCC_ATOMIC_BUILTINS -fno-typed-memory-operations -fno-typed-cxx-new-delete -DUSE_FFI_CLOSURE_ALLOC conftest.c  -L. -L/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/lib -L/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/lib -L/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libassuan/2.5.6/lib -L/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/lib -L. -L/AppleInternal/Library/BuildRoots/4b66fb3c-7dd0-11ef-b4fb-4a83e32a47e1/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.1.Internal.sdk/usr/local/lib    /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/lib/libgpgme.a /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libassuan/2.5.6/lib/libassuan.a /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/lib/libgpg-error.a -lruby.2.6   "
+ld: warning: search path '/AppleInternal/Library/BuildRoots/4b66fb3c-7dd0-11ef-b4fb-4a83e32a47e1/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.1.Internal.sdk/usr/local/lib' not found
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <gpgme.h>
+4: #include <stdlib.h>
+5: int main (void) {
+6:   return gpgme_check_version ("1.1.3") == NULL;
+7: }
+/* end */
+
+./conftest
+--------------------
+
+have_func: checking for gpgme_op_export_keys()... -------------------- yes
+
+"xcrun clang -o conftest -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/universal-darwin24 -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/backward -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0 -I. -I/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/include -I/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libassuan/2.5.6/include -I/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT    -g -Os -pipe -DHAVE_GCC_ATOMIC_BUILTINS -fno-typed-memory-operations -fno-typed-cxx-new-delete -DUSE_FFI_CLOSURE_ALLOC conftest.c  -L. -L/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/lib -L/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/lib -L/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libassuan/2.5.6/lib -L/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/lib -L. -L/AppleInternal/Library/BuildRoots/4b66fb3c-7dd0-11ef-b4fb-4a83e32a47e1/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.1.Internal.sdk/usr/local/lib    /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/lib/libgpgme.a /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libassuan/2.5.6/lib/libassuan.a /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/lib/libgpg-error.a -lruby.2.6 /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/lib/libgpgme.a /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libassuan/2.5.6/lib/libassuan.a /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/lib/libgpg-error.a  "
+conftest.c:14:57: error: use of undeclared identifier 'gpgme_op_export_keys'
+   14 | int t(void) { void ((*volatile p)()); p = (void ((*)()))gpgme_op_export_keys; return !p; }
+      |                                                         ^
+1 error generated.
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return 0;
+13: }
+14: int t(void) { void ((*volatile p)()); p = (void ((*)()))gpgme_op_export_keys; return !p; }
+/* end */
+
+"xcrun clang -o conftest -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/universal-darwin24 -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/backward -I/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0 -I. -I/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/include -I/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libassuan/2.5.6/include -I/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/include -D_XOPEN_SOURCE -D_DARWIN_C_SOURCE -D_DARWIN_UNLIMITED_SELECT -D_REENTRANT    -g -Os -pipe -DHAVE_GCC_ATOMIC_BUILTINS -fno-typed-memory-operations -fno-typed-cxx-new-delete -DUSE_FFI_CLOSURE_ALLOC conftest.c  -L. -L/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/lib -L/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/lib -L/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libassuan/2.5.6/lib -L/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/lib -L. -L/AppleInternal/Library/BuildRoots/4b66fb3c-7dd0-11ef-b4fb-4a83e32a47e1/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.1.Internal.sdk/usr/local/lib    /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/lib/libgpgme.a /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libassuan/2.5.6/lib/libassuan.a /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/lib/libgpg-error.a -lruby.2.6 /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/lib/libgpgme.a /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libassuan/2.5.6/lib/libassuan.a /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/lib/libgpg-error.a  "
+ld: warning: ignoring duplicate libraries: '/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/lib/libgpgme.a', '/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libassuan/2.5.6/lib/libassuan.a', '/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/lib/libgpg-error.a'
+ld: warning: search path '/AppleInternal/Library/BuildRoots/4b66fb3c-7dd0-11ef-b4fb-4a83e32a47e1/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.1.Internal.sdk/usr/local/lib' not found
+checked program was:
+/* begin */
+ 1: #include "ruby.h"
+ 2: 
+ 3: /*top*/
+ 4: extern int t(void);
+ 5: int main(int argc, char **argv)
+ 6: {
+ 7:   if (argc > 1000000) {
+ 8:     int (* volatile tp)(void)=(int (*)(void))&t;
+ 9:     printf("%d", (*tp)());
+10:   }
+11: 
+12:   return 0;
+13: }
+14: extern void gpgme_op_export_keys();
+15: int t(void) { gpgme_op_export_keys(); return 0; }
+/* end */
+
+--------------------
+

@@ -1,0 +1,7 @@
+development:
+ :concurrency: 5
+:queues:
+  - [duke, 10]
+  - [critical, 9]
+  - [default, 2]
+  - [low, 1]

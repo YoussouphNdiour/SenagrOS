@@ -1,0 +1,65 @@
+- main_toolbar name: :main do |t|
+  = t.export(:animal_list, key: Time.zone.now.to_s, resource: @animals, target: "_blank")
+  = t.menu :new.tl do |menu|
+    - menu.item :add_entrance.tl, { controller: :receptions, action: :new }, data: { toggle: 'dialog', refresh: true }
+    - menu.item :add_exit.tl, { controller: :shipments, action: :new }, data: { toggle: 'dialog', refresh: true }
+    - menu.separator
+    - menu.item :add_animals.tl, { controller: :animals, action: :new }, data: { toggle: 'dialog', refresh: true }
+
+  #animals-interventions-menu.btn-group{data: {matching_interventions_path: matching_interventions_backend_animals_path, hide_on_list: true}}
+    = render partial: 'interventions_menu', locals: {t: t}
+
+  .btn-group{data: {hide_on_list: true}}
+    = t.new icon: false, label: :all.tl, data: { toggle: 'item-scope', scoped_items: 'all' }, href: ''
+    = t.new icon: false, label: :available.tl, data: { toggle: 'item-scope', scoped_items: 'now' }, href: '', class: 'active'
+
+
+= janus do |j|
+  - j.face :list do
+    = kujaku do |k|
+      - k.text
+      -# k.choice :all, :healthy, :illness
+      - k.helper :journal_period_crit
+      - k.helper do
+        %div.label-container
+          %label= Animal.human_attribute_name(:variant)
+        = select_tag(:variant_id, options_for_select([[]] + ProductNatureVariant.of_variety(:animal).order(:name).collect{|u| [u.name, u.id]}, params[:variant_id]))
+    = main_list
+
+  - j.face :column do
+    .golumn.loading{data: {golumns: 'animal', keep_animals_path: keep_backend_animals_path }}
+
+      .golumn-loading
+      .golumn-columns
+        .golumn-columns-container{data: { bind: "template: {name: 'golumn-column-template', foreach: groups}" }}
+        .golumn-items-counter{data: { bind: "visible: counter, text: counter" }}
+
+      %script#golumn-column-template{type: 'text/html'}
+        .golumn-column
+          .golumn-column-header{data: {bind: 'checkbox: toggleItems'}}
+            .golumn-column-handle
+              %span.golumn-column-title{data: {bind: 'text: name'}}
+              = link_to '', nil, class: :edit, data: { bind: 'attr: { href: edit_path }', toggle: 'dialog', refresh: true }
+              %span.badge.golumn-column-badge{data: { bind: 'text: count'}}
+          .golumn-column-body
+            .add-container.dropzone{data: {bind: "droppable: {active: droppable, options: { hoverClass: 'container-drop-hover', tolerance: 'intersect' , scope: 'items'}}, visible: droppable" }}
+              %button.btn.btn-link{type: 'button'}
+                %i.icon.icon-plus.text-muted
+            %ul.golumn-groups{data: { bind: "template: { name: 'golumn-group-template', foreach: containers }"}}
+
+      %script#golumn-group-template{type: 'text/html'}
+        %li.golumn-group{data: {bind: "droppable: {active: droppable, options: { hoverClass: 'container-drop-hover', tolerance: 'intersect' , scope: 'items'} }" }}
+          .golumn-group-header{data: {bind: 'checkbox: toggleItems'}}
+            .golumn-group-actions
+              .collapser{data: { bind: "click: toggle, css: {'active': !hidden()}"}}
+            %span.golumn-group-title{data: { bind: 'text: name'}}
+            %span.badge.golumn-group-badge{data: { bind: 'text: count'}}
+          .golumn-group-body{data: { bind: "css: {'hide':hidden}"}}
+            %div{data: { bind: "template: { name: 'golumn-item-template', foreach: items }"}}
+
+      %script#golumn-item-template{type: 'text/html'}
+        .golumn-item{data: { bind: "draggable: {active: checked, options: {cursor: 'move', opacity: 1, revert: false, cursorAt: { left: 65 }, scrollSensitivity: 65, scrollSpeed: 30, scope: 'items'}}, checkbox: $data.checked, css: stateClass"}}
+          .golumn-item-actions
+            = link_to '', nil, class: :details, data: { bind: 'attr: { href: show_path }', toggle: 'dialog' }
+          %i.sex.icon{data: {bind: 'css: $data.sexClass'}}
+          %span.golumn-item-title{data: { bind: 'text: $data.name'}}

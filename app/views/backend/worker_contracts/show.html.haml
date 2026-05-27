@@ -1,0 +1,43 @@
+- main_toolbar do |t|
+  = t.edit resource
+
+= main_informations attachment: true do
+  .big-infos
+    .med-info.important
+      %span.title= :worker_contract_started_at.tl
+      %span.value= resource.started_at.l
+    .med-info.important
+      %span.title= :monthly_duration.tl
+      %span.value= resource.monthly_duration.in(:hour).round(2).l
+    .med-info.important
+      %span.title= :worker_contract_raw_hourly_amount.tl
+      %span.value= resource.raw_hourly_amount.l(currency: Preference[:currency])
+  - if resource.reference_name.present?
+    .big-infos
+      .med-info.important
+        %span.title= :worker_contract_year_charged_cost.tl
+        %span.value= resource.cost(period: :year, mode: :charged)&.l(currency: Preference[:currency], precision: 2)
+      .med-info.important
+        %span.title= :worker_contract_month_charged_cost.tl
+        %span.value= resource.cost(period: :month, mode: :charged)&.l(currency: Preference[:currency], precision: 2)
+      .med-info.important
+        %span.title= :worker_contract_hour_charged_cost.tl
+        %span.value= resource.cost(period: :hour, mode: :charged)&.l(currency: Preference[:currency], precision: 2)
+
+  = attributes_list do |l|
+    - l.attribute :entity, label: :full_name, url: true
+    - l.attribute :salaried
+    - l.attribute :description
+
+= cobbles do |c|
+  - if resource.distributions.any?
+    - c.cobble(:distributions, title: Activity.human_attribute_name(:distributions)) do
+      :ruby
+        data = resource.distributions.reorder(:affectation_percentage).find_each.map do |distribution|
+          percentage = distribution.affectation_percentage.to_s.to_f
+
+          { name: :label_value.th(label: distribution.main_activity_name, value: number_to_percentage(percentage, precision: 2)), y: percentage }
+        end
+        series = [{type: 'pie', name: Activity.human_attribute_name(:distributions), data: data}]
+
+      = pie_highcharts(series, legend: true)

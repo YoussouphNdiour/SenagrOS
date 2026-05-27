@@ -1,0 +1,9 @@
+= kujaku do |k|
+  - k.text
+  - k.choice :all, :active, :inactive
+
+- main_toolbar do
+  - %w[article animal crop equipment service worker zone].each do |nature|
+    = link_to nature.pluralize.tl, send("backend_variant_types_#{nature}_types_path"), class: 'btn-pill'
+
+= main_list

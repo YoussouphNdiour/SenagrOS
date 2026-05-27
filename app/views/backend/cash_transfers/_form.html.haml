@@ -1,0 +1,9 @@
+= field_set do
+  = f.input :transfered_at
+  = f.referenced_association :emission_cash
+  = f.input :emission_amount
+  = f.input :currency_rate
+  = f.referenced_association :reception_cash
+  = f.input :description, field: :text
+  = f.custom_fields
+  = f.attachments

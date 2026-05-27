@@ -1,0 +1,24 @@
+= field_set do
+  .control-group
+    = label_tag :period_reference, :period_to_take_into_account.tl, class: 'control-label'
+    .controls
+      = radio_button_tag :period_reference, 'invoiced_at', true
+      = label_tag :invoice_date.tl
+      = radio_button_tag :period_reference, 'payment_at', false
+      = label_tag :payment_due_date.tl
+
+  .control-group
+    = label_tag :period, :period.tl, class: 'control-label'
+    .controls.inline-date-fields
+      %span.addon= :from.tl
+      = date_field_tag :started_at, params[:started_at], disabled: @affairs.present?
+      %span.addon= :to.tl
+      = date_field_tag :stopped_at, params[:stopped_at], disabled: @affairs.present?
+
+  = f.association :mode, label: :payment_mode_form_label.tl, input_html: { data: { trigger_visibility: '#first-check-number', trigger_visibility_url: '/backend/outgoing_payment_modes/:id/sepa' } }
+  .control-group#first-check-number{ data: { visibility_triggered_by: '#outgoing_payment_list_mode_id' } }
+    = label_tag :bank_check_number, :first_check_number.tl, class: 'control-label'
+    .controls
+      = text_field_tag :bank_check_number, params[:bank_check_number]
+
+  = render partial: 'third', collection: @affairs.collect(&:supplier).uniq, locals: { f: f }

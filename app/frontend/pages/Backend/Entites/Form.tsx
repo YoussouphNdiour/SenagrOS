@@ -87,9 +87,9 @@ const EntitesForm = ({ entite, errors }: EntiteFormProps) => {
       </div>
 
       <form onSubmit={handleSubmit} noValidate>
-        <FlashBanner errors={errors} />
         <SectionCard className="mb-5">
           <SectionTitle icon={User}>Identité</SectionTitle>
+          <FlashBanner errors={errors} />
 
           <div className="flex flex-col gap-5">
             <FormField label="Nature" htmlFor="ent-nature" error={Array.isArray(errors.nature) ? errors.nature[0] : errors.nature}>

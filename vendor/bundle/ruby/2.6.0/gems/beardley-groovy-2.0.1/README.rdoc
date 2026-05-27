@@ -1,0 +1,4 @@
+= Beardley::Groovy
+{<img src="https://badge.fury.io/rb/beardley-groovy.png" alt="Gem Version" />}[http://badge.fury.io/rb/beardley-groovy]
+
+Provides a JAR of Groovy.

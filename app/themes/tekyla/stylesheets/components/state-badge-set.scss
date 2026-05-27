@@ -1,0 +1,43 @@
+.state-badge-set {
+  float: right;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &__badge {
+    font-size: 27px;
+    font-weight: bold;
+    margin: 7px 7px 0 7px;
+    padding: 7px;
+    text-transform: uppercase;
+    border: solid 2px;
+    display: none;
+
+    &--reconcile, &--accepted, &--allowed, &--draft {
+      color: #4CAF50;
+      border-color: #4CAF50;
+    }
+
+    &--incident, &--confirmed {
+      color: $caution-color;
+      border-color: $caution-color;
+    }
+
+    &--to-reconcile, &--forbidden, &--closed{
+      color: #f44336;
+      border-color: #f44336;
+    }
+  }
+
+  &--closed &__badge--closed,
+  &--draft &__badge--draft,
+  &--confirmed &__badge--confirmed,
+  &--reconcile &__badge--reconcile,
+  &--incident &__badge--incident,
+  &--to-reconcile &__badge--to-reconcile,
+  &--accepted &__badge--accepted,
+  &--allowed &__badge--allowed,
+  &--forbidden &__badge--forbidden {
+    display: block;
+  }
+}

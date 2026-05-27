@@ -1,0 +1,224 @@
+- displayed_state = resource.state.tl
+- displayed_state = :planned.tl(count: 1) if resource.nature.to_sym == :request
+
+- main_toolbar do |t|
+  = t.export(:intervention_sheet, key: Printers::InterventionSheetPrinter.build_key(id: resource.id, updated_at: resource.updated_at.to_s))
+  = t.edit resource
+  - unless @intervention.receptions_is_given?
+    = t.destroy
+  = t.new params: { request_intervention_id: resource.id, redirect: nil } if resource.request?
+  - unless resource.state == 'validated'
+    = t.menu(displayed_state, class: "btn btn-primary dropdown", icon: false, disable_with: tl(:please_wait), force_menu: true) do |menu|
+      - menu.item(next_state[0], change_state_backend_interventions_path(:intervention => { :interventions_ids => [resource.id].to_json, state: next_state[1].to_sym }), method: :post) if next_state
+  - if resource.spraying?
+    = t.tool(Onoma::DocumentNature.find(:phytosanitary_applicator_sheet).human_name, { action: :export, params: { id: resource.id, document_nature_name: :phytosanitary_applicator_sheet, format: :odt }}, icon: :download)
+    - documents = DocumentTemplate.where(nature: :ac_work_sheet)
+    - if documents.present?
+      = t.menu(Onoma::DocumentNature.find(:ac_work_sheet).human_name, class: "btn btn btn-default dropdown", icon: false, force_menu: true) do |menu|
+        - documents.each do |document|
+          - if document.active?
+            - menu.item(document.name, { action: :export, params: { id: resource.id, document_nature_name: :ac_work_sheet, format: :odt, template: document.id }}, icon: :download)
+
+- currency = Onoma::Currency.find(resource.currency)
+
+= cobbles do |c|
+  - if params[:mode] == 'spraying'
+    = render 'spraying_map', cobbler: c
+  - else
+    = render 'map', cobbler: c
+
+  - tractor_tool = resource.product_parameters.find_by(reference_name: 'tractor')
+  - if tractor_tool && tractor_tool.product
+    :ruby
+      tractor = tractor_tool.product
+      series = []
+      [:fuel_consumption].each do |indicator_name|
+        indicator = Onoma::Indicator[indicator_name]
+        readings = ProductReading.where(indicator_name: indicator_name, product: tractor).between(resource.started_at, resource.stopped_at)
+        next unless readings.any?
+        data = readings.reorder(:read_at).map do |reading|
+          [reading.read_at.to_usec, reading.value.round(2).to_s.to_f]
+        end
+        series << {
+          type: indicator.curve,
+          name: indicator.human_name,
+          data: data,
+          tooltip: {
+            value_suffix: " #{Onoma::Unit[indicator.unit].symbol}"
+          }
+        }
+      end
+    - if series.any?
+      - c.cobble(:chart) do
+        = spline_highcharts(series, y_axis: {title: {text: :indicator_value.tl} , opposite: true}, tooltip: { shared: true }, x_axis: {type: 'datetime', crosshair: true}, legend: true)
+
+  - c.cobble(:costs) do
+    = infos(class: 'costs') do
+      - total = 0
+      - [:input, :tool, :doer].each do |type|
+        - cost = (resource.cost(type) || 0.0).round(currency.precision)
+        .big-info.cost.intervention-costs
+          %span.title= "evaluated_#{type}_cost".tl
+          %span.value
+            %i.picto{class: "picto-#{type}"}
+            = cost.l(currency: currency.name)
+
+      .big-info.cost
+        %span.title= "evaluated_reception_cost".tl
+        %span.value
+          %i.picto{class: "picto-recent-actors"}
+          = resource.receptions_cost.l(currency: currency.name)
+
+
+      - if resource.working_zone_area.to_f > 0.0
+        .big-info
+          %span.title= Intervention.human_attribute_name(:working_zone_area)
+          %span.value= resource.human_working_zone_area(precision: 4)
+
+        .big-info
+          %span.title= :net_surface_area.tl
+          %span.value= resource.human_activity_production_zone_area(precision: 4)
+
+        .big-info
+          - unit = Onoma::Unit.find(:hectare)
+          %span.title= Intervention.human_attribute_name(:costs_per_unit, unit: unit.human_name)
+          - total_cost_per_area = resource.total_cost_per_area(unit)
+          - if total_cost_per_area
+            - localized_cost = total_cost_per_area.round(currency.precision).l(currency: currency.name)
+            - displayed_cost_per_area = "#{localized_cost}/#{unit.symbol}"
+          %span.value= displayed_cost_per_area || ""
+
+        .big-info.cost.important
+          %span.title= :working_hectare_costs.tl
+          - displayed_cost_per_working_area = (resource.total_cost / resource.working_zone_area.to_f).to_f.round(2).round(currency.precision).l(currency: currency.name)
+          %span.value= "#{displayed_cost_per_working_area}/#{unit.symbol}"
+
+      .big-info.cost.important
+        %span.title= :total_cost.tl
+        %span.value= resource.total_cost.round(currency.precision).l(currency: currency.name)
+
+  - if resource.product_parameters.any?
+    - c.cobble(:parameters) do
+      %ul.product_parameters= render partial: 'product_parameter', collection: resource.product_parameters.order(:type)
+
+  - if resource.parameter_setting_items.any?
+    - c.cobble(:settings) do
+      - resource.parameter_settings.each do |parameter_setting|
+        .big-info
+          %span.title= parameter_setting.name
+        = infos do
+          - parameter_setting.settings.each do |item|
+            .med-info
+              %span.title= item.indicator.l
+              %span.value= item.value.is_a?(Measure) ? item.value.round_l : item.value
+
+  - if resource.incoming_harvests.any?
+    - c.cobble(:incoming_harvests) do
+      = cobble_list(:incoming_harvests)
+
+  - if resource.receptions.any?
+    - c.cobble(:service_deliveries) do
+      = cobble_list(:service_deliveries)
+
+  - c.cobble(:general_informations) do
+    = infos do
+      = attributes_list do |l|
+        - l.attribute :number
+      -#.med-info.important
+        %span.title= Intervention.human_attribute_name(:nature)
+        %span.value= resource.nature.l #lights(resource.status)
+      .med-info
+        %span.title= Intervention.human_attribute_name(:started_at)
+        %span.value
+          %i.picto.picto-calendar
+          = resource.started_at.l
+      .med-info
+        %span.title= Intervention.human_attribute_name(:stopped_at)
+        %span.value
+          %i.picto.picto-calendar
+          = resource.stopped_at.l
+      .med-info
+        %span.title= Intervention.human_attribute_name(:duration)
+        %span.value
+          %i.picto.picto-clock
+          = resource.human_working_duration
+
+      .med-info.actionner-cobble
+        = resource.decorate.planned_by
+        = resource.decorate.validated_by
+
+      -# - if resource.duration_from_catalog
+        -# .med-info
+          -# %span.title= Intervention.human_attribute_name(:catalog_duration)
+          -# %span.value
+            -# %i.picto.picto-timelapse
+            -# = resource.duration_from_catalog.round(2).l
+
+      -#.med-info
+        %span.title= Intervention.human_attribute_name(:working_duration)
+        %span.value
+          %i.picto.picto-timelapse
+          = human_duration(resource.drivers_times(nature: :intervention))
+      -#.med-info
+        %span.title= Intervention.human_attribute_name(:whole_duration)
+        %span.value
+          %i.picto.picto-timelapse
+          = human_duration(resource.drivers_times(nature: nil))
+      -#.med-info
+        %span.title= I18n.t('enumerize.intervention_working_period.nature.preparation')
+        %span.value
+          %i.picto.picto-clock-o
+          = human_duration(resource.drivers_times(nature: :preparation))
+      -#.med-info
+        %span.title= I18n.t('enumerize.intervention_working_period.nature.travel')
+        %span.value
+          %i.picto.picto-clock-o
+          = human_duration(resource.drivers_times(nature: :travel))
+      -#.med-info
+        %span.title= I18n.t('enumerize.intervention_working_period.nature.intervention')
+        %span.value
+          %i.picto.picto-clock-o
+          = human_duration(resource.drivers_times(nature: :intervention))
+
+    -# if resource.production_support
+      .info
+        %span.title= :production_support.tl
+        %span.value= link_to(resource.production_support.name, {controller: :production_supports, action: :show, id: resource.production_support})
+
+      - if resource.storage
+        .info
+          %span.title= ProductionSupport.human_attribute_name(:storage)
+          %span.value= link_to(resource.storage.name, {controller: :products, action: :show, id: resource.storage})
+
+    - if resource.prescription
+      .info
+        %span.title= Intervention.human_attribute_name(:prescription)
+        %span.value= link_to(resource.prescription.name, {controller: :prescriptions, action: :show, id: resource.prescription})
+
+    - if resource.journal_entry
+      .info
+        %span.title= Intervention.human_attribute_name(:journal_entry)
+        %span.value= link_to(resource.journal_entry.number, {controller: :journal_entries, action: :show, id: resource.journal_entry.id})
+
+    - if resource.issue
+      .info
+        %span.title= Intervention.human_attribute_name(:issue)
+        %span.value= link_to(resource.issue.name, {controller: :issues, action: :show, id: resource.issue})
+
+    - if resource.description?
+      .info
+        %span.title= Intervention.human_attribute_name(:description)
+        %span.value= resource.description
+
+    .info
+      %span.title= Intervention.human_attribute_name(:actions)
+      %span.value= resource.human_actions_names
+
+    - if resource.trouble_encountered?
+      .info
+        %span.title= Intervention.human_attribute_name(:trouble_encountered)
+        %span.value= resource.trouble_description
+    = labels_info(resource.labels)
+  
+  - c.cobble :historical_weather do
+    = cell :historical_weather, params: { period: :hourly, started_at: resource.started_at, stopped_at: resource.stopped_at }

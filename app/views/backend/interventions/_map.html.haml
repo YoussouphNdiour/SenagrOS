@@ -1,0 +1,60 @@
+- count = 0
+:ruby
+  data = []
+  data_crumbs = []
+  resource.targets.each do |parameter|
+    shape = parameter.working_zone
+    shape ||= parameter.product.shape(at: resource.started_at) if parameter.product
+    if shape
+      activity = parameter.best_activity if parameter.is_a?(InterventionTarget)
+      if activity
+        item = {
+          name: parameter.product.name,
+          shape: shape,
+          activity: activity.name,
+          shape_color: activity.color
+        }
+      else
+        item = {
+          name: parameter.product.name,
+          shape: shape,
+          activity: parameter.product.name,
+          shape_color: cycle(theme_colors)
+        }
+      end
+      data << item
+      count += 1
+    end
+  end
+
+  visualization_opts = if resource.spraying? || resource.all_in_one_sowing? || resource.sowing_with_spraying?
+    max_nta = resource.max_non_treatment_area
+    { optional_data_url: backend_visualizations_non_treatment_areas_visualizations_path(add_to_map: max_nta) }
+  else
+    {}
+  end
+
+- map = visualization(visualization_opts) do |v|
+  - if data.any?
+    - v.serie :main, data
+    - v.categories :activity, :main
+  - resource.product_parameters.each do |parameter|
+    - if parameter.crumbs.any?
+      :ruby
+        label = if parameter.product
+                  parameter.product.name
+                elsif parameter.variant
+                  parameter.variant.name
+                else
+                  parameter.name
+                end
+      - v.serie("path_#{parameter.id}", parameter.crumbs.reorder(:read_at).collect{|c| {name: parameter.name, shape: c.geolocation}})
+      - v.path label, "path_#{parameter.id}"
+      - count += 1
+  - v.control :zoom
+  - v.control :scale
+  - v.control :fullscreen
+  - v.control :layer_selector
+- if count > 0
+  - cobbler.cobble :resource_map, title: :map.tl do
+    = map

@@ -1,0 +1,42 @@
+- main_toolbar do |t|
+  = t.edit resource
+  = t.new_inventory params: { controller: :inventories, action: :new, product_nature_category_id: resource.id }, icon: false, label: :new_inventory.tl
+
+= cobbles do |c|
+  - c.cobble :general_informations do
+    = attributes_list do |l|
+      - l.attribute :number
+      - l.attribute :active
+      - l.attribute :description if resource.description?
+      - l.attribute :pictogram
+      - l.attribute :reductible
+
+      - l.attribute :purchasable
+      - if resource.purchasable
+        - l.attribute :charge_account, url: true
+
+      - l.attribute :asset_fixable
+      - if resource.asset_fixable
+        - l.attribute :fixed_asset_account, url: true
+
+      - l.attribute :depreciable
+      - if resource.depreciable
+        - l.attribute :fixed_asset_allocation_account, url: true
+        - l.attribute :fixed_asset_expenses_account, url: true
+
+      - l.attribute :saleable
+      - if resource.saleable
+        - l.attribute :product_account, url: true
+
+      - l.attribute :storable
+      - if resource.storable
+        - l.attribute :stock_account, url: true
+        - l.attribute :stock_movement_account, url: true
+
+      - l.attribute :subscribing
+
+  - c.cobble :product_nature_variants do
+    = cobble_list :product_nature_variants
+
+  - c.cobble :taxations do
+    = cobble_list :taxations

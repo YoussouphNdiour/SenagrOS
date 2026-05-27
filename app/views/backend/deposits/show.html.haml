@@ -1,0 +1,24 @@
+- main_toolbar do |t|
+  = t.export(:deposit_list, target: "_blank")
+  = t.edit resource
+
+= cobbles do |c|
+  - c.cobble :general_informations do
+    = attributes_list do |l|
+      - l.attribute :number
+      - l.attribute :cash, url: true
+      - l.attribute :mode #, url: true
+      - l.attribute :payments_count
+      - l.attribute :responsible
+      - l.attribute :description
+      - l.attribute :journal_entry, url: true
+
+  - c.cobble :payments, title: Deposit.human_attribute_name(:payments) do
+    = cobble_list :payments
+    %table.list
+      %tr.total
+        %th= :payments_count.tl(mode: resource.mode.name)
+        %td= resource.payments.count
+      %tr.total.important
+        %th= :total.tl
+        %td= resource.amount.l(currency: resource.currency)

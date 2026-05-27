@@ -1,0 +1,20 @@
+- main_toolbar do |t|
+  = t.edit resource
+  = t.new_inventory params: { controller: :inventories, action: :new, product_nature_id: resource.id }, icon: false, label: :new_inventory.tl
+
+= cobbles do |c|
+  - c.cobble :details do
+    = attributes_list do |l|
+      - l.attribute :name
+      - l.attribute :variety
+      - l.attribute :derivative_of
+      - l.attribute :number
+      - l.attribute :active
+      - l.attribute :subscribing
+      - if resource.subscribing
+        - l.attribute :subscription_duration
+        - l.attribute :subscription_nature, url: true
+      - l.attribute :description
+
+  - c.cobble :variants, title: ProductNature.human_attribute_name(:variants) do
+    = cobble_list :variants

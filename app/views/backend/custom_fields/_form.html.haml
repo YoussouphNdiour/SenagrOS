@@ -1,0 +1,14 @@
+= field_set do
+  = f.input :customized_type, collection: f.object.class.customizable_types.collect{|m| [::I18n.t("activerecord.models.#{m.to_s.underscore}"), m]}.sort{|a,b| a[0] <=> b[0]}
+  = f.input :name
+  = f.input :active
+  = f.input :required
+  = f.input :nature, as: :radio_buttons, show: '.{{value}}_options'
+  .text_options
+    = f.input :minimal_length
+    = f.input :maximal_length
+  .decimal_options
+    = f.input :minimal_value
+    = f.input :maximal_value
+  .choice_options
+    = f.nested_association :choices

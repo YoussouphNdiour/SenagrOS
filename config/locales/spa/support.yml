@@ -1,0 +1,129 @@
+spa:
+  about:
+    authors: ["Coralie Labouyrie", "Brice Texier"]
+    dir: "ltr"
+    iso2: "es"
+    name: "Español"
+  boolean:
+    human:
+      false_class: "Falso"
+      true_class: "Verdadero"
+    polar:
+      false_class: "Sí"
+      true_class: "No"
+  date:
+    abbr_day_names: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sá"]
+    abbr_month_names: ["", "ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"]
+    day_names: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"]
+    formats:
+      default: "%d/%m/%Y"
+      legal: "%d %B %Y"
+      long: "%B %d, %Y"
+      month: "% B% Y"
+      month_letter: "%d %B %Y"
+      # month_name: "%B"
+      short: "%b %d"
+      short_month: "%m/%Y"
+    month_names: ["", "enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"]
+  datetime:
+    distance_in_words:
+      about_x_hours:
+        one: "alrededor de 1 hora"
+        other: "alrededor de %{count} horas"
+      about_x_months:
+        one: "alrededor de 1 mes"
+        other: "alrededor de %{count} meses"
+      about_x_years:
+        one: "alrededor de 1 año"
+        other: "alrededor de %{count} años"
+      almost_x_years:
+        one: "casi 1 año"
+        other: "casi %{count} años"
+      half_a_minute: "medio minuto"
+      less_than_x_minutes:
+        one: "menos de 1 minuto"
+        other: "menos de %{count} minutos"
+      less_than_x_seconds:
+        one: "menos de 1 segundo"
+        other: "menos de %{count} segundos"
+      over_x_years:
+        one: "más de 1 año"
+        other: "más de %{count} años"
+      x_days:
+        one: "1 día"
+        other: "%{count} días"
+      x_minutes:
+        one: "1 minuto"
+        other: "%{count} minutos"
+      x_months:
+        one: "1 mes"
+        other: "%{count} meses"
+      x_seconds:
+        one: "1 segundo"
+        other: "%{count} segundos"
+    periods:
+      day: "Día"
+      month: "Mes"
+      today: "Hoy"
+      week: "Semana"
+      year: "Año"
+    relative_distance_in_words:
+      in_sometime: "en %{distance}"
+      sometime_ago: "hace %{distance}"
+  http:
+    errors:
+      internal_server_error:
+        hint: "La aplicación se encuentra con problemas. Los administradores han sido notificados para este problema."
+        title: "Lo lamentamos, pero algo salió mal"
+      maintenance:
+        hint: "Por favor regresa más tarde"
+        title: "El servicio se encuentra en mantenimiento y no está disponible por el momento"
+      not_found:
+        hint: "Es posible que haya escrito mal la dirección o la página puede haber movido."
+        title: "La página que estás buscando no existe"
+      unprocessable_entity:
+        hint: "Tal vez ha intentado cambiar algo que no tiene acceso."
+        title: "El cambio que quería fue rechazada"
+  number:
+    currency:
+      format:
+        delimiter: ","
+        format: "%u%n"
+        negative_format: "-%u%n"
+        precision: 2
+        separator: "."
+        unit: "⁈"
+    format:
+      delimiter: " "
+      precision: 3
+      separator: ","
+    human:
+      format:
+        delimiter: ""
+        precision: 1
+    percentage:
+      format:
+        delimiter: ""
+    precision:
+      format:
+        delimiter: ""
+  # rank: "#%{number}"
+  support:
+    array:
+      last_word_connector: " y "
+      sentence_connector: "y"
+      two_words_connector: ", "
+      words_connector: ", "
+  time:
+    am: "am"
+    formats:
+      compact: "% M /% d /% Y% H:% M"
+      default: "%d %b. %Y - %H:%M:%S"
+      full: "% M /% d /% Y% H:% M:% S"
+      long: "%B %d, %Y %H:%M"
+      short: "%d %b %H:%M"
+      time: "%H:%M" #?
+    js_formats:
+      compact: "MM / DD / AAAA HH: mm"
+      full: "MM / DD / AAAA HH: mm: ss"
+    pm: "pm"

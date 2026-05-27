@@ -1,0 +1,66 @@
+- main_toolbar do |t|
+  -# [:qualify, :evaluate, :quote, :negociate, :win, :lose].each do |event|
+    - if resource.send("can_#{event}?")
+      = t.send(event, resource, method: :post)
+  = t.edit resource
+
+= main_state_bar(resource)
+
+= main_informations attachment: true do
+  .pull-right
+    - if resource.dead_line_at
+      .med-info
+        %span.title= SaleOpportunity.human_attribute_name(:timeleft)
+        %span.value= human_interval(resource.timeleft, display: 2)
+      .med-info
+        %span.title= SaleOpportunity.human_attribute_name(:age)
+        %span.value= human_interval(resource.age, display: 2)
+
+  .pull-right
+    .med-info
+      %span.title= SaleOpportunity.human_attribute_name(:probability_percentage)
+      %span.value= resource.probability_percentage
+    - if resource.pretax_amount
+      .med-info
+        %span.title= SaleOpportunity.human_attribute_name(:pretax_amount)
+        %span.value= resource.pretax_amount.l(currency: resource.currency)
+  = attributes_list stamps: false do |l|
+    - l.attribute :client, label: :label, url: true
+    - l.attribute :number
+    - l.attribute :responsible, label: :full_name, url: true
+    - l.attribute :created_at
+    - l.attribute :dead_line_at if resource.dead_line_at?
+    - l.attribute :pretax_amount, currency: true
+    - l.attribute :description if resource.description?
+    - l.attribute :origin
+  = labels_info(resource.labels)
+
+= janus do |j|
+  - j.face :timeline do
+    = timeline(resource) do |l|
+      - l.side :observations, at: :observed_at
+      - l.side :events, at: :started_at, params: {controller: :events, nature: :meeting, participations: {"0" => {participant_id: resource.third_id, state: :accepted}, "1" => {participant_id: current_user.person_id, state: :accepted}}}
+      - l.side :sales, new: false
+      - l.side :purchase_invoices, new: false
+      - l.side :incoming_payments, new: false
+      - l.side :outgoing_payments, new: false
+      - l.side :gaps, new: false
+      - l.side :tasks, at: :due_at
+      - l.side :versions, new: false
+
+  - j.face :cobbles do
+    = cobbles do |c|
+      - c.cobble :deals do
+        = affair_deals(resource)
+      - c.cobble :tasks, title: :x_tasks.tl(count: resource.tasks.count) do
+        = cobble_toolbar do |t|
+          = t.new(params: {controller: :tasks, entity_id: resource.third_id, executor_id: current_user.id, state: :todo})
+        = cobble_list(:tasks)
+      - c.cobble :events, title: :x_events.tl(count: resource.events.count) do
+        = cobble_toolbar do |t|
+          = t.new(params: {controller: :events, nature: :meeting, participations: {"0" => {participant_id: resource.third_id, state: :accepted}, "1" => {participant_id: current_user.person_id, state: :accepted}}})
+        = cobble_list(:events)
+      - c.cobble :sale_contracts, title: :x_sale_contracts.tl(count: resource.sale_contracts.count) do
+        = cobble_toolbar do |t|
+          = t.new(params: {controller: :sale_contracts, sale_opportunity_id: resource.id, client_id: resource.third_id})
+        = cobble_list(:sale_contracts)

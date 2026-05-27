@@ -1,0 +1,12 @@
+.thumbs
+  - attachments.each do |attachment|
+    - next unless document = attachment.document
+    .thumb
+      = link_to(backend_document_path(document, format: :pdf)) do
+        = image_tag(backend_document_path(document, format: :jpg))
+      = link_to(backend_document_path(attachment.document)) do
+        .name= attachment.document.name
+        - if attachment.nature
+          .nature
+            %i
+            = attachment.nature.l

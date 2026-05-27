@@ -1,0 +1,42 @@
+.picture.picture-identity
+  - if resource.picture.file?
+    = image_tag(resource.picture.url(:identity))
+  - else
+    .picto{class: "picto-#{resource.organization? ? :building : :user}"}
+- main_links = EntityLink.of_entity(resource)
+- main_entities = [resource.id]
+- main_links.order("(entity_id = #{resource.id} and main) DESC, id ASC").each do |link|
+  - next unless link.entity && link.linked
+  .info
+    %span.title
+      - other = (link.entity == resource ? link.linked : link.entity)
+      - others = EntityLink.of_entity(other).where("entity_id NOT IN (?) AND linked_id NOT IN (?)", main_entities, main_entities)
+      - if others.any?
+        - seconds = capture do
+          %ul
+            - others.each do |indirect|
+              %li= render "link", link: indirect, entity: other, popover: nil
+      - else
+        - seconds = nil
+      = render "link", link: link, entity: resource, popover: seconds
+    = link_to({controller: :entity_links, action: :edit, id: link.id, redirect: request.fullpath}, class: "info-action") do
+      %i.icon.icon-edit
+    = link_to({controller: :entity_links, action: :destroy, id: link.id, redirect: request.fullpath}, class: "info-action", data: {confirm: :are_you_sure.tl}) do
+      %i.icon.icon-destroy
+
+
+- resource.addresses.order(:canal, :by_default).each do |address|
+  .info
+    %span.title{class: "canal-#{address.canal}"}= address.canal.l
+    %span.value
+      - if address.email?
+        = mail_to(address.coordinate, address.coordinate)
+      - elsif address.phone? || address.mobile?
+        %a{:href => "tel:#{address.coordinate}"}= address.coordinate
+      - elsif address.mail?
+        = link_to(address.coordinate, "https://maps.google.fr/?q=#{URI.encode(address.mail_lines(without: :line_1))}")
+      - elsif address.website?
+        = link_to(address.coordinate, address.coordinate)
+      - else
+        = address.coordinate
+

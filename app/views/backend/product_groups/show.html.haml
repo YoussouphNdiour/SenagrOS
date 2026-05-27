@@ -1,0 +1,34 @@
+- main_toolbar do |t|
+  = t.edit resource
+  = t.destroy
+
+= cobbles do |c|
+  - c.cobble :details do
+    - if resource.picture.exists?
+      .picture= image_tag(resource.picture.url(:thumb))
+    = attributes_list do |l|
+      - l.attribute :name
+      - l.attribute :variety, url: true
+      - l.attribute :identification_number
+      - l.attribute :description
+
+  - c.cobble(:members) do
+    = cobble_list(:members)
+
+  - c.cobble(:groups) do
+    = cobble_list(:groups)
+
+  - c.cobble(:contained_products) do
+    = cobble_list(:contained_products)
+
+  - c.cobble(:places) do
+    = cobble_list(:places)
+
+  - c.cobble(:issues) do
+    = cobble_toolbar do |t|
+      = t.new(params: {controller: :issues, target_id: resource.id, target_type: resource.class.name})
+    = cobble_list(:issues)
+
+  - c.cobble(:readings, title: tl(:x_readings, count: resource.readings.count)) do
+    = cobble_list(:readings)
+

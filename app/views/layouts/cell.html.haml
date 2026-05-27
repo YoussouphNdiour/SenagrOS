@@ -1,0 +1,26 @@
+:ruby
+  names = []
+  preference = current_user.preferences.find_by(name: "beehive.#{params[:beehive]}")
+  if preference
+    config = YAML.safe_load(preference.value)
+    config = {} unless config.is_a?(Hash)
+    names = (config.deep_symbolize_keys[:boxes] || {}).map do |box|
+      (box[:cells] || {}).map { |cell| cell[:name].to_s }
+    end.flatten
+  end
+  i = 0
+  name = nil
+  loop do
+    i += 1
+    name = "#{params[:type]}_#{i}"
+    break unless names.include?(name)
+  end
+
+.cell{data: {beehive_cell: { name: name, type: params[:type]}.to_json }}
+  .cell-inner
+    .cell-title
+      = link_to("#beehive-#{params[:beehive]}", data: {beehive_remove: "cell"}) do
+        %i
+      = params[:type].tl
+    .cell-content= yield
+    .cell-bottom

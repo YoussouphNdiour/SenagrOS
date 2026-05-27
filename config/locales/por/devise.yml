@@ -1,0 +1,95 @@
+por:
+  devise:
+    confirmations:
+      confirmed: "Sua conta foi confirmada com sucesso. Você pode acessar o sistema agora."
+      send_instructions: "Você irá receber dentro de alguns minutos informações para ativar sua conta."
+      send_paranoid_instructions: "Se o seu e-mail existe em nosso banco de dados você receberá em instantes um link para confirmar sua conta."
+    failure:
+      already_authenticated: "Você já se inscreveu."
+      inactive: "Sua conta ainda não foi ativada."
+      invalid: "Senha ou e-mail inválidos."
+      invalid_token: "Chave de autenticação inválida."
+      invited: "Você tem um convite pendente, aceito-o para terminar de criar sua conta."
+      locked: "Sua conta foi bloqueada."
+      not_approved: "A sua conta não foi aprovado pelo administrador ainda."
+      not_found_in_database: "E-mail ou senha inválidos."
+      timeout: "Sua sessão expirou, entre novamente para continuar."
+      unauthenticated: "Você precisa entrar ou se inscrever para continuar."
+      unconfirmed: "Você deve confirmar sua conta antes de continuar."
+    invitations:
+      edit:
+        header: "Coloque sua senha"
+        submit_button: "Definir minha senha"
+      invitation_removed: "O seu convite foi removido."
+      invitation_token_invalid: "O token convite fornecido não é válido!"
+      new:
+        header: "Enviar convite"
+        submit_button: "Envie um convite"
+      no_invitations_remaining: "Nenhum convite restantes"
+      # send_instructions: "An invitation email has been sent to %{email}."
+      updated: "Sua senha foi definida com êxito. Agora você está conectado."
+      updated_not_active: "Sua senha foi definida com êxito."
+    mailer:
+      confirmation_instructions:
+        subject: "Instruções de confirmação"
+      invitation_instructions:
+        accept: "Aceitar o convite"
+        # accept_until: "This invitation will be due in %{due_date}."
+        # hello: "Hello %{first_name} %{last_name},"
+        ignore: "Se você não quiser aceitar o convite, por favor ignore este e-mail. <br /> A sua conta não será criada até que você acessar o link acima e definir a sua senha."
+        # someone_invited_you: "Someone has invited you to %{url}, you can accept it through the link below."
+        subject: "Instruções do convite"
+      registrations:
+        approved:
+          # accepted: "An administrator has approved your registration on %{url}, you can now sign in through the link below."
+          # hello: "Hello %{first_name} %{last_name},"
+          sign_in: "Entre aqui."
+          subject: "A sua conta foi aprovado!"
+        signed_up:
+          subject: "Novo registo"
+      reset_password_instructions:
+        subject: "Instruções para resetar sua senha"
+      unlock_instructions:
+        subject: "Instruções de desbloqueio"
+    omniauth_callbacks:
+      failure: "Não pudemos autenticar %{kind} porque “%{reason}”."
+      success: "Autenticado com sucesso apartir da conta %{kind}."
+    passwords:
+      no_token: "Você não pode acessar esta página diretamente. Se você veio de um e-mail para resetar sua senha certifique-se que a URl está completa."
+      send_instructions: "Você receberá em instantes um e-mail com instruções para resetar sua senha."
+      send_paranoid_instructions: "Se o seu e-mail existe em nosso banco de dados você irá receber um e-mail com instruções para recuperar sua senha."
+      updated: "Sua senha foi modificada com sucesso. Você está logado no sistema."
+      updated_not_active: "Sua senha foi modificad com sucesso."
+    registrations:
+      destroyed: "Até mais! Sua conta foi cancelada. Esperamos ver você novamente em breve."
+      signed_up: "Bem vindo! Você se inscreveu corretamente."
+      signed_up_but_inactive: "Você se inscreveu com sucesso. No entanto precisamos que você ative sua conta para iniciar sua sessão."
+      signed_up_but_locked: "Você iniciou sessão com sucesso. No entando não pudemos iniciar a mesma pois sua conta está bloqueada."
+      signed_up_but_unconfirmed: "Uma mensagem de confirmação foi enviada para seu e-mail. Por favor abra o link para ativar sua conta."
+      update_needs_confirmation: "Você atualizou sua conta com sucesso, mas nós precisamos verificar seu e-mail. Por favor confira seu e-mail e clique para confirmar."
+      updated: "Você atualizou sua conta com sucesso."
+      user:
+        signed_up_but_not_approved: "Você se inscreveu com êxito, mas sua conta não foi aprovado pelo administrador ainda"
+    sessions:
+      signed_in: "Sessão iniciada com sucesso."
+      signed_out: "Sessão encerrada com sucesso."
+    unlocks:
+      send_instructions: "Você irá receber um e-mail com informações de desbloqueio dentro de alguns minutos."
+      send_paranoid_instructions: "Se sua conta existe, você recebera um e-mail com as informações sobre como desbloquear sua conta."
+      unlocked: "Sua conta foi desbloqueada com sucesso. Por favor entre para continuar"
+  errors:
+    messages:
+      already_confirmed: "já foi confirmado, por favor tente logar"
+      confirmation_period_expired: "precisa ser confirmado dentro %{period}, por favor requisite um novo"
+      expired: "expirou, por favor requisite um novo"
+      not_found: "não encontrado"
+      not_locked: "não estava bloqueado"
+      not_saved:
+        one: "1 erro está proibindo este %{resource} de ser salvo:"
+        other: "%{count} erros proibindo este %{resource} de ser salvo:"
+  time:
+    formats:
+      devise:
+        mailer:
+          invitation_instructions:
+            accept_until_format: "% B% d,% Y% I:% M% p"

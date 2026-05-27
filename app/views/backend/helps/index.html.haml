@@ -1,0 +1,9 @@
+= kujaku
+
+= subheading(:x_results, count: @search[:count], :here => true) if @search && @search[:count]
+
+= search_results(@search) do |result|
+  %h3
+    = link_to(result["title"].html_safe, "#", 'data-toggle' => 'result')
+    %small= result["pertinence"]
+  .content.collapsed= help(result["file"])

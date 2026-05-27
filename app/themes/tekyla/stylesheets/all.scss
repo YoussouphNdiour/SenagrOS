@@ -1,0 +1,90 @@
+/*
+ * This is a manifest file that'll be compiled into screen.css, which will include all the files
+ * listed below.
+ *= require_self
+ */
+
+// Core variables and mixins
+@import "variables";
+@import "mixins";
+
+// Reset
+@import "reset";
+@import "fonts";
+@import "print";
+@import 'bootstrap-sprockets';
+
+// Plugins
+@import "vendor/flatpickr";
+@import "bootstrap-slider";
+@import "wice_grid";
+@import "font-awesome-sprockets";
+
+// Specific
+@import "abilities";
+@import "accesses";
+@import "activities";
+@import "activity_productions";
+@import "accounts";
+@import "attachments";
+@import "bank_statements";
+@import "budget";
+@import "buttons";
+@import "beehives";
+@import "calendars";
+@import "charts";
+@import "documents";
+@import "draft_journals";
+@import "equipments";
+@import "financial_years";
+@import "forms";
+@import "golumns";
+@import "grid";
+@import "imports";
+@import "integrations";
+@import "interventions";
+@import "intervention_participations";
+@import "leaflet/dist/leaflet";
+@import "leaflet-draw/dist/leaflet.draw";
+@import "cartography";
+@import "cartography-fix";
+@import "catalog_items";
+@import "inventory_items";
+@import "leaflet-legends";
+@import "leaflet-custom";
+@import "leaflet-ghost-label";
+@import "main";
+@import "map_layers";
+@import "modals";
+@import "naming_formats";
+@import "notifications";
+@import "production_costs";
+@import "purchases";
+@import "purchase_process_reconciliation";
+@import "quick_trades";
+@import "receptions";
+@import "outgoing_payment_lists";
+@import "tables";
+@import "taskboard";
+@import "tax_declarations";
+@import "timelines";
+@import "tour";
+@import "plants";
+@import "wice_grid";
+@import "warning";
+@import "general_ledgers";
+@import "trial_balances";
+@import "journals";
+@import "crop_groups";
+@import "financial_year_exchanges";
+@import "active_list_icons";
+@import "autocomplete";
+
+@import "./components/index";
+@import "./components/spinner";
+
+// Optimization
+@import "symbolic_icons";
+
+// Ekylibre plugins
+@import "themes/tekyla/plugins";

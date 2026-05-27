@@ -1,0 +1,27 @@
+= field_set do
+  - if f.object.new_record?
+    - if params[:affair_id]
+      - f.object.affair = SaleAffair.find(params[:affair_id])
+    - if f.object.affair
+      = f.association :affair, as: :hidden
+  = f.referenced_association :payer
+  = f.referenced_association :mode
+  = f.input :amount
+  = f.input :to_bank_at, wrapper_html: { class: 'apply-fy-date' }
+  %span.hidden#financial-year-dates{ financial_year_started_on_stopped_on }
+    = :warning_date_not_in_period.tl
+  = f.input :received
+  = f.input :with_discount, show: '#discount-fields'
+  #discount-fields
+    = f.input :discount_amount
+    = f.referenced_association :discount_vat, new: false, source: :current
+  = f.custom_fields
+
+= field_set(:depositable_options) do
+  = f.referenced_association :responsible, :source => :employees
+  = f.input :paid_at
+  = f.input :bank_check_number
+  = f.input :bank_account_number
+  = f.input :bank_name
+
+= f.attachments_field_set

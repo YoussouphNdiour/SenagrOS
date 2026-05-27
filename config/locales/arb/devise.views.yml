@@ -1,0 +1,63 @@
+arb:
+  devise:
+    confirmations:
+      new:
+        resend_confirmation_instructions: "إعادة إرسال تعليمات تأكيدا"
+    mailer:
+      confirmation_instructions:
+        action: "تأكيد حسابي"
+        # greeting: "Welcome %{recipient}!"
+        instruction: "يمكنك التأكد من البريد الإلكتروني حسابك من خلال الرابط أدناه:"
+        subject: "تعليمات تأكيد"
+      reset_password_instructions:
+        action: "تغيير كلمة المرور الخاصة بي"
+        # greeting: "Hello %{recipient}!"
+        instruction: "وقد طلبت شخص رابطا لتغيير كلمة المرور الخاصة بك، ويمكنك القيام بذلك من خلال الرابط أدناه."
+        instruction_2: "إذا كنت لم تطلب هذا، الرجاء تجاهل هذا البريد الإلكتروني."
+        instruction_3: "لن تغيير كلمة المرور الخاصة بك حتى يمكنك وصول إلى الرابط أعلاه وإنشاء واحدة جديدة."
+        subject: "إعادة تعيين كلمة المرور تعليمات"
+      signed_up:
+        confirm: "يرجى تأكيد ذلك في لوحة الإدارة."
+        # details: "%{first_name} %{last_name} with email %{email} has just signed up."
+        subject: "علامة جديدة تصل"
+      unlock_instructions:
+        action: "فتح حسابي"
+        # greeting: "Hello %{recipient}!"
+        instruction: "اضغط على الرابط أدناه لفتح حسابك:"
+        message: "تم تأمين حسابك بسبب كمية زائدة من علامة ناجحة في المحاولات."
+        subject: "فتح تعليمات"
+    passwords:
+      edit:
+        change_my_password: "تغيير كلمة المرور الخاصة بي"
+        change_your_password: "تغيير كلمة المرور الخاصة بك"
+        confirm_new_password: "تأكيد كلمة المرور الجديدة"
+        new_password: "كلمة السر الجديدة"
+      new:
+        forgot_your_password: "نسيت رقمك السري؟"
+        send_me_reset_password_instructions: "أرسل لي إعادة تعيين كلمة المرور تعليمات"
+    registrations:
+      edit:
+        are_you_sure: "هل أنت واثق؟"
+        cancel_my_account: "إلغاء حسابي"
+        leave_blank_if_you_don_t_want_to_change_it: "ترك فارغا إذا كنت لا تريد لتغييره"
+        # title: "Edit %{resource}"
+        unhappy: "تعيس"
+        update: "تحديث"
+        we_need_your_current_password_to_confirm_your_changes: "نحن بحاجة إلى كلمة المرور الحالية لتأكيد التغييرات"
+      new:
+        sign_up: "سجل"
+    sessions:
+      new:
+        sign_in: "تسجيل الدخول"
+        sign_in_with_ekylibre: "تسجيل الدخول مع Ekylibre.com"
+    shared:
+      links:
+        didn_t_receive_confirmation_instructions: "لم تتلق تعليمات التأكيد؟"
+        didn_t_receive_unlock_instructions: "لم تتلق تعليمات فتح؟"
+        forgot_your_password: "نسيت رقمك السري؟"
+        sign_in: "تسجيل الدخول"
+        # sign_in_with_provider: "Sign in with %{provider}"
+        sign_up: "سجل"
+    unlocks:
+      new:
+        resend_unlock_instructions: "إعادة فتح تعليمات"

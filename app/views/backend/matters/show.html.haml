@@ -1,0 +1,87 @@
+- main_toolbar do |t|
+  = t.edit resource
+  = t.destroy
+  = t.new(params: {controller: :issues, target_id: resource.id, target_type: resource.class.name}, label: :new_issue.tl, tool: 'new-issue')
+
+= main_informations attachment: true do
+  -# = render 'picture'
+  = infos do
+    .med-info.important
+      - icon = resource.pictogram
+      %span.title= Matter.human_attribute_name(:variant)
+      %span.value
+        %i.picto{class: "picto-#{icon}"}
+        = link_to(resource.variant_name, controller: :product_nature_variants, action: :show, id: resource.variant_id)
+    = product_info(:work_number, important: true)
+    = product_info(:identification_number, important: true)
+    - if resource.born_at && resource.age && resource.age >= 1.day
+      = product_info(:age) do |age|
+        %i.picto{class: "picto-clock-o"}
+        = human_age(resource.born_at, display: 2)
+    - if resource.variant.france_maaid
+      = resource_info(:france_maaid) do |france_maaid|
+        %i.picto{class: "picto-flask"}
+        = link_to(france_maaid, "https://ephy.anses.fr/resultats_recherche/ppp?search_api_aggregation_3=#{france_maaid}", target: "_blank")
+    - unless resource.population_counting_unitary?
+      = product_info :population, important: true do |population|
+        = population.round(2).l(precision: 2) + " " + resource.conditioning_unit.name
+    = product_info(:tracking, important: true) do
+      = link_to(resource.tracking.serial, controller: :trackings, action: :show, id: resource.tracking.id)
+    - if resource.current_ownership && resource.current_ownership.other?
+      = product_info(:owner, important: true) do |owner|
+        = owner.name
+    - if resource.incoming_parcel_item_storing && resource.incoming_parcel_item_storing.parcel_item
+      .med-info.important
+        %span.title= resource_model.human_attribute_name(:incoming_parcel_item)
+        %span.value
+          %i.picto{class: "picto-movements"}
+          = link_to(resource.incoming_parcel_item_storing.parcel_item.reception.number, controller: :receptions, action: :show, id: resource.incoming_parcel_item_storing.parcel_item.reception.id)
+    - if resource.outgoing_parcel_item
+      .med-info.important
+        %span.title= resource_model.human_attribute_name(:outgoing_parcel_item)
+        %span.value
+          %i.picto{class: "picto-movements"}
+          = link_to(resource.outgoing_parcel_item.shipment.number, controller: :shipments, action: :show, id: resource.outgoing_parcel_item.shipment.id)
+  = labels_info(resource.labels)
+
+= cobbles do |c|
+  - c.cobble(:movements) do
+    = movements_chart(resource)
+
+  -# c.cobble(:variable_indicators) do
+    = variable_readings(resource)
+
+  - c.cobble(:reception_items) do
+    = cobble_list(:reception_items)
+
+  - c.cobble(:shipment_items) do
+    = cobble_list(:shipment_items)
+
+  -# c.cobble(tl(:x_readings, count: resource.readings.count)) do
+    = cobble_list(:readings)
+
+  -# c.cobble(:interventions) do
+    = cobble_toolbar do |t|
+      = t.new(params: {controller: :interventions})
+    = cobble_list(:intervention_product_parameters)
+
+  - c.cobble(:places) do
+    = cobble_toolbar do
+      = tool_to :new.ta, {action: :new, controller: :product_localizations, product_id: resource.id }, tool: :new
+    = cobble_list(:places)
+
+  -# c.cobble(:groups) do
+    = cobble_list(:groups)
+
+  - c.cobble :details do
+    = attributes_list do |l| # liste des champs à afficher
+      - l.attribute :name
+      - l.attribute :variant, url: { controller: ProductNatureVariantDecorator.new(resource.variant).get_controller_path, action: :show }
+      - l.attribute :variety
+      -#l.attribute :group, url: true # on affiche l'attribut name de l'entité ProductGroup associé par l'attribut group de l'entité courante Product avec un lien vers ce groupe
+      - l.attribute :born_at
+      - l.attribute :dead_at
+      - l.attribute :identification_number
+      - l.attribute :description
+
+= render "timeline"

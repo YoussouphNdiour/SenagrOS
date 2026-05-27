@@ -1,0 +1,152 @@
+module Procedo
+  module Formula
+    grammar Language
+
+      include Procedo::Formula::Nodes
+
+      ############################################################################
+      # Numerical expression
+
+      rule expression
+        conditive / additive / primary
+      end
+
+      rule conditive
+        test:boolean_expression space "?" space if_true:argument space ":" space if_false:(argument / conditive) <Condition>
+      end
+
+      rule multitive
+          head:primary space? "*" space? operand:multitive <Multiplication>
+        / head:primary space? "/" space? operand:multitive <Division>
+        / primary
+      end
+
+      rule additive
+          head:multitive space? "+" space? operand:additive <Addition>
+        / head:multitive space? "-" space? operand:additive <Substraction>
+        / multitive
+      end
+
+      rule primary
+        numeric / reading / string_expression / object / interpolation / "(" space? expression space? ")" <Expression>
+      end
+
+      rule string_expression
+        "'" string_body:(string_part)* "'" <StringExpression>
+      end
+
+      rule string_part
+         interpolation / text
+      end
+
+      rule text
+        ["_"a-zA-Z0-9\s\n]+ <Text>
+      end
+
+      rule interpolation
+        "%\{" space? expression space? "\}" <Interpolation>
+      end
+
+      rule argument
+        numeric / symbol / reading / object / variable / expression
+      end
+
+      rule object
+        function_call / environment_variable
+      end
+
+      rule reading
+          object ".." indicator options:("(" unit ")")? <IndividualReading>
+        / object "."  indicator options:("(" unit ")")? <WholeReading>
+      end
+
+      rule environment_variable
+        [A-Z] [A-Z0-9]* ("_" [A-Z0-9]+)* <EnvironmentVariable>
+      end
+
+      rule variable
+        [a-z] [a-z0-9]* ("_" [a-z0-9]+)* <Variable>
+      end
+
+      rule indicator
+        [a-z] [a-z0-9]* ("_" [a-z0-9]+)* <Indicator>
+      end
+
+      rule unit
+        [a-z] [a-z0-9]* ("_" [a-z0-9]+)* <Unit>
+      end
+
+      rule numeric
+        ([1-9] [0-9]* / "0") ("." [0-9]+)? <Numeric>
+      end
+
+      rule symbol
+        ":" [a-z] [a-z0-9]* ("_" [a-z0-9]+)* <Symbol>
+      end
+
+      rule function_call
+        function_name "(" space? args:(first_arg:argument other_args:(space? "," space? argument)* )?  space? ")" <FunctionCall>
+      end
+
+      rule function_name
+        [a-z] [a-z0-9]* ("_" [a-z0-9]+)* <FunctionName>
+      end
+
+      rule space
+        [\s\n]+
+      end
+
+      ############################################################################
+      # Boolean expression
+
+      rule boolean_expression
+        disjunctive / test
+      end
+
+      rule conjonctive
+          head:test space?  "&" space? operand:conjonctive <Conjunction>
+        / head:test space "and" space  operand:conjonctive <Conjunction>
+        / head:test space? "||" space? operand:conjonctive <ExclusiveDisjunction>
+        / head:test space  "or" space  operand:conjonctive <ExclusiveDisjunction>
+        / test
+      end
+
+      rule disjunctive
+          head:conjonctive space? "|" space? operand:disjunctive <Disjunction>
+        / conjonctive
+      end
+
+      rule test
+        negative / comparative / indicative / presence / "(" boolean_expression ")" <BooleanExpression>
+      end
+
+      rule comparative
+          head:primary space? operator:">"  space? operand:primary <StrictSuperiorityComparison>
+        / head:primary space? operator:"<"  space? operand:primary <StrictInferiortyComparison>
+        / head:primary space? operator:">=" space? operand:primary <SuperiorityComparison>
+        / head:primary space? operator:"<=" space? operand:primary <InferiorityComparison>
+        / head:primary space? operator:"==" space? operand:primary <EqualityComparison>
+        / head:primary space? operator:"!=" space? operand:primary <DifferenceComparison>
+      end
+
+      rule presence
+          object "?"  <ActorPresenceTest>
+        / variable "?" <VariablePresenceTest>
+      end
+
+      rule indicative
+          object "."   indicator "?" <IndicatorPresenceTest>
+        / object ".."  indicator "?" <IndividualIndicatorPresenceTest>
+      end
+
+      rule negative
+        "!" negated_test <NegativeTest>
+      end
+
+      rule negated_test
+        indicative / presence / "(" boolean_expression ")" <BooleanExpression>
+      end
+
+    end
+  end
+end

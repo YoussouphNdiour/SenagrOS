@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<procedures xmlns="http://www.ekylibre.org/XML/2013/procedures">
+  <procedure name="tunnel_removing" categories="crop_protection" actions="tunnel_removal">
+    <parameters>
+      <target name="plant" filter="is plant and has indicator shape">
+        <attribute name="working_zone" default-value="PRODUCT.shape" if="PRODUCT?"/>
+      </target>
+      <output name="tunnel" filter="is canvas_cover" cardinality="*">
+        <handler name="population"/>
+      </output>
+      <doer name="driver" filter="is worker and can drive(equipment)" cardinality="*"/>
+      <doer name="worker" filter="is worker" cardinality="*"/>
+      <tool name="tractor" filter="is motorized_vehicle and can tow(equipment)" cardinality="*"/>
+      <tool name="tunnel_remover" filter="is equipment and can uncover(plant)" cardinality="*"/>
+    </parameters>
+  </procedure>
+</procedures>

@@ -1,0 +1,144 @@
+# = Informations
+#
+# == License
+#
+# Ekylibre - Simple agricultural ERP
+# Copyright (C) 2008-2009 Brice Texier, Thibaud Merigon
+# Copyright (C) 2010-2012 Brice Texier
+# Copyright (C) 2012-2014 Brice Texier, David Joulin
+# Copyright (C) 2015-2023 Ekylibre SAS
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see http://www.gnu.org/licenses.
+#
+# == Table: taxes
+#
+#  active                               :boolean          default(FALSE), not null
+#  amount                               :decimal(19, 4)   default(0.0), not null
+#  collect_account_id                   :integer(4)
+#  collect_isacompta_code               :string
+#  country                              :string           not null
+#  created_at                           :datetime         not null
+#  creator_id                           :integer(4)
+#  deduction_account_id                 :integer(4)
+#  deduction_isacompta_code             :string
+#  description                          :text
+#  fixed_asset_collect_account_id       :integer(4)
+#  fixed_asset_collect_isacompta_code   :string
+#  fixed_asset_deduction_account_id     :integer(4)
+#  fixed_asset_deduction_isacompta_code :string
+#  id                                   :integer(4)       not null, primary key
+#  intracommunity                       :boolean          default(FALSE), not null
+#  intracommunity_payable_account_id    :integer(4)
+#  lock_version                         :integer(4)       default(0), not null
+#  name                                 :string           not null
+#  nature                               :string           not null
+#  provider                             :jsonb
+#  reference_name                       :string
+#  updated_at                           :datetime         not null
+#  updater_id                           :integer(4)
+#
+---
+taxes_001:
+  active: false
+  amount: 19.6
+  collect_account_id: 33
+  country: fr
+  created_at: 2014-10-31 17:19:32.000000000 Z
+  creator_id: 1
+  deduction_account_id: 39
+  id: 1
+  intracommunity: false
+  lock_version: 2
+  name: 19.6% VAT
+  nature: normal_vat
+  updated_at: 2014-11-01 19:45:09.073583000 Z
+  updater_id: 1
+taxes_002:
+  active: true
+  amount: 0.0
+  collect_account_id: 33
+  country: fr
+  created_at: 2014-10-31 17:19:32.000000000 Z
+  creator_id: 1
+  deduction_account_id: 39
+  id: 2
+  intracommunity: false
+  lock_version: 3
+  name: 0% VAT
+  nature: null_vat
+  updated_at: 2016-05-10 19:21:37.165894000 Z
+  updater_id: 1
+taxes_003:
+  active: true
+  amount: 20.0
+  collect_account_id: 33
+  country: fr
+  created_at: 2014-10-31 17:19:32.000000000 Z
+  creator_id: 1
+  deduction_account_id: 39
+  id: 3
+  intracommunity: false
+  lock_version: 2
+  name: 20% VAT
+  nature: normal_vat
+  updated_at: 2016-05-10 19:20:53.765809000 Z
+  updater_id: 1
+taxes_004:
+  active: true
+  amount: 10.0
+  collect_account_id: 578
+  country: fr
+  created_at: 2016-05-10 19:21:37.154673000 Z
+  creator_id: 1
+  deduction_account_id: 577
+  id: 8
+  intracommunity: false
+  lock_version: 0
+  name: TVA 10.0 %
+  nature: intermediate_vat
+  reference_name: french_vat_intermediate_2014
+  updated_at: 2016-05-10 19:21:37.154673000 Z
+  updater_id: 1
+taxes_005:
+  active: true
+  amount: 2.1
+  collect_account_id: 582
+  country: fr
+  created_at: 2016-05-10 19:21:37.351341000 Z
+  creator_id: 1
+  deduction_account_id: 581
+  id: 9
+  intracommunity: false
+  lock_version: 0
+  name: TVA 2.1 %
+  nature: particular_vat
+  reference_name: french_vat_particular_1989
+  updated_at: 2016-05-10 19:21:37.351341000 Z
+  updater_id: 1
+taxes_006:
+  active: true
+  amount: 5.5
+  collect_account_id: 584
+  country: fr
+  created_at: 2016-05-10 19:21:37.582543000 Z
+  creator_id: 1
+  deduction_account_id: 583
+  id: 10
+  intracommunity: false
+  lock_version: 0
+  name: TVA 5.5 %
+  nature: reduced_vat
+  reference_name: french_vat_reduced
+  updated_at: 2016-05-10 19:21:37.582543000 Z
+  updater_id: 1

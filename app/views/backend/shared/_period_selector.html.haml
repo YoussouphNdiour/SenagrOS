@@ -1,0 +1,13 @@
+- if intervals.size > 1
+  .period-selector
+    = button_to_today(period_interval)
+
+= button_group(class: 'period-selector') do
+  = button_to_previous_period(period_interval, current_period)
+  - if intervals.size > 1
+    = dropdown_to_current_period(period_interval, current_period, intervals)
+  - else
+    = button_to_current_period(period_interval, current_period)
+  = button_to_next_period(period_interval, current_period)
+
+

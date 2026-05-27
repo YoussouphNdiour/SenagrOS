@@ -1,0 +1,147 @@
+@import "bootstrap/dropdowns";
+// @import "bootstrap/buttons";
+
+input[type="submit"], input[type="button"], input[type="reset"] {
+  @include button($input: true);
+  &.primary, &.btn-primary {
+    @include button($background-color: $base-color, $input: true);
+  }
+  &.btn-success {
+    @include button($background-color: $success-color, $input: true);
+  }
+  &.important, &.caution, &.btn-warning {
+    @include button($background-color: $caution-color, $input: true);
+  }
+  &.btn-danger {
+    @include button($background-color: $invalid-color, $input: true);
+  }
+}
+
+// @include button($passive-bg, $active-bg);
+// @include button(#D88E68, #D88E68, "&.important");
+
+
+a.btn, button.btn {
+  @include button();
+  &.primary, &.btn-primary {
+    @include button($background-color: $base-color);
+  }
+  &.btn-success {
+    @include button($background-color: $success-color, $input: true);
+  }
+  &.important, &.caution, &.btn-warning {
+    @include button($background-color: $caution-color);
+  }
+  &.btn-danger {
+    @include button($background-color: $invalid-color);
+  }
+  &.btn-previous, &.btn-next {
+    padding-left: round($fs-normal*0.40);
+    padding-right: round($fs-normal*0.40);
+  }
+  &.btn-cell--pfi {
+    margin: 0 0 7px 7px !important;
+  }
+  &.icn {
+    @include icon-before(cog, $font-size: 14px);
+    &.icn-only {
+      @include padding-right(0);
+    }
+    &.icn-after{
+      @include icon-after(cog, $font-size: 14px);
+    }
+  }
+  &.no-icn {
+    line-height: 21px !important;
+  }
+
+  &.dropdown-toggle {
+    @include icon-after(caret-down, $font-size: 14px);
+    .dropup > & {
+      @include icon-after(caret-up, $font-size: 14px);
+    }
+    &.sr-only::after {
+      @include padding-left(0);
+    }
+  }
+
+  &.btn-big {
+    padding: $default-gap;
+    margin: $default-gap;
+    height: auto;
+    text-align: center;
+    @include inline-block;
+    $size: 64px;
+    i {
+      display: block;
+      font-size: $size;
+      line-height: $size;
+      height: $size;
+      text-align: center;
+      min-width: $size;
+      margin: 0 0 $default-gap;
+    }
+    min-width: round($size * 1.7);
+  }
+}
+
+.btn-group {
+  @include button-group;
+  &.btn-group-lg {
+    .btn {
+      padding: $default-gap 2*$default-gap;
+    }
+  }
+  & > .btn:not(:last-child) {
+    margin-right: 5px;
+  }
+}
+
+
+.add-on {
+  padding: round($fs-normal * 0.2) round($fs-normal * 0.4);
+  @include box-sizing(content-box);
+  @include border-radius($default-border-radius);
+  font-size: $fs-normal;
+  line-height: $lh-normal;
+  height: $lh-normal;
+  vertical-align: middle;
+  cursor: default;
+  border: $menu-border;
+  background: #EEE;
+  @include inline-block;
+}
+
+.btn-pill {
+  @include inline-block;
+  @include margin-right(5px);
+  @include text-shadow(1px 1px 0 white);
+  border: 1px solid transparent;
+  border-radius: 1000px !important;
+  background: $neutral-background;
+  padding: round($default-gap * 0.2 - 1px) $default-gap;
+  color: mix($base-font-color, $active-color) !important;
+  font-size: $fs-normal;
+  line-height: round($lh-ratio * $fs-normal);
+
+  &.dropdown-toggle {
+    @include icon-after(caret-down, $font-size: 14px);
+  }
+  &.active {
+    @include text-shadow(1px 1px 0 $neutral-color);
+    background-color: $primary-color;
+    border-color: $active-color;
+    color: white !important;
+    font-weight: bold;
+  }
+  &:focus {
+    @include box-shadow(0 0 round($fs-normal*0.6) rgba($base-color, 0.6));
+  }
+  &:focus, &:active {
+    outline: none;
+    border-color: $active-color;
+  }
+  &:hover {
+    @include box-shadow(0 0 $default-gap white);
+  }
+}

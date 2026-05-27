@@ -1,0 +1,29 @@
+- main_toolbar do |t|
+  = t.edit resource
+  = t.convert resource, params: { to: :cultivable_zone, redirect: nil }, method: :post, label: :convert_to_cultivable_zone.tl
+
+= cobbles do |c|
+  - c.cobble :general_informations do
+    = infos do
+      .med-info
+        %span.title= CapIslet.human_attribute_name(:islet_number)
+        %span.value= resource.islet_number
+      .med-info
+        %span.title= CapIslet.human_attribute_name(:campaign)
+        %span.value= resource.campaign_name
+      .med-info
+        %span.title= CultivableZone.human_attribute_name(:net_surface_area)
+        %span.value= resource.net_surface_area.in(:hectare).round(3).l
+  - c.cobble :resource_map, title: :map.tl do
+    = visualization do |v|
+      - v.serie resource.id, [{name: resource.islet_number, shape: resource.shape}]
+      - options = {fill_opacity: 0}
+      - options[:fill_opacity] = 0.9
+      - options[:fill_color] = cycle(theme_colors)
+      - v.simple resource.islet_number, resource.id, options
+      - v.control :zoom
+      - v.control :scale
+      - v.control :fullscreen
+      - v.control :layer_selector
+  - c.cobble(:cap_land_parcels) do
+    = cobble_list(:cap_land_parcels)

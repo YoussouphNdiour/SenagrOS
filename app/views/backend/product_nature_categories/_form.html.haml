@@ -1,0 +1,40 @@
+= f.object.errors.inspect if Rails.env.development? && f.object.errors.any?
+- type = params[:subdivision] ? "VariantCategories::#{params[:subdivision].singularize.classify}" : nil
+
+= field_set do
+  = f.input :name
+  - if f.object.new_record?
+    = f.input :type, selected: type
+  = f.input :active
+  = f.input :description
+  = f.custom_fields
+
+= field_set(:nature) do
+  = f.input :reductible
+  = f.input :asset_fixable, show: :financials_assets
+  = f.input :depreciable, show: :financials_assets, input_html: { data: { always_check: "input#product_nature_category_asset_fixable" } }
+  = f.input :storable, show: :stocks
+  = f.input :purchasable, show: :purchases
+  = f.input :saleable, show: :sales
+  = f.input :subscribing
+
+= field_set(:financials_assets) do
+  = f.input :fixed_asset_depreciation_method, collection: enumerize_as_options(:fixed_asset, :depreciation_method)
+  = f.input :fixed_asset_depreciation_percentage
+  = f.referenced_association :fixed_asset_account
+  = f.referenced_association :fixed_asset_allocation_account, :source => :assets_depreciations
+  = f.referenced_association :fixed_asset_expenses_account, :source => :asset_depreciations_inputations_expenses
+
+= field_set(:stocks) do
+  = f.referenced_association :stock_account
+  = f.referenced_association :stock_movement_account, :source => :stocks_variations
+
+= field_set(:purchases) do
+  = f.referenced_association :charge_account
+  -# = f.association :purchase_taxes, as: :radio_buttons
+  = f.nested_association :purchase_taxations
+
+= field_set(:sales) do
+  = f.referenced_association :product_account
+  -# = f.association :sale_taxes, as: :radio_buttons
+  = f.nested_association :sale_taxations

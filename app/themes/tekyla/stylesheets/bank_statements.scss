@@ -1,0 +1,261 @@
+.reconciliation-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+
+  .top-part {
+    display: flex;
+    justify-content: space-between;
+    padding: $default-gap;
+    flex: 0 0 auto;
+
+    .buttons {
+      .btn-group + .btn-group {
+        margin-left: unset;
+      }
+    }
+
+    .details {
+      width: unset;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      * {
+        @include margin-left($default-gap);
+        text-align: center;
+      }
+
+      .flatpickr-input {
+        width: 200px;
+      }
+    }
+  }
+
+  .list {
+    overflow-y: scroll;
+  }
+
+  .amounts {
+    display: flex;
+    justify-content: space-around;
+    width: 15rem;
+  }
+
+  .details {
+    width: 15rem;
+    display: flex;
+    justify-content: space-around;
+
+    a#clear {
+      span {
+        color: #3f70ce;
+      }
+      i {
+        color: #3f70ce;
+        display: inline-block;
+        @include is-icon;
+        @include use-icon(eraser);
+      }
+    }
+
+  }
+
+  .legend {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    width: 100%;
+    padding: 0 0 2px;
+
+    a {
+      margin: 0 5px;
+    }
+
+    p {
+      flex: 1;
+      font-weight: bold;
+    }
+
+    & > p {
+      display: flex;
+      justify-content: flex-end;
+      align-items: middle;
+    }
+
+    .details {
+      display: flex;
+      justify-content: flex-start;
+      align-items: flex-end;
+    }
+  }
+
+  .date-section {
+    border-top: solid 1px red;
+
+    .date-header {
+      display: flex;
+      align-items: center;
+      padding: 4px 0;
+
+      p {
+        font-weight: bold;
+        padding: 0 1em;
+      }
+    }
+
+    & > div {
+      display: flex;
+    }
+  }
+
+  .totals {
+    display: flex;
+    flex-direction: column;
+    flex: 1 0 auto;
+
+    & > div {
+      display: flex;
+      justify-content: flex-end;
+
+      font-size: $fs-large;
+
+      border: solid 1px $neutral-background;
+      background-color: $desktop-background;
+
+      & ~ div {
+        border-top: none;
+      }
+
+      .title {
+        display: flex;
+        flex: 1;
+        padding: 6px;
+
+        p {
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+
+          font-size: $fs-large;
+          flex: 1;
+        }
+      }
+
+      .amounts * {
+        &.hidden {
+          display: none;
+        }
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: $fs-large;
+        font-weight: bold;
+        background-color: white;
+
+        border: solid 1px $darkened-white;
+        border-top: none;
+        border-bottom: none;
+      }
+    }
+  }
+
+  i {
+    @include is-icon;
+
+    &.bank-statement-item {
+      @include use-icon(university);
+
+      & ~ .name {
+        font-style: italic;
+      }
+    }
+    &.journal-entry-item {
+      @include use-icon(book);
+    }
+  }
+
+  a#delete > i {
+    @include use-icon(clear);
+  }
+
+  a.locked > i {
+    @include use-icon(lock);
+  }
+}
+
+.amounts {
+  * {
+    width: calc(100% - 4px);
+    text-align: center;
+  }
+}
+
+.bank-stament-item-errors {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.reconciliation-item {
+  cursor: pointer;
+  background-color: white;
+
+  display: flex;
+  justify-content: flex-end;
+
+  width: 100%;
+  border-top: solid 1px $neutral-background;
+  padding: 3px 0;
+
+  transition: background-color 0.5s;
+
+  &:hover {
+    background-color: $desktop-background;
+  }
+
+  &.selected {
+    background-color: $light-color;
+  }
+
+  i, #delete {
+    text-align: center;
+    width: 3rem;
+  }
+
+  i, .locked {
+    text-align: center;
+    width: 3rem;
+  }
+
+  & > div {
+    display: flex;
+  }
+
+  .letter {
+    font-weight: bold;
+  }
+
+  .title {
+    display: flex;
+    flex: 1;
+
+    .name {
+      @include padding-left(2em);
+      flex: 1;
+
+      input {
+        width: calc(100% - 8px);
+      }
+    }
+  }
+}
+
+.new_bank_statement, .edit_bank_statement {
+  .nested-fields {
+    .transfered_on {
+      overflow: visible;
+    }
+  }
+}

@@ -1,0 +1,15 @@
+.log.log-observation.log-with-content
+  - if step.author
+    .log-avatar= image_tag step.author.avatar_url(size: avatar_size)
+  .log-wrapper
+    .log-symbol
+    .log-heading
+      = link_to(backend_observation_path(observation, redirect: request.fullpath), method: :delete, class: "log-action log-action-destroy", data: {confirm: :are_you_sure.tl}) do
+        %i
+        = :destroy.tl
+      = link_to(edit_backend_observation_path(observation, redirect: request.fullpath), class: "log-action log-action-edit") do
+        %i
+        = :edit.tl
+      = :timeline_comment.th(defaults)
+    .log-body
+      .log-content= preserve(observation.content)

@@ -1,0 +1,381 @@
+current directory: /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ext/gpgme
+/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/bin/ruby -I /System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/lib/ruby/2.6.0 -r ./siteconf20260515-20517-9fv53b.rb extconf.rb
+************************************************************************
+IMPORTANT!  gpgme gem uses locally built versions of required C libraries,
+namely libgpg-error, libassuan, and gpgme.
+
+If this is a concern for you and you want to use the system library
+instead, abort this installation process and reinstall gpgme gem as
+follows:
+
+    gem install gpgme -- --use-system-libraries
+
+************************************************************************
+Extracting libgpg-error-1.47.tar.bz2 into tmp/arm64-apple-darwin24.1.0/ports/libgpg-error/1.47... OK
+Running 'configure' for libgpg-error 1.47... OK
+Running 'compile' for libgpg-error 1.47... OK
+Running 'install' for libgpg-error 1.47... OK
+Activating libgpg-error 1.47 (from /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47)...
+Extracting libassuan-2.5.6.tar.bz2 into tmp/arm64-apple-darwin24.1.0/ports/libassuan/2.5.6... OK
+Running 'configure' for libassuan 2.5.6... OK
+Running 'compile' for libassuan 2.5.6... OK
+Running 'install' for libassuan 2.5.6... OK
+Activating libassuan 2.5.6 (from /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libassuan/2.5.6)...
+Extracting gpgme-1.21.0.tar.bz2 into tmp/arm64-apple-darwin24.1.0/ports/gpgme/1.21.0... OK
+Running 'configure' for gpgme 1.21.0... OK
+Running 'compile' for gpgme 1.21.0... OK
+Running 'install' for gpgme 1.21.0... OK
+Activating gpgme 1.21.0 (from /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0)...
+checking for linker flags for static linking... NONE
+checking for gpgme.h... yes
+checking for gpgme >= 1.1.3... yes
+checking for gpgme_op_export_keys()... yes
+creating Makefile
+
+current directory: /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ext/gpgme
+make "DESTDIR=" clean
+
+current directory: /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ext/gpgme
+make "DESTDIR="
+compiling gpgme_n.c
+gpgme_n.c:332:31: warning: '(' and '{' tokens introducing statement expression appear in different macro expansion contexts [-Wcompound-token-split-by-macro]
+  332 |   vbuffer = rb_funcall (vcbs, rb_intern ("read"), 2, vhook_value,
+      |                               ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:23: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                       ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:332:31: note: '{' token is here
+  332 |   vbuffer = rb_funcall (vcbs, rb_intern ("read"), 2, vhook_value,
+      |                               ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:24: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1811:5: note: expanded from macro 'RUBY_CONST_ID_CACHE'
+ 1811 |     {                                                   \
+      |     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:332:31: warning: '}' and ')' tokens terminating statement expression appear in different macro expansion contexts [-Wcompound-token-split-by-macro]
+  332 |   vbuffer = rb_funcall (vcbs, rb_intern ("read"), 2, vhook_value,
+      |                               ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:24: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1816:5: note: expanded from macro 'RUBY_CONST_ID_CACHE'
+ 1816 |     }
+      |     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:332:31: note: ')' token is here
+  332 |   vbuffer = rb_funcall (vcbs, rb_intern ("read"), 2, vhook_value,
+      |                               ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:56: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                                                        ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:349:31: warning: '(' and '{' tokens introducing statement expression appear in different macro expansion contexts [-Wcompound-token-split-by-macro]
+  349 |   vnwrite = rb_funcall (vcbs, rb_intern ("write"), 3,
+      |                               ^~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:23: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                       ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:349:31: note: '{' token is here
+  349 |   vnwrite = rb_funcall (vcbs, rb_intern ("write"), 3,
+      |                               ^~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:24: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1811:5: note: expanded from macro 'RUBY_CONST_ID_CACHE'
+ 1811 |     {                                                   \
+      |     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:349:31: warning: '}' and ')' tokens terminating statement expression appear in different macro expansion contexts [-Wcompound-token-split-by-macro]
+  349 |   vnwrite = rb_funcall (vcbs, rb_intern ("write"), 3,
+      |                               ^~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:24: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1816:5: note: expanded from macro 'RUBY_CONST_ID_CACHE'
+ 1816 |     }
+      |     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:349:31: note: ')' token is here
+  349 |   vnwrite = rb_funcall (vcbs, rb_intern ("write"), 3,
+      |                               ^~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:56: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                                                        ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:358:16: warning: '(' and '{' tokens introducing statement expression appear in different macro expansion contexts [-Wcompound-token-split-by-macro]
+  358 |   ID id_seek = rb_intern ("seek");
+      |                ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:23: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                       ^
+gpgme_n.c:358:16: note: '{' token is here
+  358 |   ID id_seek = rb_intern ("seek");
+      |                ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:24: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1811:5: note: expanded from macro 'RUBY_CONST_ID_CACHE'
+ 1811 |     {                                                   \
+      |     ^
+gpgme_n.c:358:16: warning: '}' and ')' tokens terminating statement expression appear in different macro expansion contexts [-Wcompound-token-split-by-macro]
+  358 |   ID id_seek = rb_intern ("seek");
+      |                ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:24: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1816:5: note: expanded from macro 'RUBY_CONST_ID_CACHE'
+ 1816 |     }
+      |     ^
+gpgme_n.c:358:16: note: ')' token is here
+  358 |   ID id_seek = rb_intern ("seek");
+      |                ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:56: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                                                        ^
+gpgme_n.c:654:26: warning: '(' and '{' tokens introducing statement expression appear in different macro expansion contexts [-Wcompound-token-split-by-macro]
+  654 |   rb_funcall (vpassfunc, rb_intern ("call"), 5,
+      |                          ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:23: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                       ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:654:26: note: '{' token is here
+  654 |   rb_funcall (vpassfunc, rb_intern ("call"), 5,
+      |                          ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:24: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1811:5: note: expanded from macro 'RUBY_CONST_ID_CACHE'
+ 1811 |     {                                                   \
+      |     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:654:26: warning: '}' and ')' tokens terminating statement expression appear in different macro expansion contexts [-Wcompound-token-split-by-macro]
+  654 |   rb_funcall (vpassfunc, rb_intern ("call"), 5,
+      |                          ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:24: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1816:5: note: expanded from macro 'RUBY_CONST_ID_CACHE'
+ 1816 |     }
+      |     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:654:26: note: ')' token is here
+  654 |   rb_funcall (vpassfunc, rb_intern ("call"), 5,
+      |                          ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:56: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                                                        ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:703:28: warning: '(' and '{' tokens introducing statement expression appear in different macro expansion contexts [-Wcompound-token-split-by-macro]
+  703 |   rb_funcall (vstatusfunc, rb_intern ("call"), 3,
+      |                            ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:23: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                       ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:703:28: note: '{' token is here
+  703 |   rb_funcall (vstatusfunc, rb_intern ("call"), 3,
+      |                            ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:24: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1811:5: note: expanded from macro 'RUBY_CONST_ID_CACHE'
+ 1811 |     {                                                   \
+      |     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:703:28: warning: '}' and ')' tokens terminating statement expression appear in different macro expansion contexts [-Wcompound-token-split-by-macro]
+  703 |   rb_funcall (vstatusfunc, rb_intern ("call"), 3,
+      |                            ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:24: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1816:5: note: expanded from macro 'RUBY_CONST_ID_CACHE'
+ 1816 |     }
+      |     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:703:28: note: ')' token is here
+  703 |   rb_funcall (vstatusfunc, rb_intern ("call"), 3,
+      |                            ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:56: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                                                        ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:750:26: warning: '(' and '{' tokens introducing statement expression appear in different macro expansion contexts [-Wcompound-token-split-by-macro]
+  750 |   rb_funcall (vprogfunc, rb_intern ("call"), 5, vhook_value,
+      |                          ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:23: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                       ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:750:26: note: '{' token is here
+  750 |   rb_funcall (vprogfunc, rb_intern ("call"), 5, vhook_value,
+      |                          ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:24: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1811:5: note: expanded from macro 'RUBY_CONST_ID_CACHE'
+ 1811 |     {                                                   \
+      |     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:750:26: warning: '}' and ')' tokens terminating statement expression appear in different macro expansion contexts [-Wcompound-token-split-by-macro]
+  750 |   rb_funcall (vprogfunc, rb_intern ("call"), 5, vhook_value,
+      |                          ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:24: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1816:5: note: expanded from macro 'RUBY_CONST_ID_CACHE'
+ 1816 |     }
+      |     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:750:26: note: ')' token is here
+  750 |   rb_funcall (vprogfunc, rb_intern ("call"), 5, vhook_value,
+      |                          ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:56: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                                                        ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:1439:26: warning: '(' and '{' tokens introducing statement expression appear in different macro expansion contexts [-Wcompound-token-split-by-macro]
+ 1439 |   rb_funcall (veditfunc, rb_intern ("call"), 4, vhook_value, INT2FIX(status),
+      |                          ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:23: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                       ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:1439:26: note: '{' token is here
+ 1439 |   rb_funcall (veditfunc, rb_intern ("call"), 4, vhook_value, INT2FIX(status),
+      |                          ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:24: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1811:5: note: expanded from macro 'RUBY_CONST_ID_CACHE'
+ 1811 |     {                                                   \
+      |     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:1439:26: warning: '}' and ')' tokens terminating statement expression appear in different macro expansion contexts [-Wcompound-token-split-by-macro]
+ 1439 |   rb_funcall (veditfunc, rb_intern ("call"), 4, vhook_value, INT2FIX(status),
+      |                          ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:24: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1816:5: note: expanded from macro 'RUBY_CONST_ID_CACHE'
+ 1816 |     }
+      |     ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:1439:26: note: ')' token is here
+ 1439 |   rb_funcall (veditfunc, rb_intern ("call"), 4, vhook_value, INT2FIX(status),
+      |                          ^~~~~~~~~~~~~~~~~~
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:1826:56: note: expanded from macro 'rb_intern'
+ 1826 |         __extension__ (RUBY_CONST_ID_CACHE((ID), (str))) : \
+      |                                                        ^
+/Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/include/ruby-2.6.0/ruby/ruby.h:2602:20: note: expanded from macro 'rb_funcall'
+ 2602 |         rb_funcallv(recv, mid, \
+      |                           ^~~
+gpgme_n.c:1469:9: warning: 'gpgme_op_edit' is deprecated [-Wdeprecated-declarations]
+ 1469 |   err = gpgme_op_edit (ctx, key, edit_cb, (void *)vcb, out);
+      |         ^
+/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/include/gpgme.h:2650:33: note: 'gpgme_op_edit' has been explicitly marked deprecated here
+ 2650 |                                    gpgme_data_t out) _GPGME_DEPRECATED(1,7);
+      |                                                      ^
+/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/include/gpgme.h:77:33: note: expanded from macro '_GPGME_DEPRECATED'
+   77 | # define _GPGME_DEPRECATED(a,b) GPGRT_ATTR_DEPRECATED
+      |                                 ^
+/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/include/gpg-error.h:838:49: note: expanded from macro 'GPGRT_ATTR_DEPRECATED'
+  838 | # define GPGRT_ATTR_DEPRECATED  __attribute__ ((__deprecated__))
+      |                                                 ^
+gpgme_n.c:1498:9: warning: 'gpgme_op_edit_start' is deprecated [-Wdeprecated-declarations]
+ 1498 |   err = gpgme_op_edit_start (ctx, key, edit_cb, (void *)vcb, out);
+      |         ^
+/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/include/gpgme.h:2647:26: note: 'gpgme_op_edit_start' has been explicitly marked deprecated here
+ 2647 |                                    gpgme_data_t out) _GPGME_DEPRECATED(1,7);
+      |                                                      ^
+/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/include/gpgme.h:77:33: note: expanded from macro '_GPGME_DEPRECATED'
+   77 | # define _GPGME_DEPRECATED(a,b) GPGRT_ATTR_DEPRECATED
+      |                                 ^
+/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/include/gpg-error.h:838:49: note: expanded from macro 'GPGRT_ATTR_DEPRECATED'
+  838 | # define GPGRT_ATTR_DEPRECATED  __attribute__ ((__deprecated__))
+      |                                                 ^
+gpgme_n.c:1527:9: warning: 'gpgme_op_card_edit' is deprecated [-Wdeprecated-declarations]
+ 1527 |   err = gpgme_op_card_edit (ctx, key, edit_cb, (void *)vcb, out);
+      |         ^
+/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/include/gpgme.h:2658:41: note: 'gpgme_op_card_edit' has been explicitly marked deprecated here
+ 2658 |                                         _GPGME_DEPRECATED(1,7);
+      |                                         ^
+/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/include/gpgme.h:77:33: note: expanded from macro '_GPGME_DEPRECATED'
+   77 | # define _GPGME_DEPRECATED(a,b) GPGRT_ATTR_DEPRECATED
+      |                                 ^
+/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/include/gpg-error.h:838:49: note: expanded from macro 'GPGRT_ATTR_DEPRECATED'
+  838 | # define GPGRT_ATTR_DEPRECATED  __attribute__ ((__deprecated__))
+      |                                                 ^
+gpgme_n.c:1556:9: warning: 'gpgme_op_card_edit_start' is deprecated [-Wdeprecated-declarations]
+ 1556 |   err = gpgme_op_card_edit_start (ctx, key, edit_cb, (void *)vcb, out);
+      |         ^
+/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/include/gpgme.h:2654:41: note: 'gpgme_op_card_edit_start' has been explicitly marked deprecated here
+ 2654 |                                         _GPGME_DEPRECATED(1,7);
+      |                                         ^
+/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/gpgme/1.21.0/include/gpgme.h:77:33: note: expanded from macro '_GPGME_DEPRECATED'
+   77 | # define _GPGME_DEPRECATED(a,b) GPGRT_ATTR_DEPRECATED
+      |                                 ^
+/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports/arm64-apple-darwin24.1.0/libgpg-error/1.47/include/gpg-error.h:838:49: note: expanded from macro 'GPGRT_ATTR_DEPRECATED'
+  838 | # define GPGRT_ATTR_DEPRECATED  __attribute__ ((__deprecated__))
+      |                                                 ^
+18 warnings generated.
+linking shared-object gpgme_n.bundle
+ld: warning: search path '/AppleInternal/Library/BuildRoots/4b66fb3c-7dd0-11ef-b4fb-4a83e32a47e1/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.1.Internal.sdk/usr/local/lib' not found
+Cleaning files only used during build.
+rm -rf /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ext/gpgme/tmp/arm64-apple-darwin24.1.0/ports
+rmdir -p /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ext/gpgme/tmp/arm64-apple-darwin24.1.0
+rm -rf /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ports
+
+current directory: /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/gpgme-2.0.23/ext/gpgme
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 gpgme_n.bundle ./.gem.20260515-20517-17dpvm3

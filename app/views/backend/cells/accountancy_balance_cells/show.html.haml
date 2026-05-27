@@ -1,0 +1,45 @@
+- if @financial_year && Account.french_accounting_system? && JournalEntry.where(financial_year: @financial_year).any?
+  :ruby
+    # get accoutancy ratio in financial_year.sum_entry_items_with_mandatory_line(:ratio, :products)
+    # operating_margin_on_turnover = ( operating_margin / turnover_value) * 100
+
+    base_compute = AccountancyComputation.new(@financial_year)
+
+    series = []
+    data = []
+
+    # Products
+    exercice_production = base_compute.sum_entry_items_by_line(:ratio, :exercice_production)
+    data << {name: :exercice_production.tl(financial_year: @financial_year.name) , y: exercice_production.to_s.to_f, color: :green}
+
+    # commercial_margin
+    commercial_margin = base_compute.sum_entry_items_by_line(:ratio, :commercial_margin)
+    data << {name: :commercial_margin.tl(financial_year: @financial_year.name) , y: commercial_margin.to_s.to_f, color: :green}
+
+    # production_purchases
+    production_purchases = base_compute.sum_entry_items_by_line(:ratio, :production_purchases)
+    data << {name: :production_purchases.tl(financial_year: @financial_year.name) , y: - production_purchases.to_s.to_f, color: :red}
+
+    # production_others_charges
+    production_others_charges = base_compute.sum_entry_items_by_line(:ratio, :production_others_charges)
+    data << {name: :production_others_charges.tl(financial_year: @financial_year.name) , y: - production_others_charges.to_s.to_f, color: :red}
+
+    # added value
+    data << {name: :added_value.tl, isIntermediateSum: true}
+
+    # subsidies
+    subsidies = base_compute.sum_entry_items_by_line(:ratio, :subsidies)
+    data << {name: :subsidies.tl(financial_year: @financial_year.name) , y: subsidies.to_s.to_f, color: :green}
+
+    # taxes_and_wages
+    taxes_and_wages = base_compute.sum_entry_items_by_line(:ratio, :taxes_and_wages)
+    data << {name: :taxes_and_wages.tl(financial_year: @financial_year.name) , y: - taxes_and_wages.to_s.to_f, color: :red}
+
+    # operating_margin
+    data << {name: :operating_margin.tl, isSum: true}
+
+    series << { data: data }
+
+  = waterfall_highcharts(series, x_axis: { type: 'category'}, y_axis: {title: {text: 'EUR'}}, legend: { enabled: false }, tooltip: {point_format: '<b>{point.y:,.2f}</b>'})
+- else
+  = no_data

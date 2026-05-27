@@ -1,0 +1,32 @@
+= kujaku do |k|
+  - k.text
+  - if Plant.unique_varieties.any?
+    - k.helper do
+      %div.label-container
+        %label= Plant.human_attribute_name(:variety)
+      = select_tag(:variety, options_for_select([[]] + Plant.unique_varieties.map{ |v| [v.human_name, v.name.to_s] }.sort_by(&:first), params[:variety].to_s))
+  - if Plant.where.not(born_at: nil).any?
+    - k.helper do
+      = plant_period_crit(label: Plant.human_attribute_name(:born_at), name: :born_at)
+  - if Plant.where.not(dead_at: nil).any?
+    - k.helper do
+      = plant_period_crit(label: Plant.human_attribute_name(:dead_at), name: :dead_at)
+  - k.helper do
+    - max = plants_max_area.in_hectare.to_f.ceil.in_hectare
+    %div.label-container
+      %label= Plant.human_attribute_name(:net_surface_area)
+    .range-slider.range-slider--plant.value-container
+      %span.range-minimum.range-minimum--plant= 0.in_hectare.l(precision: 0)
+      %input{ name: :area, data: { slider: { min: 0, max: max.to_f.round, value: area_range_slider_value(max.to_f), step: 0.1, tooltip_split: true }, provide: 'slider' } }
+      %span.range-maximum.range-maximum--plant= max.l(precision: 0)
+
+- main_toolbar do
+  = new_planting_and_sowing_dropdown(:generate_plant.tl)
+
+= janus do |j|
+  - if current_campaign && Plant.of_campaign(current_campaign).any?
+    - j.face :map do
+      = plants_map(main: true, optional_data_url: backend_visualizations_non_treatment_areas_visualizations_path)
+
+  - j.face :list do
+    = main_list

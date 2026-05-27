@@ -1,0 +1,9 @@
+- if @deposits.any?
+  = form_tag do
+    = list :unvalidateds
+    = form_actions do
+      = link_to :previous.tl, action: :index
+      = submit_tag :validate.tl
+- else
+  %p{:style => 'text-align:center'}= :no_deposits.tl
+

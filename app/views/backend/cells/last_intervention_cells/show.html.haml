@@ -1,0 +1,55 @@
+- if @intervention
+  - count = 0
+  - map = visualization do |v|
+    - @intervention.product_parameters.each do |cast|
+      - shape = cast.working_zone
+      - shape ||= cast.product.shape(at: @intervention.started_at) if cast.product
+      - if shape
+        - v.serie cast.id, [{name: cast.name, shape: shape}]
+        :ruby
+          label = if cast.product
+                    cast.product.name
+                  elsif cast.variant
+                    cast.variant.name
+                  else
+                    cast.name
+                  end
+        - v.simple label, cast.id, fill_color: cycle(theme_colors)
+        - count += 1
+    - v.control :zoom
+    - v.control :scale
+    - v.control :fullscreen
+    - v.control :layer_selector
+  - if count > 0
+    = map
+  - targets = @intervention.targets
+  - targets = @intervention.inputs unless targets.any?
+  .info
+    %span.title= Intervention.human_attribute_name(:name)
+    %span.value= link_to(@intervention.name, controller: "/backend/interventions", action: :show, id: @intervention.to_param)
+  .info
+    %span.title= Intervention.human_attribute_name(:targets)
+    %span.value= @intervention.human_target_names
+  - if @intervention.started_at?
+    .info
+      %span.title= Intervention.human_attribute_name(:started_at)
+      %span.value= @intervention.started_at.l
+    .info
+      %span.title= Intervention.human_attribute_name(:working_duration)
+      %span.value= human_duration(@intervention.working_duration)
+    .info
+      %span.title= Intervention.human_attribute_name(:state)
+      %span.value= @intervention.state.l
+    - total = 0
+    - for type in [:input, :tool, :doer]
+      - cost = (@intervention.cost(type) || 0.0).round
+      - total += cost
+      .info
+        %span.title= "evaluated_#{type}_cost".tl
+        %span.value= cost.l(currency: Preference[:currency])
+    .big-info.important
+      %span.title= :total_cost.tl
+      %span.value= total.l(currency: Preference[:currency])
+
+- else
+  = no_data

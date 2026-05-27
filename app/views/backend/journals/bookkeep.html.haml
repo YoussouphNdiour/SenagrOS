@@ -1,0 +1,22 @@
+- if @step == 1
+  = form_tag({}, method: :put) do
+    = field_set :period do
+      = field :from.tl, date_field_tag(:started_on, params[:started_on])
+      = field :to.tl,   date_field_tag(:stopped_on, params[:stopped_on])
+    = form_actions do
+      = submit_tag :validate.tl
+
+
+- if @step == 2
+  = form_tag({}, method: :post) do
+    = field_set :preferences do
+      = field :from.tl, params[:started_on].l
+      = field :select_date_generation.tl, params[:stopped_on].l
+      = field :save_in_draft.tl, check_box_tag("save_in_draft", "1", Preference[:bookkeep_in_draft])
+    = field_set :counts_by_nature do
+      - @natures.each do |nature|
+        = field nature.to_s.classify.constantize.model_name.human, @records[nature].size
+    = form_actions do
+      = submit_tag :save.tl
+      = link_to :back.tl, {action: :bookkeep, finish_bookkeeping_on: params[:stopped_on]}, class: 'btn'
+

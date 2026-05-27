@@ -1,0 +1,11 @@
+- subheading("x_results", count: @search[:count])
+
+- unless @search[:count].zero?
+  = search_results(@search) do |result|
+    %h3
+      = link_to(controller: result["record_type"].tableize, action: :show, id: result["record_id"]) do
+        = result["record_type"].constantize.model_name.human
+        = " &mdash; ".html_safe
+        = result["title"]
+      %small= result["pertinence"]
+    %p= highlight(truncate(result["indexer"], length: 300), @search[:words])

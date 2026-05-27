@@ -1,0 +1,33 @@
+- c.cobble(:products) do
+  = cobble_toolbar do |t|
+
+    - controller_name = resource.variant_type == :article ? 'matter' : resource.variant_type
+    - if (controller_name != :crop) && (controller_name != :zone) && (controller_name != :service)
+      = t.new(params: {controller: "/backend/#{controller_name.to_s.pluralize}", :variant_id => resource.id, redirect: nil})
+      = cobble_list(:products)
+    - else
+      = cobble_list(:products)
+
+- if resource.purchasable? || resource.saleable? || resource.storable?
+  - c.cobble(:prices_list) do
+    = cobble_toolbar do |t|
+      = t.new(params: {controller: '/backend/catalog_items', :variant_id => resource.id, redirect: request.fullpath}, tool: 'new-price')
+    = cobble_list(:catalog_items)
+
+- if resource.saleable?
+  - c.cobble(:sale_items) do
+    = cobble_list(:sale_items)
+
+- if resource.purchasable?
+  - c.cobble(:purchase_order_items) do
+    = cobble_list(:purchase_order_items)
+
+  - c.cobble(:purchase_invoice_items) do
+    = cobble_list(:purchase_invoice_items)
+
+  - c.cobble(:suppliers) do
+    = cobble_list(:suppliers)
+
+- if resource.of_variety? :equipment
+  - c.cobble(:components) do
+    = cobble_list(:components)

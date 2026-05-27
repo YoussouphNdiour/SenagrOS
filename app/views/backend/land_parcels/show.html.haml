@@ -1,0 +1,46 @@
+- main_period_selector(:year)
+
+= cobbles do |c|
+  - c.cobble :general_informations do
+    = product_mini_map
+    = infos do
+      - if resource.initial_shape && resource.human_initial_shape_area_unit && resource.activity_production
+        .med-info.important
+          %span.title= LandParcel.human_attribute_name(:net_surface_area)
+          %span.value= resource.activity_production.human_support_shape_area
+        .med-info.important
+          %span.title= :working_area.tl
+          %span.value= resource.activity_production.decorate.human_working_zone_area(current_campaign)
+        - unless @reentry_possible.possible
+          .med-info.delay
+            %span.title= :re_entry_delay.tl
+            %span.value
+              %span= @reentry_possible.next_possible_date.l
+            - if @reentry_possible.period.duration == 8
+              %span
+                %span= :add_two_hours_reentry_delay.tl
+
+  - c.cobble :weather do
+    = cell :weather, params: {centroid: resource.initial_shape.centroid} if resource.initial_shape.present?
+
+  - if resource&.activity_production&.interventions&.any?
+    - c.cobble(:production_costs, title: :production_costs.tl) do
+      = render partial: 'backend/shared/production_costs', locals: { costs: resource.activity_production.decorate.production_costs(current_campaign) }
+  - else
+    = no_data
+
+  - c.cobble(:interventions) do
+    = cobble_toolbar do |t|
+      :ruby
+        new_params = {
+          controller: :interventions,
+          intervention: { product_id: resource.id },
+          targets_attributes: [{ product_id: resource.id }]
+        }
+      = t.new(params: new_params)
+      = cobble_list(:interventions)
+
+  - c.cobble(:plants, title: :crops.tl) do
+    = toolbar do
+      = new_planting_and_sowing_dropdown(:new.tl)
+    = cobble_list(:plants)

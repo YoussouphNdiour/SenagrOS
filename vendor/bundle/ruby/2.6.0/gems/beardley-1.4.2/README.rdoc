@@ -1,0 +1,11 @@
+= Beardley
+{<img src="https://badge.fury.io/rb/beardley.png" alt="Gem Version" />}[http://badge.fury.io/rb/beardley]
+{<img src="https://api.travis-ci.org/ekylibre/beardley.png?branch=master"/>}[https://travis-ci.org/ekylibre/beardley]
+{<img src="https://gemnasium.com/ekylibre/beardley.png"/>}[https://gemnasium.com/ekylibre/beardley]
+{<img src="https://codeclimate.com/github/ekylibre/beardley.png" />}[https://codeclimate.com/github/ekylibre/beardley]
+{<img src="https://coveralls.io/repos/ekylibre/beardley/badge.png?branch=master" alt="Coverage Status" />}[https://coveralls.io/r/ekylibre/beardley]
+
+Beardley provides a minimal use of JasperReport.
+
+== More informations
+* http://en.wikipedia.org/wiki/List_of_recurring_The_Simpsons_characters#Jasper_Beardly

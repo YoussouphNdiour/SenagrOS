@@ -1,0 +1,3774 @@
+arb:
+  actions:
+    authentication/invitations:
+      edit: "قبول دعوة"
+    authentication/passwords:
+      edit: "كلمة السر الجديدة"
+      new: "كلمة السر الجديدة"
+    authentication/registrations:
+      edit: "سجل"
+      new: "سجل"
+    authentication/sessions:
+      destroy: "الخروج"
+      new: "الدخول"
+    backend/accountancy: #?
+      balance: "رصيد الحساب" #?
+      bookkeep: "نظام المحاسبة المتغير" #?
+      draft: "المسودات" #?
+      general_ledger: "دفتر الحسابات" #?
+      index: "المحاسبة العامة" #?
+    backend/accounts:
+      edit: "تعديل الحساب : %{number} - %{name}"
+      index: "مخطط الحساب"
+      load: "تحميل خطة للحسابات"
+      mark: "تسجيل حساب رقم %{number} من %{started_at} الى %{stopped_at}"
+      new: "انشاء حساب جديد"
+      reconciliation: "كتابة حسابات"
+      show: "الحساب : %{number} - %{name}"
+      unmark: "حساب إزالة العلامة"
+    backend/activities:
+      # edit: "Edit activity: %{name}"
+      # family: "Family activity: %{name}"
+      index: "أنشطة"
+      new: "نشاط جديد"
+      # show: "Activity: %{name}"
+    backend/activity_budgets:
+      # edit: "Edit budget: %{name}"
+      new: "الميزانية الجديدة"
+      # show: "Activity budget: %{name}"
+    backend/activity_productions:
+      # edit: "Edit production: %{name}"
+      index: "إنتاجات"
+      new: "إنتاج نشاط جديد"
+      # show: "Production: %{name}"
+    backend/affairs:
+      # attach: "Attach to affair %{number}"
+      # detach: "Detach from affair %{number}"
+      # finish: "Finish affair %{number}"
+      index: "شئون"
+      select: "تحديد سجل لإضافة إلى قضية"
+      # show: "Affair: %{number}"
+    backend/analyses:
+      # edit: "Edit analysis #%{number}"
+      index: "تحليلات"
+      new: "تحليل جديد"
+      # show: "Analysis #%{number}"
+    backend/analysis_items:
+      new: "البند تحليل جديد"
+    backend/animal_groups:
+      # edit: "Edit animal group: %{name}"
+      index: "المجموعات الحيوانية"
+      new: "مجموعة حيوانية جديدة"
+      # show: "Animal group: %{name}"
+    backend/animals:
+      add_to_group: "إضافة إلى مجموعة"
+      # edit: "Edit animal: %{name}"
+      index: "الحيوانات"
+      new: "حيوان جديد"
+      # show: "%{nature}: %{name}"
+    backend/bank_reconciliation/items:
+      # index: "Reconciliate bank statement %{cash} %{number} (from %{started_on} to %{stopped_on})"
+      # reconciliate: "Bank statements of %{cash} (from %{started_on} to %{stopped_on})"
+    backend/bank_statements:
+      edit: "تعديل الكشف المصرفي رقم%{number}"
+      edit_interval: "فترات البيانات المصرفية للتوفيق"
+      import: "ملف الاستيراد OFX"
+      index: "بيان الحساب المصرفي"
+      new: "الاشارة لكشف حساب جديد"
+      show: "رقم كشف الحساب%{number}"
+    backend/beehives:
+      # reset: "Reset beehive: %{name}"
+    backend/building_divisions:
+      # edit: "Edit building division: %{name}"
+      index: "الانقسامات بناء"
+      new: "تقسيم المبنى الجديد"
+      # show: "Building division: %{name}"
+    backend/buildings:
+      edit: "تعديل موقع التخزين"
+      index: "مواقع التخزين"
+      new: "اضافة موقع للتخزين"
+      show: "تفاصيل عن مواقع التخزين : %{name}"
+    backend/campaigns:
+      current: "حملة"
+      # edit: "Edit campaign: %{name}"
+      index: "حملات"
+      new: "حملة جديدة"
+      # show: "Campaign %{name}"
+    backend/cap_islets:
+      # edit: "Edit CAP islet: %{islet_number}"
+      index: "الجزر كاب"
+      new: "جزيرة كاب جديدة"
+      # show: "CAP islet: %{islet_number}"
+    backend/cap_land_parcels:
+      # edit: "Edit CAP land parcel: %{land_parcel_number}"
+      index: "قطع الأراضي كاب"
+      new: "جديد لا يتجزأ غطاء الأرض"
+      # show: "CAP land parcel: %{land_parcel_number}"
+    backend/cap_statements:
+      # edit: "Edit CAP statement: %{id}"
+      index: "البيانات كاب"
+      new: "بيان الحد الأقصى الجديد"
+      # show: "CAP statement: %{id}"
+    backend/cash_transfers:
+      # edit: "Edit cash transfer: %{number}"
+      index: "التحويلات النقدية"
+      new: "التحويلات النقدية الجديد"
+      # show: "Cash transfer: %{number}"
+    backend/cashes:
+      edit: "تعديل الخزينة : %{name}"
+      index: "الخزينة"
+      new: "التسجيل لخزينة جديدة"
+      show: "%{nature_label} : %{name}"
+    backend/catalog_items:
+      # edit: "Edit catalog item: %{name}"
+      new: "البند الكتالوج الجديد"
+      # show: "Catalog item: %{name}"
+    backend/catalogs:
+      # edit: "Edit catalog: %{name}"
+      index: "كتالوجات"
+      new: "الكتالوج الجديد"
+      # show: "Catalog: %{name}"
+    backend/companies:
+      edit: "تعديل الإعدادات شركة"
+      register: "تسجيل شركة" #?
+    backend/company: #?
+      about: "وحول ايكيليبغ" #?
+      backups: "النسخ الاحتياطية" #?
+      change_password: "تغيير كلمة المرور" #?
+      configure: "التكوين" #?
+      help: "المساعدة" #?
+      import: "الاستيراد" #?
+      index: "صباح الخير، %{user}" #?
+      listing_nodes: "اختر المعلومات المستخرجة" #?
+      welcome: "نرحب بايكيليبغ  %{user}" #?
+    backend/contacts: #?
+      edit: "تعديل عنوان : %{entity}" #?
+      new: "اضافة متصل جديد" #?
+    backend/contracts:
+      # edit: "Edit contract %{number}"
+      index: "عقود"
+      new: "عقد جديد"
+      # show: "Contract %{number}"
+    backend/crumbs:
+      index: "فتات"
+    backend/cultivable_zones:
+      # edit: "Edit cultivable zone: %{name}"
+      index: "المناطق الصالحة للزراعة"
+      new: "منطقة زراعة جديدة"
+      # show: "Cultivable zone: %{name}"
+    backend/custom_fields:
+      edit: "تعديل الحقل المخصص : %{name}"
+      index: "الحقول المخصصة"
+      new: "انشاء حقل مخصص"
+      show: "الحقل المخصص : %{name}"
+      sort: "خيارات فرز الحقول المخصصة"
+    backend/dashboards:
+      accountancy: "المحاسبة لوحة القيادة"
+      # edit: "Edit dashboard: %{name}"
+      home: "لوحة أجهزة القياس المنزلية"
+      humans: "لوحة الموارد البشرية"
+      index: "لوحات"
+      new: "لوحة تحكم جديدة"
+      production: "لوحة أجهزة القياس إنتاج"
+      # purchases: "Purchases dashboard"
+      relationship: "لوحة أجهزة القياس العلاقة"
+      # sales: "Sales dashboard"
+      # sandbox: "Sandbox dashboard: %{name}"
+      # search: "Search for: %{searched}"
+      settings: "إعدادات لوحة القيادة"
+      # show: "%{name} dashboard"
+      stocks: "الأسهم لوحة القيادة"
+      tools: "أدوات لوحة القيادة"
+      trade: "لوحة أجهزة القياس التجارة"
+    backend/delays: #?
+      edit: "تعديل المهلة : %{name}" #?
+      index: "مهلة" #?
+      new: "اضافة مهلة جديدة" #?
+      show: "المهلة : %{name}" #?
+    backend/deliveries:
+      deliveries: "تسليم وسيلة النقل" #?
+      edit: "تعديل وسيلة النقل"
+      index: "وسائل النقل"
+      new: "اضافة وسيلة نقل جديدة"
+      show: "نقلت من %{created_at}"
+    backend/deposits:
+      edit: "تعديل اقتطاعات البنك من %{created_at}"
+      index: "اقتطاعات البنك"
+      new: "انشاء اقتطاع : %{mode}"
+      show: "اقتطاع البنك %{number} من %{created_at}"
+      unvalidateds: "التأكد من اقتطاعات البنك"
+    backend/districts:
+      edit: "تعديل عنوان بريدي : %{name}"
+      index: "المناطق الادارية"
+      new: "اضافة عنوان بريدي"
+    backend/document_templates:
+      edit: "تعديل نموذج الوثيقة : %{name}"
+      index: "نماذج الوثيقة"
+      load: "تحميل نموذج الوثيقة افتراضيا"
+      new: "انشاء نموذج للوثيقة"
+      # show: "Document template: %{name}"
+    backend/documents:
+      # edit: "Edit document: %{name}"
+      index: "إدارة الوثائق"
+      new: "وثيقة جديدة"
+      print: "طباعة وتصدير" #?
+      # show: "Document: %{name}"
+    backend/draft_journals:
+      show: "المسودات"
+    backend/entities:
+      edit: "تعديل الملف : %{full_name}"
+      export: "تصدير الملفات"
+      import: "استيراد الملفات"
+      index: "سجلات الاشخاص"
+      merge: "دمج التكرار مع المافات الاصلية"
+      new: "انشاء ملف جديد للعميل / للممول"
+      show: "ملف: %{full_name}"
+    backend/entity_addresses:
+      # edit: "Edit address: %{name}"
+      new: "العنوان الجديد"
+    backend/entity_categories: #?
+      edit: "تعديل نوع الملف : %{name}" #?
+      index: "انواع الملف" #?
+      new: "اضافة نوع جديد للملف" #?
+      show: "نوع الملف : %{name}" #?
+    backend/entity_event_natures: #?
+      edit: "تعديل نوع الحدث: %{name}" #?
+      index: "انواع الاحداث" #?
+      new: "اضافة نوع الحدث" #?
+    backend/entity_events: #?
+      edit: "تعديل الحدث" #?
+      index: "الاحداث" #?
+      new: "اضافة حدث" #?
+    backend/entity_link_natures: #?
+      edit: "تعديل نوع الرابط : %{name}" #?
+      index: "انواع الرابط" #?
+      new: "اضافة نوع رابط جديد" #?
+    backend/entity_links:
+      edit: "تعديل الرابط"
+      new: "اضافة رابط جديد"
+    backend/entity_natures: #?
+      edit: "تعديل نوع الملف : %{name}" #?
+      index: "انواع الملفات" #?
+      new: "اضافة نوع ملف جديد" #?
+    backend/equipments:
+      # edit: "Edit equipment: %{name}"
+      index: "المعدات"
+      new: "معدات جديدة"
+      # show: "Equipment: %{name}"
+    backend/establishments: #?
+      edit: "تعديل نموذج المرفق : %{name}" #?
+      index: "مرافق" #?
+      new: "اضافة مرفق جديد" #?
+    backend/event_natures: #?
+      edit: "تعديل نوع الحدث: %{name}" #?
+      index: "انواع الاحداث" #?
+      new: "اضافة نوع الحدث" #?
+    backend/event_participations:
+      # edit: "Edit participation: %{participant_name}"
+    backend/events:
+      edit: "تعديل الحدث"
+      index: "الاحداث"
+      new: "اضافة حدث"
+      # show: "Event: %{name}"
+    backend/exports:
+      index: "صادرات"
+      # show: "Export: %{name}"
+    backend/finances: #?
+      unvalidated_deposits: "التأكد من اقتطاعات البنك" #?
+    backend/financial_year_exchanges:
+      journal_entries_import: "استيراد الصرف في العام المالي"
+      new: "الصرف الجديد"
+      # show: "Exchange: %{stopped_on}"
+    backend/financial_years:
+      close: "نهاية الممارسة"
+      compute_balances: "حساب التوازن العام المالي"
+      edit: "تعديل المهنة الجديدة"
+      # generate_last_journal_entry: "Generate last journal entry of %{code}"
+      index: "ممارسة المحاسبة"
+      # lock: "Lock financial year %{code}"
+      new: "انشاء مهنة جديدة"
+      show: "ممارسة المحاسبة %{code}"
+    backend/fixed_assets:
+      # edit: "Edit fixed asset: %{name}"
+      index: "أصول ثابتة"
+      new: "الأصول الثابتة الجديدة"
+      # show: "Fixed asset: %{name}"
+    backend/fungi:
+      # edit: "Edit fungus: %{name}"
+      index: "الفطريات"
+      new: "فطر جديد"
+      # show: "Fungus: %{name}"
+    backend/gaps:
+      index: "ثغرات"
+      # show: "Gap: %{number}"
+    backend/general_ledgers:
+      # index: "%{ledger}"
+      show: "دفتر الحسابات"
+    backend/georeadings:
+      # edit: "Edit georeading: %{name}"
+      # index: "Georeadings"
+      new: "georeading جديدة"
+      # show: "Georeading: %{name}"
+    backend/guide_analyses:
+      # show: "Analysis #%{execution_number} of %{guide}"
+    backend/guides:
+      # edit: "Edit guide: %{name}"
+      index: "أدلة"
+      new: "دليل جديد"
+      # run: "Run guide: %{name}"
+      # show: "Guide: %{name}"
+    backend/helps:
+      index: "مساعدة"
+      # show: "Help: %{name}"
+      # toggle: "Toggle help: %{name}"
+    backend/identifiers:
+      # edit: "Edit identifier: %{name}"
+      index: "معرفات"
+      new: "معرف جديد"
+      # show: "Identifier: %{name}"
+    backend/imports:
+      # edit: "Edit import: %{nature}"
+      index: "واردات"
+      new: "استيراد جديد"
+      run: "استيراد تشغيل"
+      # show: "Import: %{nature}"
+    backend/incoming_payment_modes:
+      edit: "تعديل طريقة الدفعة: %{name}"
+      index: "طرق تسديد الدفعات"
+      new: "اضافة طريقة جديدة لتسديد الفعة"
+      # show: "Incoming payment mode: %{name}"
+    backend/incoming_payment_uses: #?
+      new: "اضافة دفعة جديدة  : %{type} رقم %{number}" #?
+    backend/incoming_payments:
+      edit: "تعديل دفعة رقم%{number}"
+      index: "الدفعات"
+      new: "اضافة دفعة جديدة"
+      show: "دفعة رقم%{number} من %{entity}"
+    backend/inspections:
+      # edit: "Edit product grading\_: %{number}"
+      index: "الى التصنيف المنتج"
+      new: "جديد الدرجات المنتج"
+      # show: "Product grading\_: %{number}"
+    backend/integrations:
+      # edit: "Edit integration: %{name}"
+      index: "التكامل"
+      # new: "Activate integration: %{name}"
+    backend/intervention_participations:
+      # convert: "Convert intervention participation: %{name}"
+      index: "المساهمات تدخل"
+    backend/interventions:
+      edit: "تحرير"
+      edit_request: "طلب تحرير"
+      # edit_specified: "Edit %{procedure_name} #%{number}"
+      # edit_specified_request: "Edit %{procedure_name} request #%{number}"
+      index: "التدخلات"
+      new: "تدخل جديد"
+      new_request: "طلب تدخل جديد"
+      new_specified: "تدخل جديد"
+      new_specified_request: "تدخل طلب جديد"
+      # show: "%{nature} %{procedure_name} #%{number}"
+    backend/inventories:
+      edit: "تعديل الجرد"
+      index: "الجرد"
+      new: "الجرد"
+      # show: "Inventory: %{name}"
+    backend/invitations:
+      index: "دعوات"
+      new: "دعوة جديدة"
+    backend/issues:
+      # abort: "Abort issue: %{name}"
+      # close: "Close issue: %{name}"
+      # edit: "Edit issue: %{name}"
+      index: "مسائل"
+      new: "مشكلة جديدة"
+      # reopen: "Reopen issue: %{name}"
+      # show: "Issue: %{name}"
+    backend/journal_entries:
+      edit: "تعديل السجل رقم %{number} من %{created_at}"
+      index: "إدخالات دفتر اليومية"
+      new: "اضافة سجل"
+      show: "رقم سجل المحاسبة%{number} من %{created_at}"
+    backend/journal_entry_items:
+      index: "البنود إدخال دفتر اليومية"
+      new: "البند قيد جديد" #?
+      # show: "Journal entry item: %{name}"
+    backend/journals:
+      bookkeep: "نظام المحاسبة المتغير"
+      close: "اغلاق %{name}"
+      edit: "تعديل الدفتر اليومي : %{name}"
+      index: "الدفاتر اليومية"
+      new: "انشاء دفتر يومي جديد"
+      # reopen: "Reopen journal: %{name}"
+      show: "الدفتر اليومي : %{name} (%{code})"
+    backend/labels:
+      # edit: "Edit label: %{name}"
+      index: "تسميات"
+      new: "تسمية جديدة"
+      # show: "Label: %{name}"
+    backend/land_parcels:
+      edit: "تعديل النظام : %{name}"
+      index: "انظمة"
+      new: "اضافة نظام جديد"
+      show: "نظام %{name}"
+    backend/listing_nodes:
+      edit: "تحرير العقدة قائمة"
+      new: "العقدة قائمة جديدة"
+    backend/listings:
+      edit: "تعديل المستخرج : %{name}"
+      # extract: "Extract listing: %{name}"
+      index: "الصادرات وارسال الرسائل"
+      mail: "ارسال الرسالة ل «%{name}»"
+      new: "انشاء استخلاص جديد"
+    backend/loan_repayments:
+      # edit: "Edit repayment due on %{due_on} of loan %{loan_name}"
+      # new: "New loan repayment"
+    backend/loans:
+      # edit: "Edit loan: %{name}"
+      index: "القروض"
+      new: "قرض جديد"
+      # show: "Loan: %{name}"
+    backend/management: #?
+      index: "ادارة الاعمال" #?
+      sale_items: "اختيار المنتجات للطلب %{sale} من : %{client}" #?
+      sale_summary: "فوترة دفعة  (دفعات) طلب الشراء %{number}" #?
+      sales_invoice: "%{nature} %{number}" #?
+      sales_invoices: "الفواتير" #?
+      statistics: "الاحصائيات" #?
+      undelivered_sales: "التسليم بالانتظار" #?
+    backend/mandates: #?
+      configure: "ترتيب التفويضات" #?
+      edit: "تعديل التفويض" #?
+      index: "تفويضات" #?
+      new: "انشاء تفويض" #?
+    backend/manure_management_plans:
+      # edit: "Edit manure management plan: %{name}"
+      index: "خطط إدارة السماد"
+      new: "خطة جديدة لإدارة السماد"
+      # show: "Manure management plan: %{name}"
+    backend/map_backgrounds: #?
+      index: "خلفيات خريطة" #?
+      new: "خريطة خلفية جديدة" #?
+    backend/map_layers:
+      # edit: "Edit map layer: %{name}"
+      index: "طبقات الخرائط"
+      # load: "Load map layer: %{name}"
+      new: "طبقة خريطة جديدة"
+      # show: "Map layer: %{name}"
+      # star: "Star map layer: %{name}"
+      # toggle: "Toggle map layer: %{name}"
+    backend/matters:
+      # edit: "Edit matter: %{name}"
+      index: "المسائل"
+      new: "مسألة جديدة"
+      # show: "Matter: %{name}"
+    backend/myselves:
+      show: "بلدي المعلومات"
+      statistics: "احصائياتي" #?
+    backend/naming_format_land_parcels:
+      # edit: "Land parcel naming format"
+    backend/naming_formats:
+      # index: "Naming formats"
+    backend/net_services:
+      edit: "تعديل صافي الخدمة"
+      index: "صافي الخدمات"
+      new: "خدمة الصافية الجديدة"
+      # show: "Net service: %{name}"
+    backend/notifications:
+      index: "الإشعارات"
+    backend/observations:
+      edit: "تعديل الملاحظة"
+      new: "اضافة ملاحظة"
+    backend/operation_natures: #?
+      edit: "تعديل نوع العمل : %{name}" #?
+      index: "اواع العمل" #?
+      new: "انشاء نوع جديد من العمل" #?
+    backend/operations: #?
+      edit: "تعدل العمل %{name}" #?
+      index: "اعمال" #?
+      new: "انشاء عمل جديد" #?
+      show: "تفاصيل العمل %{name}" #?
+      unvalidateds: "تحقيق الاعمال" #?
+    backend/outgoing_delivery_modes: #?
+      edit: "تعديل وسيلة التسليم : %{name}" #?
+      index: "وسائل التسليم" #?
+      new: "اضافة وسيلة جديدة للتسليم" #?
+    backend/outgoing_parcels: #?
+      edit: "تعديل التسليم" #?
+      new: "اضافة تسليم" #?
+    backend/outgoing_payment_lists:
+      index: "المدفوعات الصادرة قائمة دفعة"
+      new: "قائمة جديدة لدفع المنتهية ولايته"
+      show: "المدفوعات الصادرة دفعة"
+    backend/outgoing_payment_modes:
+      edit: "تعديل طريقة تسديد الفعة"
+      index: "طرق تسديد الدفعات"
+      new: "اضافة طريقة تسديد الدفعة"
+      # show: "Disbursement mode: %{name}"
+    backend/outgoing_payment_uses: #?
+      new: "تسديد الشراء رقم%{number}" #?
+    backend/outgoing_payments:
+      # edit: "Edit disbursement: %{name}"
+      index: "المصروفات"
+      new: "صرف جديد"
+      # show: "Disbursement: %{name}"
+    backend/parcels:
+      # edit: "Edit %{nature} parcel: %{number}"
+      index: "الطرود"
+      new: "قطعة جديدة"
+      ship: "الطرود سفينة"
+      # show: "%{nature} parcel: %{number}"
+    backend/payslip_natures:
+      # edit: "Edit payslip nature: %{name}"
+      index: "الطبيعة بايسليب"
+      new: "طبيعة جديدة بايسليب"
+      # show: "Payslip nature: %{name}"
+    backend/payslip_payments:
+      # edit: "Edit payslip payment: %{number}"
+      index: "مدفوعات بايسليب"
+      new: "دفعة دفع جديدة"
+      # show: "Payslip payment: %{number}"
+    backend/payslips:
+      # edit: "Edit payslip: %{number}"
+      index: "كشوف"
+      new: "جديد قسيمة الدفع"
+      # show: "Payslip: %{number}"
+    backend/plant_countings:
+      # edit: "Edit plant counting: #%{number}"
+      index: "فرزان"
+      new: "العد الجديد"
+      # show: "Plant counting #%{number}"
+    backend/plants:
+      # edit: "Edit crop: %{name}"
+      index: "النباتات"
+      new: "مصنع جديد"
+      # show: "Crop: %{name}"
+    backend/postal_zones:
+      edit: "تعديل العنوان البريدي : %{name}"
+      index: "العناوين البريد"
+      new: "اضافة عنوان بريدي"
+    backend/prescriptions:
+      # edit: "Edit prescription: %{reference_number}"
+      index: "وصفات"
+      new: "وصفة جديدة"
+      # show: "Prescription: %{reference_number}"
+    backend/prices: #?
+      import: "CSV استيراد بيان التعرفة ضمن" #?
+      index: "الاسعار" #?
+      new: "اضافة سعر جديد" #?
+    backend/product_categories: #?
+      edit: "تعديل فئة المنتج : %{name}" #?
+      index: "فئات المنتج" #?
+      new: "اضافة فئة جديدة للمنتج" #?
+      show: "تفاصيل فئة: %{name}" #?
+    backend/product_components: #?
+      edit: "تعديل عنصر المنتج %{product} " #?
+      new: "اضافة عنصر الى المنتج %{product} " #?
+    backend/product_groups:
+      # edit: "Edit group: %{name}"
+      index: "مجموعات المنتجات"
+      new: "مجموعة جديدة"
+      # show: "Group: %{name}"
+    backend/product_localizations:
+      edit: "تحرير توطين المنتج:"
+      new: "جديد توطين المنتج"
+    backend/product_moves: #?
+      edit: "تعديل حركة سهم : %{name}" #?
+      new: "التسجيل لحركة السهم" #?
+    backend/product_nature: #?
+      edit: "تعديل المنتج : %{name}" #?
+      index: "المنتجات" #?
+      new: "اضافة منتج جديد" #?
+      show: "المنتجات : %{name}" #?
+    backend/product_nature_categories:
+      edit: "تعديل فئة المنتج : %{name}"
+      index: "فئات المنتج"
+      new: "اضافة فئة جديدة للمنتج"
+      pick: "اختيار فئة المنتج"
+      show: "تفاصيل فئة: %{name}"
+    backend/product_nature_components: #?
+      edit: "تعديل عنصر المنتج %{product} " #?
+      new: "اضافة عنصر الى المنتج %{product} " #?
+    backend/product_nature_variants:
+      # edit: "Edit product variant: %{name}"
+      index: "متغيرات المنتج"
+      new: "الجديد البديل المنتج"
+      pick: "اختيار المنتج البديل"
+      # show: "Product variant: %{name}"
+    backend/product_natures:
+      edit: "تعديل المنتج : %{name}"
+      index: "المنتجات"
+      new: "اضافة منتج جديد"
+      pick: "اختيار نوع المنتج"
+      show: "المنتجات : %{name}"
+    backend/product_stock_moves: #?
+      edit: "تعديل حركة سهم : %{name}" #?
+      new: "التسجيل لحركة السهم" #?
+    backend/product_stocks: #?
+      index: "وضع الاسهم" #?
+    backend/product_transfers: #?
+      confirm: "اتمام عملية نقل" #?
+      edit: "تعديل عملية نقل الاسهم" #?
+      index: "عمليات نقل وخسارة الاسهم" #?
+      new: "اضافة عملية نقل او خسارة الاسهم" #?
+    backend/production: #?
+      index: "ادارة الانتاج" #?
+      unvalidated_operations: "تحقيق الاعمال" #?
+    backend/products:
+      edit: "تعديل المنتج : %{name}"
+      edit_many: "توزيع المنتجات غير المتضررة"
+      index: "المنتجات"
+      new: "اضافة منتج جديد"
+      show: "المنتجات : %{name}"
+    backend/products_natures: #?
+      edit: "تعديل المنتج : %{name}" #?
+      index: "المنتجات" #?
+      new: "اضافة منتج جديد" #?
+      show: "المنتجات : %{name}" #?
+    backend/project_budgets:
+      # edit: "Edit project budget: %{name}"
+      # index: "Project budgets"
+      # new: "New project budget"
+      # show: "Project budget: %{name}"
+    backend/purchase_invoices:
+      # edit: "Edit invoice: %{number}"
+      # index: "Invoices"
+      # new: "New invoice"
+      # pay: "Pay invoice: %{number}"
+      # payment_mode: "Payment mode invoice: %{number}"
+      # show: "Invoice: %{number}"
+    backend/purchase_items: #?
+      edit: "تعديل تصميم الطلب" #?
+      new: "اضافة طلب للمنتج : %{number}" #?
+    backend/purchase_natures:
+      edit: "تحرير نوع شراء"
+      index: "أنواع شراء"
+      new: "نوع شراء جديدة"
+      # show: "Purchase type: %{name}"
+    backend/purchase_orders:
+      # close: "Close order: %{number}"
+      # edit: "Edit order: %{number}"
+      # index: "Orders"
+      # new: "New order"
+      # open: "Open order: %{number}"
+      # reconciliate_modal: "Reconciliate modal order: %{number}"
+      # show: "Purchase order: %{number}"
+    backend/purchase_payments:
+      edit: "تعديل دفعة : %{number}"
+      index: "دفعات"
+      new: "اضافة دفعة"
+      show: "رقم الدفعة%{number} من اجل %{payee}"
+    backend/purchases: #?
+      abort: "إحباط" #?
+      confirm: "تأكيد النظام والانتظار لتسليم" #?
+      correct: "طلب صحيح" #?
+      edit: "تعديل الشراء : %{number}" #?
+      index: "المستريات" #?
+      invoice: "تلقي فاتورة" #?
+      new: "شراء جديد" #?
+      payment_mode: "طريقة الدفع حدد" #?
+      propose: "اقتراح ترتيب" #?
+      propose_and_invoice: "فاتورة مباشرة" #?
+      refuse: "أجل رفض" #?
+      show: "تفاصيل الشراء %{number} الى الممول %{supplier} " #?
+    backend/quick_purchases:
+      new: "شراء الجديد / دفع المنتهية ولايته"
+    backend/quick_sales:
+      new: "بيع جديد / دفع الواردة"
+    backend/receptions:
+      # edit: "Edit reception: %{number}"
+      # give: "Give reception: %{number}"
+      # index: "Receptions"
+      # new: "New reception"
+      # show: "Reception: %{number}"
+    backend/registrations:
+      edit: "تسجيل تحرير"
+      index: "التسجيلات"
+    backend/relations: #?
+      index: "ادارة علاقات العملاء والممولين" #?
+    backend/roles:
+      edit: "تعديل المهام : %{name}"
+      index: "مهام"
+      new: "اضافة مهام"
+      # pick: "Pick role: %{name}"
+      # show: "Role: %{name}"
+    backend/sale_credits:
+      # new: "Cancel sales invoice %{number}"
+    backend/sale_items: #?
+      edit: "تعديل مسار طلب المنتج" #?
+      new: "اضافة تصميم خطوط المنتج" #?
+    backend/sale_natures:
+      edit: "تعديل نوع البيع : %{name}"
+      index: "انواع طلبات البيع"
+      new: "اضافة نوع البيع"
+      # show: "Sale type: %{name}"
+    backend/sale_opportunities:
+      # edit: "Edit opportunity: %{name}"
+      index: "الفرص"
+      new: "فرصة جديدة"
+      # show: "Opportunity: %{name}"
+    backend/sales:
+      cancel: "مسالك شمولية الفاتورة %{number}" #?
+      confirm: "المضي بطلب تحديد السعر والاتجاه الى التسليم" #?
+      edit: "تعديل طلب البيع رقم%{number}"
+      index: "الطلبات وتحديد الاسعار"
+      invoice: "فوترة طلب البيع" #?
+      new: "بيع جديد"
+      show: "تفاصيل البيع %{number} للعميل %{client}"
+    backend/sensors:
+      # edit: "Edit sensor: %{name}"
+      index: "أجهزة الاستشعار"
+      new: "جهاز استشعار جديد"
+      # show: "Sensor: %{name}"
+    backend/sequences:
+      edit: "تعديل التسلسل : %{name}"
+      index: "التسلسلات"
+      load: "تحميل المفقودين متواليات"
+      new: "انشاء تسلسل جديد"
+    backend/sessions: #?
+      destroy: "الخروج" #?
+      new: "الدخول" #?
+    backend/settings:
+      about: "وحول ايكيليبغ"
+    backend/settlements:
+      # edit: "Edit settlement: %{name}"
+      index: "المستوطنات"
+      new: "مستوطنة جديدة"
+      # show: "Settlement: %{name}"
+    backend/shipments:
+      # cancel: "Cancel shipment: %{number}"
+      # check: "Check shipment: %{number}"
+      # edit: "Edit shipment: %{number}"
+      # give: "Give shipment: %{number}"
+      # index: "Shipments"
+      # new: "New shipment"
+      # order: "Order shipment: %{number}"
+      # prepare: "Prepare shipment: %{number}"
+      # ship: "Ship shipment: %{number}"
+      # show: "Shipment: %{number}"
+    backend/stock_moves: #?
+      edit: "تعديل حركة سهم : %{name}" #?
+      new: "التسجيل لحركة السهم" #?
+    backend/stock_transfers: #?
+      confirm: "اتمام عملية نقل" #?
+      edit: "تعديل عملية نقل الاسهم" #?
+      index: "عمليات نقل وخسارة الاسهم" #?
+      new: "اضافة عملية نقل او خسارة الاسهم" #?
+    backend/stocks: #?
+      index: "وضع الاسهم" #?
+    backend/subscription_natures:
+      edit: "تعديل نوع الاشتراك: %{name}"
+      index: "انواع الاشتراك"
+      new: "اضافة نوع الاشتراك"
+      # show: "subscription type: %{name}"
+    backend/subscriptions:
+      edit: "تعديل الاشتراك:  %{number} من %{start} الى %{finish}"
+      index: "الاشتراكات"
+      new: "انشاء اشتراك جديد"
+      # show: "Subscription %{number}"
+    backend/supervisions:
+      # edit: "Edit supervision: %{name}"
+      index: "الاشراف"
+      new: "رقابة جديدة"
+      # show: "Supervision: %{name}"
+    backend/synchronizations:
+      index: "تزامن"
+      # run: "Run synchronization: %{name}"
+    backend/target_distributions: #?
+      edit: "توزيع هدف تحرير" #?
+      edit_many: "توزيع المنتجات لم تتأثر" #?
+      index: "توزيعات الهدف" #?
+      new: "توزيع هدف جديد" #?
+      show: "توزيع هدف" #?
+    backend/tasks:
+      # edit: "Edit task: %{name}"
+      index: "المهام"
+      new: "مهمة جديدة"
+      # show: "Task: %{name}"
+    backend/tax_declarations:
+      # confirm: "Confirm tax declaration: %{number}"
+      # edit: "Edit tax declaration: %{number}"
+      index: "تصريح عن قيمة الضريبة الاضافية"
+      new: "الإقرار الضريبي الجديد"
+      # propose: "Propose tax declaration: %{number}"
+      # show: "Tax declaration: %{number}"
+    backend/taxes:
+      edit: "تعديل الضريبة : %{name}"
+      index: "الضرائب"
+      new: "اضافة ضريبة جديدة"
+      # show: "Tax: %{name}"
+    backend/teams:
+      edit: "تعديل الوظيفة : %{name}"
+      index: "الوظائف/المهام"
+      new: "اضافة وظيفة جديدة"
+      # show: "Team: %{name}"
+    backend/tools: #?
+      edit: "تعديل المادة : %{name}" #?
+      index: "مادة" #?
+      new: "اضافة مادة" #?
+      show: "المادة : %{name}" #?
+    backend/trackings:
+      # edit: "Edit tracking: %{name}"
+      # index: "Trackings"
+      new: "تتبع جديد"
+      show: "الحصة %{name}"
+    backend/trial_balances:
+      show: "رصيد الحساب"
+    backend/units: #?
+      edit: "تعديل الوحدة : %{label}" #?
+      index: "وحدات القياس" #?
+      new: "اضافة وحدة قياس جديدة" #?
+    backend/unreceived_purchase_orders:
+      # edit: "Edit unreceived order: %{name}"
+      # index: "Unreceived orders"
+      # show: "Unreceived order: %{name}"
+    backend/users:
+      edit: "تعديل المستخدم"
+      index: "المستخدمين"
+      lock: "المستخدم القفل"
+      new: "انشاء مستخدم جديد"
+      show: "المستخدم : %{first_name} %{last_name}"
+      statistics: "احصائياتي" #?
+      unlock: "فتح المستخدم"
+    backend/variant_categories/animal_categories:
+      # index: "Animals categories"
+      # pick: "Import an animals category"
+    backend/variant_categories/article_categories:
+      # index: "Articles categories"
+      # pick: "Import an articles category"
+    backend/variant_categories/crop_categories:
+      # index: "Crops categories"
+      # pick: "Import a crops category"
+    backend/variant_categories/equipment_categories:
+      # index: "Equipments categories"
+      # pick: "Import an equipments category"
+    backend/variant_categories/service_categories:
+      # index: "Services categories"
+      # pick: "Import a services category"
+    backend/variant_categories/worker_categories:
+      # index: "Workers categories"
+      # pick: "Import a workers category"
+    backend/variant_categories/zone_categories:
+      # index: "Zones categories"
+      # pick: "Import a zones category"
+    backend/variant_types/animal_types:
+      # index: "Animals types"
+      # pick: "Import an animals type"
+    backend/variant_types/article_types:
+      # index: "Articles types"
+      # pick: "Import an articles type"
+    backend/variant_types/crop_types:
+      # index: "Crops types"
+      # pick: "Import a crops type"
+    backend/variant_types/equipment_types:
+      # index: "Equipments types"
+      # pick: "Import an equipments type"
+    backend/variant_types/service_types:
+      # index: "Services types"
+      # pick: "Import a services type"
+    backend/variant_types/worker_types:
+      # index: "Workers types"
+      # pick: "Import a workers type"
+    backend/variant_types/zone_types:
+      # index: "Zones types"
+      # pick: "Import a zones type"
+    backend/variants/animal_variants:
+      # index: "Animals"
+      # pick: "Import an animal"
+    backend/variants/article_variants:
+      # index: "Other articles"
+      # pick: "Import an article"
+    backend/variants/articles/fertilizer_articles:
+      # index: "Fertilizers"
+      # pick: "Import a fertilizer"
+    backend/variants/articles/plant_medicine_articles:
+      # index: "Plant medicines"
+      # pick: "Import a plant medicine"
+    backend/variants/articles/seed_and_plant_articles:
+      # index: "Seed and plants"
+      # pick: "Import a seed or a plant"
+    backend/variants/crop_variants:
+      # index: "Crops"
+      # pick: "Import a crop"
+    backend/variants/equipment_variants:
+      # index: "Equipements"
+      # pick: "Import an equipement"
+    backend/variants/service_variants:
+      # index: "Services"
+      # pick: "Import a service"
+    backend/variants/worker_variants:
+      # index: "Workers"
+      # pick: "Import a worker"
+    backend/variants/zone_variants:
+      # index: "Zones"
+      # pick: "Import a zone"
+    backend/wine_tanks:
+      index: "الدبابات النبيذ"
+    backend/workers:
+      # edit: "Edit worker: %{name}"
+      index: "العمال"
+      new: "عامل جديد"
+      # show: "Worker: %{name}"
+    public:
+      index: "الصفحة الرئيسية"
+  controllers: #?
+    backend/accountancy: "المحاسبة" #?
+    backend/accounts: "مخطط الحساب" #?
+    backend/application: "تطبيق" #?
+    backend/areas: "العناوين البريد" #?
+    backend/authentication: "المصادقة" #?
+    backend/bank_statements: "بيان الحساب المصرفي" #?
+    backend/buildings: "مواقع التخزين" #?
+    backend/cashes: "الخزينة" #?
+    backend/company: "شركة" #?
+    backend/custom_fields: "الحقول المخصصة" #?
+    backend/delays: "مهلة" #?
+    backend/deliveries: "وسائل النقل" #?
+    backend/departments: "الوظائف/المهام" #?
+    backend/deposits: "اقتطاعات البنك" #?
+    backend/districts: "المناطق الادارية" #?
+    backend/document_templates: "نماذج الوثيقة" #?
+    backend/entities: "سجلات الاشخاص" #?
+    backend/entity_categories: "انواع الملف" #?
+    backend/entity_event_natures: "انواع الاحداث" #?
+    backend/entity_events: "الاحداث" #?
+    backend/entity_link_natures: "انواع الرابط" #?
+    backend/entity_natures: "انواع الملفات" #?
+    backend/establishments: "مرافق" #?
+    backend/event_natures: "انواع الاحداث" #?
+    backend/events: "الاحداث" #?
+    backend/financial_years: "ممارسة المحاسبة" #?
+    backend/help: "المساعدة" #?
+    backend/incoming_payment_modes: "طرق تسديد الدفعات" #?
+    backend/incoming_payments: "الدفعات" #?
+    backend/inventories: "الجرد" #?
+    backend/journals: "الدفاتر اليومية" #?
+    backend/land_parcels: "انظمة" #?
+    backend/listings: "الصادرات وارسال الرسائل" #?
+    backend/management: "الادارة" #?
+    backend/mandates: "تفويضات" #?
+    backend/operation_natures: "اواع العمل" #?
+    backend/operations: "اعمال" #?
+    backend/outgoing_delivery_modes: "وسائل التسليم" #?
+    backend/outgoing_payment_modes: "طرق تسديد الدفعات" #?
+    backend/prices: "الاسعار" #?
+    backend/product_categories: "فئات المنتج" #?
+    backend/product_nature: "المنتجات" #?
+    backend/product_nature_categories: "فئات المنتج" #?
+    backend/product_natures: "المنتجات" #?
+    backend/product_stocks: "وضع الاسهم" #?
+    backend/product_transfers: "عمليات نقل وخسارة الاسهم" #?
+    backend/production: "المنتج" #?
+    backend/products: "المنتجات" #?
+    backend/products_natures: "المنتجات" #?
+    backend/purchase_payments: "دفعات" #?
+    backend/purchases: "المستريات" #?
+    backend/relations: "العلاقات" #?
+    backend/roles: "مهام" #?
+    backend/sale_natures: "انواع طلبات البيع" #?
+    backend/sales: "الطلبات وتحديد الاسعار" #?
+    backend/sequences: "التسلسلات" #?
+    backend/stock_transfers: "عمليات نقل وخسارة الاسهم" #?
+    backend/stocks: "وضع الاسهم" #?
+    backend/subscription_natures: "انواع الاشتراك" #?
+    backend/tax_declarations: "تصريح عن قيمة الضريبة الاضافية" #?
+    backend/taxes: "الضرائب" #?
+    backend/tools: "مادة" #?
+    backend/units: "وحدات القياس" #?
+    backend/users: "المستخدمين" #?
+  errors:
+    # format: "%{message}"
+    messages:
+      # accepted: "%{attribute} must be accepted"
+      # after: "%{attribute} must be after %{restriction}"
+      already_confirmed: "وقد أكد بالفعل، من فضلك حاول تسجيل الدخول"
+      # before: "%{attribute} must be before %{restriction}"
+      # blank: "%{attribute} can't be blank"
+      # can_only_have_two_years_opened: "You can have only have two financial years opened at the same time."
+      # confirmation: "%{attribute} doesn't match confirmation"
+      # confirmation_period_expired: "needs to be confirmed within %{period}, please request a new one"
+      # currency_does_not_match: "The currency of the %{attribute} is different from %{currency}"
+      # empty: "%{attribute} can't be empty"
+      # end_of_month: "%{attribute} should be at the end of the month"
+      # equal_to: "%{attribute} must be equal to %{count}"
+      # even: "%{attribute} must be even"
+      # exclusion: "%{attribute} is reserved"
+      expired: "انتهت، يرجى طلب كلمة مرور جديدة"
+      # financial_year_exchange_on_this_period: "There is an opened accounting exchange at this date"
+      # financial_year_matching_this_date_is_in_closure_preparation: "The financial year matching this date is currently being prepared for closure by another user"
+      # financial_year_not_found: "There is no financial year at this date"
+      # greater_than: "%{attribute} must be greater than %{count}"
+      # greater_than_or_equal_to: "%{attribute} must be greater than or equal to %{count}"
+      # harvest_in_progress: "Be careful, this crop is being harvested"
+      # included_in: "The value of %{attribute} must be included between %{minimum} and %{maximum}"
+      # inclusion: "%{attribute} is not included in the list"
+      # invalid: "%{attribute} is invalid"
+      # invalid_at: "%{attribute} is_invalid. Error near %{error}"
+      # invalid_child: "At least one value of %{attribute} is invalid."
+      # invalid_date: "%{attribute} is not a valid date"
+      # invalid_datetime: "%{attribute} is not a valid datetime"
+      # invalid_population_for_unitary_product: "The equipment %{name} cannot have a population of %{population} as it is supposed to be unique."
+      # invalid_time: "%{attribute} is not a valid time"
+      # invalid_token: "%{attribute} is invalid. Invalid token %{error}. Expected tokens are %{accepted}."
+      # is: "%{attribute} must be a %{thing}"
+      # is_at: "%{attribute} must be at %{restriction}"
+      # less_than: "%{attribute} must be less than %{count}"
+      # less_than_or_equal_to: "%{attribute} must be less than or equal to %{count}"
+      # missing_bank_details_for_sepa: "Values for IBAN and/or Account owner are missing for the cash account selected."
+      # must_be_a_mail_address: "%{attribute} must be a mail address"
+      # no_opened_financial_year: "No financial year opened at this date"
+      # not_a_number: "%{attribute} is not a number"
+      # not_an_end_of_month: "%{attribute} must be an end of month"
+      # not_an_integer: "%{attribute} must be an integer"
+      # not_enough: "not enough %{resource} to complete task"
+      not_found: "غير معثور عليه"
+      not_locked: "كان غير مؤمن"
+      # not_opened_financial_year: "An open accounting period is required"
+      not_saved:
+        # one: "1 error prohibited this %{resource} from being saved:"
+        # other: "%{count} errors prohibited this %{resource} from being saved:"
+      # nothing_to_pay: "Nothing to pay. If you want to register a downpayment, do not forget to note that."
+      # odd: "%{attribute} must be odd"
+      # on_or_after: "%{attribute} must be on or after %{restriction}"
+      # on_or_after_field: "%{attribute} must be on or after %{restriction} (%{model} %{field})"
+      # on_or_before: "%{attribute} must be on or before %{restriction}"
+      # overlap: "%{attribute} overlaps an existing record"
+      # overlap_sibling: "%{attribute} overlaps sibling"
+      # posterior: "%{attribute} must be posterior to %{to}"
+      # record_invalid: "Validations failed: %{errors}"
+      # record_is_not_valid: "The record is invalid"
+      # should_be_consecutive: "Financial years must be consecutive, therefore %{attribute} should be %{expected}."
+      # should_be_the_last_day_of_month: "%{attribute} should be the last day of the month."
+      # taken: "%{attribute} has already been taken"
+      # too_long: "%{attribute} is too long (maximum is %{count} characters)"
+      # too_short: "%{attribute} is too short (minimum is %{count} characters)"
+      # unitary_in_parcel: "Unitary items can only be sent one by one"
+      # wrong_length: "%{attribute} is the wrong length (should be %{count} characters)"
+    template:
+      body: "كانت هناك مشاكل مع الحقول التالية:"
+      header:
+        # one: "%{count} error prohibited this %{model} from being saved"
+        # other: "%{count} errors prohibited this %{model} from being saved"
+  front-end:
+    bank_reconciliation:
+      # remove: "Remove"
+    intervention:
+      nature:
+        # add_two_hours: "Add two hours if application happened in a close area"
+        # harvest: "Harvest:"
+        # reentry: "Reentry:"
+    leaflet:
+      interactive_maps: "مكتبة جس للخرائط التفاعلية"
+      draw:
+        handlers:
+          circle:
+            tooltip:
+              start: "انقر واسحب لرسم دائرة."
+          marker:
+            tooltip:
+              start: "انقر الخريطة لوضع علامة."
+          polygon:
+            tooltip:
+              cont: "انقر لمتابعة رسم الشكل."
+              end: "انقر النقطة الأولى لإغلاق هذا الشكل."
+              start: "انقر لبدء رسم الشكل."
+          polyline:
+            error: "<strong>خطأ:</strong> حواف الشكل لا يمكن أن تعبر!"
+            tooltip:
+              cont: "انقر على مواصلة خط الرسم."
+              end: "انقر النقطة الأخيرة لإنهاء الخط."
+              start: "انقر لبدء رسم الخط."
+          rectangle:
+            tooltip:
+              start: "انقر واسحب لرسم مستطيل."
+          simpleshape:
+            tooltip:
+              end: "الماوس الإصدار لإنهاء الرسم."
+        toolbar:
+          actions:
+            text: "إلغاء"
+            title: "إلغاء الرسم"
+          buttons:
+            circle: "أرسم دائرة"
+            marker: "رسم علامة"
+            polygon: "رسم مضلع"
+            polyline: "رسم شكل متعدد الخطوط"
+            rectangle: "رسم مستطيل"
+          undo:
+            text: "حذف النقطة الأخيرة"
+            title: "حذف النقطة الأخيرة رسمها"
+      edit:
+        handlers:
+          edit:
+            tooltip:
+              subtext: "انقر فوق إلغاء الأمر للتراجع عن التغييرات."
+              text: "مقابض السحب، أو علامة لتحرير الميزة."
+          remove:
+            tooltip:
+              text: "انقر على ميزة لإزالة"
+        toolbar:
+          actions:
+            cancel:
+              text: "إلغاء"
+              title: "إلغاء التحرير، ويتجاهل كل التغييرات."
+            save:
+              text: "حفظ"
+              title: "حفظ التغيرات."
+          buttons:
+            edit: "تحرير طبقات."
+            editDisabled: "عدم وجود طبقات لتحرير."
+            remove: "حذف طبقات."
+            removeDisabled: "لا طبقات حذف."
+      fullscreenTitle: "تكبير الشاشة"
+      importerButtonTitle: "استيراد"
+      zoomInTitle: "تكبير"
+      zoomOutTitle: "تصغير"
+  labels:
+    # accepted: "Accepted"
+    # accepted_for_paiment: "Accepted for paiment"
+    access: "وصول"
+    access_parameters: "المعلمات وصول"
+    account_accruals: "حسابات الاستحقاق" #?
+    account_attorney_to_create: "-- انشاء حساب للوكيل بشكل اوتوماتيكي --" #?
+    # account_certification_by_competent_person: "I certify that my accounts have been revised outside of the software by a competent person."
+    # account_certification_by_competent_person_close: "I certify that my accounts have been revised by a competent person."
+    account_claims_assets: "الدين" #?
+    account_client_to_create: "-- انشاء حساب للعميل بشكل اوتوماتيكي --" #?
+    account_create: "تسجيل لحساب جديد" #?
+    account_current_assets: "الموجودات المتداولة" #?
+    account_debt: "الديون" #?
+    account_equity: "رأس مال خاص" #?
+    account_fixed_assets: "الموجودات الثابتة" #?
+    account_for: "حساب ل"
+    account_inventories_assets: "أسهم" #?
+    # account_lettered: "Lettered"
+    # account_lettering_state: "Lettering state"
+    account_mark: "تسجيل الحسابات" #?
+    account_other_assets: "موجودات اخرى" #?
+    account_provision: "احتياطات لمواجهة المخاطر والتكاليف" #?
+    account_supplier_to_create: "-- انشاء حساب للممول بشكل اوتوماتيكي --" #?
+    account_tabbox: #?
+      children: "الحسابات الفرعية" #?
+      entities: "أشخاص" #?
+      journal_entry_items: "ادخالات الدفاتر اليومية" #?
+    account_tangible_fixed_assets: "موجودات ثابتة وملموسة" #?
+    # account_totals: "Account Totals"
+    account_untangible_fixed_assets: "موجودات ثابتة وغير ملموسة" #?
+    account_update: "تعديل الحسابات" #?
+    account_value_current: "القيمة الحالية" #?
+    account_value_previous: "القيمة السابقة" #?
+    accountancy: "المحاسبة"
+    accountancy_balance: "ميزان المحاسبة"
+    accountancy_preferences: "تفضيلات المحاسبة"
+    accounting: "محاسبة"
+    # accounting_system: "Accounting system"
+    accounts: "حسابات المحاسب المستخدمة"
+    accounts_only_used_at: "حسابات تستخدم فقط في"
+    # accounts_starting_with: "Accounts starting with"
+    # accounts_to_change: "Accounts to change"
+    accounts_to_load: "حسابات لتحميل"
+    action_duration: "مدة الإجراء"
+    activate_entry_autocompletion: "تفعيل تكملة دخول"
+    active: "فعال"
+    active_balance_sheet: "رصيد دائر" #?
+    active_current_sum: "مجموع الموجودات المتداولة" #?
+    active_finishing_after: "التشطيب نشط بعد"
+    active_finishing_within: "التشطيب نشط داخل"
+    active_fixed_sum: "مجموع الموجودات الثابتة" #?
+    active_sum: "مجموع الموجودات" #?
+    # active_totals: "Active Totals"
+    activities: "أنشطة"
+    activity: "نشاط"
+    activity_production: "إنتاج النشاط"
+    activity_productions: "إنتاجات آخر"
+    add: "اضافة"
+    # add_a_repayment: "Add a loan repayment"
+    add_a_worker: "إضافة عامل"
+    # add_an_account: "Add an account"
+    add_animal: "إضافة الحيوانية"
+    add_animal_group: "إضافة مجموعة الحيوانات"
+    # add_animals: "Add a consignment of animals"
+    add_annotation: "إضافة تعليق توضيحي"
+    add_attachment: "إضافة مرفق"
+    add_bank_statement: "إضافة كشف حساب بنكي"
+    add_building_division: "إضافة قسم بناء"
+    add_catalog_price: "إضافة سعر كتالوج"
+    add_child: "إضافة عنصر الطفل"
+    add_choice: "إضافة خيار"
+    add_compensation_entry: "إضافة إدخال التعويض"
+    add_component: "إضافة عنصر"
+    add_condition: "اضافة شرط"
+    add_conditions: "اضف شروط"
+    add_delivery: "اضافة وسيلة نقل"
+    add_distribution: "إضافة التوزيع"
+    add_email: "إضافة البريد الإلكتروني"
+    add_entrance: "إضافة مدخل"
+    add_entry: "إضافة إدخال"
+    add_exit: "إضافة الخروج"
+    add_expense: "إضافة حساب"
+    add_fax: "إضافة الفاكس"
+    # add_fees: "Add fees"
+    # add_field: "Add field"
+    add_filter: "إضافة فلتر"
+    add_grading_check: "إضافة الاختيار الدرجات"
+    add_incoming_payment: "إضافة دفع الواردة"
+    add_inspection_calibration_nature: "إضافة تفتيش معايرة الطبيعة"
+    add_inspection_calibration_scale: "إضافة تفتيش على نطاق والمعايرة"
+    add_inspection_point_nature: "إضافة نقطة تفتيش الطبيعة"
+    add_intervention_record: "اضافة التسجيلة تدخل"
+    add_intervention_request: "إضافة طلب تدخل"
+    add_item: "إضافة البند"
+    add_labelling: "إضافة تسمية"
+    add_line: "إضافة خط"
+    add_linestring: "إضافة تنسيقي"
+    add_mail: "إضافة عنوان البريدي"
+    # add_merchandise: "Add merchandise"
+    add_mobile: "إضافة رقم الهاتف المحمول"
+    add_new_record: "إضافة قياسيا جديدا"
+    add_outgoing_payment: "إضافة دفع المنتهية ولايته"
+    add_participation: "إضافة مشاركة"
+    add_payment: "اضافة دفعة"
+    add_payslip: "إضافة قسيمة دفع"
+    add_payslip_payment: "إضافة دفع قسيمة"
+    add_phone: "إضافة رقم الهاتف"
+    add_plant_density_abacus: "إضافة الجدول المرجعي كثافة بذر"
+    add_point: "إضافة نقطة"
+    add_polygon: "إضافة مضلع"
+    add_production: "إضافة الانتاج"
+    add_purchase: "إضافة شراء"
+    # add_purchase_invoice: "Add invoice"
+    add_purchase_payment: "إضافة صرف"
+    add_purchase_taxation: "إضافة الضرائب شراء"
+    add_quickly_an_item: "بسرعة إضافة خط من المنتجات"
+    add_reading: "إضافة قيمة للمؤشر"
+    # add_reception: "Add reception"
+    add_regularization: "إضافة تسوية"
+    add_revenue: "إضافة الإيرادات"
+    add_sale: "إضافة بيع"
+    add_sale_taxation: "إضافة بيع الضرائب"
+    add_season: "إضافة الموسم"
+    # add_service: "Add service"
+    # add_service_delivering: "Add service delivering"
+    # add_storing: "Add storing"
+    # add_subscription_for_sale_line: "Add subscription for sale line #%{position}"
+    add_support: "إضافة دعم"
+    add_tactic: "إضافة تقنيات إدارة المحاصيل"
+    add_tool: "إضافة أداة"
+    # add_two_hours_reentry_delay: "Add two hours if application happened in a close area"
+    add_website: "أضف موقعك"
+    add_working_period: "إضافة working_period"
+    # add_x: "Add “%{x}”"
+    added_value: "القيمة المضافة"
+    address: "العنوان" #?
+    advance_charges: "الرسوم مسبقا"
+    advance_giveables: "giveables مسبقا"
+    # advance_payment: "4564 - Associates advance payments"
+    advance_products: "منتجات مسبقا"
+    advance_receivables: "ذمم مسبقة"
+    affair: "قضية"
+    affair_number: "عدد غرامية"
+    affairs: "شئون"
+    # alive_corporeal_assets_adult_animals: "Alive corporeal assets adult animals"
+    # alive_corporeal_assets_advances: "Alive corporeal assets advances"
+    # alive_corporeal_assets_in_progress: "Alive corporeal assets in progress"
+    # alive_corporeal_assets_others: "Alive corporeal assets others"
+    # alive_corporeal_assets_perennial_plants: "Alive corporeal assets perennial plants"
+    # alive_corporeal_assets_service_animals: "Alive corporeal assets service animals"
+    # alive_corporeal_assets_young_animals: "Alive corporeal assets young animals"
+    all: "جميع الاسعار"
+    all_accounts: "جميع الحسابات"
+    all_areas: "--- جميع العناوين البريدية ---" #?
+    all_cash_balances: "جميع الأرصدة النقدية" #?
+    all_columns: "جميع الأعمدة"
+    all_conditions: "جميع الشروط"
+    # all_entries_balanced: "All entries are balanced"
+    # all_exchanges_closed: "All exchanges are closed"
+    # all_financial_years_closed_or_locked: "All financial years are closed or locked"
+    # all_financial_years_not_closed_or_locked: "All financial years are not closed or locked"
+    all_periods: "كل سنة مالية"
+    # allocation_balance: "Budget allocation - %{name} allocation"
+    # allowed: "Allowed"
+    # allowed_harvest_on: "Allowed harvest on"
+    already_credited_quantity: "اشتملت الائتمانات الكمية من قبل" #?
+    amount: "القيمة من دون الضرائب"
+    # amount_computed_from: "Amount computed from %{source}"
+    # amount_estimated_from: "Amount estimated from %{source}"
+    # amount_per_unit: "%{amount}/%{unit}"
+    amount_to_add: "جمع واضافة القيمة باليورو، بما في ذلك ايام العطل" #?
+    amount_to_reduce: "جمع القيمة ونسبها الى اليورو، بما في ذلك ايام العطل" #?
+    amount_with_taxes: "مجموع قيمة التسليم مع كامل الضرائب" #?
+    # amounts_in_currency: "Amounts (%{currency})"
+    analyses: "تحليلات"
+    analytic_preferences: "تفضيلات التحليلية"
+    anew_reports: "تقرير جديد"
+    animal_details: "تفاصيل الحيوان"
+    # animal_natures: "Animals"
+    animal_productions: "الإنتاج الحيواني" #?
+    # animal_purchases: "Animal purchases"
+    # animal_sales: "Animal sales"
+    # animal_variants_specie_variety: "Variety"
+    animals: "الحيوانات"
+    # any_journal: "Any journal"
+    # applications_count: "Max applications count"
+    # applications_interval_not_respected: "Applications interval non respected"
+    apply: "تطبيق" #?
+    # aquatic_nta: "Aquatic non-treatment area (%{distance} m)"
+    # archive_post_closure: "Post closure archive"
+    # archive_prior_to_closure: "Prior to closure archive"
+    archives: "أرشيف"
+    are_you_sure: "هل انت متأكد من رغبتك بالقيام به؟"
+    are_you_sure_you_want_to:
+      abort_issue: "هل أنت متأكد أنك تريد إجهاض هذه المسألة؟"
+      close_issue: "هل أنت متأكد أنك تريد إغلاق هذه القضية؟"
+      reopen_issue: "هل أنت متأكد أنك تريد إعادة فتح هذه القضية؟"
+    # are_you_sure_you_want_to_change_account_digits: "Are you sure you want to change the number of characters on account numbers?"
+    # are_you_sure_you_want_to_change_accounting_system: "Are you sure you want to change your accounting system ?"
+    are_you_sure_you_want_to_confirm: "هل انت متأكد من رغبتك بالمضي بطلب الشراء؟"
+    are_you_sure_you_want_to_delete: "هل انت متاكد من رغبتك بالقيام به؟"
+    are_you_sure_you_want_to_delete_delivery: "هل انت متأكد من رغبتك بازالة التسليم من وسائل النقل؟" #?
+    are_you_sure_you_want_to_invoice: "هل انت متأكد من رغبتك باعداد فاتورة البيع؟"
+    are_you_sure_you_want_to_send_mails: "هل انت متأكد من رغبتك بارسال الرسالة"
+    area: "منطقة"
+    area_create: "اضافة عنوان بريدي" #?
+    area_x: "%{name} (%{postcode})" #?
+    # articles: "Articles"
+    assessable_operations: "الاجراءات الضريبية (H.T)" #?
+    asset_exists: "وجود الأصول"
+    assets: "الأصول"
+    assets_gaps: "الفجوات الأصول"
+    assimilated_tax: "A3310 حساب الضرائب المماثلة على جدول رقم" #?
+    associate_debts: "الديون المنتسبين"
+    associate_locked_debts: "الديون مقفل المنتسبين"
+    associate_receivables: "ذمم المنتسبين"
+    # associated_sale: "Associated sale"
+    # assuming_you_want_to_close_a_financial_year_in_the_future: "Assuming you want to close a financial year in the future, you will have to provide an opening balance sheet."
+    # at: "at"
+    at_the_address: "على العنوان"
+    attach_deal: "إضافة الى اتفاق"
+    attachment: "المرفق"
+    attachments: "مرفقات"
+    attorney: "معلومات الوكيل" #?
+    # authorized: "Authorized"
+    automatic: "السيارات"
+    # auxiliary: "Auxiliary"
+    available: "متاح"
+    # available_area: "Available area"
+    available_columns: "الحقول المتاحة : %{columns}"
+    average: "متوسط"
+    back: "التأكد من صحة واسترداد قائمة وسائل النقل"
+    backup: "نسخ احتياطية" #?
+    backups: "النسخ الاحتياطية" #?
+    bad_browser: #?
+      explanation: "لم يتم دعم هذا الاصدار من المتصفح من قبل ايكيلينغ لاستخدامه، ولم يتم عرض الصفحات بشكل صحيح والميزات اصبحت مفقودة. " #?
+      proposal: "رجاءا، خططو لانقاذ صفحة واحدة من هذه المتصفحات اليوم:" #?
+      title: "يبدو على متصفح الويب الخاص بك قديم" #?
+      wb: #?
+        chrome: "جوجل كروم" #?
+        firefox: "فاير فوكس" #?
+        ie: "انترنت اكسبلورير" #?
+        opera: "الاوبرا" #?
+        safari: "سفاري رحلة قنص" #?
+    balance: "رصيد الحساب"
+    # balance_allocated_to_retained_earnings: "Budget allocation - Balance allocated to retained earnings"
+    balance_of_selection: "ميزان اختيار"
+    # balance_of_the_income_statement: "Budget allocation - balance of the income statement"
+    # balanced: "Balanced"
+    # balanced_balance_sheet: "The balance sheet is balanced."
+    bank_account: "حساب البنك"
+    bank_accounts: "" #?
+    # bank_check_number: " no. %{number}"
+    # bank_check_number_text: "Check no. %{number}"
+    # bank_guarantees: "Bank guarantees"
+    bank_statement_number: "عدد بيان البنك"
+    bank_statement_point: "الاشارة للكشف المصرفي" #?
+    bank_statement_update: "تعديل الكشف المصرفي" #?
+    bank_statements: "البيانات المصرفية"
+    # based_on_current_regulation: "Verifications based on current regulation"
+    # based_on_regulation_at_date: "Verifications based on regulation in effect at %{date}"
+    bban: "رقم الحساب المصرفي الأساسي (BBAN)"
+    # before_taxe_result: "Before taxe result"
+    beginning: "البداية"
+    beta: "ميزة بيتا"
+    beta_description: "هذه الميزة هي حاليا قيد التطوير، وكما لا ينبغي أن يؤخذ هذا نتائجها في ظاهرها."
+    body: "هيكل الرسالة"
+    # bookkeep: "Bookkeep"
+    bookkeep_with_payment: "Bookkeep مع دفع"
+    budget: "ميزانية"
+    budget_per_working_indicator: "الميزانية في مؤشر العمل"
+    budgets: "الميزانيات"
+    building_create: "اضافة موقع تخزين" #?
+    building_name: "انتاج" #?
+    building_update: "تعديل موقع التخزين" #?
+    # building_zones: "Building zones"
+    # by_account_fixed_assets: "Fixed assets by account on %{to}"
+    by_year: "وبحلول العام"
+    calculate: "حساب"
+    calculated_hours: "الساعات المحسوبة"
+    calculators: "الآلات الحاسبة"
+    calendar: "تقويم"
+    campaign: "حملة"
+    canals: "التنسيق"
+    cancel: "الغاء"
+    cancelation: "إلغاء"
+    cancelled: "تم الالغاء" #?
+    # cannot_be_mixed_with: "Cannot be mixed with the product %{phyto}"
+    # cannot_be_mixed_with_any_product: "Cannot be mixed with any other product"
+    cap_islets: "الجزر كاب"
+    cap_land_parcels: "قطع الأراضي كاب"
+    capitalised_production: "إنتاج يبلغ رأس مال"
+    capitals: "عواصم"
+    # capitals_anew_reports: "capitals_anew_reports"
+    # capitals_derogatory_depreciations: "capitals_derogatory_depreciations"
+    # capitals_emissions: "capitals_emissions"
+    # capitals_investment_subsidies: "capitals_investment_subsidies"
+    # capitals_liability_reserves: "capitals_liability_reserves"
+    # capitals_mandatory_provisions: "capitals_mandatory_provisions"
+    # capitals_profit_or_loss: "capitals_profit_or_loss"
+    # capitals_risk_and_charges_provisions: "capitals_risk_and_charges_provisions"
+    # capitals_values: "capitals_values"
+    # carcinogen_mutagenic_toxic_for_reproduction: "Carcinogen, mutagenic, toxic for reproduction"
+    cartography: "خرائطية"
+    cash: "حسابات بنكية"
+    cash_balance: "الرصيد النقدي"
+    cash_create: "اضافة حساب بنكي جديد" #?
+    cash_update: "تعديل الخزينة" #?
+    # cash_variations: "Cash variations"
+    cashe_debts: "الديون Cashe"
+    cashes_balance: "التوازن يصرف"
+    cashes_balance_evolution: "يصرف تطور الميزان"
+    casting: "صب"
+    casts: "يلقي"
+    catalog: "مواصفات للفهرس"
+    catalog_items: "العناصر كتالوج"
+    category: "فئة"
+    centralize: "مركزية حسابات المحاسب"
+    centralized_account: "مركزية الحسابات %{name}"
+    # centralizing_account: "Centralizing account"
+    # centralizing_accounts: "Centralizing accounts"
+    # centralizing_journal: "Centralizing journal"
+    # change: "Change"
+    change_password: "تغيير كلمة السر"
+    change_price: "تغيير وحدة السعر" #?
+    change_state: "تغيير الدولة"
+    change_status_of_selected_interventions: "تغيير حالة بعض المداخلات المختارة"
+    charge_value: "قيمة تهمة"
+    # charges: "Charges"
+    # charges_total: "Charge total"
+    chart: "خريطة"
+    check: "نحقق"
+    # check_letter: "Check letter"
+    # check_usage_conditions: "Check usage conditions"
+    check_x_entries_to_balance:
+      # one: "Check entry to balance (%{count})"
+      # other: "Check entries to balance (%{count})"
+    children: "الأطفال"
+    choices: "خيارات"
+    choose_a_type_of_product: "اختر نوع المنتج"
+    choose_creation_mode: "اختيار وضع إنشاء"
+    choose_delete_interventions_options: "سيكون لك:"
+    choose_mail_column: "الرجاء اختيار العمود المستخدم للرسالة"
+    choose_options_is_needed: "يجب عليك اختيار الحالة لالتدخلات التالية:"
+    city_name: "المدينة" #?
+    clear: "واضح"
+    # click_the_button_below_to_record_a_new_transaction: "Click the button below to be redirected to the new transaction form."
+    click_to_mail: "اكتب الرسالة بالبريد الالكتروني الخاص بك"
+    client: "اختيار العميل"
+    client_accounting_balance: "رصيد العميل" #?
+    client_informations: "المعلومات العميل"
+    client_receivables: "ذمم العملاء"
+    # clients: "Clients"
+    close: "اغلاق الدفتر اليومي"
+    # close_carry_forward: "Generating carrying forward entries"
+    close_financial_year: "وثيق السنة المالية"
+    # close_financial_year_exchange_before_preparing_for_closure: "You won't be able to begin the closure process for this financial year until you have closed the current exchange in place."
+    close_journal: "إغلاق مجلة"
+    # close_result_entry: "Generating result entries"
+    # close_settings: "Close settings"
+    # close_the_financial_year: "Close the financial year"
+    closed: "مغلق"
+    # closure_failed_because_balance_sheet_unbalanced: "Closure failed because the balance sheet is not balanced."
+    # clouds: "Clouds"
+    cobbles: "الحصى"
+    code: "الرمز" #?
+    column: "البيانات"
+    column_family: "الاسرة" #?
+    column_organization: "المنظمة" #?
+    column_title: "العنوان" #?
+    columns: "اعمدة الاستيراد"
+    # combustion_agents: "Combustion agents"
+    # comment: "Comment"
+    # commercial_margin: "Commercial margin"
+    commission: "عمولة"
+    company: "المجتمع"
+    # compare_planned_and_realised: "Compare planned and done"
+    completed: "منجز"
+    components: "العناصر" #?
+    # compute_balances: "Computing balances"
+    conditions:
+      filter_on_attribute_of_class: "التصفية وفق %{attribute} (%{class})"
+      special-subscriber: "تصفية وفق الاشتراك"
+    # conducted: "Conducted"
+    configure: "تكوين"
+    # confirmation: "Confirmation"
+    # confirmation_update_historical_plans: "Confirmation update historical plans"
+    confirmed: "تأكيد" #?
+    confirmed_at: "تم تأكيده في" #?
+    connect: "الدخول"
+    consult: "استشارة" #?
+    consult_the_day_book:
+      # one: "Consult the day book (%{count} entry)"
+      # other: "Consult the day book (%{count} entries)"
+      # zero: "Consult the day book (%{count} entry)"
+    consult_unbalanced_entries:
+      # one: "Consult the unbalanced entry"
+      # other: "Consult unbalanced entries (%{count})"
+    consume: "تستهلك"
+    contact: "العنوان" #?
+    contact_create: "اضافة مشترك جديد" #?
+    # contact_support_to_delete_production: "To delete this production, please contact us with the chat."
+    contained_products: "المنتجات الواردة"
+    container: "وعاء"
+    convert_balance_into_loss: "تحويل الرصيد إلى فقدان"
+    convert_balance_into_profit: "تحويل الرصيد إلى أرباح"
+    convert_into_contact: "تحويل إلى الاتصال"
+    convert_into_organization: "تحويل إلى منظمة"
+    convert_to_cultivable_zone: "تحويل إلى منطقة صالحة للزراعة"
+    cooperative_cartodb: "تعاونية CartoDB"
+    coordinates: "تنسيق"
+    copy_from_another_activity: "نسخ من نشاط آخر"
+    copy_from_previous_campaign: "نسخ من حملة السابقة"
+    copy_of: "نسخ من %{source}"
+    copy_previous_budget: "ميزانية نسخة سابقة"
+    corporeal_assets: "أصول مادية"
+    # corporeal_assets_advances: "Advances"
+    # corporeal_assets_buildings: "Buildings"
+    # corporeal_assets_enhancement: "Enhancement"
+    # corporeal_assets_equipments: "Equipments"
+    # corporeal_assets_in_progress: "In progress"
+    # corporeal_assets_land_parcels: "Land parcels"
+    # corporeal_assets_others: "Others"
+    # corporeal_assets_settlements: "Settlements"
+    # corrosive_skin_and_mucosa_risks_of_severe_burns: "Corrosive skin and mucosa, risks of severe burns"
+    # corrosive_substances: "Corrosive substances"
+    # cost: "Cost"
+    cost_income_statement: "التكاليف" #?
+    cost_per_net_surface_area: "تكلفة المساحة الصافية"
+    cost_sum: "مجموع تكاليف الاستثمار" #?
+    costs: "التكاليف"
+    costs_map: "خريطة التكاليف" #?
+    costs_per_hectare: "تكاليف الهكتار الواحد"
+    # could_not_attach_x_or_y_to_affair: "Could not attach %{trade} or %{payment} to affair."
+    countings: "فرزان"
+    counts: "التهم"
+    counts_by_nature: "عدد ونوع السجلات"
+    create: "انشاء"
+    # create_a_sale: "Create a sale"
+    create_and_continue: "إنشاء ومتابعة"
+    create_journal: "-- انشاء دفتر يومي --"
+    create_or_import_equipments: "إنشاء أو المعدات استيراد"
+    create_or_import_incoming_parcels: "إنشاء أو استيراد الطرود الواردة"
+    create_or_import_interventions: "إنشاء أو تدخلات استيراد"
+    create_or_import_workers: "إنشاء أو العمال استيراد"
+    created_at: "انشأ في"
+    # created_at_by: "Created at %{at} by %{author}"
+    created_between: "تم التسجيل بين %{started_at} و %{stopped_at}"
+    # created_by_ago: "Created by %{author} %{when}"
+    credit: "رصيد دائن"
+    # credit_account_balance: "Credit balance: %{value}€"
+    # credit_balance: "110 - Profit carried forward"
+    credited_quantity: "الكمية على الائتمان"
+    credits: "الائتمانات"
+    critic_stock_min: "الحد الادنى لانتقاد الاسهم" #?
+    critic_stocks: "الاسهم على حافة الخطر" #?
+    cropping_plan: "خطة زراعة المحاصيل"
+    cropping_plan_on_cultivable_zones: "زراعة المحاصيل الخطة على المناطق الصالحة للزراعة"
+    # crops: "Crops"
+    crumbs: "فتات"
+    csv_statistics: "نموذج احصائيات القيمة النقدية" #?
+    cultivable_zone: "منطقة القابلة للزراعة"
+    cultivable_zones: "المناطق الصالحة للزراعة"
+    # cultivated_hectare_costs: "Cultivated hectare costs"
+    cumul: "رقم الرصيد التراكمي الكلي والسابق%{number}"
+    # currency: "Currency"
+    currency_conversion_rate: "سعر تحويل العملة"
+    current: "الحالية"
+    # current_accounts: "455 - Partners/associates - Current accounts"
+    current_assets: "الاصول المتداولة"
+    current_cultivation: "زراعة الحالية"
+    current_letter: "البيانات الحالية : %{letter}" #?
+    current_result_before_taxe: "نتيجة الحالية قبل و taxe"
+    # current_stock: "Current stock"
+    current_stocks_by_variety: "المخزونات الحالية من قبل متنوعة"
+    currently_subscribed_to: "مشترك حاليا ل"
+    custom_field_choice_create: "اضافة خيار جديد للقائمة" #?
+    custom_field_create: "انشاء حقل مخصص جديد" #?
+    custom_field_sort: "تفريزة الخيارات حسب الاسم" #?
+    custom_field_update: "تعديل الحقل المخصص" #?
+    custom_fields: "الحقول المخصصة"
+    data_to_export: "تصدير البيانات" #?
+    data_to_extract: "استخراج البيانات" #?
+    # database_version: "Database Version"
+    # date_range: "%{from} to %{to}"
+    # dated_cash: "%{cash}: %{on}"
+    dates: "ادخل تواريخ بداية ونهاية المدة"
+    days: "أيام"
+    deals: "عروض"
+    debit: "الدين"
+    # debit_account_balance: "Debit balance: %{value}€"
+    # debit_balance: "119 - Loss carried forward"
+    debts: "الديون"
+    # debts_associate_locked_debts: "debts_associate_locked_debts"
+    # debts_cashe_debts: "debts_cashe_debts"
+    # debts_land_parcel_loans: "debts_land_parcel_loans"
+    debts_on_assets: "الديون على الأصول"
+    # debts_other_financial_debts: "debts_other_financial_debts"
+    # debts_others_loans: "debts_others_loans"
+    decimal_case: "خيارات للكسر العشري" #?
+    decision_making: "اتخاذ القرار"
+    # deduction_from_distribution: "4423 - Deductions and levies on distributions"
+    default_letter_conclusion: "وتفضلوا، سيدتي، سيدي العزيز، بقبول أسمى عبارات التقدير."
+    default_letter_function_title: "سيدتي، سيدي العزيز"
+    default_letter_introduction: "بعد حديثنا، وأنا أعطيك عناصر التقدير."
+    default_subject: "[%{company}]"
+    definition: "تعريف"
+    deformity: "تشويه"
+    deformity_percentage: "تشوه (٪)"
+    deformity_percentage_evolution: "تطور نسبة التشوه"
+    delay: "تأخير"
+    delay_create: "اضافة مهلة جديدة" #?
+    delay_update: "تعديل المهلة" #?
+    delays: "التأخير" #?
+    delete: "حذف"
+    delete_only_record: "أو حذف فقط تدخل مختارة (ق) وعرض طلب الزميلة؟"
+    delete_request: "حذف أيضا على طلب المنتسبين إلى تدخل مختارة (ق)"
+    delete_selected_interventions: "حذف التدخلات المنتقاة"
+    delete_x_entries:
+      # one: "Delete %{count} entry"
+      # other: "Delete %{count} entries"
+    delete_x_financial_years_without_entry:
+      # one: "Delete the financial year without entry %{financial_year_code}"
+      # other: "Delete the %{count} financial years without entry from %{first_financial_year_code} to %{last_financial_year_code}"
+    deliver: "التأكد من ارسال التسليم"
+    deliveries: "التسليم"
+    delivery: "خدمه توصيل"
+    delivery_natural_gas_and_electricity_assessable: "وتخضع امدادات الغاز الطبيعي والكهرباء للضريبة في فرنسا" #?
+    delivery_natural_gas_and_electricity_not_assessable: "لا تخضع امدادات الغاز الطبيعي والكهرباء للضريبة في فرنسا" #?
+    # delta: "+/-"
+    department_create: "اضافة وظيفة جديدة" #?
+    departments: "وظائف/مهام" #?
+    deposit: "اقتطاعات البنك"
+    deposit_create: #?
+      one: "يقدم بيانا : %{mode} (دفعة واحدة)" #?
+      other: "يقدم بيانا : %{mode} (%{count}دفعات اخرى)" #?
+      zero: "يقدم بيانا : %{mode} (ولا دفعة)" #?
+    deposit_update: "تعديل اقتطاعات البنك" #?
+    depositable: "تكملة المعلومات" #?
+    depositable_options: "خيارات الإيداع"
+    deposits: "الودائع"
+    depreciation: "الاستهلاك"
+    depreciations: "انخفاض قيمة"
+    depreciations_inputations_expenses: "مصاريف انخفاض قيمة inputations"
+    # derogatory_depreciation_explanation: "Ekylibre doesn't handle derogatory depreciations"
+    derogatory_depreciations: "انخفاض قيمة مهينة"
+    description: "الوصف"
+    destroy: "هدم"
+    # destroyed_at_by: "Destroyed at %{at} by %{author}"
+    # destroyed_by_ago: "Destroyed by %{author} %{when}"
+    detail: "التفاصيل"
+    details: "معلومات اضافية"
+    # development_stage: "Phenological stage"
+    direct_margin: "هامش المباشر" #?
+    discount: "الخصم (%)"
+    # discount_without_percent: "Discount"
+    disease: "مرض"
+    disease_deformity_percentage: "نسبة المرض والتشوه"
+    disease_percentage: "مرض (٪)"
+    disease_percentage_evolution: "تطور نسبة المرض"
+    display: "عرض"
+    # display_accounts: "Display accounts"
+    display_help: "عرض المساعدة" #?
+    # display_n_1: "Display N-1"
+    distribute_unaffected_products: "توزيع المنتجات لم تتأثر"
+    distributions: "التوزيعات"
+    district_create: "اضافة منطقة ادارية" #?
+    district_x: "%{name} (%{code})" #?
+    divide: "انقسام"
+    # dividende_payable: "457 - Partners/associates - Dividends payable"
+    division: "تقسيم"
+    divisions: "الانقسامات"
+    document: "وثيقة"
+    document_natures: "نوع الوثيقة"
+    document_template_create: "انشاء نموذج للوثيقة" #?
+    document_templates: "نموذج الوثائق"
+    documentation: "توثيق"
+    doer_cost: "تكلفة الفاعل"
+    done: "فعله"
+    dont_generate_carrying_forward_entries: "- لا تولد تحمل إدخالات إلى الأمام -"
+    dont_generate_closure_entries: "- لا تولد إدخالات إغلاق -"
+    dont_generate_result_entries: "- لا تولد إدخالات نتيجة -"
+    dont_use_journal: "-- عدم استعمال الدفتر اليومي --"
+    # dose_bigger_than_max: "Dose bigger than max"
+    # dose_equal_to_max: "Dose equal to max"
+    # dose_less_than_max: "Dose less than max"
+    down: "للاسفل"
+    down_to_level: "نزولا الى مستوى" #?
+    # download: "Download"
+    # download_archive: "Download archive (ZIP)"
+    download_firefox: "تحميل موزيلا فاير فوكس" #?
+    # download_template_file: "Download template file"
+    downpayment: "شروط العربون"
+    draft: "المسودات"
+    # draft_entries_to_validate: "There are draft entries to validate"
+    # draft_fixed_asset_on_current_financial_year: "There are remaining draft or standing-by fixed assets, you will no longer be able to put them in use on this financial year once it has been closed."
+    # draft_loan_on_current_financial_year: "You have draft loans ongoing. Once the financial year closed, it won't be possible to enter them into service on this financial year (%{code})."
+    # draft_vat_declaration: "Pending VAT declaration"
+    # driver: "Driver"
+    # due_date: "Due date"
+    duplicate: "تكرار"
+    # duplicate_intervention: "Duplicate intervention"
+    duplicate_x_selected_interventions:
+      # one: "Duplicate selected intervention"
+      # other: "Duplicate selected interventions"
+    duration: "%{hours}ساعة %{minutes}دقيقة"
+    # duration_in_hours_and_minutes: "%{hours}h %{minutes}min"
+    during: "أثناء"
+    earns: "يكسب" #?
+    edit: "تعديل"
+    edit_budget: "تحرير الميزانية"
+    # edition_date: "Edition date"
+    ekylibre: "www.ekylibre.org"
+    # ekylibre_version: "Ekylibre version"
+    elapsed_interventions_times_by_activities: "التدخلات مرات المنقضي من الأنشطة"
+    # element_status: "Status"
+    email: "البريد الإلكتروني:"
+    emissions_and_reevaluation_gaps: "الانبعاثات والثغرات إعادة تقييم"
+    employee_and_wages: "الموظفين والأجور"
+    employee_informations: "المعلومات موظف"
+    employee_involvement: "ادخال الموظفين"
+    employee_name: "الموظف" #?
+    end: "لغاية"
+    entities: "الكيانات"
+    # entities_advance_charges: "entities_advance_charges"
+    # entities_advance_giveables: "entities_advance_giveables"
+    # entities_assets_gaps: "entities_assets_gaps"
+    # entities_associate_receivables: "entities_associate_receivables"
+    # entities_client_receivables: "entities_client_receivables"
+    entities_export: "CSV جميع الصادرات ضمن" #?
+    entities_import: "CSV استيراد سجلات" #?
+    # entities_investment_security: "entities_investment_security"
+    entities_merge: "دمج السجلات" #?
+    # entities_other_receivables: "entities_other_receivables"
+    # entities_others_clients: "entities_others_clients"
+    # entities_reserve: "entities_reserve"
+    # entities_state_receivables: "entities_state_receivables"
+    entity_category_create: "اضافة نوع الملف" #?
+    entity_category_update: "تعديل نوع الملف" #?
+    entity_create: "انشاء سجل جديد" #?
+    entity_link_create: "اضافة رابط جديد" #?
+    entity_link_nature_create: "اضافة نوع رابط جديد" #?
+    entity_links: "الروابط كيان"
+    entity_nature_create: "اضافة نوع ملف جديد" #?
+    entity_print: "طباعة الملف" #?
+    entity_to_delete: "( دمج التكرار (وجعله يختفي"
+    entity_to_update: "وضع ملف اليوم مع العناصر المتكررة"
+    entity_update: "تعديل الملف" #?
+    entries: "السجلات"
+    # entries_to_balance: "Entries to balance"
+    entries_to_point: "اعداد المدخلات"
+    # entry_item_label: "Entry item label"
+    entry_items: "البنود دخول"
+    # entry_resource_label: "Record"
+    # environment_h4: "Environment H4"
+    equipment: "معدات"
+    equipment_name: "اسم معدات"
+    # equipment_natures: "Equipments"
+    # equipment_variants_specie_variety: "Brand / Model"
+    equipments: "المعدات"
+    equities: "الأسهم"
+    error: "آسف..."
+    error_no_file: "عدم توفر المساعدة في هذا الجزء من الطلب (%{article}).لم يتم كتابة التعليمات حتى الان.يمكنك زيارة موقعنا الالكتروني للمزيد من الاستفسار."
+    errors_explanation: "هنالك أخطاء في الملف. اذا لم تقم بتصحيحها فان خطوط الاخطاء لن تأخذ بعين الاعتبار اثناء الاستيراد"
+    establish_capital_goods: "تشكل الممتلكات رأس المال" #?
+    establishment: "المؤسسة" #?
+    establishment_create: "اضافة مرفق جديد" #?
+    establishments: "مرافق" #?
+    estimate_to_order: "المضي بطلب تحديد السعر" #?
+    estimate_yield: "العائد تقدير"
+    europe_out_export: "الاتحاد الاوروبي خارج الصادرات" #?
+    evaluated_direct_margin: "هامش المباشر تقييمها" #?
+    evaluated_doer_cost: "تكلفة العمالة تقييمها"
+    evaluated_input_cost: "تكلفة المدخلات تقييمها"
+    evaluated_other_cost: "التكلفة الأخرى تقييمها"
+    # evaluated_reception_cost: "Service Delivery Cost"
+    evaluated_tool_cost: "تكلفة أداة تقييم"
+    event_create: "اضافة حدث" #?
+    event_nature_create: "اضافة نوع الحدث" #?
+    events: "أحداث"
+    evolution: "تطور"
+    example: "مثال&nbsp;: %{value}"
+    exceptional_expenses: "نفقات استثنائية"
+    # exceptional_expenses_on_assets_cessions: "Exceptional expenses on assets cessions"
+    # exceptional_expenses_on_capital_operations: "Exceptional expenses on capital operations"
+    # exceptional_expenses_on_management_operations: "Exceptional expenses on management operations"
+    # exceptional_expenses_on_provisions: "Exceptional expenses on provisions"
+    exceptional_products: "منتجات استثنائية"
+    # exceptional_products_on_assets_cessions: "Exceptional products on assets cessions"
+    # exceptional_products_on_capital_operations: "Exceptional products on capital operations"
+    # exceptional_products_on_management_operations: "Exceptional products on management operations"
+    # exceptional_products_on_provisions: "Exceptional products on provisions"
+    exceptional_result: "نتيجة استثنائية"
+    exchange: "تبادل"
+    # exchange_rate_from_x_to_y: "Exchange rate from %{x} to %{y}"
+    exchanges: "التبادل"
+    # exchanges_to_close: "There is at least one exchange to close: "
+    executed: "انجز" #?
+    # exercice_production: "Exercice production"
+    # exercice_result: "Exercice result"
+    # exercice_result_allocation: "Allocation of profit for the year"
+    existing: "موجود"
+    existing_part: "استخدام الدفعات الغير متضررة" #?
+    # expected_quantity_is_x: "Expected quantity: %{x}"
+    # expedier: "Expedier"
+    expenses: "مصاريف"
+    expenses_by_product_nature_category: "النفقات حسب الفئة طبيعة المنتج"
+    expired_since: "انتهت منذ (بالأيام)"
+    expired_within: "انتهت خلال (بالأيام)"
+    # exploitation_result: "Exploitation result"
+    exploitation_results: "النتائج الاستغلال"
+    # explosive_substances: "Explosive substances"
+    export: "اصدار الوثائق"
+    export_as_csv: "التصدير، CSV"
+    export_as_ods: "التصدير، المواد المستنفدة للأوزون"
+    # export_as_odt: "Export as ODT"
+    # export_as_pdf: "Export as PDF"
+    export_as_xcsv: "تصدير واكسل CSV"
+    # export_balance_sheet: "Export balance sheet"
+    # export_by_account_fixed_asset_registry: "Fixed assets by account"
+    # export_centralizing_journal: "Export centralizing journal"
+    # export_fixed_asset_registry: "Fixed assets"
+    # export_gain_and_loss_fixed_asset_registry: "Added values and capital losses"
+    # export_income_statement: "Export income statement"
+    # export_text_fec_all: "Export FEC corporate tax (Text)"
+    # export_text_fec_ba_bnc_ir_commercial_accountancy: "Export FEC for agriculture and professional operations income taxation commercial accountancy (Text)"
+    # export_text_fec_ba_ir_cash_accountancy: "Export FEC agriculture income taxation cash accountancy (Text)"
+    # export_text_fec_bnc_ir_cash_accountancy: "Export FEC professional operations income taxation cash accountancy (Text)"
+    # export_xml_fec_all: "Export FEC corporate tax (XML)"
+    # export_xml_fec_ba_bnc_ir_commercial_accountancy: "Export FEC for agriculture and professional operations income taxation commercial accountancy (XML)"
+    # export_xml_fec_ba_ir_cash_accountancy: "Export FEC agriculture income taxation cash accountancy (XML)"
+    # export_xml_fec_bnc_ir_cash_accountancy: "Export FEC professional operations income taxation cash accountancy (XML)"
+    # external_links: "External links"
+    extract: "يستخرج" #?
+    # extract_account_x: "Extract account %{account_number}"
+    # extract_unlettered_account_x: "Extract unlettered account %{account_number}"
+    # extraordinary_income: "Extraordinary income"
+    # fees: "Fees"
+    # fertilizers: "Fertilizers"
+    # field: "Field %{counter}"
+    field_distribution: "مجال التوزيع"
+    file_nature: "نوع الملف"
+    file_preview: "معاينة"
+    file_to_download: "ملف الاستيراد" #?
+    file_to_import: "ملف للاستيراد" #?
+    file_to_upload: "ملف لتحميل"
+    # file_trimming: "File trimming :"
+    filter: "تصفية"
+    filter_entries_with: "تصفية الادخالات مع" #?
+    # filter_on: "Filter on"
+    final_balance: "الرصيد النهائي"
+    # financial_asset_dotations: "Financial asset dotations"
+    financial_assets: "الأصول المالية"
+    # financial_assets_others: "Others"
+    # financial_assets_participations: "Participations"
+    # financial_assets_participations_debts: "Participations debts"
+    # financial_debts: "Financial debts"
+    # financial_depreciations: "Financial depreciations"
+    financial_expenses: "نفقات مالية"
+    # financial_interests_and_charges: "Financial interests and charges"
+    # financial_negative_change: "Financial negatice change"
+    # financial_net_cession_debts: "Financial net cession debts"
+    # financial_net_cession_values: "Financial net cession values"
+    # financial_others_interests: "Financial others interests"
+    # financial_participations: "Financial participations"
+    # financial_positive_change: "Financial positive change"
+    financial_products: "المنتجات المالية"
+    # financial_result: "Financial result"
+    # financial_result_iii_iv: "Financial result (III - IV)"
+    financial_state: "الوضع المالي" #?
+    # financial_year: "Financial year"
+    # financial_year_close_message: "<p> The close will definitively validate all entries of the financial year, which may not be modified or deleted. It will not be possible to add new ones too. </p>"
+    # financial_year_closing: "Financial year closure in progress"
+    # financial_year_closure_in_preparation_initiated_by_someone_else: "Closure of %{code} in preparation, you can't edit entries related to this financial year anymore."
+    # financial_year_closure_in_preparation_initiated_by_you: "Closure of %{code} in preparation, you're the only person able to edit entries related to this financial year."
+    financial_year_create: "فتح مهنة جديدة للمحاسبة" #?
+    # financial_year_lock_message: "<p> The lock will definitively validate all entries of the financial year, which may not be modified or deleted. It will not be possible to add new ones too. <br/> You will need to get in contact the person who did the close out of the software to get back your year-end documents. </p>"
+    # financial_year_needed: "All commercial and financial operations need to be accounted on an opened financial year. Please open a financial year for the current period or ask a manager"
+    # financial_year_results: "Financial year results : %{results}"
+    # financial_year_warning: "<p> If the financial year is not closed or locked before the %{last_financial_year_end_date}, you will not be able to open a financial year on %{new_financial_year_start_date}. Indeed, it is not possible to have more than 2 financial years opened simultaneously. Furthermore, it is necessary to have an opened financial year on the ongoing date to input commercial and financial operations. <br/> If you don't manage your accountacy with Ekylibre, you have the possibility to lock your financial year. <br/> Attention : locked financial years can't be modified like a closed financial year."
+    financials_assets: "الأصول المالية" #?
+    # fingerprint_sha256: "Fingerprint (SHA256)"
+    finish: "انهاء"
+    finished: "تم الانتهاء من"
+    finished_income_statement: "المنتجات" #?
+    finished_sum: "مجموع منتجات الاستثمار" #?
+    # first_check_number: "Number of the first check"
+    first_line_as_title: "السطر الأول كما لقب"
+    fixed_asset_debts: "الديون الأصول الثابتة"
+    fixed_asset_depreciations: "انخفاض قيمة الأصول الثابتة"
+    # fixed_asset_depreciations_not_accounted_on_current_financial_year: "Fixed asset depreciations not accounted on current financial year"
+    # fixed_asset_successfully_associated_to_sale: "The fixed asset has been successfully associated to the sale. Click the 'Sold' button to proceed."
+    fixed_assets: "أصول ثابتة"
+    # flammable_agents: "Flammable agents"
+    # forbidden: "Unauthorized"
+    # forecast_harvest_week: "Forecast harvest week"
+    format_date: #?
+      iso: "(السنة-الشهر-اليوم)" #?
+    free_purchases: "المشتريات مجانية" #?
+    from: "من"
+    from_date: "من تاريخ" #?
+    # from_to_date: "from %{from} to %{to}"
+    # fruit_yield: "Fruit yield"
+    # full_name: "Full name"
+    fullscreen: "تكبير الشاشة"
+    function: "وظيفة"
+    fungi: "الفطريات"
+    future_events: "الاحداث المستقبلية"
+    # future_year_credit_balance: "110 - Profit carried forward"
+    # future_year_debit_balance: "119 - Loss carried forward"
+    # gain_and_loss_fixed_assets: "Gains and losses on %{to}"
+    genealogy: "علم الانساب"
+    general: "معلومات عامة"
+    # general_fixed_assets: "Fixed assets on %{to}"
+    general_informations: "معلومات عامة"
+    general_ledger: "دفتر الحسابات"
+    # general_total: "General total"
+    generate: "توليد"
+    # generate_documents_post_closure: "Generating mandatory documents post closure"
+    # generate_documents_prior_to_closure: "Generating mandatory documents prior to closure"
+    generate_last_journal_entry: "تولد الماضي إدخال دفتر اليومية"
+    generate_parcel: "تولد لا يتجزأ"
+    generate_repayments: "تمرير مسك الدفاتر"
+    geolocation: "تحديد الموقع الجغرافي"
+    give_discount: "منح خصومات" #?
+    # global_costs: "Global costs"
+    global_preferences: "تفضيلات العالمية"
+    go: "صلاحية"
+    # go_back_to_financial_year_details: "Go back to financial year details"
+    gradings: "الى التصنيف"
+    grain_yield: "محصول الحبوب"
+    grains_yield: "العائد الحبوب"
+    graph_statistics: "رسومات احصائية" #?
+    grass_yield: "العائد العشب"
+    gross_profit: "اجمالي الربح"
+    group: "مجموعة"
+    # group_by_centralizing_accounts: "Group by centralizing accounts"
+    groups: "المجموعات"
+    guide_evolution: "توجيه تطور"
+    # harvested_area: "Harvested area"
+    harvested_at: "تحصد في"
+    # health_h3: "Health H3"
+    help: "المساعدة"
+    help_center: "مركز المساعدة"
+    hide_lettered_lines: "إخفاء خطوط بحروف"
+    hint: "تلميح&nbsp;: %{value}"
+    historic: "تاريخي"
+    home: "الرجوع الى صفجة المساعدة الرئيسية"
+    # hour: "Hour"
+    # hour_counter: "Hour counter"
+    hour_duration: #?
+      one: "مجموع الوقت المستخدم : ساعة واحدة" #?
+      other: "مجموع الوقت المستخدم%{count} ساعات" #?
+      zero: "" #?
+    # hours: "H"
+    # hours_label: "Hours"
+    human_working_duration: "مدة العمل"
+    # humans: "HR"
+    # humidity: "Humidity"
+    iban: "رقم الحساب المصرفي الدولي (IBAN)"
+    identification: "اسم ورمز المنتج"
+    identifiers: "معرفات"
+    # if_closed_environment: "if closed environment"
+    illness: "مرض"
+    implanted_at: "مزروع في"
+    import: "استيراد"
+    # import_incoming_payments: "Import incoming payments"
+    # import_sales: "Import sales"
+    importation_explanation: "لتأكيد عملية الاستيراد، يجب عليك النقر عليه"
+    in_line_create: "اضافة منتج وارد" #?
+    in_progress: "في تَقَدم"
+    inactive: "غير نشط"
+    include_blank: "--- ولا اية منظمة ---"
+    # including_vat: "incl. VAT"
+    income_statement: "حسابات الناتج"
+    incoming_parcels: "الطرود الواردة"
+    incoming_payment: "دفع الواردة"
+    incoming_payment_create: "اضافة دفعة جديدة" #?
+    incoming_payment_update: "تعديل الدفعة" #?
+    incoming_payment_use_create: "اضافة دفعة للشراء" #?
+    incoming_payments: "المدفوعات الواردة"
+    incoming_payments_to_deposit: "المدفوعات الواردة إلى الودائع"
+    incorporeal_assets: "الأصول المعنوية"
+    # incorporeal_assets_advances: "Advances"
+    # incorporeal_assets_creation_costs: "Creation costs"
+    # incorporeal_assets_others: "Others"
+    index: "العودة الى دليل ادارة الاعمال" #?
+    indicative_group_size: "حجم المجموعة الإرشادي"
+    indicator: "لوحة التحكم"
+    indicator_value: "قيمة مؤشر"
+    indicators: "مؤشرات"
+    indicators_evolutions: "مؤشرات التطورات"
+    indirect_expenses: "الرسوم غير المباشرة" #?
+    # individual_capital: "101 - Individual capital"
+    info: "معرفة المعلومات عن وسائل النقل"
+    infos: "معرفة خصائص النظام"
+    # infos_usage: "Usage informations"
+    initial_balance_of_bank_statement: "توازن الأولية من كشف حساب بنكي"
+    input_cost: "تكلفة المدخلات"
+    input_cost_per_hectare: "تكلفة المدخلات في الهكتار الواحد" #?
+    inputs: "المدخلات"
+    insert_actual_password: "أدخل كلمة المرور الحالية" #?
+    insert_password: "أدخل كلمة المرور الجديدة" #?
+    inspections: "عمليات التفتيش"
+    interface_preferences: "تفضيلات واجهة"
+    internal_error: "عفوا، حدث شيء ما."
+    international_normal_vat_collected: "معدل ضريبة القيمة المضافة الدولية العادية %8.5" #?
+    international_reduce_vat_collected: "معدل ضريبة القيمة المضافة الدولية المخفضة %2.1" #?
+    international_vat_collected: "مجموع ضريبة القيمة المضافة الدولية" #?
+    interval: "المدة الزمنية المخصصة"
+    intervention: "تدخل"
+    # intervention_at: "%{intervention} at %{at}"
+    intervention_message_miscibility: "الاختلاط المسموح به"
+    intervention_product_parameters: "يلقي تدخل"
+    interventions: "التدخلات"
+    interventions_count: "عد التدخلات"
+    interventions_paths: "مسارات التدخلات"
+    # intracommunautary_vat: "Intra-communautary VAT"
+    invalid_file: "ملف غير صالح"
+    invalid_format: "صيغة خاطئة"
+    inventories: "المخزونات"
+    inventory: "عدل الجرد"
+    inventory_create: "تأدية عملية جرد جديدة" #?
+    inventory_print: "طباعة الجرد" #?
+    inventory_variations: "الاختلافات المخزون"
+    investment_security: "أمن الاستثمار"
+    investment_subsidies: "دعم الاستثمار"
+    invitation_status: "الحالة"
+    # invoice: "Invoice"
+    # invoice_date: "Invoice date"
+    invoice_period: "فترة الفاتورة"
+    invoice_status: "وضع الفاتورة"
+    invoiced: "فواتير"
+    invoiced_amount: "قيمة الفاتورة" #?
+    invoices: "الفواتير"
+    # irreversible_operation: "This operation is irreversible"
+    # irritating_by_skin_contact_and_inhalation_severe_eyes_irritation: "Irritating by skin contact and inhalation, severe eyes irritation"
+    is: "هل"
+    # is_equipment_set_as_inactive_by_intervention: "This intervention set the equipment as inactive ?"
+    issue: "القضية"
+    issues: "مسائل"
+    issues_count: "عد قضايا"
+    item_concentration_per_hectare: "تركيز البند في الهكتار الواحد"
+    items: "تصميم خطوط البيع"
+    journal: "دفتراليومية"
+    journal_detail: "اغلق في %{closed_at}" #?
+    journal_entries: "المدخالات"
+    # journal_entries_deletion_confirmation_message: "Once validated, you won't be able to edit or delete these entries. Are you sure you want to validate these entries ?"
+    journal_entries_states: "الولايات إدخالات"
+    journal_entry_items: "البنود إدخال دفتر اليومية"
+    journal_entry_items_states: "بيان المدخلات المستخدمة" #?
+    journal_entry_items_with_taxes_out_of_range:
+      # one: "%{count} journal entry item with taxes before declaration started on"
+      # other: "%{count} journal entry items with taxes before declaration started on"
+    journal_entry_items_with_undeclared_taxes:
+      # one: "%{count} journal entry item with undeclared taxes"
+      # other: "%{count} journal entry items with undeclared taxes"
+    journal_entry_items_with_unidentified_expenses:
+      # one: "%{count} journal entry item with unidentified expenses"
+      # other: "%{count} journal entry items with unidentified expenses"
+    journal_entry_items_with_unidentified_revenues:
+      # one: "%{count} journal entry item with unidentified revenues"
+      # other: "%{count} journal entry items with unidentified revenues"
+    journal_name: "%{name}"
+    journal_record_update: "تعديل العينات" #?
+    journal_update: "تعديل الفاتر اليومية" #?
+    journal_view:
+      draft: "المسودات" #?
+      entries: "العينات"
+      entry_items: "الادخالات" #?
+      items: "عناصر من إدخالات"
+      mixed: "دمج السجلات"
+    journals: "الدفاتر اليومية"
+    # journals_closure: "Closing journals"
+    # journals_natures: "Natures journals"
+    kame: "" #?
+    label: "ملصق"
+    # label_value: "%{label}: %{value}"
+    land_parcel_abbreviation: "ليرة لبنانية" #?
+    land_parcel_create: "انشاء نظام جديد" #?
+    land_parcel_name: "نظام" #?
+    land_parcel_update: "تعديل النظام" #?
+    land_parcels: "قائمة بالنظام"
+    last_analyses: "تحليل الحليب الماضي"
+    # last_bank_statement_stopped_on: "last bank statement stopped on"
+    last_computed_balance: "ميزان حسابها الماضي"
+    # last_confirmation_before_definitive_close: "Last confirmation before definitive close"
+    # last_confirmation_before_definitive_lock: "Last confirmation before definitive lock"
+    last_documents: "مشاركة المستندات"
+    last_entities: "مشاركة الكيانات"
+    last_events: "مشاركة الأحداث"
+    last_incoming_parcels: "مشاركة الطرود الواردة"
+    last_inspection: "تفتيش الماضي"
+    last_intervention: "تدخل الماضي"
+    last_issue: "المسألة الأخيرة"
+    last_issues: "مشاركة القضايا"
+    last_movements: "مشاركة الحركات"
+    last_outgoing_parcels: "مشاركة الطرود الصادرة"
+    # last_socleo_import: "Last Socleo import"
+    last_products: "آخر المنتجات"
+    last_purchases: "مشاركة مشتريات"
+    # last_purchases_invoices: "Last purchases"
+    # last_purchases_orders: "Last orders"
+    last_sales: "مشاركة المبيعات"
+    # late: "Late"
+    # late_delivery: "Late delivery"
+    left_balance_amount: "ارجاء الرصيد السابق غير معلق وغير مكلف" #?
+    # left_to_allocate: "Remaining to allocate:"
+    # legal_position_missing: "You should select the legal form of your company to be able to allocate your result."
+    # legal_reserves: "1061 - Legal reserve"
+    letter: "مراسلة"
+    letter_conclusion: ".أرجو أن تتقبلوا سادتي التعبير عن فائق احترامي" #?
+    letter_function_title: "سيداتي، سادتي الاعزاء" #?
+    letter_introduction: ".وفق حديثنا التالي، سوف نصلكم بعناصر من التقدير" #?
+    # letterable: "Letterable"
+    lettered: "مكتوب بنقش"
+    lettering_account_client: "كتابة حسابات الزبائن" #?
+    lettering_account_supplier: "كتابة حسابات المموليين" #?
+    lettering_modes: #?
+      attorneys: "الوكيل" #?
+      clients: "العملاء" #?
+      suppliers: "الممولون" #?
+      title: "العنصر الثالث" #?
+    lettering_state: "الدولة الترقين"
+    liabilities: "المطلوبات"
+    liabilities_gaps: "ثغرات الخصوم"
+    liability_reserves: "احتياطيات المسؤولية"
+    line: "سطر رقم%{index} :" #?
+    # line_number: "Line #%{number}"
+    line_stock: "مكان التخزين: %{building}, الكمية المتوفرة: %{virtual_q}" #?
+    linear_options: "خيارات الخطية"
+    link: "صلة"
+    # link_to_a_sale: "Link to a sale"
+    liquid_assets_on_turnover: "الموجودات السائلة على دوران"
+    list: "قائمة"
+    listing_create: "انشاء استخراج جديد" #?
+    listing_extract: "قائمة الاستخراج" #?
+    listing_mail: "ارسال البريد الالكتروني" #?
+    listings: "استحراج البيانات" #?
+    load: "حمل"
+    load_demo_data: "تحميل البيانات التجريبية" #?
+    # loan_repayments_not_accounted_on_current_financial_year: "Loan repayments not accounted on current financial year"
+    loans_debts: "القروض الديون"
+    locale: "اللغة"
+    localization: "الموقع الجغرافي"
+    lock: "القفل"
+    # lock_financial_year: "Lock %{code}"
+    # lock_settings: "Lock settings"
+    # lock_the_financial_year: "Lock the financial year"
+    # locking_will_validate_every_journal_entries_for_this_financial_year: "Locking will definitively validate any journal entries related to the financial year, resulting in the impossibility to edit or delete them. As well as it will not be possible to add new ones."
+    # long_cycle_alive_products: "Long cycle alive products"
+    # long_cycle_alive_products_animals: "Long cycle alive products animals"
+    # long_cycle_alive_products_others: "Long cycle alive products others"
+    # long_cycle_alive_products_plant_advance: "Long cycle alive products plant advance"
+    # long_cycle_alive_products_plant_in_ground: "Long cycle alive products plant in ground"
+    # long_cycle_alive_products_wine: "Long cycle alive products wine"
+    # loss_is_x_for_account: "<span class='loss'> Loss of %{x} </span> to account for the account %{account_number}"
+    losses: "خسائر"
+    mail: "ارسال البريد الالكتروني"
+    mailing: "المراسلات"
+    mails:
+      one: "البريد الالكتروني"
+      other: "%{count} بريد الكتروني اخر"
+      zero: "ولا بريد الكتروني " #?
+    main_settings: "الضبط الرئيسي"
+    make_your_production_support: "جعل دعم الإنتاج الخاص"
+    manage_activities: "إدارة الأنشطة"
+    # manage_financial_years: "Manage financial years"
+    # manage_notifications: "Manage notifications"
+    management: "ادارة الاعمال" #?
+    management_index: "دليل ادارة الاعمال" #?
+    mandate_create: "انشاء تفويض" #?
+    mandatory_provisions: "الأحكام الإلزامية"
+    manual: "كتيب"
+    manual_period: "من %{start} الى %{finish}"
+    manure_management_plan_chart: "السماد خطة إدارة التخطيط"
+    map: "رسم خريطة"
+    map_preferences: "تفضيلات خريطة"
+    mark_all_as_read: "علامة جميع للقراءة"
+    mark_as_read: "كمقروء"
+    marketable_net_mass: "الكتلة الصافية للتسويق"
+    # mask_draft_items: "Mask draft items"
+    mask_lettered_items: "قناع العناصر بحروف"
+    mass: "الوزن"
+    maximal_temperature: "درجة الحرارة القصوى"
+    maximum_amount: "الحد الأقصى للمبلغ"
+    # maximum_dose: "Maximum dose"
+    meeting: "المقابلة(X)مكان" #?
+    members: "أعضاء"
+    menu: #?
+      accountancy_tasks: "أعمال المحاسبة" #?
+      bank_statements: "بيانات الحساب" #?
+      bookkeep: "ميزان المحاسبة" #?
+      documents: "الوثائق" #?
+      informations: "المعلومات" #?
+      my_account: "حسابي" #?
+      parameters: "الاعدادات" #?
+      production: "الانتاج" #?
+      purchases: "المشتريات" #?
+      relations_tasks: "العملاء والمموليين" #?
+      sales: "المبيعات" #?
+      stock_transfers: "تحويلات الاسهم والضائع منها" #?
+      stocks_tasks: "الاسهم" #?
+      tools: "الادوات" #?
+    menus: #? String expected ("Menus")
+      accountancy: "المحاسبة" #?
+      finances: "المالية" #?
+      general: "شركة" #?
+      home: "إستقبال" #?
+      production: "المنتج" #?
+      relations: "العلاقات" #?
+      trade: "التجارة" #?
+    # merchandise: "Merchandise"
+    merchandises_purchases: "يروج مشتريات"
+    merchandises_purchases_stocks_variation: "يروج بشراء أسهم الاختلاف"
+    # merchandises_services_costs: "Merchandises, services or costs"
+    merge: "دمج"
+    # merged_entity: ""
+    method: "طريقة"
+    minimal_temperature: "درجة الحرارة الحد الأدنى"
+    minimum_amount: "اقل مبلغ"
+    minutes: "دقيقة"
+    missing_attributes: "بعض سمات مفقودة"
+    missing_help: "صفحات مفقودة"
+    mobile: "التليفون المحمول"
+    mode: "طريقة"
+    model: "نموذج"
+    modes: "وسائط"
+    moment: "" #?
+    month: "شهر"
+    # month_period: "%{code} - %{month} %{year}"
+    monthly: "Mensuelle"
+    months: "أشهر"
+    move_animal: "تحرك الحيوانات"
+    movements: "الحركات"
+    moves: "حركات الاسهم" #?
+    my_company: "عن شركتك" #?
+    my_self: "عن نفسك" #?
+    n: "لا شيء"
+    name: "الاسم"
+    national_deliveries: "الامدادات المحلية" #?
+    national_normal_vat_collected: "معدل ضريبة القيمة المضافة المحلية العادية %19.6" #?
+    national_reduce_vat_collected: "معدل ضريبة القيمة المضافة المحلية المخفضة  %5.5" #?
+    national_vat_collected: "الاجراءات التي حدثت في فرنسا" #?
+    nature: "الطبع"
+    nature_changed: "لو نوع قصر animaux تغيير"
+    natures: "أنواع"
+    nb_mandates: #?
+      one: "تفويض واحد مسجل" #?
+      other: "%{count} تفويضات اخرى" #?
+      zero: "ولا اية تفويض" #?
+    nb_products: #?
+      one: "تم تسجيل منتج واحد" #?
+      other: "%{count} تم تسجيل منتجات اخرى" #?
+      zero: "لم يتم تسجيل اي منتج" #?
+    # needed_quantity: "Needed quantity"
+    net_income: "صافي الدخل"
+    net_margin: "هامش صافي" #?
+    net_mass: "الكتلة الصافية"
+    net_production_sales: "صافي مبيعات الإنتاج"
+    net_surface_area: "مساحة صافية"
+    net_vat_amount: "صافي قيمة الضريبة الاضافية المستحقة" #?
+    # neutral_area_category: "Neutral area category"
+    new: "انشاء دفعة جديدة"
+    new_activity: "نشاط جديد"
+    new_animal: "حيوان جديد"
+    new_attachment: "مرفق جديد"
+    new_box: "صندوق جديد"
+    new_budget: "الميزانية الجديدة"
+    new_call: "مكالمة جديدة"
+    new_contact: "جهة اتصال جديدة"
+    new_container: "حاويات جديدة"
+    new_delivery_of_x_parcels:
+      # one: "New transport (%{count} delivery)"
+      # other: "New transport (%{count} deliveries)"
+    new_delivery_of_x_parcels_for_y:
+      # one: "New transport for %{transporter} (%{count} delivery)"
+      # other: "New transport for %{transporter} (%{count} deliveries)"
+    new_deposit:
+      # one: "Make a deposit %{mode}: %{count} available payment"
+      # other: "Make a deposit %{mode}: %{count} available payments"
+    new_email: "بريد إلكتروني جديد"
+    new_family: "اسرة جديدة" #?
+    new_financial_year_exchange: "الصرف الجديد"
+    new_group: "مجموعة جديدة"
+    new_incoming_parcel: "لا يتجزأ الجديد الوافد"
+    new_incoming_payment: "دفع الواردة الجديد"
+    new_inventory: "جرد جديدة"
+    new_issue: "مشكلة جديدة"
+    new_listing: "قائمة جديدة"
+    new_organization: "منظمة جديدة"
+    new_outgoing_parcel: "الطرد الصادر الجديد"
+    new_outgoing_payment: "دفع المنتهية ولايته الجديدة"
+    new_payment: "تسجيل دفعة جديدة" #?
+    new_production: "إنتاج جديد"
+    # new_production_of_activity: "New production of %{activity}"
+    new_quote: "اقتباس جديد"
+    # new_reception: "New reception"
+    new_sale: "بيعة جديدة" #?
+    # new_shipment: "New shipment"
+    new_title: "عنوان جديد" #?
+    new_value: "قيمة جديدة" #?
+    new_writing: "الكتابة الجديدة"
+    next: "التالي"
+    # next_application_possible_on: "Next application possible on"
+    nitrogen_concentration: "تركيز النيتروجين"
+    no_attachments: "إسقاط الملفات الخاصة بك هنا أو انقر على زر"
+    no_commercial: "-- دون تداول --" #?
+    no_crumbs_to_check: "لا فتات للتحقق"
+    no_data: "لايوجد بيانات"
+    no_deliveries: "ليس هناك من تسليم بالانتظار" #?
+    no_deliveries_for_this_sale: "لم يتم التسليم لهذا الطلب من البيع" #?
+    no_deposits: "التأكد من عدم اقتطاعات البنك"
+    # no_draft_entry: "No draft entry"
+    # no_financial_year_opened: "No financial year opened on current date"
+    no_intervention_participations_to_check: "لا المساهمات تدخل للتحقق"
+    no_javascript: "ان متصفح الويب الخاص بك لا يدعم نسخة الجافا، لذا تحتاج الى تفعيله من اجل استخدام ايكيليبغ." #?
+    # no_new_notifications: "No new notifications"
+    no_notifications: "أي إخطارات"
+    no_origin: "-- بدون مصدر --" #?
+    no_particular_periods: "لا فترة معينة"
+    # no_previous_closure_so_think_about_providing_carrying_forward_entry: "Think about adding a carrying forward entry for the previous financial year at the first day of the financial year you're about to close."
+    no_products: "Sans produit"
+    no_proposer: "-- دون راعي او كفيل --" #?
+    no_purchases: "لا شراء في انتظار الاستلام" #?
+    no_records: "ولا اية سجل" #?
+    no_results: "لا نتائج"
+    # no_right_defined_for_this_part_of_the_application: "No right defined for this part of the application (%{controller}#%{action})"
+    no_right_defined_for_this_part_of_the_application_and_this_user: "لم يتم تحديد لهذا الجزء من الطلب وهذا حق المستخدم"
+    # no_sale_to_link_to_this_fixed_asset: "None of the existing sales can be associated to this fixed asset."
+    no_tracking: "ولا اي مسار" #?
+    no_transfers: "لم يتم اي عملية نقل" #?
+    nominal_storable_easement_area: "الاسمية منطقة الارتفاق للتخزين"
+    # non_compliant: "Non compliant"
+    # non_compliant_with_request: "Non compliant with request"
+    none: "لا شيء"
+    normal: "نظام واقعي طبيعي"
+    # not_allowed_for_organic_farming: "This product cannot be used for organic agriculture"
+    not_assessable_operations: "اجراءات غير ضريبية" #?
+    not_delivered: "لم يتم تسليمها"
+    # not_informed: "Not informed"
+    # not_invoiced_or_aborted_purchases: "You have not invoiced or aborted purchases. Once the financial year closed, it won't be possible to invoice them or abort them on this financial year (%{code})."
+    # not_invoiced_or_aborted_sales: "You have not invoiced or aborted sales. Once the financial year closed, it won't be possible to invoice them or abort them on this financial year (%{code})."
+    not_letterable: "لم يكن قادرا على بريد إلكتروني"
+    not_ready: "ليس جاهزا"
+    not_received: "لم تتلق"
+    # not_sent_incoming_parcels_on_current_financial_year: "You have unconfirmed incoming parcels. Once the financial year closed, it won't be possible to receive them on this financial year (%{code})."
+    # not_sent_outgoing_parcels_on_current_financial_year: "You have unconfirmed outgoing parcels. Once the financial year closed, it won't be possible to send them on this financial year (%{code})."
+    # not_sent_tax_declaration_on_current_financial_year: "You have not sent tax declarations (draft or validated) ongoing. Once the financial year closed, it won't be possible to sent them on this financial year (%{code})."
+    notifications: #?
+      error: "خطأ" #?
+      information: "معلومة" #?
+      success: "استكملت العملية بنجاح" #?
+      warning: "!تحذير" #?
+    now: "الآن"
+    number: "رقم"
+    number_of_cap_islets: "عدد من الجزر الصغيرة كاب"
+    number_of_cap_land_parcels: "عدد من قطع الأراضي كاب"
+    # number_of_cap_neutral_areas: "Number of cap neutral areas"
+    number_options: "أرقام الخيارات" #?
+    # number_with_param: "N° %{number}"
+    numbers: "أرقام"
+    observation_create: "اضافة ملاحظة" #?
+    on_account: "أ€ يضع على الحساب"
+    # on_all_exercises: "on all exercises"
+    one_condition: "ما لا يقل عن شرط واحد"
+    open_a_campaign: "فتح حملة" #?
+    open_a_production: "فتح الإنتاج"
+    open_an_activity: "فتح النشاط"
+    # open_financial_year: "Open a financial year"
+    # open_financial_year_with_date: "Open %{code}"
+    # operating_costs: "Operating costs"
+    operating_margin: "هامش التشغيل"
+    operating_margin_on_turnover: "هامش تعمل على دوران"
+    # operating_profit: "Operating profit %{financial_year}"
+    # operating_result_i_ii: "Operating result (I - II)"
+    # operating_revenues: "Operating revenues"
+    operation: "" #?
+    operation_create: "اضافة عمل" #?
+    operation_nature_create: "انشاء نوع عمل جديد" #?
+    operation_update: "تعديل العمل" #?
+    operation_use_create: "اضافة مادة" #?
+    operations: "عمليات"
+    options: "خيارات"
+    or: "أو"
+    order_amount_with_taxes: "قيمة الطلب مع الضرائب" #?
+    order_print: "طباعة الطلب" #?
+    organic_matter_concentration: "تركيز المواد العضوية"
+    original_component: "أصلي"
+    other_assessable_operations: "اجراءات ضريبية اخرى" #?
+    other_debts: "ديون أخرى" #?
+    other_expenses: "نفقات أخرى"
+    other_financial_debts: "الديون المالية الأخرى"
+    other_not_assessable_operations: "اجراءات غير ضريبية اخرى" #?
+    other_products: "منتجات اخرى"
+    other_purchases: "مشتريات أخرى"
+    other_receivables: "المستحقون الآخرون"
+    # other_reserves: "1068 - Other reserves"
+    other_results: "...نتائج اخرى" #?
+    other_services: "احتياجات وخدمات اخرى" #?
+    others: "اقتطاع القيم الضريبية المضافة الاخرى"
+    # others_debts: "Others debts"
+    # others_debts_advance_products: "others_debts_advance_products"
+    # others_debts_advance_receivables: "others_debts_advance_receivables"
+    # others_debts_associate_debts: "others_debts_associate_debts"
+    # others_debts_fixed_asset_debts: "others_debts_fixed_asset_debts"
+    # others_debts_liabilities_gaps: "others_debts_liabilities_gaps"
+    # others_debts_others: "others_debts_others"
+    # others_debts_social_debts: "others_debts_social_debts"
+    # others_debts_state_debts: "others_debts_state_debts"
+    # others_debts_supplier_receivables: "others_debts_supplier_receivables"
+    out_line_create: "اضافة منتج صادر" #?
+    out_vat_amount: "مبلغ الضريبة على القيمة المضافة" #?
+    outgoing_delivery: "التسليم" #?
+    outgoing_delivery_create: "اضافة تسليم" #?
+    outgoing_parcel_quantities: "كميات (لا يتجزأ المنتهية ولايته)"
+    outgoing_parcels: "الطرود الصادرة"
+    outgoing_payment: "دفع المنتهية ولايته"
+    outgoing_payment_create: "اضافة نفقة" #?
+    # outgoing_payment_list_text: "You will find below the references covered by the payment in the amount of %{amount} %{currency}."
+    outgoing_payment_update: "تعديل دفعة الشراء" #?
+    outgoing_payment_use_create: "تسديد سعر الشراء" #?
+    outgoing_payments: "المدفوعات الصادرة"
+    overflow: "فائض رصيد الدائن" #?
+    page_title: "%{company_code} - %{menu} - %{action}"
+    page_title_by_default: "Ekylibre - %{action}"
+    page_title_special: "%{company_code} - %{action}"
+    paid_amount: "القيمة المسدودة"
+    paid_at: "تم التسديد في"
+    parameter_error_miscibility: "في عداد المفقودين عدد MAAID"
+    parameters: "عامل متغير"
+    parcel_items: "عناصر لا يتجزأ"
+    parcels: "الطرود"
+    partially_lettered: "بحروف جزئيا"
+    # partially_lettered_unlettered: "Partially lettered / unlettered"
+    participants: "مشتركين"
+    participations: "بالمشاركات"
+    parts: "وحدات"
+    passive_balance_sheet: "رصيد ثابت" #?
+    passive_capital_sum: "مجموع رأس المال" #?
+    passive_debt_sum: "مجموع الديون" #?
+    passive_stock_sum: "مجموع الاحتياطات" #?
+    passive_sum: "مجموع المطلوبات" #?
+    # passive_totals: "Passive Totals"
+    password: "كلمة المرور"
+    paths_to_convert: "مسارات لتحويل" #?
+    payable_taxes: "الضرائب المستحقة"
+    payback: "طلب الاستحقاق" #?
+    payment_amount: "المبلغ المدفوع"
+    payment_at: "سدد في"
+    payment_conditions: "شروط الدفع"
+    # payment_delay_placeholder: "eom, 5 days before"
+    # payment_due_date: "Payment due date"
+    payment_label: "%{number}. %{amount} (%{usable_amount} المتبقي)  %{date} بواسطة %{mode} لاجل %{entity}" #?
+    payment_mode: "طريقة تسديد الدفعة"
+    # payment_mode_form_label: "Payment mode"
+    payment_uses: "الدفعات" #?
+    payments: "الدفعات"
+    payments_amount: "تم تسديد القيمة" #?
+    payments_count: "عدد %{mode}"
+    payments_number: "عدد الدفعات" #?
+    payments_total: "جميع الدفعات" #?
+    payslip_number: "بايسليب #"
+    payslips: "كشوف"
+    people: "الناس"
+    percentage_by_calibration: "النسبة المئوية من المعايرة"
+    period: "المدة المحددة مسبقا"
+    # period_to_take_into_account: "Period to take into account"
+    periods: "فترات"
+    permanent_stock_inventory: "جرد مخزون دائم"
+    permute: "مقايضة الملفات"
+    personalized_mail: "ارسال بريد الكتروني شخصي"
+    pertinence: "%{value}%"
+    # pfi_dose: "Pfi dose"
+    # pfi_parcel_ratio: "Pfi parcel ratio"
+    # pfi_treatment_ratio: "Pfi treatment ratio"
+    phosphorus_concentration: "تركيز الفوسفور"
+    # physical_h2: "Physical H2"
+    # phyto_data: "Phytosanitary data"
+    picture: "صورة"
+    placeholder: "نائب"
+    places: "الأماكن"
+    # planned: "Planned"
+    # planned_again_intervention_in: "Plan again this intervention on"
+    planned_at: "قرر يوم" #?
+    # planning_of: "Planning of"
+    plant: "نبات"
+    plant_counting: "عد"
+    plant_countings: "فرزان"
+    # plant_medicines: "Plant medicines"
+    plantation_density: "كثافة المزارع"
+    plants: "النباتات"
+    # please_provide_a_valid_maaid_to_display_this_article_properties: "Please provide a valid AMM number to display this article's properties"
+    # please_reach_out_for_the_person_in_charge_of_the_closure: "Please reach out for the person in charge of the closure outside of the software to get your documents."
+    please_wait: "أرجو الإنتظار…"
+    # pluviometry: "Ploviometry"
+    point: "نقطة"
+    points: "نقاط"
+    population: "عدد السكان"
+    potassium_concentration: "تركيز البوتاسيوم"
+    potential_hydrogen: "الهيدروجين محتمل"
+    # pre_harvest_delay: "Pre harvest delay"
+    precipitation: "هطول"
+    preferences: "التفضيلات"
+    # prepare_financial_year_for_closure: "Prepare %{code} for closure"
+    # prerequisites_checks_before_closure: "Prerequisites checks before closure"
+    prescription: "وصفة طبية"
+    prescriptions: "وصفات"
+    # pressure: "Pressure"
+    # pretax: "pre-tax"
+    pretax_amount: "كمية ما قبل الضريبة"
+    previous: "السابق"
+    # previous_financial_year_was_locked_warning: "As the previous financial year was locked, remember to provide an opening balance sheet before performing the closure."
+    # previous_year_result_should_be_allocated: "The result of the previous financial year must be allocated before closing this financial year"
+    price: "السعر"
+    price_amount: "Prix HT" #?
+    price_amount_with_taxes: "القيمة مع كامل الضريبة" #?
+    price_create: "اضافة تسعيرة هذا النوع" #?
+    prices: "السار المنتجات"
+    prices_export: "CSV اسعار التصدير ضمن" #?
+    prices_import: "CSV استيراد بيان الاسعار  ضمن" #?
+    print: "طباعة"
+    print_at: "ال" #?
+    # print_lant_parcel_register: "Print the land parcel register"
+    # printing_document: "Printing %{document}"
+    procedures: "الإجراءات"
+    product: "المنتج"
+    product_account_number: "رقم حساب المنتج"
+    product_category: "الفئة"
+    product_category_create: "اضافة فئة جديدة للمنتج" #?
+    product_category_update: "تعديل الفئة" #?
+    product_component_create: "اضافة عنصر للمنتج" #?
+    product_create: "اضافة منتج جديد" #?
+    product_name: "المنتج"
+    # product_nature: "Product type"
+    # product_nature_category: "Product category"
+    # product_nature_variants: "Variants"
+    product_natures: "أنواع المنتجات"
+    product_update: "تعديل تفاصيل المنتج" #?
+    # product_value: "Product value %{financial_year}"
+    # product_variant: "Product variant"
+    production: "ادارة الانتاج"
+    production_cost: "تكلفة الانتاج"
+    # production_costs: "Production costs"
+    production_distribution: "توزيع الانتاج"
+    # production_nature: "Production nature"
+    # production_others_charges: "Production others charges"
+    # production_purchases: "Production purchases"
+    production_support: "دعم الإنتاج"
+    productions: "المنتجات"
+    productions_sales: "مبيعات المنتجات"
+    products: "فئة المنتج"
+    products_purchases: "منتجات مشتريات"
+    products_sales: "مبيعات المنتجات"
+    # products_total: "Products total"
+    profile: "الملف الشخصي"
+    profit_and_loss: "الربح والخسارة"
+    # profit_is_x_for_account: "<span class='profit'> Profit of %{x} </span> to account for the account %{account_number}"
+    profit_or_loss: "المالية نتيجة العام"
+    profit_taxe: "و taxe الربح"
+    profits: "الأرباح"
+    profits_and_losses: "الأرباح والخسائر"
+    profits_taxe: "الأرباح و taxe" #?
+    # progress_bar_current_step: "Step %{current}/%{total} : %{label}..."
+    # provide_mandatory_information_before_putting_on_hold: "Please provide the mandatory information before putting your fixed asset on hold. Click the 'Waiting' button after the redirection to end the process."
+    # provide_mandatory_information_before_scrapping: "Please provide the mandatory information before scrapping your fixed asset. Click the 'Scrapped' button after the redirection to end the process."
+    # provide_mandatory_information_before_selling: "Please provide the mandatory information before selling your fixed asset. Click the 'Sold' button after the redirection to end the process."
+    provisionnal_budget: "الميزانية Provisionnal" #?
+    provisions_revenues: "عائدات أحكام"
+    purchase: "الطلب"
+    purchase_create: "اضافة شراء جديد" #?
+    # purchase_invoice_items: "Invoice items"
+    purchase_item_create: "اضافة طلب للمنتج" #?
+    purchase_items: "تعديل تصميم الشراء"
+    purchase_number: "عدد شراء"
+    # purchase_order: "Purchase order"
+    # purchase_order_items: "Order items"
+    purchase_payments: "دفعات الشراء"
+    purchase_price_create: "انشاء سعر الشراء" #?
+    purchase_print: "طباعة الطلب للممول" #?
+    purchase_steps: #?
+      products: "انشاء الصفقة" #?
+      summary: "النفقات" #?
+    purchase_update: "تعديل معلومات الطلب" #?
+    purchases: "المشتريات"
+    purchases_number: "" #?
+    purchases_price_create: "اضافة سعر الشراء" #?
+    # purchases_prices: "Purchases prices"
+    purchases_stocks_variation: "تباين الأسهم مشتريات"
+    quality: "جودة"
+    # quandl: "Quandl"
+    quantity: "الكمية"
+    # quantity_available: "Quantity available"
+    quantity_rest: "الكمية المتبقية" #?
+    quantity_to_credit: "شمولية الكمية بالائتمانات" #?
+    # quantity_to_receive: "Quantity to receive"
+    quarterly: "Trimestrielle" #?
+    query: ": الاستعلام"
+    # quit_financial_year_closure_preparation: "Quit preparation mode for %{code}"
+    # radical_class_accounts_dont_have_entries: "Radical class accounts does not contain any entry"
+    # radical_class_accounts_have_entries: "Radical class accounts contains entries"
+    raw_income: "الدخل الخام"
+    raw_margin: "هامش الخام" #?
+    # re_entry_delay: "Re entry delay"
+    # re_entry_interval: "Re-entry interval"
+    reading_tasks: "مهام القراءة"
+    readings: "قراءات"
+    ready: "جاهز"
+    ready_to_harvest: "استعداد لموسم الحصاد"
+    # receipt_date: "Receipt date"
+    # receipt_responsible: "Receipt responsible"
+    received: "مستلم"
+    # received_quantity: "Received quantity"
+    # receiving_address: "Receiving address"
+    recent_events: "الاحداث الاخيرة"
+    # reception: "Reception"
+    # reception_incident: "Reception incident"
+    # reception_items: "Reception items"
+    # reception_number: "Reception number"
+    # receptions: "Receptions"
+    # reconcile: "Reconcile"
+    # reconciliate_with_purchases_orders: "Reconciliate with purchases orders"
+    # reconciliate_with_receptions: "Reconciliate with receptions"
+    record: "سجل"
+    # record_cannot_be_saved: "The record can not be saved"
+    record_has_been_correctly_removed: "قد تم حذف السجلات بشكل صحيح" #?
+    record_has_not_been_removed: "لم يتم حذف السجلات" #?
+    record_maintenance: "صيانة المسجلات"
+    # reevaluation_gaps: "reevaluation_gaps"
+    # reference: "Reference"
+    # reference_supplier: "Reference supplier : %{reference_number}"
+    reflect: "يعكس"
+    reflected: "التغييرات تنعكس"
+    reflections: "خواطر"
+    refresh: "تحديث"
+    register: "تسجيل شركة جديدة" #?
+    register_intervention_request: "تسجيل طلب تدخل"
+    # regressive_options: "Regressive options"
+    # regulated_reserves: "1064 - Tax-regulated reserves"
+    rejected: "مرفوض"
+    relations: "ادارة علاقات العملاء / والمموليين" #?
+    relationship: "صلة"
+    # relationship_of_entity: "%{relationship} of %{entity}"
+    # relationship_of_entity_as_inverse_post: "%{relationship} of %{entity} (%{inverse_post})"
+    # relationship_of_entity_as_post: "%{relationship} of %{entity} as %{post}"
+    remaining_amount_to_reconcile: "المتبقية المبلغ التوفيق"
+    # remaining_items_to_reconcile: "Remaining items to reconcile"
+    remove: "إزالة"
+    remove_item: "إزالة بند"
+    remove_subscription: "إزالة الاشتراك"
+    renewed: "متجدد"
+    reopen: "فتح الدفتر اليومي" #?
+    repayment_period: "فترة السداد"
+    repayments: "تسديد"
+    repayments_graph: "تسديد الرسم البياني"
+    report: "Informations communes"
+    reported_balance: "ارجاء الرصيد" #?
+    request: "طلب"
+    request_maintenance: "صيانة الطلب"
+    requests: "طلبات"
+    reserve: "الاحتياطي"
+    reservoir: "الاحتياطي" #?
+    reservoir_informations: "معلومات عن خزان الاحتياطي" #?
+    reservoirs_create: "اضافة خزان احتياطي" #?
+    reset: "إعادة تعيين"
+    resource: "مراجعة السجلات الاصلية : %{resource} %{number}"
+    resources: "ادارة الموارد البشرية"
+    rest: "راحة"
+    rest_to_pay: "القيمة المتبقية" #?
+    restore: "تجديد"
+    result: "الناتج"
+    results: #?
+      one: "نتيجة واحدة" #?
+      other: "%{count} نتائج" #?
+      zero: "ولا نتيجة" #?
+    revenues: "إيرادات"
+    revenues_by_product_nature: "الإيرادات حسب نوع المنتج"
+    reverse: "تطبيق الحالة العكسية"
+    # revise: "Revise"
+    right_parts: #?
+      accountancy: "حقوق المحاسبة" #?
+      company: "حقوق الشركة" #?
+      management: "حقوق التجارة" #?
+      production: "حق الانتاج" #?
+      relations: "حقوق العلاقات" #?
+      resources: "حقوق المصادر" #?
+    rights: "الحقوق"
+    risk_and_charges_provisions: "أحكام خطر والرسوم"
+    # risks: "Risks"
+    role: "دور"
+    role_create: "اضافة مهام" #?
+    role_name: "ادخل اسم المهام ومن ثم خصص له حقوقه" #?
+    roles: "مهام / ادوار"
+    # rss: "RSS"
+    run: "يجري"
+    running_cost: "تكاليف الاستثمار" #?
+    running_finished: "منتجات الاستثمار" #?
+    # salary_payments: "Salary payments"
+    sale: "الطلبات"
+    sale_cancel: "الغاء الفاتورة" #?
+    sale_create: "اضافة بيعة جديدة" #?
+    sale_deliveries: "تسليم الطلبات" #?
+    sale_item_create: "(اضافة منتج للاسعار (صيغة كاملة" #?
+    sale_items: "تعديل تصميم طلب البيع"
+    sale_nature_create: "انشاء نوع بيع جديد" #?
+    sale_opportunities: "فرص بيع"
+    sale_price_create: "اضافة سعر البيع" #?
+    sale_print: "طباعة طلب البيع" #?
+    sale_steps: #?
+      deliveries: "جدولة عمليات التسليم" #?
+      estimate: "انشاء تقييم" #?
+      general: "الوصف" #?
+      products: "المنتجات" #?
+      summary: "فواتير وايصالات" #?
+    sale_update: "تعديل معلومات الطلب" #?
+    sales: "تم تسديد دفعات طلب البيع"
+    sales_conditions: "شروط البيع"
+    sales_invoice: "الفوترة"
+    sales_invoice_items: "تصميم الفاتورة" #?
+    sales_invoice_number: "فاتورة رقم" #?
+    sales_invoice_print: "طباعة الفاتورة" #?
+    sales_invoice_sale: "فوترة طلب البيع" #?
+    sales_invoices: "الفواتير" #?
+    sales_invoices_total: "مجموع قيمة الفاتورة" #?
+    sales_number: "" #?
+    sales_preferences: "تفضيلات المبيعات"
+    sales_pretax_amount: "كمية قبل خصم الضرائب (مبيعات)"
+    sales_price_create: "اضافة سعر البيع" #?
+    # same_variant_as_x: "Same variant as %{x}"
+    save: "حفظ"
+    save_in_draft: "حفظ في المسودات"
+    # saved_but_couldnt_letter_x_and_y: "Successfully saved %{trade} and %{payment} but couldn't letter them."
+    scheduled: "المقرر"
+    scrapped_on: "ألغت يوم"
+    search: "البحث عن الشراء"
+    search_go: "بدء البحث" #?
+    search_placeholder: "بحث…"
+    search_sales: "البحث عن طلبات البيع" #?
+    second_building_name: "ادخال الاسم" #?
+    # section_x: "Section %{x}"
+    see_details: "انظر التفاصيل"
+    # see_fixed_assets: "See fixed asset"
+    # see_incoming_parcels: "See the incoming parcels"
+    # see_loans: "See loans"
+    see_more_details: "مشاهدة مزيد من التفاصيل"
+    # see_outgoing_parcels: "See the outgoing parcels"
+    # see_purchases: "See the purchases"
+    # see_sales: "See the sales"
+    # see_tax_declarations: "See tax declarations"
+    # see_the_accounts: "See the accounts"
+    # see_the_day_book: "See the day book"
+    # see_the_financial_years: "See the financial years"
+    # see_the_unbalanced_entries: "See the unbalanced entries"
+    # seed_and_plants: "Seed and plants"
+    select_a_journal: "حدد مجلة"
+    select_account_client: "كتابة حسابات" #?
+    select_account_supplier: "كتابة حسابات" #?
+    select_area: "عنوان بريدي" #?
+    select_building: "اختر مكان التخزين" #?
+    select_closure_date: "اختيار تاريخ الاغلاق"
+    select_columns: "ضع علامة على العمود الذي ترغب باظهاره في الجدول"
+    select_date: "ادخل تاريخ"
+    select_date_generation: "تاريخ نهاية الدمج"
+    select_existing_payment: "ختيار الدفعة الموجودة" #?
+    select_file_to_upload: "تحديد الملف المراد تحميله"
+    select_financial_year: "ممارسة" #?
+    select_forward_journal: "استخدام الدفاتر اليومية لتقارير جديدة"
+    # select_legal_position: "Select legal position"
+    select_number: "ادخل رقم" #?
+    select_number_or_date: "ادخل رقم او تاريخ" #?
+    select_organization: "منظمة" #?
+    selection: "اختيار"
+    # selling_amounts: "Selling amounts"
+    semester: "نصف السنة"
+    send: "ارسل الرسالة" #?
+    send_mail: "إرسال البريد"
+    send_test: "ارسال رسالة تجريبية" #?
+    send_test_mail: "إرسال البريد اختبار"
+    sensor_model: "نموذج الاستشعار"
+    sensors: "أجهزة الاستشعار"
+    # sent: "Sent"
+    # sent_vat_declaration: "Definitive VAT declaration"
+    sequence_create: "اضافة تسلسل" #?
+    sequences: "التسلسل" #?
+    sequences_load: "تحميل التسلسلات المفقودة" #?
+    # service: "Service"
+    # service_deliveries: "Service deliveries"
+    # service_delivering: "Service delivering"
+    # services: "Services"
+    # services_sale: "Service sale"
+    sessions: "جلسات"
+    set_reconcilable_new_but_existing_third_accounts: "تعيين مصالحتها حسابات الثالثة الجديدة ولكن القائمة (العملاء والموردين والمحامين)"
+    settings: "إعدادات"
+    settings_statistics: "إحصاءات إعدادات"
+    sex: "جنس"
+    shape: "شكل"
+    ship: "بشريطة"
+    # shipment_items: "Shipment items"
+    # shipments: "Shipments"
+    # shipping_note: "Shipping bill"
+    # short_cycle_alive_products: "Short cycle alive products"
+    # short_cycle_alive_products_animals: "Short cycle alive products animals"
+    # short_cycle_alive_products_others: "Short cycle alive products others"
+    # short_cycle_alive_products_plant_advance: "Short cycle alive products plant advance"
+    # short_cycle_alive_products_plant_in_ground: "Short cycle alive products plant in ground"
+    show: "تبين"
+    sign_out: "خروج"
+    # signature_html: "Signature (<a href='%{url}' target='_blank'>Verify signature</a>)"
+    simplified: "نظام واقعي مبسط"
+    simplified_linear_options: "خيارات الخطية المبسطة"
+    social_debts: "الديون الاجتماعية"
+    social_expenses: "النفقات الاجتماعية"
+    sold_on: "تباع في"
+    source: "مصدر البيانات"
+    # standard_vat: "Standard VAT"
+    start: "ابتداء من"
+    start_new_intervention_here: "بدء التدخل الجديد هنا"
+    started: "بدأت"
+    state: "الحالة"
+    state_debts: "الديون الخارجية"
+    state_receivables: "ذمم الدولة"
+    statistics: "إحصائيات"
+    # statutory_reserves: "1063 - Statutory or contractual reserves"
+    stewardship: "إدارة"
+    stock: "مخزون"
+    # stock_after_order: "Stock after order"
+    stock_container_map: "خريطة الأسهم"
+    stock_in_ground: "الأسهم في الأرض"
+    stock_in_ground_by_calibration: "أسهم في الأرض عن طريق المعايرة"
+    stock_max: "الحد الاقصى للاسهم" #?
+    stock_min: "الحد الادنى للاسهم" #?
+    stock_move_create: "اضافة حركة جديدة للاسهم" #?
+    # stock_of_x: "Stock of %{x}"
+    stock_transfer_create: "اضافة عملية نقل ام خسارة الاسهم" #?
+    stocks: "ادارة الاسهم"
+    # stocks_end_products: "Stocks end product"
+    # stocks_others_products: "Stocks other product"
+    # stocks_supply: "Stocks supply"
+    stop: "لغاية"
+    stopped: "توقفت"
+    stopped_on: "توقفت على"
+    storage: "تخزين"
+    string_case: "خيارات للنص" #?
+    subject: "الموضوع"
+    # subledger_of_accounts_x: "Sub-ledger of accounts %{account}"
+    submit: "ارسال"
+    subscribed_on: "اشتركت في"
+    subscriber_period: "تم التسجيل في %{subscribed_at}"
+    subscriber_quantity: "عدد المشتركيين %{subscribed_at}"
+    subscription_create: "اضافة اشتراك" #?
+    subscription_nature: "نوع الاشتراك"
+    subscription_nature_create: "اضافة نوع اشتراك جديد" #?
+    subscription_natures_down: "(-1) انقاص العدد الحالي" #?
+    subscription_natures_up: "(+1) زيادة العدد الحالي" #?
+    subscriptions: "الاشتراكات"
+    subscriptions_evolution: "تطور الاشتراكات"
+    subsidies: "الإعانات"
+    # substances_mixing_not_allowed_due_to_znt_buffer: "Substances mixing not allowed due to the usage %{usage} of product %{phyto} (untreated buffer aquatic >= 100 m)"
+    subtitle: "معرفة المعلومات المتعلقة بالاستخلاص" #?
+    subtotal: "المجموع الاجمالي %{name}"
+    subtotals_at_level: "المبلغ الاجمالي على مستوى"
+    supplier: "اسعار البيع للممولين"
+    supplier_informations: "المعلومات المورد"
+    supplier_payment_mode: "المورد وضع الدفع"
+    supplier_receivables: "ذمم المورد"
+    # supplier_reference: "Supplier reference"
+    # suppliers: "Suppliers"
+    supply: "التسليم"
+    support: "الدعم"
+    supports: "الدعم"
+    supports_chart: "يدعم الرسم البياني" #?
+    # switch_accounting_plan: "Switch accounting plan"
+    synthesis: "تجميع الوثائق"
+    target: "الهدف"
+    tasks: "المهام"
+    # tax_amount: "VAT amount"
+    tax_create: "اضافة ضريبة جديدة" #?
+    tax_declaration_create: "اضافة تصريح جديد" #?
+    tax_declarations: "الإقرارات الضريبية"
+    # tax_declarations_states: "Tax declarations states"
+    tax_label: "التسمية الضرائب"
+    taxations: "الأنظمة الضريبية"
+    taxes: "الضرائب"
+    taxes_and_wages: "الضرائب والأجور"
+    theoric_quantity: "الكمية النظرية" #?
+    # think_about_registering_regularization_journal_entries_before_closing: "If you haven't done it yet, think about manually adding regularization journal entries before closing the financial year."
+    # third_balance: "(balance - supplier account balance : %{balance} - %{supplier_account_balance})"
+    third_is_unbalanced: "ثالثا غير متوازن. (ميزان - ميزان الحساب المورد)"
+    # this_archive_is_digitally_signed: "This archive is digitally signed."
+    # this_product_has_been_withdrawn: "This product has been withdrawn"
+    # threshold_commercialization_by_production: "Threshold commercialization by production"
+    thumb: "اصبع الابهام"
+    time_cost: "تكلفة الوقت"
+    time_spent_by_activity: "الوقت الذي يقضيه النشاط"
+    time_zone: "منطقة زمنية"
+    timeline: "الجدول الزمني"
+    # timeline_comment: "%{author} commented %{when}"
+    timeline_entity_link: "رابط كيان الزمني"
+    # timeline_event: "%{name} with %{participants} %{when}"
+    # timeline_event_without_participants: "%{name} %{when}"
+    # timeline_incoming_call: "%{author} called %{entity} about %{name} %{when}"
+    # timeline_incoming_mail: "%{entity} wrote to %{author} about %{name} %{when}"
+    # timeline_item_added: "%{type} %{name} added by %{author} %{when}"
+    # timeline_item_deleted: "%{type} %{name} removed by %{author} %{when}"
+    # timeline_outgoing_call: "%{author} called %{entity} about %{name} %{when}"
+    # timeline_outgoing_mail: "%{author} wrote to %{entity} about %{name} %{when}"
+    # timeline_payment: "%{type} %{name} of %{amount} by %{mode} added by %{author} %{when}"
+    # timeline_sale: "%{type} %{name} of %{amount} added by %{author} %{when}"
+    # timeline_task: "%{author} added task %{name} %{when}"
+    times: "مرات"
+    to: "الى"
+    to_date: "الى تاريخ" #?
+    to_deliver: "للتسليم" #?
+    to_deposit: "لإيداع"
+    to_deposit_later: "على أن تودع في وقت لاحق"
+    to_deposit_now: "إيداع الآن"
+    to_pay: "لدفع"
+    # to_point: "Point"
+    to_reclaim: "لاستعادة"
+    # to_reconcile: "To reconcile"
+    # to_reconciliate: "To reconciliate"
+    today: "اليوم"
+    tool_cost: "تكلفة أداة"
+    tool_create: "اضافة مادة" #?
+    tool_update: "تعديل المادة" #?
+    tools: "مادة مستخدمة"
+    total: "المجموع"
+    total_amount: "صافي اجمالي الكمية"
+    # total_amount_with_taxes: "Total amount incl. taxes"
+    # total_amount_without_taxes: "Total amount excl. taxes"
+    total_cost: "التكلفة الإجمالية"
+    total_earn: "إجمالي كسب" #?
+    # total_expenses: "Expenses incl. taxes"
+    total_invoiced_amount: "فواتير المبلغ الاجمالي" #?
+    total_paid_amount: "إجمالي المبلغ المدفوع" #?
+    total_pretax_expenses: "مجموع نفقات ما قبل الضريبة"
+    total_pretax_revenues: "إجمالي الإيرادات قبل خصم الضرائب"
+    total_quantity: "مجموع الكمية"
+    # total_revenues: "Revenues incl. taxes"
+    total_unpaid_amount: "إجمالي المبلغ غير المدفوع" #?
+    totals: "(المجموع (صلاحية العينات والمسودات"
+    tours:
+      production:
+        field_distribution:
+          content: "تجد هنا 3 مستويات للالزراعات: مناطق صالحة للزراعة (مستقلة من الحملات)، قطع الأراضي المحددة في الإنتاج، والزراعات زرعت خلال التدخلات."
+          title: "مجالات"
+        production:
+          content: "تسمح الأنشطة لتحديد ما تريد لإنتاج والتخطيط له."
+          title: "إنتاج"
+        quality:
+          content: "اتبع المحاصيل والأنشطة الخاصة بك مع العديد من أنواع التحليلات، ومراقبة الأمراض مع القضايا والتحقق من جودة الحصاد مع عمليات التفتيش."
+          title: "أدوات الجودة"
+        supervision:
+          content: "تصاريح أجهزة استشعار لتسجيل والتركيز القيم لك أجهزة الاستشعار في الحقول."
+          title: "أجهزة الاستشعار"
+      welcome:
+        home:
+          content: "سنقوم بعمل جولة سريعة من واجهة التطبيق. أول هذه التصاريح زر العودة إلى المنزل من أي مكان في التطبيق."
+          title: "مرحبا بكم في Ekylibre"
+        main:
+          content: "حيث كل مكان اتخاذ الإجراءات هنا. نتمنى لك استخدام سعيدا."
+          title: "اين تعمل"
+        parts:
+          content: "تسمح هذه القائمة إلى الوصول إلى جميع وحدات رئيسية."
+          title: "وحدات من Ekylibre"
+        side:
+          content: "يحتوي هذا الشريط الجانبي جميع القوائم الفرعية وحدة الحالية التي يجري التشاور."
+          title: "الشريط الجانبي وحدة"
+        user:
+          content: "هنا، يمكنك أن ترى الإشعارات، وتبين مساعدة، وقراءة اسم المزارع الخاصة بك. تفضيلات المستخدم الخاص بك للتحرير من القائمة."
+          title: "القائمة المستخدم"
+    # toxic: "Toxic"
+    # toxic_for_aquatic_organisms: "Toxic for aquatic organisms"
+    tracking: "المسار"
+    trade: "تجارة"
+    trade_counts: "التهم التجارة"
+    transactions_by_month: "المعاملات حسب الشهر"
+    transfer: "اجراء النقل"
+    transformations: "التحولات" #?
+    transport: "المواصلات"
+    transport_create: "اضافة وسيلة نقل جديدة" #?
+    transport_deliveries: "تسليم وسائل النقل" #?
+    trimester: "الثلث"
+    # type_of_structure: "Type of structure"
+    # unauthorized: "Unauthorized"
+    unavailable: #?
+      entity: "السجل المطلوب غير متاح" #?
+      financial_year: "السنة المالية غير متوفرة %{value}" #?
+      journal: "الدفتر اليومي المطلوب غير متوفر (%{value})" #?
+      product: "المنتج المطلوب غير متوفر" #?
+    # unbalanced: "Unbalanced"
+    # unbalanced_balance_sheet: "The balance sheet is not balanced."
+    unbalanced_clients: "عملاء غير متوازن"
+    unbalanced_suppliers: "الموردين غير متوازن"
+    unbilled_payables: "دائنة غير المفوترة"
+    undefined_activity: "النشاط غير محدد"
+    undefined_container: "حاوية غير محددة"
+    undelivered: "لم يتم التسليم"
+    undelivered_invoices: "الفواتير التي لم يتم تسليمها"
+    undeposited: "لم يتم اي اقتطاع بنكي" #?
+    # under_pressure_or_refrigerated_gas: "Under pressure or refrigerated gas"
+    undone: "غير مصنوع"
+    uninvoiced: "لم يتم تحرير فواتير"
+    uninvoiced_amount: "قيمة غير مفوترة" #?
+    unit: "الوحدة"
+    # unit_amount: "Unit cost excl. taxes"
+    # unit_and_indicator: "%{unit} (%{indicator})"
+    unit_create: "اضافة وحدة قياس جديدة" #?
+    # unit_pretax_amount: "Unit pretax amount"
+    unit_price_amount: "PU HT" #?
+    unit_price_amount_with_taxes: "PU TTC" #?
+    units_load: "تحميل الوحدات الاساسية المفقودة" #?
+    unknown: "غير معروف"
+    unknown_condition: "غير معروف نوع الشرط"
+    unknown_user: "مستخدم غير معروف"
+    unknown_variant: "البديل غير معروف"
+    unlettered: "جاهل"
+    unlock: "فتح القفل"
+    unmark: "غير علامة"
+    unmarketable_inspection_categories_evolution: "غير قابلة للتسويق تطور فئات التفتيش"
+    unpaid: "غير مسدد"
+    unpaid_amount: "القيمة المتبقية" #?
+    unpaid_days: "بدون أجر منذ (بالأيام)"
+    unpaid_purchases: "مشتريات غير المدفوعة"
+    unpaid_sales: "مبيعات غير المدفوعة"
+    unpaid_sales_export: "csv لم يتم تسديد قائمة البيع الصادرة ضمن" #?
+    unparted: "غير متضرر" #?
+    unreceived: "غير مقبوضة" #?
+    unset_reconcilable_old_third_accounts: "حسابات الثالثة القديمة للمصالحة ضبطه (العملاء والموردين والمحامين)"
+    unsubcribed_capital: "العاصمة Unsubcribed"
+    # until: "until"
+    # untreated_buffer_aquatic: "Untreated buffer aquatic"
+    # untreated_buffer_arthropod: "Untreated buffer arthropods"
+    # untreated_buffer_plants: "Untreated buffer plants"
+    unused_payment: "دفعات غير مستخدمة" #?
+    unvalidated_operations: "عمل غير صحيح" #?
+    up: "يرتفع"
+    up_to: "يصل إلى"
+    update: "تعديل"
+    update_params: "تعديل البحث" #?
+    # updated_at_by: "Updated at %{at} by %{author}"
+    # updated_by_ago: "Updated by %{author} %{when}"
+    upload: "تحميل الملفات"
+    usage: "استعمال"
+    # usage_conditions: "Usage conditions"
+    # usage_phyto: "Usage"
+    use_forward: "اختر دفتر يومي للتقارير الجديدة" #?
+    used_accounts: "الحسابات المستخدمة فقط" #?
+    user_create: "اضافة مستخدم جديد" #?
+    user_name: "اسم المستخدم" #?
+    user_status: "الحالة"
+    user_update: "تعديل معلومات المستخدم" #?
+    users: "المستخدمين"
+    uses: "المادة" #?
+    valid: "الصلاحية"
+    validate: "التعديل"
+    validate_crumbs_for_x_interventions:
+      # one: "Validate crumbs for %{count} intervention"
+      # other: "Validate crumbs for %{count} interventions"
+    validate_selected_entries: "التحقق من المدخلات المختارة"
+    validate_x_entries:
+      # one: "Validate the entry"
+      # other: "Validate %{count} entries"
+    validated: "التحقق من صحة"
+    # validated_by: "Validated by"
+    # validated_vat_declaration: "Definitive VAT declaration"
+    values: "القيم"
+    variable_indicators: "مؤشرات متغيرة"
+    # variant: "Variant"
+    variants: "المتغيرات"
+    vat: "الضريبة المستحقة"
+    vat_acquisitions: "المكاسب الداخلية" #?
+    vat_amount: "الضرائب المستحقة" #?
+    vat_collected: "صافي قيمة الضريبة المضافة" #?
+    vat_paid: "خصم قيمة الضريبة المضافة" #?
+    # vat_rate: "VAT rate"
+    # vegetable_yield: "Vegetable yield"
+    view: "معاينة"
+    view_map_when_creating_an_intervention: "عرض الخريطة عند إنشاء التدخل"
+    virtual_quantity: "الكمية العملية" #?
+    wages: "أجور"
+    waiting: "أ€ التسدسد لاحقا" #?
+    # warning_date_not_in_period: "Warning: The date entered is not on the current exercise."
+    # water_lakes: "Water lakes"
+    # water_rivers: "Water rivers"
+    watering_concentration: "استخدام المياه"
+    # waters: "Waters"
+    weather: "طقس"
+    website: "موقع الكتروني"
+    # wice_grid_columns: "Columns"
+    wind_speed: "سرعة الرياح"
+    with_fixed_assets_depreciations: "مع انخفاض قيمة الأصول الثابتة"
+    with_prints: "(وتشمل الطباعة (الفواتير والاوامر" #?
+    # worked_zone_not_corresponding: "The worked zone is not corresponding to the planned one"
+    # worker_natures: "Workers"
+    workers: "العمال"
+    # workforce: "Workforce"
+    # working_area: "Working area"
+    working_duration: "مدة العمل"
+    # working_hectare_costs: "Working hectare costs"
+    working_sets_stocks: "مجموعات العمل الأسهم"
+    # working_times: "Working times of %{name}"
+    # working_zone_overlaps_nta: "Working zone overlaps non-treatment area"
+    # workload: "Workload"
+    x_cashes:
+      one: "حساب بنكي واحد"
+      other: "%{count} حسابات بنكية اخرى"
+      zero: "ولا اي حساب" #?
+    x_cents:
+      # one: "%{count} cent"
+      # other: "%{count} cents"
+    x_client_journal_entry_items:
+      # one: "%{count} clients journal entry item"
+      # other: "%{count} clients journal entry items"
+    x_contacts:
+      one: "مشترك واحد"
+      other: "%{count} مشتركين اخرين"
+      zero: "ولا مشترك" #?
+    x_contracts:
+      # one: "%{count} contract"
+      # other: "%{count} contracts"
+    x_countings:
+      # one: "%{count} counting"
+      # other: "%{count} countings"
+    x_days:
+      # one: "%{count} day"
+      # other: "%{count} days"
+    x_depositable_payments:
+      one: "1 دفع الواردة إلى الودائع"
+      # other: "%{count} incoming payments to deposit"
+      zero: "لا المدفوعات الواردة إلى الودائع" #?
+    x_deposits_to_validate:
+      one: "التحقق من صحة البيان البنكي"
+      other: "%{count} التحقق من صحة البيانات البنكية الاخرى"
+      zero: "عدم التحقق من اي بيان" #?
+    x_entities:
+      one: "تسجيل سجل واحد"
+      other: "%{count} تسجيل سجلات اخرى"
+      zero: "عدم تسجيل اية سجل" #?
+    x_entity_links:
+      one: "رابط واحد"
+      other: "%{count} روابط اخرى"
+      zero: "ولا رابط" #?
+    x_equipment_maintenance_interventions:
+      # one: "%{count} equipment maintenance intervention"
+      # other: "%{count} equipment maintenance interventions"
+    x_events:
+      one: "1 الحدث"
+      # other: "%{count} events"
+    x_events_of_nature_y:
+      # one: "One event %{nature} for a total duration of %{duration} minutes"
+      # other: "%{count} events %{nature} for a total duration of %{duration} minutes"
+    x_fixed_assets:
+      # one: "%{count} asset"
+      # other: "%{count} assets"
+    # x_has_been_cleared: "%{x} has been cleared (formerly %{a})"
+    # x_has_been_updated_from_a_to_b: "%{x} has been updated from %{a} to %{b}"
+    # x_has_been_updated_to_a: "%{x} has been updated to %{a}"
+    x_hours:
+      # one: "%{count} hour"
+      # other: "%{count} hours"
+    x_hours_worked:
+      # one: "%{count}\_h worked"
+      # other: "%{count}\_h worked"
+    x_incoming_parcels:
+      # one: "%{count} incoming parcel"
+      # other: "%{count} incoming parcels"
+      zero: "لا يتجزأ واردة" #?
+    x_incoming_payments:
+      one: "دفعة واحدة"
+      other: "%{count} دفعات اخرى"
+      zero: "ولااية دفعة" #?
+    x_incoming_payments_to_deposit:
+      # one: "%{count} incoming payment to deposit"
+      # other: "%{count} incoming payments to deposit"
+    x_inspections:
+      # one: "%{count} inspection"
+      # other: "%{count} inspections"
+    x_intervention_product_parameters:
+      # one: "%{count} intervention cast"
+      # other: "%{count} intervention casts"
+    x_interventions:
+      # one: "%{count} intervention"
+      # other: "%{count} interventions"
+    x_issues:
+      one: "1 قضية"
+      # other: "%{count} issues"
+    x_items_remain:
+      # one: "%{count} item remains"
+      # other: "%{count} items remain"
+    x_journal_entries:
+      one: "سجل واحد"
+      other: "%{count} سجلات اخرى"
+      zero: "ولا اي سجل" #?
+    x_mandates: #?
+      one: "تفويض واحد" #?
+      other: "%{count} تفويض اخر" #?
+      zero: "ولا اية تفويض" #?
+    x_mills:
+      # one: "%{count} mill"
+      # other: "%{count} mills"
+    x_minutes:
+      # one: "%{count} minute"
+      # other: "%{count} minutes"
+    x_months:
+      # one: "%{count} month"
+      # other: "%{count} months"
+    x_notifications:
+      # one: "%{count} notification"
+      # other: "%{count} notifications"
+    x_observations:
+      one: "ملاحظة واحدة"
+      other: "%{count} ملاحظات اخرى"
+      zero: "ولا اية ملاحظة" #?
+    # x_of_y: "%{x} of %{y}"
+    x_operations: #?
+      one: "عمل واحد" #?
+      other: "%{count} اعمال اخرى" #?
+      zero: "ولا اي عمل" #?
+    x_outgoing_parcels:
+      # one: "%{count} outgoing parcel"
+      # other: "%{count} outgoing parcels"
+      zero: "لا يتجزأ المنتهية ولايته" #?
+    x_outgoing_payments:
+      one: "نفقة واحدة"
+      other: "%{count} نفقات اخرى"
+      zero: "ولااية نفقة" #?
+    x_performed_operations: #?
+      one: "تم انجاز عمل واحد" #?
+      other: "%{count} تم انجاز اعمال اخرى" #?
+      zero: "لم يتم انجاز اي عمل" #?
+    x_purchase_payments:
+      # one: "%{count} purchase payment"
+      # other: "%{count} purchase payments"
+    x_purchases:
+      one: "1 شراء"
+      # other: "%{count} purchases"
+    x_purchases_invoices:
+      # one: "%{count} purchase"
+      # other: "%{count} purchase"
+    x_purchases_orders:
+      # one: "%{count} purchase order"
+      # other: "%{count} purchase orders"
+    x_readings:
+      # one: "%{count} reading"
+      # other: "%{count} readings"
+    x_receptions:
+      # one: "%{count} reception"
+      # other: "%{count} receptions"
+    x_results:
+      # one: "%{count} result found"
+      # other: "%{count} results found"
+      zero: "لا توجد نتائج" #?
+    x_sale_opportunities:
+      # one: "%{count} opportunity"
+      # other: "%{count} opportunities"
+    x_sales:
+      # one: "%{count} sale"
+      # other: "%{count} sales"
+    x_sales_invoices:
+      # one: "%{count} sales invoice"
+      # other: "%{count} sales invoices"
+    x_seconds:
+      # one: "%{count} second"
+      # other: "%{count} seconds"
+    x_shipments:
+      # one: "%{count} shipment"
+      # other: "%{count} shipments"
+    x_subscriptions:
+      one: "اشتراك واحد"
+      other: "%{count} اشتراكات اخرى"
+      zero: "ولا اية اشتراك" #?
+    x_supplier_journal_entry_items:
+      # one: "%{count} suppliers journal entry item"
+      # other: "%{count} suppliers journal entry items"
+    x_tasks:
+      # one: "%{count} task"
+      # other: "%{count} tasks"
+    # x_thing: "%{x} %{thing}"
+    x_times:
+      # one: "%{count} time"
+      # other: "%{count} times"
+    x_trackings:
+      # one: "%{count} tracking"
+      # other: "%{count} trackings"
+      zero: "لم يتم العثور على تتبع" #?
+    # x_unit: "%{quantity}%{unit}"
+    # x_unit_of_product_per_second: "%{quantity}%{unit}/s of %{product}"
+    # x_unit_per_second: "Flow: %{quantity}%{unit}/s"
+    # x_units_of_product_y: "%{quantity}%{unit} of %{product}"
+    x_unpaid_purchases:
+      # one: "%{count} unpaid purchase"
+      # other: "%{count} unpaid purchases"
+    x_unpaid_sales:
+      # one: "%{count} unpaid sale"
+      # other: "%{count} unpaid sales"
+    x_waiting_incoming_parcels:
+      # one: "%{count} waiting incoming parcel"
+      # other: "%{count} waiting incoming parcels"
+    x_waiting_outgoing_deliveries:
+      # one: "%{count} waiting outgoing parcel"
+      # other: "%{count} waiting outgoing parcels"
+    x_years:
+      one: "1 سنة"
+      # other: "%{count} years"
+    y: "نعم" #?
+    year: "عام"
+    # year_end: "Year end"
+    # year_start: "Year start"
+    yearly: "Annuelle" #?
+    years_count_in_historic: "عدد السنوات عامة" #?
+    yield: "يخضع أو يستسلم"
+    yield_by_calibration: "العائد من المعايرة"
+    # you_can_close_financial_year: "You can close or lock your financial year %{financial_year_to_close}"
+    # you_can_close_financial_year_to_open_a_new_one: "You can close or lock your financial year %{financial_year_to_close} to open %{financial_year_to_open}"
+    # zone_natures: "Zones"
+    zones: "المناطق"
+  notifications:
+    levels:
+      error: "خطأ"
+      information: "معلومة"
+      success: "استكملت العملية بنجاح"
+      warning: "!تحذير"
+    messages:
+      access_denied: " ليس لديك الصلاحية لبلوغ هذه الصفحة %{reason} (%{url})"
+      accountant_notified: "وقد تم إخطار محاسب"
+      accountant_without_email: "الرجاء ضبط البريد الإلكتروني محاسب"
+      # aggeratio_not_found: "The export requested was not found"
+      all_fixed_assets_must_be_depreciable: "يجب أن تكون جميع الأصول الثابتة قابلة للاستهلاك"
+      all_parcels_must_be_invoiceable_and_of_same_nature_and_third: "يجب أن تكون جميع الطرود invoiceable ومن نفس الطبيعة والثالث"
+      all_purchases_must_be_ordered_or_invoiced: "جميع المشتريات يجب أن يؤمر أو فواتير."
+      all_tax_declarations_have_already_existing: "جميع الإعلانات الضريبية موجودة بالفعل"
+      # an_error_was_raised_during_import: "An error was raised during import process."
+      bad_file: "لا يبدو ان الملفات متطابقة" #?
+      bookkeeping_is_finished: "نهاية نطاق المحاسبة"
+      bookkeeping_works_only_with: "يمكن جعل نطاق الماسبة الحالية ل : %{list}."
+      cannot_add_bank_statement_item: "لا يمكنك إضافة سطر جديد لأنه لا يوجد كشف مصرفي متاح في هذا اليوم"
+      # cannot_change_to_in_use_state: "The start date must be before the end of the last opened financial year"
+      cannot_delete_entity: "غير ممكن حذف هذا الملف لاحتوائه على محاسبة هامة" #?
+      cannot_find_deal_to_attach: "لا يمكن العثور على التعامل إرفاق"
+      cannot_find_deal_to_detach: "لا يمكن العثور على التعامل فصل"
+      cannot_finish_affair: "لا يمكن إنهاء القضية"
+      cannot_mark_entry_items: "لا يمكن وضع علامات على هذه الخطوط دخول"
+      cannot_merge_an_entity_with_itself: "غير ممكن دمج الملف مع نفسه"
+      cannot_merge_entities: "Une erreur est survenue. غير ممكن دمج هذه الملفات"
+      changes_have_been_reflected: "كانت تنعكس التغييرات بشكل صحيح على الوضع الحالي للاسهم"
+      changes_have_not_been_reflected: "لم تكن تنعكس هذه التغييرات بشكل صحيح على الوضع الحالي للأسهم"
+      closed_financial_periods: "تمتد فترة األصول الثابتة عبر فترات مالية مغلقة."
+      closed_financial_year_exchange: "تم إغلاق الصرف في العام المالي بنجاح"
+      closed_financial_years: "تم اغلاق السنة المالية بشكل صحيح"
+      # closure_process_started: "Closure process started."
+      columns_are_already_uses: "تم اخيار عامود او اكثر للتحميل لمرات عدة"
+      # could_not_attach_x_or_y_to_affair: "Could not attach %{x} or %{y} to affair"
+      dashboard_is_being_developed: "لوحة أجهزة القياس هي قيد التطوير الثقيلة"
+      density_is_not_computable_in_counting: "لا يمكن حساب كثافة لهذا العد. وينبغي الانتهاء من القيم المفقودة في خصائص العد أو مؤشرات الزارع و."
+      # depreciation_failed: "Assets could not be depreciated."
+      # depreciation_successful: "Assets have been successfully depreciated."
+      document_in_preparation: "المستند الخاص بك هو في إعداد سيتم إرسال إشعار لك عندما يكون جاهزا"
+      # document_template_not_handled: "Document template not handled: %{nature}"
+      # draft_journal_entries_are_present: "Draft journal entries are present."
+      # draft_journal_entries_cannot_be_validated: "You need to validate every previous entries before these ones"
+      draft_journal_entries_have_been_validated:
+        one: "تم التحقق من صحة الملفات واخراجها من قائمة المسودات"
+        other: "واخراجها من قائمة المسودات %{count} تم التحقق من صحة الملفات الاخرى"
+        zero: "لم يتم التحقق من صحة اي ملف" #?
+      entity_columns_are_needed: ".يجب عليك تحديد عامود واحد كحد ادنى للفرد بما في ذلك اسمه"
+      # equipment_component_is_at_end_of_life: "The component %{component_name} of the equipment %{equipment_name} is reaching the end of its life. Remaining time: %{remaining_time}."
+      # equipment_component_is_worn_out: "The component %{component_name} of the equipment %{equipment_name} is worn out. Remaining work time: %{remaining_time}."
+      # equipment_is_at_end_of_life: "Equipment %{name} is reaching the end of its life. Remaining time: %{remaining_time}."
+      # equipment_is_worn_out: "Equipment %{name} is worn out. Remaining work time: %{remaining_time}."
+      error_client_account_empty: "لا يمكن تشغيل، حساب العميل فارغ"
+      error_during_file_generation: "حدث خطأ أثناء إنشاء ملف"
+      # error_during_vat_declaration_generation: "An error occured while generating the VAT declaration."
+      # error_on_field: "%{field} in invalid\_: %{message}"
+      expired_session: ".نهاية الدورة. الرجاء معاودة الاتصال" #?
+      fails_to_extract_listing: "لم يتمكن الاستخراج من اتمام التنفيذ : %{message}"
+      # feature_in_development: "Feature available in the upcoming version of our mobile application <u><a href='https://play.google.com/store/apps/details?id=ekylibre.zero' target='_blank'>Zero</a></u>"
+      file_generated: "تم إنشاء الملف بنجاح"
+      # financial_year_already_closed: "The financial year has already been closed."
+      # financial_year_is_not_past: "The financial year hasn't passed yet."
+      # financial_year_x_could_not_be_closed: "Financial Year  %{name} could not be closed."
+      # financial_year_x_successfully_closed: "Financial Year %{name} successfully closed !"
+      financial_years_missing: "يجب عليك إنشاء كل المفقودين سنة مالية منذ سجلت لأول مرة"
+      # financial_years_missing_tax_declarations: "You must create every declarations for the following financial years: %{codes}"
+      implemented_with_dummy_data: "نفذت مع بيانات وهمية"
+      # import_creation_successful_suggest_execute: "Creation successful! You can now import the file with the button 'Run'."
+      # import_failed: "Import %{name} failed: %{message}"
+      # import_finished_successfully: "Import %{name} finished successfully"
+      import_succeeded: "نم استيراد بياناتك بشكل صحيح" #?
+      importation_cancelled: "لم تم استيراد بياناتك، تم الغاء الاستيراد" #?
+      importation_finished: "انتهاء الاستيراد"
+      incompatible_browser: "المتصفح غير متوافق"
+      # information_success_print: "Creation successful! You can now print the file with the button 'Print'."
+      # informations_feed_is_unreachable: "Informations feed (%{url}) is unreachable. Error message: %{message}"
+      integrate_tools_you_are_using_every_day: "دمج الأدوات التي تستخدم كل يوم"
+      invalid_file_nature: "نوع الملف غير صحيح" #?
+      invalid_reference_name: "اسم إشارة غير صالحة"
+      # inventory_reflection_in_progress: "Inventory is being reflected, you will be notified once it has finished. You can still use the application in the meantime."
+      journal_closed_at: "  ال%{journal} تم اغلاقه في %{closed_at} بشكل صحيح." #?
+      # journal_closed_on: "The journal “%{journal}” was closed on %{closed_on}."
+      journal_entries_imported: "وقد تم استيراد إدخالات دفتر اليومية."
+      journal_entry_already_validated: "قد سبق التحقق من صحة الملف ولا يمكن اجراء اي تعديل اخر عليه"
+      journal_entry_has_been_saved: "رقم السجل%{number} تم تسجيله بشكل صحيح"
+      # journal_entry_has_been_saved_with_a_new_number: "The journal entry has been successfully saved with a new number: %{number}"
+      # journal_entry_items_marked_with_letter: "Journal entry items have been marked with letter %{letter}"
+      journal_reopened_at: "%{journal} تم اعادة فتحه في %{closed_at} بشكل صحيح." #?
+      # journal_reopened_on: "The journal “%{journal}” has been re-opened on %{closed_on}."
+      # locked_exercice_info: "This financial year is locked. Please get in contact with the person who closed this financial year in order to retrieve your documents and exports of year end"
+      # locking_version_error: "Sorry, please retry in a moment, someone else is updating this record"
+      mails_are_sent: "تم ارسال رسائل البريد الالكتروني"
+      merge_is_done: "ويتم دمج"
+      need_a_valid_payment_mode: "تحتاج إلى وضع دفع صالح"
+      need_a_valid_purchase_nature_to_start_new_purchase: "تحتاج إلى نوع شراء ساري المفعول لبدء شراء جديدة"
+      need_a_valid_sale_nature_to_start_new_sale: "تحتاج إلى نوع بيع صالحة لبدء بيع جديد"
+      need_balanced_journal_to_tax_declaration: "يجب ان تكون جميع دفاتركم اليومية مغلقة ومتوازنة مع هذا التاريخ" #?
+      need_building_to_create_purchase_item: "يجب عليك انشاء موقع للتخزين لتتمكن من اجراء عملية الشراء" #?
+      need_building_to_create_sale_item: "يجب عليك انشاء موقع للتخزين لتتمكن من اجراء عملية البيع" #?
+      need_building_to_record_stock_moves: "يجب عليك تسجيل مواقعك للتخزين لتتمكن من ادارة اسهمك"
+      need_closed_financial_year_to_declaration: "يجب عليك اغلاق السنة المالية لانشاء تصريح لقيمة الضريبة المضافة" #?
+      need_company_code_to_login: "يجب عليك اختيار شركتك لتتمكن من الاتصال باسم المستخدم" #?
+      need_entries_to_reconciliate: "لا إدخالات إلى مصالحة بين في الفترة بيان البنك"
+      # need_financial_year_over_entire_period: "The transition to accounting requires accounting exercises over the entire period."
+      need_journal_to_manage_tax_declaration: "يجب ان يكون لديك دفتر الاجراءات المختلفة اليوميةكحد ادنى ودفتر مبيعات يومي او شراء لتتمكن من تسجيل تصاريح الضرائب" #?
+      need_payment_mode_to_create_deposit: "يجب عليك تحديد طريقة الدفع لتنفيذ عملية الاقتطاع المصرفي"
+      need_quantities_to_cancel_an_sales_invoice: "يجب عليك تحديد الكمية لتتمكن من اجراءات الفاتورة" #?
+      need_stocks_building_to_create_products: "يجب عليك انشاء موقع للتخزين لتتمكن من انشاء منتج" #?
+      need_stocks_to_create_inventories: "يجب عليك ادارة الاسهم لمنتج واحد كحد ادنى لتتمكن من اجراء عمليات الجرد"
+      # need_to_edit_or_correct_entries_before_validating: "You have to correct or delete these entries before you can enclose the financial year or validate them."
+      net_services_and_identifiers_are_always_available_but_are_deprecated_and_will_be_removed_in_next_major_release: "صافي الخدمات والمعرفات هي دائما موجودة، ولكن تم إيقاف وسيتم إزالتها في الافراج الرئيسي القادم"
+      no_archived_prints: "لا يطبع المحفوظة"
+      no_balance_template: "ليس هناك من نموذج لوثيقة الرصيد" #?
+      # no_bank_statement_found_for_this_period: "No bank statement found for this period."
+      no_budget_defined_for_current_campaign: "لم يتم تحديد لحملة الحالية الميزانية"
+      no_building: "لم يتم التعرف على اي موقع للتخزين، الرجاء انشاء واحد لتتمكن من ادارة اسهمك" #?
+      no_closable_financial_year: "ليس لديك اي سنة مالية قابلة للاغلاق " #?
+      no_closable_journal: "ليس باستطاعتك اغلاق هذا الدفتر اليومي"
+      no_depositable_payments: "لا يوجد دفعات لتقديمها للبنك"
+      no_existing_mandates: "ليس هنالك من تفويض مسجل في الوقت الحاضر" #?
+      no_financial_year: "لم يتم تسجيل اي سنة مالية" #?
+      no_fixed_assets_given: "لم يتم إعطاء أية أصول ثابتة"
+      no_inspections_given: "لا عمليات التفتيش الممنوحة"
+      no_interventions_given: "لا تدخلات الممنوحة"
+      no_items_found: "لم يتم اضافة اي منتج الى الطلب" #?
+      no_parcels_given: "لا الطرود الممنوحة"
+      no_payment_to_deposit: "ليس هنالك من دفعات للحصر"
+      no_production_defined_for_current_campaign: "لم يتم تحديد لحملة الحالية إنتاج"
+      no_production_found_you_can_add_it_or_copy_from_previous_records: "لم يتم العثور على الإنتاج. يمكنك إضافة جديد أو نسخ بعض من حملة السابقة."
+      no_purchase_affair_found_on_given_period: "أي شراء علاقة جدت في فترة معينة"
+      no_purchases_given: "لا مشتريات الممنوحة"
+      # no_reopenable_journal: "You can not re-open this journal."
+      no_replacements_since_beginning: "لا البدلاء منذ بداية"
+      no_stocks: "ليس لديك اية سهم، اذا رغبت بادارة سهم المنتج، الرجاء ضع علامة على خيار «ادارة الاسهم» في خصائص منتجاتك" #?
+      no_template_journal: "ليس هنالك من نموذج للدفتر اليومي" #?
+      no_template_journal_by_id: "ليس هنالك من نموذج للدفتر اليومي" #?
+      no_unvalidated_operations: "لم يتم تحقيق اية اجراء" #?
+      password_successfully_changed: "تم تغيير كلمة المرور الخاصة بك بنجاح" #?
+      # please_contact_support_for_further_information: "%{message} Please contact our support for further information."
+      # previouos_financial_year_is_not_closed: "The previous financial year hasn't been closed."
+      prices_import_succeeded: "تم استيراد بياناتك بشكل صحيح" #?
+      print_failure: " غير قابل للطباعة، حاول تحديث نماذج الوئائق لتصحيح المشكلة%{error} (%{class})." #?
+      # purchase_invoice_need_at_least_one_item: "An invoice should have at least one item"
+      # purchase_order_need_at_least_one_item: "An order should have at least one item"
+      purchases_invalid_for_sepa: "الشراء المحددة غير صالحة لنقل المصلحة (الوضع صرف العملة غير صالح أو خاطئة أو مفقودة المستفيد IBAN أو صاحب حساب مصرفي الاسم)"
+      # reception_need_at_least_one_item: "A reception should have at least one item"
+      record_already_imported: "سجل استيراد بالفعل"
+      record_cannot_be_removed: "لا يمكن حذف السجل"
+      record_has_been_correctly_removed: "تم حذف السجل بشكل صحيح"
+      record_has_been_imported: "تم استيراد سجل"
+      record_has_not_been_removed: "لم يتم حذف السجل بشكل صحيح" #?
+      record_not_found: "سجل لم يتم العثور"
+      # record_x_created: "%{record} %{name} created"
+      # record_x_updated: "%{record} %{name} updated"
+      restoration_finished: "انتهاء استعادة النسخ الاحتياطية  ( بالثواني%{value}). رمزك بالشركة هو %{code}" #?
+      sale_already_invoiced: "قد سبق وتم فوترة البيع: ليس بامكانك تعري التسليم" #?
+      sale_cannot_be_updated: "الطلب غير قابل للتعديل" #?
+      sale_cant_be_deleted: "ليس بامكانك الغاء طلب البيع" #?
+      sale_is_not_duplicatable: "بيع ليست duplicatable"
+      select_entries_to_letter_together: "اختر الادخالات للكتابة معا " #?
+      select_entry_items_to_mark_together: "حدد العناصر دخول للاحتفال معا"
+      # sensor_has_been_fixed: "Sensor %{name} has been fixed"
+      # sensor_is_out_of_service: "Sensor %{name} is out of service: %{message}"
+      # sensor_reading_failed: "Sensor %{name} reading failed: %{message}"
+      some_parcels_are_not_shippable: "بعض الطرود ليست الممكن شحنها"
+      specify_filter: "اختر تطبيق تصفية واحدة كحد ادنى للبحث" #?
+      specify_updates: "يجب عليك تحديد حقل واحد كحد ادنى للتعديل" #?
+      subscription_is_not_renewable: "الاشتراك ليست قابلة للتجديد"
+      # synchronization_operation_failed: "Operation %{operation_name} failed: %{target} %{message}"
+      # synchronization_operation_finished_successfully: "Operation %{operation_name} finished successfully"
+      # synchronization_operation_in_progress: "Operation %{operation_name} in progress"
+      the_automatic_lettering_cannot_be_done_in_accountancy: "حروف التلقائي لا يمكن القيام به في مجال المحاسبة"
+      the_automatic_lettering_cannot_be_done_in_accountancy_because_too_many_thirds_are_present: "حروف التلقائي لا يمكن القيام به في مجال المحاسبة لأن الكثير من ثلثي موجودة"
+      the_bookkeep_date_format_is_invalid: "تنسيق تاريخ حجز الكتب غير صالح"
+      the_sales_invoice_is_not_cancellable: "فاتورة المبيعات ليست للإلغاء"
+      there_are_x_remaining_unbalanced_entries:
+        # one: "%{count} entry during this period remain unbalanced. You have to correct it to be able to perform a global validation."
+        # other: "%{count} entries during this period remain unbalanced. You have to correct them to be able to perform a global validation."
+      this_service_is_not_activated: "لم يتم تنشيط هذه الخدمة"
+      # unable_to_modify_purchase_invoice_link_to_tax_declaration: "This invoice is linked to a tax declaration and thus, cannot be updated or deleted. If possible, please delete the tax declaration and retry. You can contact us for more information."
+      unavailable_model: "%{model} غير متوفر أو غير موجود (%{id})" #?
+      # unavailable_resource: "Nonexistent %{type} #%{id}"
+      # unbalanced_journal_entries_are_present_in_year: "Some unbalanced journal entries are present in the financial year."
+      # unexpected_resource_type: "Unexpected resource type: %{type}"
+      unknown_action: "الصفحة المطلوبة غير متوفرة (%{url})" #?
+      unknown_company: "شركة غير معروفة" #?
+      unvalid_version_for_restore: "ان اصدار البرنامج المستخدم لتنفيذ النسخ الاحتياطية لا يطابق اصدار البرنامج الحالي" #?
+      update_is_done: "قد انجز اعداد التحديث"
+      validates_old_inventories: "ينصح بالغاء أو التحقق من صحة قوائم الجرد قبل اتخاذ جديد" #?
+      # vat_declaration_generated: "VAT declaration was successfully generated."
+      # vat_declaration_in_preparation: "The VAT declaration for the selected period is currently being generated, you will receive a notification as soon as it has been processed."
+      x_fixed_asset_depreciations_have_been_bookkept_successfully:
+        # one: "%{count} fixed asset depreciation has been bookkept successfully"
+        # other: "%{count} fixed asset depreciations have been bookkept successfully"
+      x_loan_repayments_have_been_bookkept_successfully:
+        # one: "%{count} loan repayment has been bookkept successfully"
+        # other: "%{count} loan repayments have been bookkept successfully"
+      x_unpointed_journal_entry_items:
+        one: "يوجد مدخل واحد مشار اليه"
+        other: "%{count} يوجد مدخلات اخرى مشار اليه"
+        zero: "ليس هنالك اية ادخال مشار اليه في هذه اللحظة" #?
+      you_must_have_an_email_column: "يجب ان يكون لديك عمود خاص بالبريد الالكتروني"
+      you_must_select_a_file_to_import: "يجب عليك اختيار ملف للاستيراد" #?
+      you_need_to_review_your_application_configuration: "تحتاج إلى مراجعة تكوين التطبيق الخاص بك"
+      you_will_lose_all_your_current_data: "اذا قمت بالمتابعة، فسوف تفقد جميع البيانات الحالية. فهل ترغب بالاستمرار؟" #?
+      # your_fixed_asset_is_now_ready_to_be_put_on_hold: "Your fixed asset is now ready to be put on hold, click the 'Waiting' button one last time to end the process."
+      # your_fixed_asset_is_now_ready_to_be_scrapped: "Your fixed asset is now ready to be scrapped, click the 'Scrapped' button one last time to end the process."
+      # your_fixed_asset_is_now_ready_to_be_sold: "Your fixed asset is now ready to be sold, click the 'Sold' button one last time to end the process."
+  preferences:
+    # account_number_digits: "Account number length"
+    accountancy: #?
+      accounts: #?
+        capital_gains: "(نتيجة العمل (الارباح" #?
+        capital_losses: "(نتيجة العمل (الخسارة" #?
+        charges: "حسابات الحمولة" #?
+        financial_banks: "الحسابات المصرفية" #?
+        financial_cashes: "حسابات الصندوق النقدي" #?
+        financial_payments_to_deposit: "قواعد الدفعات النقدية" #?
+        products: "حسابات المنتج" #?
+        taxes_acquisition: "حساب الضرائب المكتسبة داخليا" #?
+        taxes_assimilated: "حسابات الضرائب المماثلة" #?
+        taxes_balance: "حساب صافي الضريبة" #?
+        taxes_collected: "حساب الضرائب التي تم جمعها" #?
+        taxes_paid: "حساب الضرائب المقتطعة" #?
+        taxes_payback: "حساب الضرائب المسددة" #?
+        third_attorneys: "حسابات الوكيل" #?
+        third_clients: "حسابات العملاء" #?
+        third_suppliers: "حسابات الممولين" #?
+      bookkeep: #?
+        automatic: "تنشيط موازين بيانات المحاسبة تلقائيا" #?
+        detail_payments_in_deposits: "توسيع قائمة الانظمة المحاسبية للاقتطاع المصرفي" #?
+        draft_mode: "حفظ الملفات في قائمة المسودة تلقائيا" #?
+      journals: #?
+        bank: "الدفاتر المصرفية اليومية الافتراضيا" #?
+        cash: "دفاتر الصندوق النقدي اليومية افتراضيا " #?
+        forward: "تقارير دورية افتراضية جديدة" #?
+        purchases: "مشتريات دورية افتراضية" #?
+        sales: "مبيعات دورية افتراضية" #?
+        various: "الاجراءات اليومية المختلفة افتراضيا" #?
+    accounting_system: "جدول الحسابات"
+    bookkeep_automatically: "تفعيل المحاسبة التلقائي"
+    bookkeep_in_draft: "حفظ السجلات في وضع المسودة خلال مسك الدفاتر"
+    catalog_price_item_addition_if_blank: "كتالوج اضافة السعر إلى الكتالوج خلال بيع / شراء إذا كتالوج فارغ"
+    client_account_radix: "جذر حساب العميل"
+    country: "بلد"
+    create_activities_from_telepac: "خلق أنشطة خلال Telepac استيراد"
+    currency: "عملة"
+    default_depreciation_period: "فترة الاستهلاك افتراضي"
+    detail_payments_in_deposit_bookkeeping: "التفاصيل جميع المدفوعات في مسك الدفاتر وديعة"
+    distribute_sales_and_purchases_on_activities: "توزيع البيع والشراء على الأنشطة"
+    distribute_sales_and_purchases_on_teams: "توزيع البيع والشراء على فرق"
+    employee_account_radix: "جذر حساب الموظف"
+    # fiscal_position: "Fiscal position"
+    general: #?
+      language: "اللغة المفترضة" #?
+    language: "لغة"
+    management: #?
+      deposits: #?
+        days_before_warning_undone: "عدد الايام قبل منع الضرائب الفير تامة" #?
+        days_before_warning_unvalidated: "عدد الايام الضرورية للمصادقة على الاقنطاعات المصرفية " #?
+        numeration: "احصاء الاقتطاعات المصرفية" #?
+      payments: #?
+        numeration: "احصاء الانظمة" #?
+      purchases: #?
+        numeration: "احصاء المشتريات" #?
+      sales: #?
+        numeration: "احصاء المبيعات" #?
+      sales_invoices: #?
+        numeration: "احصاء الفواتير" #?
+      subscriptions: #?
+        numeration: "احصاء الاشتراكات" #?
+    map_measure_srs: "SRS خريطة قياس"
+    permanent_stock_inventory: "وضع جرد مخزون دائم"
+    relations: #?
+      entities: #?
+        numeration: "احصاء ملفات العملاء / الممولين" #?
+    sales_conditions: "شروط البيع"
+    supplier_account_radix: "جذر حساب المورد"
+    unbilled_payables: "دائنة غير المفوترة"
+    use_contextual_help: "استخدام المساعدة السياقية"
+    use_entity_codes_for_account_numbers: "استخدام رمز لخلق أرقام الحسابات"
+    use_global_search: "استخدام البحث العالمية"
+  rest:
+    actions:
+      abort: "إحباط"
+      about: "حول"
+      attach: "يرفق"
+      # bookkeep: "Bookkeep"
+      cancel: "إلغاء"
+      category: "فئة" #?
+      check: "الاختيار"
+      children: "الأطفال" #?
+      close: "قريب"
+      compute: "حساب"
+      compute_balances: "أرصدة حساب"
+      confirm: "أكد"
+      contacts: "جهات الاتصال"
+      convert: "تحول"
+      correct: "صحيح"
+      create: "خلق"
+      decrement: "إنقاص" #?
+      destroy: "هدم"
+      detach: "فصل"
+      detail: "التفاصيل"
+      down: "أسفل"
+      duplicate: "مكرر"
+      edit: "تحرير"
+      edit_interval: "مصالحة بين"
+      edit_many: "تعديل العديد"
+      evaluate: "تقييم"
+      export: "تصدير"
+      # export_closing_documents: "Export closing documents"
+      # export_fec: "FEC export"
+      export_to_sepa: "تصدير إلى المصلحة"
+      extract: "استخراج"
+      family: "أسرة"
+      finish: "إنهاء"
+      generate_last_journal_entry: "تولد الماضي إدخال دفتر اليومية"
+      give: "يعطى"
+      import: "استيراد"
+      incorporate: "دمج"
+      increment: "زيادة" #?
+      index: "فهرس"
+      invoice: "فاتورة"
+      # journal_entries_csv_export: "Export CSV"
+      journal_entries_export: "تنزيل ملف CSV"
+      journal_entries_import: "استيراد CSV"
+      list: "قائمة"
+      load: "حمل"
+      lock: "قفل"
+      lose: "تخسر"
+      mail: "بريد"
+      mark: "علامة"
+      merge: "دمج"
+      move: "خطوة" #?
+      # negociate: "Negociate"
+      new: "جديد"
+      new_purchase: "شراء جديدة"
+      new_sale: "بيع جديدة"
+      notify_accountant: "إبلاغ محاسب"
+      open: "فتح"
+      order: "طلب"
+      # order_again: "Order again"
+      pay: "دفع"
+      payment_gap: "الفجوة الدفع"
+      payment_mode: "طريقة الدفع"
+      pick: "اختيار"
+      picture: "صورة"
+      prepare: "إعداد"
+      # print: "Print"
+      # print_land_parcel_register: "Print land parcel register"
+      # print_worker_register: "Print worker register"
+      propose: "اقترح"
+      propose_and_invoice: "اقتراح وفاتورة"
+      prospect: "احتمال"
+      purchase: "تتحول إلى شراء"
+      qualify: "التأهل"
+      quote: "اقتبس"
+      reconciliation: "تصالح"
+      reflect: "تعكس"
+      refresh: "اعادة تنشيط"
+      refuse: "رفض"
+      renew: "جدد"
+      reopen: "إعادة فتح"
+      repay: "رد"
+      reset: "إعادة تعيين"
+      retrieve: "استرداد"
+      run: "يجري"
+      # scrap: "Scrap"
+      search: "بحث"
+      select: "اختار"
+      sell: "تتحول بيع"
+      ship: "سفينة"
+      show: "تبين"
+      show_export_preview: "عرض معاينة المستند (قد يزيد وقت التحميل)"
+      sort: "فرز"
+      # stand_by: "Put on hold"
+      star: "نجمة"
+      start: "بداية"
+      # start_up: "Commission"
+      stop: "توقف"
+      suspend: "تعليق"
+      take: "أخذ"
+      takeover: "يتولى"
+      toggle: "تبديل"
+      unlock: "فتح"
+      unmark: "غير علامة"
+      unroll: "انبسط"
+      # unvalidateds: "Unvalidateds"
+      up: "فوق"
+      update: "تحديث"
+      update_password: "تحديث كلمة المرور" #?
+      win: "انتصر"
+  simple_form:
+    hints:
+      purchase:
+        reference_number: "رقم الفاتورة المورد"
+    required:
+      text: "مطلوب"
+  unrolls:
+    # backend/accounts: "%{number}. %{name}"
+    # backend/activities: "%{name}"
+    # backend/activity_budgets: "%{activity_name} %{campaign_name}"
+    # backend/activity_productions: "%{activity_name} %{support_name} #%{rank_number}"
+    # backend/animals: "%{name} #%{work_number}"
+    # backend/campaigns: "%{name}"
+    # backend/catalog_items: "%{name}"
+    # backend/entities: "%{full_name} ‒ %{number}"
+    # backend/entity_links: "%{started_at}"
+    # backend/events: "%{name}"
+    # backend/incoming_payments: "%{number}. %{mode_name} from %{payer_full_name} of %{amount} %{currency}"
+    # backend/interventions: "%{number}"
+    # backend/journal_entry_items: "%{entry_number} %{name} %{account_number} D%{real_debit} C%{real_credit} %{currency}"
+    # backend/matters: "%{name} ‒ %{work_number}"
+    # backend/observations: "%{content}"
+    # backend/outgoing_payments: "%{number}. %{mode_name} to %{payee_full_name} of %{amount} %{currency}"
+    # backend/parcels: "%{number} ‒ %{reference_number}"
+    # backend/payslip_payments: "%{number}. %{mode_name} to %{payee_full_name} of %{amount} %{currency}"
+    # backend/plant_density_abacus_items: "%{plants_count} ‒ %{seeding_density_value} %{plant_density_abacus_seeding_density_unit}"
+    # backend/plants: "%{name} ‒ %{work_number}"
+    # backend/prescriptions: "%{reference_number}"
+    # backend/product_memberships: "%{started_at}"
+    # backend/product_nature_variants: "%{name} (%{unit_name}) - %{charge_account_number}"
+    # backend/product_nature_variants/saleables: "%{name} (%{unit_name}) - %{product_account_number}"
+    # backend/product_natures: "%{name}"
+    backend/products:
+      # default: "%{work_number} %{name} (%{number})"
+      # land_parcels: "%{name}"
+    # backend/purchase_payments: "%{number}. %{mode_name} to %{payee_full_name} of %{amount} %{currency}"
+    # backend/trackings: "%{serial} ‒ %{name} ‒ %{producer_full_name}"
+    # backend/users: "%{first_name} %{last_name}"

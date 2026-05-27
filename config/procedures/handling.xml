@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<procedures xmlns="http://www.ekylibre.org/XML/2013/procedures">
+  <procedure name="handling" categories="handling" actions="handling">
+    <parameters>
+      <doer name="doer" filter="is worker"/>
+       <target name="land_parcel" filter="is land_parcel and has indicator shape" cardinality="*">
+        <attribute name="working_zone" default-value="PRODUCT.shape" if="PRODUCT?"/>
+      </target>
+      <tool name="equipment" filter="is equipment" cardinality="*"/>
+    </parameters>
+  </procedure>
+</procedures>

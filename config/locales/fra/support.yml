@@ -1,0 +1,134 @@
+fra:
+  about:
+    authors: ["Brice Texier", "Thibaud Merigon", "David Joulin"]
+    dir: "ltr"
+    iso2: "fr"
+    name: "Français"
+  boolean:
+    human:
+      false_class: "Faux"
+      true_class: "Vrai"
+    polar:
+      false_class: "Non"
+      true_class: "Oui"
+  date:
+    abbr_day_names: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"]
+    abbr_month_names: ["", "janv", "févr", "mars", "avr", "mai", "juin", "juil", "août", "sept", "oct", "nov", "déc"]
+    day_names: ["Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi"]
+    formats:
+      default: "%d/%m/%Y"
+      legal: "%d %B %Y"
+      long: "%A %d %B %Y"
+      month: "%B %Y"
+      month_letter: "%d %B %Y"
+      month_name: "%B"
+      short: "%d %b"
+      short_month: "%m/%Y"
+    month_names: ["", "janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"]
+  datetime:
+    distance_in_words:
+      about_x_hours:
+        one: "environ une heure"
+        other: "environ %{count} heures"
+      about_x_months:
+        one: "environ un mois"
+        other: "environ %{count} mois"
+      about_x_years:
+        one: "environ un an"
+        other: "environ %{count} ans"
+      almost_x_years:
+        one: "presqu’un an"
+        other: "presque %{count} ans"
+      half_a_minute: "une demi-minute"
+      less_than_x_minutes:
+        one: "moins d’une minute"
+        other: "moins de %{count} minutes"
+        zero: "moins d’une minute" #?
+      less_than_x_seconds:
+        one: "moins d’une seconde"
+        other: "moins de %{count} secondes"
+        zero: "moins d’une seconde" #?
+      over_x_years:
+        one: "plus d’un an"
+        other: "plus de %{count} ans"
+      x_days:
+        one: "1 jour"
+        other: "%{count} jours"
+      x_minutes:
+        one: "1 minute"
+        other: "%{count} minutes"
+      x_months:
+        one: "1 mois"
+        other: "%{count} mois"
+      x_seconds:
+        one: "1 seconde"
+        other: "%{count} secondes"
+    periods:
+      day: "Planning journalier"
+      month: "Planning mensuel"
+      today: "Aujourd'hui"
+      week: "Planning hedbomadaire"
+      year: "Planning annuel"
+    relative_distance_in_words:
+      in_sometime: "dans %{distance}"
+      sometime_ago: "il y a %{distance}"
+  http:
+    errors:
+      internal_server_error:
+        hint: "L’application rencontre des problèmes. Les administrateurs ont été notifiés."
+        title: "Nous sommes désolés, mais quelque chose s’est mal passé"
+      maintenance:
+        hint: "Dans le cadre de la stabilisation de notre système et de l’amélioration de notre qualité de service, 
+               notre plateforme est actuellement en maintenance.<br>
+               Nous nous excusons d’avance pour la gêne occasionnée et vous invitons à vous connecter plus tard.<br>
+               L'équipe d'Ekylibre"
+        title: "Maintenance en cours"
+      not_found:
+        hint: "Vous pouvez avoir mal saisi l’adresse ou la page peut avoir été déplacée."
+        title: "La page que vous voulez n’existe pas"
+      unprocessable_entity:
+        hint: "Peut-être que vous avez essayé de changer quelque chose auquel vous n’avez pas accès."
+        title: "Le changement que vous avez demandé a été rejeté"
+  number:
+    currency:
+      format:
+        delimiter: "\_"
+        format: "%n\_%u"
+        negative_format: "-%n\_%u"
+        precision: 2
+        separator: ","
+        unit: "⁈"
+    format:
+      delimiter: " "
+      precision: 3
+      separator: ","
+    human:
+      format:
+        delimiter: ""
+        precision: 1
+    percentage:
+      format:
+        delimiter: ""
+    precision:
+      format:
+        delimiter: ""
+  rank: "n°%{number}"
+  support:
+    array:
+      last_word_connector: " et "
+      sentence_connector: "et"
+      two_words_connector: " et "
+      words_connector: ", "
+  time:
+    am: "am"
+    formats:
+      compact: "%d/%m/%Y %H:%M"
+      default: "%d/%m/%Y %H:%M"
+      full: "%d/%m/%Y à %H:%M:%S"
+      long: "%A %d %B %Y à %H:%M"
+      short: "%d %b %H:%M"
+      time: "%H:%M" #?
+    js_formats:
+      compact: "DD/MM/YYYY HH:mm"
+      full: "DD/MM/YYYY HH:mm:ss"
+    pm: "pm"

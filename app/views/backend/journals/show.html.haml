@@ -1,0 +1,63 @@
+= kujaku(popover: false) do |k|
+  - k.text
+  - k.helper :journal_entries_states_crit
+  - k.helper :journal_period_crit, default: @current_financial_year_period
+
+- main_toolbar do |t|
+  = t.new(params: { controller: :journal_entries, journal_id: resource.id, redirect: nil }, label: :add_entry.tl, disabled: FinancialYear.opened.none?) unless resource.booked_for_accountant?
+  = t.edit resource
+  = link_to t("labels.consult_the_day_book", count: @draft_entries_count), { controller: :draft_journals, action: :show, redirection: backend_journal_path(params[:id]), journal_id: params[:id] }, { class: ['btn btn-default no-icn',('disabled' if @draft_entries_count < 1)] }
+  - if params[:period]
+    = t.export :journal_ledger, key: Printers::JournalLedgerPrinter.build_key(started_on: params[:started_on],
+                                                                              stopped_on: params[:stopped_on],
+                                                                              states: params[:states],
+                                                                              journal: resource)
+
+= journals_tag
+
+= main_list(:items)
+
+-# This line use a "c" variable which conflict with cobbles
+- conditions = eval(controller.class.journal_entries_conditions)
+
+= cobbles do |c|
+  -# - c.cobble :entry_items, title: Journal.human_attribute_name(:entry_items) do
+  -#   = journal_view_tag
+  -#   = cobble_list(:items)
+
+  - c.cobble :totals, title: :totals.tl do
+    :ruby
+      absolute_currency = Preference[:currency]
+      totals = {}
+      totals[:real_debit]  = JournalEntry.where(conditions).sum(:real_debit)
+      totals[:real_credit] = JournalEntry.where(conditions).sum(:real_credit)
+      totals[:real_balance_debit] = totals[:real_balance_credit] = 0.0
+      totals["real_balance_#{totals[:real_debit]>totals[:real_credit] ? 'debit' : 'credit'}".to_sym] = (totals[:real_debit] - totals[:real_credit]).abs
+    %table
+      %tbody
+        %tr.important.total
+          %th
+          %th= Journal.human_attribute_name(:debit)
+          %th= Journal.human_attribute_name(:credit)
+        %tr.important.total
+          %th= :total.tl
+          %td.decimal= totals[:real_debit].l(currency: resource.currency)
+          %td.decimal= totals[:real_credit].l(currency: resource.currency)
+        - if resource.currency != absolute_currency
+          %tr.important.total
+            %th= :total.tl
+            %td.decimal= JournalEntry.where(conditions).sum(:absolute_debit).l(currency: absolute_currency)
+            %td.decimal= JournalEntry.where(conditions).sum(:absolute_credit).l(currency: absolute_currency)
+        - if totals[:real_balance_debit] != totals[:real_balance_credit]
+          %tr.important.total
+            %th= :balance.tl
+            %td.decimal= totals[:real_balance_debit].l(currency: resource.currency)
+            %td.decimal= totals[:real_balance_credit].l(currency: resource.currency)
+
+  - c.cobble :details do
+    = attributes_list(resource) do |l|
+      - l.attribute :name
+      - l.attribute :code
+      - l.attribute :nature
+      - l.attribute :currency
+      - l.attribute :closed_on

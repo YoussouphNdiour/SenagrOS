@@ -1,0 +1,173 @@
+arb:
+  about:
+    authors: ["Alaa Alshoubaki"]
+    dir: "rtl"
+    iso2: "ar"
+    name: "لعربية"
+  boolean:
+    human:
+      false_class: "كاذب"
+      true_class: "صحيح"
+    polar:
+      false_class: "نعم فعلا"
+      true_class: "لا"
+  date:
+    abbr_day_names: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
+    abbr_month_names: ["", "jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+    day_names: ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+    formats:
+      default: "%m/%d/%Y"
+      legal: "%d %B %Y"
+      long: "%B %d, %Y"
+      month: "%B %Y"
+      month_letter: "%d %B %Y"
+      # month_name: "%B"
+      short: "%b %d"
+      short_month: "%d/%Y"
+    month_names: ["", "january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"]
+  datetime:
+    distance_in_words:
+      about_x_hours:
+        few: "حوالي %{count} ساعات" #?
+        many: "حوالي %{count} ساعة" #?
+        one: "حوالي ساعة واحدة"
+        other: "حوالي %{count} ساعة"
+        two: "حوالي ساعتان" #?
+        zero: "حوالي صفر ساعات" #?
+      about_x_months:
+        few: "حوالي %{count} أشهر" #?
+        many: "حوالي %{count} شهر" #?
+        one: "حوالي شهر واحد"
+        other: "حوالي %{count} شهر"
+        two: "حوالي شهران" #?
+        zero: "حوالي صفر أشهر" #?
+      about_x_years:
+        few: "حوالي %{count} سنوات" #?
+        many: "حوالي %{count} سنة" #?
+        one: "حوالي سنة"
+        other: "حوالي %{count} سنة"
+        two: "حوالي سنتان" #?
+        zero: "حوالي صفر سنوات" #?
+      almost_x_years:
+        few: "ما يقرب من %{count} سنوات" #?
+        many: "ما يقرب من %{count} سنة" #?
+        one: "تقريبا سنة واحدة"
+        other: "ما يقرب من %{count} سنة"
+        two: "ما يقرب من سنتين" #?
+        zero: "ما يقرب من صفر سنوات" #?
+      half_a_minute: "نصف دقيقة"
+      less_than_x_minutes:
+        few: "أقل من %{count} دقائق" #?
+        many: "أقل من %{count} دقيقة" #?
+        one: "أقل من دقيقة"
+        other: "أقل من %{count} دقيقة"
+        two: "أقل من دقيقتان" #?
+        zero: "أقل من صفر دقائق" #?
+      less_than_x_seconds:
+        few: "أقل من %{count} ثوان" #?
+        many: "أقل من %{count} ثانية" #?
+        one: "أقل من ثانية"
+        other: "أقل من %{count} ثانية"
+        two: "أقل من ثانيتان" #?
+        zero: "أقل من صفر ثواني" #?
+      over_x_years:
+        few: "أكثر من %{count} سنوات" #?
+        many: "أكثر من %{count} سنة" #?
+        one: "أكثر من سنة"
+        other: "أكثر من %{count} سنة"
+        two: "أكثر من سنتين" #?
+        zero: "أكثر من صفر سنوات" #?
+      x_days:
+        few: "%{count} أيام" #?
+        many: "%{count} يوم" #?
+        one: "يوم واحد"
+        other: "%{count} يوم"
+        two: "يومان" #?
+        zero: "صفر أيام" #?
+      x_minutes:
+        few: "%{count} دقائق" #?
+        many: "%{count} دقيقة" #?
+        one: "دقيقة واحدة"
+        other: "%{count} دقيقة"
+        two: "دقيقتان" #?
+        zero: "صفر دقائق" #?
+      x_months:
+        few: "%{count} أشهر" #?
+        many: "%{count} شهر" #?
+        one: "شهر واحد"
+        other: "%{count} شهر"
+        two: "شهران" #?
+        zero: "صفر أشهر" #?
+      x_seconds:
+        few: "%{count} ثوان" #?
+        many: "%{count} ثانية" #?
+        one: "ثانية واحدة"
+        other: "%{count} ثانية"
+        two: "ثانيتان" #?
+        zero: "صفر ثواني" #?
+    periods:
+      day: "يوم"
+      month: "شهر"
+      today: "اليوم"
+      week: "أسبوع"
+      year: "عام"
+    relative_distance_in_words:
+      # in_sometime: "in %{distance}"
+      # sometime_ago: "%{distance} ago"
+  http:
+    errors:
+      internal_server_error:
+        hint: "واجه تطبيق المشاكل. تم إخطار المسؤولين عن هذه المشكلة."
+        title: "نحن نعتذر، ولكن حدث خطأ ما"
+      maintenance:
+        hint: "يرجى العودة في وقت لاحق"
+        title: "الخدمة تحت الصيانة وغير متوفرة في الوقت الراهن"
+      not_found:
+        hint: "كنت قد أخطأت في كتابة عنوان أو الصفحة قد تحركت."
+        title: "الصفحة التي تبحث عنها غير موجودة"
+      unprocessable_entity:
+        hint: "ربما حاولت تغيير شيء ما لم يكن لديك الوصول إليها."
+        title: "ورفض التغيير الذي أراد"
+  number:
+    currency:
+      format:
+        delimiter: ","
+        format: "%u%n"
+        negative_format: "-%u%n"
+        precision: 2
+        separator: "."
+        unit: "⁈"
+    format:
+      delimiter: " "
+      precision: 3
+      separator: ","
+    human:
+      format:
+        delimiter: ""
+        precision: 1
+    percentage:
+      format:
+        delimiter: ""
+    precision:
+      format:
+        delimiter: ""
+  # rank: "#%{number}"
+  support:
+    array:
+      last_word_connector: " و "
+      sentence_connector: "و"
+      two_words_connector: ", "
+      words_connector: ", "
+  time:
+    am: "صباحا"
+    formats:
+      compact: "%م /%د /%Y%H:%M"
+      default: "%b. %d, %Y at %H:%M:%S"
+      full: "%m/%d/%Y %H:%M:%S"
+      long: "%B %d, %Y %H:%M"
+      short: "%d %b %H:%M"
+      time: "%H:%M" #?
+    js_formats:
+      compact: "MM/DD/YYYY HH:mm"
+      full: "MM/DD/YYYY HH:mm:ss"
+    pm: "مساءا"

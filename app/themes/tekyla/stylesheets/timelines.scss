@@ -1,0 +1,227 @@
+$line-color: #DDD;
+$frame-border: 1px solid $line-color;
+$marker-color: $caution-color;
+.timeline {
+  $avatar-size: 48px;
+  $log-size: $lh-normal + 2 * $default-gap;
+  $padding: 2 * $default-gap;
+  padding: 0 $padding;
+  margin: 0 auto $padding;
+  position: relative;
+
+  max-width: $narrow-page-width;
+
+  &:before {
+    background-color: $line-color;
+    bottom: 0;
+    content: "";
+    display: block;
+    left: $padding + ($avatar-size + $default-gap) + $log-size / 2;
+    position: absolute;
+    top: 0;
+    width: 2px;
+    z-index: -1;
+  }
+
+  > .timestep {
+    &.hidden {
+      display: none;
+    }
+    border-top: 1px solid #EEE;
+    &:first-child {
+      border-top: none;
+      padding-top: $default-gap;
+    }
+    &.timestep-marker {
+      &:before {
+        background-color: $marker-color;
+        content: "";
+        display: block;
+        position: relative;
+        top: $lh-normal;
+        height: 2px;
+        z-index: -1;
+      }
+    }
+
+    > .log {
+      padding: $default-gap 0 $default-gap ($avatar-size + $default-gap);
+      $line-height: $lh-normal;
+      clear: both;
+      .log-avatar {
+        img {
+          display: block;
+          @include float(left);
+          @include margin-left(-1 * ($avatar-size + $default-gap));
+          @include border-radius($default-border-radius);
+        }
+      }
+      .log-marker {
+        @include padding-right($default-gap);
+        @include inline-block;
+        background: $desktop-background;
+        font-weight: bold;
+        font-size: $fs-small;
+        text-transform: uppercase;
+        &, * {
+          color: $marker-color;
+          line-height: $lh-normal;
+          vertical-align: baseline;
+        }
+        i {
+          @include is-icon(14px);
+          @include use-icon(star);
+          // @include display(block);
+          // @include float(left);
+          @include text-align(center);
+          @include inline-block;
+          width: $log-size + 2px;
+        }
+        &.log-marker-past i {
+          @include use-icon(arrow-down);
+        }
+        &.log-marker-future i {
+          @include use-icon(arrow-up);
+        }
+      }
+      .log-symbol {
+        @include is-icon(14px);
+        @include use-icon(file-o);
+        line-height: $log-size;
+        color: rgba($text-color, 0.6);
+        width: $log-size;
+        border: 1px solid transparent;
+        @include text-align(center);
+        @include display(block);
+        @include border-radius(50%);
+        @include float(left);
+        @include margin-left(-1 * $log-size);
+      }
+      .log-wrapper {
+        border: $frame-border;
+        background: white;
+        overflow: hidden;
+        @include padding-left($log-size);
+        @include border-radius($default-border-radius);
+        .log-heading {
+          padding: $default-gap;
+          @include ellipsis;
+          &, * {
+            line-height: $lh-normal;
+            vertical-align: baseline;
+          }
+          .log-status {
+            @include float(right);
+            line-height: $line-height;
+            &, * {
+              vertical-align: middle;
+            }
+          }
+          .log-action {
+            @include float(right);
+            font-size: 0;
+            opacity: 0.6;
+            @include transition(opacity 0.2s);
+            padding: 0 round($default-gap * 0.5);
+            i {
+              @include is-icon(14px);
+              @include use-icon(cog);
+              @include inline-block;
+              width: 14px;
+              text-align: center;
+              @include transition(color 0.2s);
+              color: $text-color;
+            }
+            &.log-action-edit i {
+              @include use-icon(edit);
+            }
+            &.log-action-destroy i {
+              @include use-icon(clear);
+            }
+            &:hover {
+              opacity: 1;
+              i {
+                color: $active-color;
+              }
+            }
+          }
+        }
+        .log-body {
+          padding: 0;
+          margin: 0;
+          padding: $default-gap;
+          .log-content {
+            line-height: $line-height;
+            white-space: pre-line;
+          }
+          .log-changes {
+            margin-left: 2em;
+            padding: $default-gap;
+            li {
+              list-style-type: disc;
+              &, * {
+                line-height: $line-height;
+                vertical-align: baseline;
+              }
+              em {
+                font-style: italic;
+              }
+            }
+          }
+        }
+
+        .log-footer {
+          padding: $default-gap;
+          border-top: $frame-border;
+        }
+      }
+      &.log-without-content {
+        .log-wrapper {
+          background: transparent;
+          border-color: transparent;
+          .log-symbol {
+            background: white;
+            border: $frame-border;
+            @include border-radius(50%);
+          }
+        }
+      }
+
+      &.log-version-create .log-symbol {
+        @include use-icon(plus);
+      }
+      &.log-version-update .log-symbol {
+        @include use-icon(edit);
+      }
+      &.log-version-destroy .log-symbol {
+        @include use-icon(clear);
+      }
+      &.log-incoming-mail, &.log-outgoing-mail {
+        .log-symbol {
+          @include use-icon(envelope-o);
+        }
+      }
+      &.log-incoming-email, &.log-outgoing-email {
+        .log-symbol {
+          @include use-icon(email);
+        }
+      }
+      &.log-document .log-symbol {
+        @include use-icon(file-o);
+      }
+    }
+
+  }
+}
+
+.timeline-tools {
+  max-width: $narrow-page-width;
+  margin: 0 auto;
+  padding: $default-gap;
+  background: white;
+  border: $frame-border;
+  .timeline-tool {
+    @include button-group;
+    margin: $default-gap*0.5;
+  }
+}

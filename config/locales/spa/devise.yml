@@ -1,0 +1,95 @@
+spa:
+  devise:
+    confirmations:
+      confirmed: "Tu cuenta ha sido confirmada satisfactoriamente. Ahora está iniciado sesión."
+      send_instructions: "Usted recibirá un correo electrónico con instrucciones sobre cómo confirmar su cuenta en pocos minutos."
+      send_paranoid_instructions: "Si existe su dirección de correo electrónico en nuestra base de datos, recibirá un correo electrónico con instrucciones sobre cómo confirmar su cuenta en pocos minutos."
+    failure:
+      already_authenticated: "Ya has iniciado sesión."
+      inactive: "Su cuenta no se ha activado todavía."
+      invalid: "Correo electrónico o contraseña no válidos."
+      invalid_token: "Token de autenticación válida."
+      invited: "Usted tiene una invitación pendiente, lo aceptan para terminar de crear su cuenta."
+      locked: "Tu cuenta esta bloqueada."
+      not_approved: "Su cuenta no ha sido aprobado por el administrador todavía."
+      not_found_in_database: "Correo electrónico o contraseña no válidos."
+      timeout: "Su sesión ha finalizado, inicia sesión de nuevo para continuar."
+      unauthenticated: "Es necesario iniciar sesión o registrarse antes de continuar."
+      unconfirmed: "Usted tiene que confirmar su cuenta antes de continuar."
+    invitations:
+      edit:
+        header: "Establecer su contraseña"
+        submit_button: "Establecer mi contraseña"
+      invitation_removed: "Se retiró su invitación."
+      invitation_token_invalid: "El token de invitación no es válido!"
+      new:
+        header: "Enviar invitacion"
+        submit_button: "Enviar una invitación"
+      no_invitations_remaining: "No hay invitaciones restantes"
+      # send_instructions: "An invitation email has been sent to %{email}."
+      updated: "Su contraseña se ha establecido satisfactoriamente. Ahora está iniciado sesión."
+      updated_not_active: "Su contraseña se ha establecido satisfactoriamente."
+    mailer:
+      confirmation_instructions:
+        subject: "Instrucciones de confirmación"
+      invitation_instructions:
+        accept: "Aceptar la invitacion"
+        # accept_until: "This invitation will be due in %{due_date}."
+        # hello: "Hello %{first_name} %{last_name},"
+        ignore: "Si no desea aceptar la invitación, por favor, ignora este mensaje. <br /> Su cuenta no se creará hasta que acceda al enlace de arriba y fijó su contraseña."
+        # someone_invited_you: "Someone has invited you to %{url}, you can accept it through the link below."
+        subject: "Instrucciones de invitación"
+      registrations:
+        approved:
+          # accepted: "An administrator has approved your registration on %{url}, you can now sign in through the link below."
+          # hello: "Hello %{first_name} %{last_name},"
+          sign_in: "Firme aquí."
+          subject: "Su cuenta ha sido aceptado!"
+        signed_up:
+          subject: "Nuevo registro"
+      reset_password_instructions:
+        subject: "Restablecer las instrucciones de contraseña"
+      unlock_instructions:
+        subject: "Instrucciones de Desbloqueo"
+    omniauth_callbacks:
+      # failure: "Could not authenticate you from %{kind} because “%{reason}”."
+      # success: "Successfully authenticated from %{kind} account."
+    passwords:
+      no_token: "No se puede acceder a esta página sin que viene de un mensaje de restablecimiento de contraseña. Si viene de un mensaje de restablecimiento de contraseña, por favor asegúrese de que utilizó la URL completa proporcionada."
+      send_instructions: "Usted recibirá un correo electrónico con instrucciones para restablecer la contraseña en unos pocos minutos."
+      send_paranoid_instructions: "Si existe su dirección de correo electrónico en nuestra base de datos, usted recibirá un enlace de recuperación de la contraseña a su dirección de correo electrónico en unos pocos minutos."
+      updated: "Su contraseña se ha cambiado correctamente. Ahora está iniciado sesión."
+      updated_not_active: "Su contraseña se ha cambiado correctamente."
+    registrations:
+      destroyed: "¡Adiós! Su cuenta se ha cancelado correctamente. Esperamos volver a verte pronto."
+      signed_up: "¡Bienvenido! Que se haya registrado con éxito."
+      signed_up_but_inactive: "Que se haya registrado con éxito. Sin embargo, no se podía iniciar sesión porque la cuenta aún no está activada."
+      signed_up_but_locked: "Que se haya registrado con éxito. Sin embargo, no se ha podido iniciar sesión debido a que su cuenta está bloqueada."
+      signed_up_but_unconfirmed: "Un mensaje con un enlace de confirmación ha sido enviado a su dirección de correo electrónico. Por favor, abra el enlace para activar su cuenta."
+      update_needs_confirmation: "Ha actualizado su cuenta con éxito, pero que necesita para verificar su nueva dirección de correo electrónico. Por favor, consultar su correo electrónico y haga clic en el enlace de confirmación para finalizar confirmando su nueva dirección de correo electrónico."
+      updated: "Ha actualizado su cuenta correctamente."
+      user:
+        signed_up_but_not_approved: "Que se haya registrado con éxito, pero su cuenta no ha sido aprobado por el administrador sin embargo,"
+    sessions:
+      signed_in: "Firmado en éxito."
+      signed_out: "Firmado a cabo con éxito."
+    unlocks:
+      send_instructions: "Usted recibirá un correo electrónico con instrucciones sobre cómo desbloquear su cuenta en pocos minutos."
+      send_paranoid_instructions: "Si existe la cuenta, recibirá un correo electrónico con instrucciones sobre cómo desbloquearlo en pocos minutos."
+      unlocked: "Su cuenta ha sido desbloqueado con éxito. Por favor inicie sesión para continuar."
+  errors:
+    messages:
+      already_confirmed: "Ya se confirmó, intenta acceder"
+      # confirmation_period_expired: "needs to be confirmed within %{period}, please request a new one"
+      expired: "Ha caducado, por favor solicitar uno nuevo"
+      not_found: "Extraviado"
+      not_locked: "No estaba cerrada con llave"
+      not_saved:
+        # one: "1 error prohibited this %{resource} from being saved:"
+        # other: "%{count} errors prohibited this %{resource} from being saved:"
+  time:
+    formats:
+      devise:
+        mailer:
+          invitation_instructions:
+            accept_until_format: "% B% d,% Y% I:% M% p"

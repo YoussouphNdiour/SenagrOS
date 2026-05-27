@@ -1,0 +1,38 @@
+current directory: /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/therubyracer-0.12.3/ext/v8
+/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/bin/ruby -I /System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/lib/ruby/2.6.0 -r ./siteconf20260515-40428-1cux5gi.rb extconf.rb
+checking for -lpthread... yes
+checking for -lobjc... yes
+*** extconf.rb failed ***
+Could not create Makefile due to some reason, probably lack of necessary
+libraries and/or headers.  Check the mkmf.log file for more details.  You may
+need configuration options.
+
+Provided configuration options:
+	--with-opt-dir
+	--without-opt-dir
+	--with-opt-include
+	--without-opt-include=${opt-dir}/include
+	--with-opt-lib
+	--without-opt-lib=${opt-dir}/lib
+	--with-make-prog
+	--without-make-prog
+	--srcdir=.
+	--curdir
+	--ruby=/System/Library/Frameworks/Ruby.framework/Versions/2.6/usr/bin/$(RUBY_BASE_NAME)
+	--with-pthreadlib
+	--without-pthreadlib
+	--with-objclib
+	--without-objclib
+	--enable-debug
+	--disable-debug
+/Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/libv8-3.16.14.19/ext/libv8/location.rb:15:in `initialize': No such file or directory - /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/libv8-3.16.14.19/ext/libv8/.location.yml (Errno::ENOENT)
+	from /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/libv8-3.16.14.19/ext/libv8/location.rb:15:in `open'
+	from /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/libv8-3.16.14.19/ext/libv8/location.rb:15:in `load!'
+	from /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/gems/libv8-3.16.14.19/lib/libv8.rb:6:in `configure_makefile'
+	from extconf.rb:32:in `<main>'
+
+To see why this extension failed to compile, please check the mkmf.log which can be found here:
+
+  /Users/yusper/Downloads/SenagrOS/ekylibre-main/vendor/bundle/ruby/2.6.0/extensions/universal-darwin-24/2.6.0/therubyracer-0.12.3/mkmf.log
+
+extconf failed, exit code 1

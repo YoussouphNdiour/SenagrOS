@@ -1,0 +1,438 @@
+@import "bootstrap/modals";
+@import "bootstrap/alerts";
+@import "bootstrap/grid";
+
+$column-padding: $default-border-radius;
+$column-background-color: white;
+$column-width: 28ex;
+.golumn {
+  background: mix($active-color, $desktop-background, 30%);
+  overflow: auto;
+  position: relative;
+  height: 100%;
+  .golumn-loading{
+    display: none;
+  }
+  .golumn-columns {
+    display: inline-flex;
+    padding: $column-padding;
+    overflow: auto;
+    @include calc(height, "100% - #{2 * $column-padding}");
+
+    position: absolute;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    overflow: hidden;
+    overflow-x: auto;
+
+    .golumn-columns-container {
+      @include display(inline-flex);
+      align-items: flex-start;
+      flex-direction: row;
+      height: 100%;
+    }
+
+    .golumn-group-handle, .golumn-item-handle {
+      cursor: move;
+    }
+
+    .golumn-items-counter {
+      position: absolute;
+      right: 0;
+      bottom: 0;
+      border-color: $active-color;
+      background-color: $active-color;
+      color: white;
+      @include box-shadow(0 0 2px $active-color);
+      margin: $default-border-radius;
+      padding: $default-border-radius $default-gap;
+      clear: both;
+      @include border-radius($default-border-radius);
+    }
+  }
+
+
+  &.loading {
+    .golumn-loading{
+      display: block;
+    }
+    .golumn-columns{
+      display: none;
+    }
+  }
+
+
+
+  // Golumn column
+  .golumn-column {
+    width: $column-width;
+    //@include inline-block;
+
+    margin: $column-padding;
+    padding: 0;
+    @include calc(max-height, "100% - #{2 * $column-padding}");
+
+    background: white;
+    border: 1px solid #AAA;
+    @include transition(box-shadow 0.2s);
+    @include box-shadow(1px 1px 2px rgba(black, 0.1));
+    @include border-radius($default-border-radius);
+    display: flex;
+    flex-direction: column;
+    // max-height: 100%;
+
+    .edit {
+      @include is-icon(14px);
+      @include use-icon(pencil);
+      cursor: pointer;
+      opacity: 0.5;
+      width: 14px;
+      @include text-align(center);
+      @include transition(opacity 0.2s);
+      &:hover, &.active {
+        opacity: 1;
+      }
+    }
+
+
+    & > * {
+      display: block;
+      padding: round(0.5* $default-gap) $default-gap;
+    }
+    .golumn-column-header {
+      @include clearfix;
+      flex: none;
+      cursor: pointer;
+
+      .golumn-column-actions {
+        @include float(right);
+      }
+      .golumn-column-handle {
+        @include ellipsis;
+        i {
+          @include inline-block;
+          width: $fs-normal;
+          @include text-align(center);
+        }
+        .golumn-column-title {
+          @include display(inline);
+          font-weight: bold;
+        }
+        &, * {
+          line-height: $lh-normal;
+        }
+
+        .golumn-column-badge {
+          font-size: $fs-small;
+          line-height: 13px;
+          @include float(right);
+        }
+      }
+      &:hover {
+        .checker {
+          opacity: 0.5;
+          &:hover, &.active {
+            opacity: 1;
+          }
+        }
+      }
+    }
+    .golumn-column-body {
+      flex: auto;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0;
+      .golumn-groups {
+      }
+    }
+    .golumn-column-footer {
+      flex: none;
+      display: block;
+      &, * {
+        color: $link-color;
+      }
+      &:hover {
+        background: rgba(black, 0.07);
+      }
+    }
+
+    // When dragging
+    &.ui-sortable-helper {
+      .golumn-column-content {
+        @include box-shadow(2px 2px 3px rgba(black, 0.1));
+      }
+    }
+    &.new-column {
+      opacity: 0.4;
+      &:hover {
+        opacity: 1;
+      }
+      .golumn-column-body {
+        @include is-icon(64px);
+        line-height: 64px;
+        padding: $fs-normal;
+        @include use-icon(plus);
+        @include text-align(center);
+        &:hover {
+          background: rgba(black, 0.07);
+        }
+      }
+    }
+  }
+
+
+
+  // Golumn group
+  .golumn-group {
+    border-top: 1px solid #AAA;
+    padding: $default-border-radius;
+    &:first-child {
+      border-top: none;
+    }
+    .golumn-group-header {
+      cursor: pointer;
+
+      padding: round(0.5* $default-gap) $default-gap;
+      .golumn-group-actions {
+        @include float(right);
+        .collapser {
+          width: 14px;
+          @include text-align(center);
+          cursor: pointer;
+          @include inline-block;
+          @include is-icon(14px);
+          @include use-icon(caret-left);
+          @include transition(transform 0.2s);
+          &.active {
+            @include transform(rotate(-90deg));
+          }
+        }
+      }
+    }
+    .golumn-group-body {
+    }
+  }
+
+
+  // Golumn item
+  .golumn-item {
+    &, * {
+      line-height: $lh-normal;
+      font-size: $fs-normal;
+    }
+    cursor: pointer;
+    background: #FFF;
+    margin: $default-border-radius;
+    padding: $default-border-radius $default-gap;
+    clear: both;
+    @include border-radius($default-border-radius);
+
+    $mix-prop: 90%;
+    $item-background: #FFF;
+    border-left: $default-border-radius solid #DDD;
+    background: mix($item-background, #DDD, $mix-prop);
+    &.status-go {
+      background: mix($item-background, $success-color, $mix-prop);
+      border-left-color: $success-color;
+    }
+    &.status-caution {
+      background: mix($item-background, $caution-color, $mix-prop);
+      border-left-color: $caution-color;
+    }
+    &.status-stop {
+      background: mix($item-background, $invalid-color, $mix-prop);
+      border-left-color: $invalid-color;
+    }
+    &.selected {
+      border-color: $active-color;
+      @include box-shadow(0 0 2px $active-color);
+    }
+    .golumn-item-actions {
+      @include float(right);
+    }
+    .golumn-item-title {
+      cursor: pointer;
+    }
+    &:hover {
+      .details {
+        opacity: 0.5;
+        &:hover, &.active {
+          opacity: 1;
+        }
+      }
+    }
+
+    &.active {
+      background-color: $active-color !important;
+
+      .golumn-item-title {
+        color: white !important;
+      }
+    }
+
+    .details {
+      @include is-icon(14px);
+      @include use-icon(ellipsis-h);
+      cursor: pointer;
+      opacity: 0.5;
+      width: 14px;
+      @include text-align(center);
+      @include transition(opacity 0.2s);
+      &:hover, &.active {
+        opacity: 1;
+      }
+    }
+  }
+
+}
+
+.animate-dragging {
+  background-color: $active-color;
+
+  box-shadow: 0 0 8px #333;
+  border: 1px solid $neutral-color;
+
+  width: 20ex;
+  margin: $default-border-radius;
+  padding: $default-border-radius $default-gap;
+  clear: both;
+  @include border-radius($default-border-radius);
+
+  z-index: 5;
+
+
+  &, & > * {
+    font-size: $fs-normal;
+    line-height: $lh-normal;
+    text-align: center;
+    color: white;
+  }
+
+  &[data-count]:before {
+    content: attr(data-count);
+    background-color: darken($invalid-color, 0.3);
+    @include border-radius(50%);
+
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: -5px;
+    left: -5px;
+    text-align: center;
+    vertical-align: middle;
+    z-index: 1;
+  }
+
+}
+
+
+.golumn-group-badge {
+  font-size: x-small;
+}
+
+.search-form .form-group {
+  float: right !important;
+  transition: all 0.35s, border-radius 0s;
+  width: 32px;
+  height: 32px;
+  background-color: #fff;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+  border-radius: 25px;
+  border: 1px solid #ccc;
+  input.form-control {
+    padding-right: 20px;
+    border: 0 none;
+    background: transparent;
+    box-shadow: none;
+    display: block;
+    &::-webkit-input-placeholder {
+      display: none;
+    }
+    &:-moz-placeholder {
+      /* Firefox 18- */
+      display: none;
+    }
+    &::-moz-placeholder {
+      /* Firefox 19+ */
+      display: none;
+    }
+    &:-ms-input-placeholder {
+      display: none;
+    }
+  }
+  &:hover, &.hover {
+    width: 100%;
+    border-radius: 4px 25px 25px 4px;
+  }
+  span.form-control-feedback {
+    position: absolute;
+    top: -1px;
+    right: -2px;
+    z-index: 2;
+    display: block;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    text-align: center;
+    color: #3596e0;
+    left: initial;
+    font-size: 14px;
+  }
+}
+
+.grow-empty-zone {
+  transition: all 1s ease;
+  padding: 10px 0;
+}
+
+
+.hide {
+  display: none;
+}
+
+.text-muted {
+
+  color: #999;
+}
+
+.golumn-item-infos .btn-link:hover, .btn-link:focus, .btn-link:active {
+                                                       border-color: transparent;
+                                                     }
+
+
+.golumn-column .panel-footer .btn-link:hover, .btn-link:focus, .btn-link:active {
+                                                                 border-color: transparent;
+                                                               }
+
+.add-container {
+  text-align: center !important;
+  border-top: 1px solid #ddd;
+  button {
+    padding: 0;
+    background: transparent;
+    border: transparent;
+
+    i.text-muted {
+      color: #ddd !important;
+    }
+  }
+}
+
+.container-drop-hover {
+  transition: background-color 1s ease;
+  padding: 10px 0;
+  background-color: mix($active-color, $desktop-background, 50);
+  border: inset 2px $active-color;
+}
+
+.golumn-loading {
+  display: none;
+  margin: $fs-large auto;
+  @include loading-indicator;
+}
+
+i.icon {
+  font-family: Agric;
+}

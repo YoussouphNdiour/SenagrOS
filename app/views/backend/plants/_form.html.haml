@@ -1,0 +1,9 @@
+- display_dead_at ||= false
+
+= f.product_form_frame do
+
+  = field_set(:identification) do
+    = f.input :dead_at if display_dead_at
+    = f.input :specie_variety_name
+    = f.picture
+    = f.input :description

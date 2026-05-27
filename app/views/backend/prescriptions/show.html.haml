@@ -1,0 +1,15 @@
+- main_toolbar do |t|
+  = t.edit resource
+
+= main_informations attachment: true do
+  = attributes_list do |l|
+    - l.attribute :reference_number
+    - l.attribute :delivered_at
+    - l.attribute :prescriptor, url: true
+    - l.attribute :description
+
+= cobbles do |c|
+
+  - c.cobble(:interventions) do
+    = cobble_list(:interventions)
+

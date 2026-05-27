@@ -1,0 +1,12 @@
+= kujaku do |k|
+  - k.text
+  - k.choice :all, :active, :inactive
+
+- main_toolbar do |t|
+  - %w[article animal crop equipment service worker zone].each do |nature|
+    - btn_class = controller_name.match(/#{Regexp.quote(nature)}/) ? 'btn-pill active' : 'btn-pill'
+    = link_to nature.pluralize.tl, send("backend_variant_types_#{nature}_types_path"), class: btn_class
+
+  = t.pick label: :pick_reference_profile.tl, params: { redirect_show_path: backend_product_natures_path, selector_label: :product_nature.tl }
+
+= main_list "constant_name" => "VariantTypes::#{controller_name.classify}"

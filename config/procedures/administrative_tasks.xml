@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<procedures xmlns="http://www.ekylibre.org/XML/2013/procedures">
+  <procedure name="administrative_tasks" categories="administrative_tasks" actions="administrative">
+    <parameters>
+      <target name="land_parcel" filter="is land_parcel and has indicator shape" cardinality="*">
+        <attribute name="working_zone" default-value="PRODUCT.shape" if="PRODUCT?"/>
+      </target>
+      <doer name="responsible" filter="is worker"/>
+      <input name="consumable_part" filter="is preparation" cardinality="*">
+        <handler name="population"/>
+      </input>
+    </parameters>
+  </procedure>
+</procedures>

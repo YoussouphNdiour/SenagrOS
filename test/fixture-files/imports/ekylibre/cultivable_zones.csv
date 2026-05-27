@@ -1,0 +1,3 @@
+Name,Nature,Code,Shape Number,Soil nature
+Zone Petit champ,cultivable_zone,ZC01,GR1,clay_limestone_soil
+Zone Enclouse des chatâigniers,cultivable_zone,ZC02,GR2,chesnut_red_soil

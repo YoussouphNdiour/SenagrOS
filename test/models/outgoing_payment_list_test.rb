@@ -1,0 +1,188 @@
+# = Informations
+#
+# == License
+#
+# Ekylibre - Simple agricultural ERP
+# Copyright (C) 2008-2009 Brice Texier, Thibaud Merigon
+# Copyright (C) 2010-2012 Brice Texier
+# Copyright (C) 2012-2014 Brice Texier, David Joulin
+# Copyright (C) 2015-2023 Ekylibre SAS
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU Affero General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License
+# along with this program.  If not, see http://www.gnu.org/licenses.
+#
+# == Table: outgoing_payment_lists
+#
+#  cached_payment_count :integer(4)
+#  cached_total_sum     :decimal(, )
+#  created_at           :datetime
+#  creator_id           :integer(4)
+#  id                   :integer(4)       not null, primary key
+#  lock_version         :integer(4)       default(0), not null
+#  mode_id              :integer(4)       not null
+#  number               :string
+#  updated_at           :datetime
+#  updater_id           :integer(4)
+#
+require 'test_helper'
+
+class OutgoingPaymentListTest < Ekylibre::Testing::ApplicationTestCase::WithFixtures
+  setup do
+    @list = outgoing_payment_lists(:outgoing_payment_lists_001)
+    @mode = OutgoingPaymentMode.create!(sepa: true, cash: Cash.bank_accounts.first, name: 'SEPA', with_accounting: true, active: true)
+    supplier = Entity.find_by!(full_name: 'BAKTOUBI Inc.')
+    variant = ProductNatureVariant.find_by!(name: 'Adexar 5 l')
+    purchase = PurchaseInvoice.create!(
+      nature: PurchaseNature.joins(:journal).find_by!(journals: { currency: 'EUR' }),
+      supplier: supplier,
+      invoiced_at: DateTime.new(2018, 1, 1),
+      items_attributes: [
+        {
+          variant: variant,
+          conditioning_quantity: 54,
+          conditioning_unit: variant.guess_conditioning[:unit],
+          unit_pretax_amount: 161,
+          tax: Tax.find_by!(amount: 0)
+        }
+      ]
+    )
+    purchase.update_columns(number: 'A999907000012')
+    payments = [
+      PurchasePayment.new(amount: 8694, currency: 'EUR', mode: @mode, payee: supplier, responsible: User.first, to_bank_at: Time.new(2016, 9, 25, 3, 45), affair: purchase.affair)
+    ]
+    @list = OutgoingPaymentList.create!(mode: @mode, payments: payments)
+    payments.first.update_columns(number: 'D99990004')
+  end
+
+  teardown do
+    Timecop.return
+  end
+
+  test 'to_sepa' do
+    Timecop.freeze(Time.new(2016, 10, 1, 11, 1, 35, '+02:00')) do
+      doc = Nokogiri::XML(@list.to_sepa)
+      doc.collect_namespaces
+      doc.remove_namespaces!
+
+      message_identification = "EKY-#{@list.number}-#{Time.now.utc.strftime('%y%m%d-%H%M')}"
+
+      assert_equal(message_identification, doc.xpath('//CstmrCdtTrfInitn/GrpHdr/MsgId').text)
+      assert_equal(Time.now.getlocal.iso8601, doc.xpath('//CstmrCdtTrfInitn/GrpHdr/CreDtTm').text)
+      assert_equal('1', doc.xpath('//CstmrCdtTrfInitn/GrpHdr/NbOfTxs').text)
+      assert_equal('8694.00', doc.xpath('//CstmrCdtTrfInitn/GrpHdr/CtrlSum').text)
+      assert_equal('John Doe', doc.xpath('//CstmrCdtTrfInitn/GrpHdr/InitgPty/Nm').text)
+
+      assert_equal("#{message_identification}/1", doc.xpath('//CstmrCdtTrfInitn/PmtInf/PmtInfId').text)
+      assert_equal('TRF', doc.xpath('//CstmrCdtTrfInitn/PmtInf/PmtMtd').text)
+      assert_equal('false', doc.xpath('//CstmrCdtTrfInitn/PmtInf/BtchBookg').text)
+      assert_equal('1', doc.xpath('//CstmrCdtTrfInitn/PmtInf/NbOfTxs').text)
+      assert_equal('8694.00', doc.xpath('//CstmrCdtTrfInitn/PmtInf/CtrlSum').text)
+      assert_equal('SEPA', doc.xpath('//CstmrCdtTrfInitn/PmtInf/PmtTpInf/SvcLvl/Cd').text)
+      assert_equal(Time.zone.now.strftime('%Y-%m-%d').to_s, doc.xpath('//CstmrCdtTrfInitn/PmtInf/ReqdExctnDt').text)
+      assert_equal('John Doe', doc.xpath('//CstmrCdtTrfInitn/PmtInf/Dbtr/Nm').text)
+      assert_equal('FR7611111222223333333333391', doc.xpath('//CstmrCdtTrfInitn/PmtInf/DbtrAcct/Id/IBAN').text)
+      assert_equal('GHBXFRPP', doc.xpath('//CstmrCdtTrfInitn/PmtInf/DbtrAgt/FinInstnId/BIC').text)
+      assert_equal('SLEV', doc.xpath('//CstmrCdtTrfInitn/PmtInf/ChrgBr').text)
+
+      assert_equal('D99990004', doc.xpath('//CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf')[0].xpath('PmtId/EndToEndId').text)
+      assert_equal('8694.00', doc.xpath('//CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf')[0].xpath("Amt/InstdAmt[@Ccy='EUR']").text)
+      assert_equal('ABNANL2AXXX', doc.xpath('//CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf')[0].xpath('CdtrAgt/FinInstnId/BIC').text)
+      assert_equal('BAKTOUBI Inc.', doc.xpath('//CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf')[0].xpath('Cdtr/Nm').text)
+      assert_equal('NL72ABNA0897960274', doc.xpath('//CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf')[0].xpath('CdtrAcct/Id/IBAN').text)
+      assert_equal('A999907000012', doc.xpath('//CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf')[0].xpath('RmtInf/Ustrd').text)
+    end
+  end
+
+  test 'to_sepa with BIC nil' do
+    @list.mode.cash.update!(bank_identifier_code: nil)
+
+    @list.payments.each do |payment|
+      payment.payee.update!(bank_identifier_code: nil)
+    end
+
+    Timecop.freeze(Time.new(2016, 10, 1, 11, 1, 35, '+02:00')) do
+      doc = Nokogiri::XML(@list.to_sepa)
+      doc.collect_namespaces
+      doc.remove_namespaces!
+
+      message_identification = "EKY-#{@list.number}-#{Time.now.utc.strftime('%y%m%d-%H%M')}"
+
+      assert_equal(message_identification, doc.xpath('//CstmrCdtTrfInitn/GrpHdr/MsgId').text)
+      assert_equal(Time.now.getlocal.iso8601, doc.xpath('//CstmrCdtTrfInitn/GrpHdr/CreDtTm').text)
+      assert_equal('1', doc.xpath('//CstmrCdtTrfInitn/GrpHdr/NbOfTxs').text)
+      assert_equal('8694.00', doc.xpath('//CstmrCdtTrfInitn/GrpHdr/CtrlSum').text)
+      assert_equal('John Doe', doc.xpath('//CstmrCdtTrfInitn/GrpHdr/InitgPty/Nm').text)
+
+      assert_equal("#{message_identification}/1", doc.xpath('//CstmrCdtTrfInitn/PmtInf/PmtInfId').text)
+      assert_equal('TRF', doc.xpath('//CstmrCdtTrfInitn/PmtInf/PmtMtd').text)
+      assert_equal('false', doc.xpath('//CstmrCdtTrfInitn/PmtInf/BtchBookg').text)
+      assert_equal('1', doc.xpath('//CstmrCdtTrfInitn/PmtInf/NbOfTxs').text)
+      assert_equal('8694.00', doc.xpath('//CstmrCdtTrfInitn/PmtInf/CtrlSum').text)
+      assert_equal('SEPA', doc.xpath('//CstmrCdtTrfInitn/PmtInf/PmtTpInf/SvcLvl/Cd').text)
+      assert_equal(Time.zone.now.strftime('%Y-%m-%d').to_s, doc.xpath('//CstmrCdtTrfInitn/PmtInf/ReqdExctnDt').text)
+      assert_equal('John Doe', doc.xpath('//CstmrCdtTrfInitn/PmtInf/Dbtr/Nm').text)
+      assert_equal('FR7611111222223333333333391', doc.xpath('//CstmrCdtTrfInitn/PmtInf/DbtrAcct/Id/IBAN').text)
+      assert_equal('NOTPROVIDED', doc.xpath('//CstmrCdtTrfInitn/PmtInf/DbtrAgt/FinInstnId/BIC').text)
+      assert_equal('SLEV', doc.xpath('//CstmrCdtTrfInitn/PmtInf/ChrgBr').text)
+
+      assert_equal('D99990004', doc.xpath('//CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf')[0].xpath('PmtId/EndToEndId').text)
+      assert_equal('8694.00', doc.xpath('//CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf')[0].xpath("Amt/InstdAmt[@Ccy='EUR']").text)
+      assert_equal('NOTPROVIDED', doc.xpath('//CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf')[0].xpath('CdtrAgt/FinInstnId/BIC').text)
+      assert_equal('BAKTOUBI Inc.', doc.xpath('//CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf')[0].xpath('Cdtr/Nm').text)
+      assert_equal('NL72ABNA0897960274', doc.xpath('//CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf')[0].xpath('CdtrAcct/Id/IBAN').text)
+      assert_equal('A999907000012', doc.xpath('//CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf')[0].xpath('RmtInf/Ustrd').text)
+    end
+  end
+
+  test 'to_sepa with latin characters for bank_account_holder_name' do
+    @list.mode.cash.update!(bank_account_holder_name: 'Cédric Áttèntïòn')
+
+    @list.payments.first.payee.update!(bank_account_holder_name: 'Còmptë cômpliqüé')
+
+    Timecop.freeze(Time.zone.local(2016, 10, 1, 9, 1, 35)) do
+      doc = Nokogiri::XML(@list.to_sepa)
+      doc.collect_namespaces
+      doc.remove_namespaces!
+
+      assert_equal('Cedric Attention', doc.xpath('//CstmrCdtTrfInitn/GrpHdr/InitgPty/Nm').text)
+      assert_equal('Cedric Attention', doc.xpath('//CstmrCdtTrfInitn/PmtInf/Dbtr/Nm').text)
+      assert_equal('Compte complique', doc.xpath('//CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf')[0].xpath('Cdtr/Nm').text)
+    end
+  end
+
+  # This was updated from Ekylibre::Record::RecordNotDestroyable to ActiveRecord::DeleteRestrictionError because it seems the last changes
+  # made the ActiveRecord callbacks checking for dependent models run BEFORE the Ekylibre::Record::Acts::Protected callbacks.
+  # TODO to investigate before reactivate it
+  # test 'destroy with bank_statement_letter present' do
+  #  @list.payments.last.journal_entry.items.last.update_column(
+  #    :bank_statement_letter, 'someting'
+  #  )
+  #  assert_raise(ActiveRecord::DeleteRestrictionError) { @list.destroy }
+  #  assert(@list.reload.persisted?)
+  # end
+
+  test 'destroy with all bank_statement_letter blank' do
+    list = OutgoingPaymentList.all.detect do |l|
+      JournalEntryItem.where(entry_id: l.payments.select(:entry_id), state: :closed).empty?
+    end
+    assert list, 'Cannot find a destroyable list'
+    JournalEntryItem.where(entry_id: list.payments.select(:entry_id)).update_all(bank_statement_letter: nil)
+    assert(list.remove)
+    assert_raise(ActiveRecord::RecordNotFound) { list.reload }
+  end
+
+  test 'generate from purchase affairs' do
+    affairs = PurchaseAffair.where(closed: false, currency: 'EUR')
+    OutgoingPaymentList.build_from_affairs(affairs, OutgoingPaymentMode.find_by(cash: Cash.where(currency: 'EUR')), nil)
+  end
+end

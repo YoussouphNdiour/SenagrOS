@@ -1,0 +1,131 @@
+por:
+  about:
+    authors: ["Danimar Ribeiro"]
+    dir: "ltr"
+    ietf: "pt-BR" #?
+    iso2: "pt"
+    name: "Português"
+  boolean:
+    human:
+      false_class: "Falso"
+      true_class: "Verdadeiro"
+    polar:
+      false_class: "Sim"
+      true_class: "Não"
+  date:
+    abbr_day_names: ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sab"]
+    abbr_month_names: ["", "jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"]
+    day_names: ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sabádo"]
+    formats:
+      default: "%d/%m/%Y"
+      legal: "%d %B %Y"
+      long: "%d de %B de %Y"
+      month: "%B %Y"
+      month_letter: "%d %B %Y"
+      # month_name: "%B"
+      short: "%d %b"
+      short_month: "%m/%Y"
+    month_names: ["", "janeiro", "fevereiro", "março", "abril", "maio", "junho", "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"]
+  datetime:
+    distance_in_words:
+      about_x_hours:
+        one: "aproximadamente 1 hora"
+        other: "aproximadamente %{count} horas"
+      about_x_months:
+        one: "aproximadamente 1 mês"
+        other: "aproximadamente %{count} meses"
+      about_x_years:
+        one: "aproximadamente 1 ano"
+        other: "aproximadamente %{count} anos"
+      almost_x_years:
+        one: "quase 1 ano"
+        other: "quase %{count} anos"
+      half_a_minute: "meio minuto"
+      less_than_x_minutes:
+        one: "menos de um minuto"
+        other: "menos de %{count} minutos"
+      less_than_x_seconds:
+        one: "menos de 1 segundo"
+        other: "menos de %{count} segundos"
+      over_x_years:
+        one: "mais de 1 ano"
+        other: "mais de %{count} anos"
+      x_days:
+        one: "1 dia"
+        other: "%{count} dias"
+      x_minutes:
+        one: "1 minuto"
+        other: "%{count} minutos"
+      x_months:
+        one: "1 mês"
+        other: "%{count} meses"
+      x_seconds:
+        one: "1 segundo"
+        other: "%{count} segundos"
+    periods:
+      day: "Dia"
+      month: "Mês"
+      today: "Hoje"
+      week: "Semana"
+      year: "Ano"
+    relative_distance_in_words:
+      in_sometime: "em %{distance}"
+      sometime_ago: "%{distance} atrás"
+  http:
+    errors:
+      internal_server_error:
+        hint: "A aplicação encontra problemas. Os administradores foram notificados para este problema."
+        title: "Nos desculpamos, mas alguma coisa aconteceu de errado"
+      maintenance:
+        hint: "Por favor, volte mais tarde"
+        title: "O serviço está em manutenção e não está disponível por enquanto"
+      not_found:
+        hint: "Você deve ter digitado alguma valor errado ou a página não existe mais."
+        title: "A página que está procurando não existe"
+      unprocessable_entity:
+        hint: "Talvez você esteja tentando modificar algo ao qual não tem acesso"
+        title: "As modificações foram rejeitadas"
+  number:
+    currency:
+      format:
+        delimiter: "."
+        format: "%u %n"
+        negative_format: "-%un"
+        precision: 2
+        separator: ","
+        unit: "R$"
+    format:
+      delimiter: ","
+      precision: 3
+      separator: "."
+    human:
+      format:
+        # delimiter: ""
+        precision: 1
+    percentage:
+      format:
+        delimiter: "."
+        format: "%n%" #?
+    precision:
+      format:
+        delimiter: "."
+  rank: "#%{number}"
+  support:
+    array:
+      last_word_connector: " e "
+      sentence_connector: "e"
+      two_words_connector: " e "
+      words_connector: ", "
+  time:
+    am: "am"
+    formats:
+      compact: "% M /% d /% Y% H:% M"
+      default: "%a, %d de %B de %Y, %H:%M:%S"
+      full: "% M /% d /% Y% H:% M:% S"
+      long: "%d de %B de %Y, %H:%M"
+      short: "%d de %B, %H:%M"
+      time: "%H:%M" #?
+    js_formats:
+      compact: "MM / DD / AAAA HH: mm"
+      full: "MM / DD / AAAA HH: mm: ss"
+    pm: "pm"

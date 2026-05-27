@@ -1,0 +1,52 @@
+- main_toolbar name: :main do |t|
+  = t.edit resource
+
+= main_informations attachment: true do
+  .pull-right
+    .med-info.important
+      %span.title= resource.human_attribute_name(:balance)
+      %span.value= resource.balance.l(currency: resource.currency)
+    - if resource.suspend_until_reconciliation
+      .med-info.important
+        %span.title= resource.human_attribute_name(:suspended_balance)
+        %span.value= resource.suspended_balance.l(currency: resource.currency)
+  = attributes_list do |l|
+    - l.attribute :name
+    - l.attribute :nature
+    - l.attribute :journal, url: true
+    - l.attribute :main_account, url: true
+    - l.attribute :suspense_account, url: true
+    - l.attribute :enable_bookkeep_bank_item_details
+    - if resource.bank_account?
+      - l.attribute :bank_name
+      - l.attribute :bank_agency_address
+      - l.attribute :bank_account_holder_name
+      - l.attribute :spaced_iban
+      - l.attribute :bank_identifier_code
+      - if resource.mode_bban?
+        - l.attribute :bank_code
+        - l.attribute :bank_agency_code
+        - l.attribute :bank_account_number
+        - l.attribute :bank_account_key
+
+= cobbles do |c|
+  - if resource.incoming_payment_modes.depositers.any?
+    - c.cobble(:deposits, title: Cash.human_attribute_name(:deposits)) do
+      = cobble_toolbar do |t|
+        :ruby
+          variants = IncomingPaymentMode.depositers.where(cash_id: resource.id).map do |mode|
+            count = mode.depositable_payments.count
+            [:new_deposit.tl(count: count, mode: mode.name), {action: :new, mode_id: mode.id}, by_default: true]
+          end
+        = t.new variants: variants, params: {controller: :deposits}
+      = cobble_list(:deposits)
+
+  - if resource.pointable?
+    - c.cobble(:bank_statements, title: Cash.human_attribute_name(:bank_statements)) do
+      = cobble_toolbar do |t|
+        = t.import :ofx, :cfonb, controller: :bank_statements
+      = cobble_list(:bank_statements)
+
+  - if resource.cash_box?
+    - c.cobble(:sessions, title: Cash.human_attribute_name(:sessions)) do
+      = cobble_list(:sessions)

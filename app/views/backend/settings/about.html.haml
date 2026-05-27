@@ -1,0 +1,17 @@
+#about-us
+  = link_to('https://ekylibre.com/about/', target: '_blank', class: :logo) do
+    = image_tag('logo.svg')
+  - for p in @properties
+    .med-info
+      %span.title= p[0]
+      %span.value= p[1]
+
+  .med-info
+    %span.value= link_to(:consult_ekylibre_api.tl, 'https://ekylibre.com/api', target: '_blank', style: 'color:rgb(100, 148, 193); font-size: 31px;')
+      
+  = cobbles do |c|
+    - c.cobble :datasources.tl do
+      = cobble_list :datasources
+
+  .med-info
+    %span.title= "Je consulte les #{link_to('CGU', 'https://ekylibre.com/terms-of-use', target: '_blank', style: 'color:rgb(100, 148, 193)')} / #{link_to 'CGV', 'https://ekylibre.com/fra/conditions-of-sale', target: '_blank', style: 'color:rgb(100, 148, 193);'} de l'entreprise éditrice Ekylibre SAS".html_safe

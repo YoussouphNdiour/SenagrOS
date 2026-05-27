@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<procedures xmlns="http://www.ekylibre.org/XML/2013/procedures">
+  <procedure name="topkilling" categories="harvesting" actions="topkilling">
+    <parameters>
+      <target name="plant" filter="is plant and has indicator shape">
+        <attribute name="working_zone" default-value="PRODUCT.shape" if="PRODUCT?"/>
+        <attribute name="killable"/>
+      </target>
+      <doer name="driver" filter="is worker and can drive(equipment)" cardinality="*"/>
+      <tool name="tractor" filter="is motorized_vehicle and can tow(equipment)" cardinality="*"/>
+      <tool name="topper" filter="is equipment and can cut" cardinality="*"/>
+    </parameters>
+  </procedure>
+</procedures>

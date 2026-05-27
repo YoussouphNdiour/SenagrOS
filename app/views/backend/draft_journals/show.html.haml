@@ -1,0 +1,16 @@
+- financial_year = FinancialYear.find_by(id: params[:current_financial_year])
+- financial_year ||= FinancialYear.current
+- main_financial_year_selector(financial_year)
+
+#custom-list
+  = render "backend/draft_journals/list"
+
+= modal(id: 'fec-compliance-errors', size: :large) do
+  .modal-header
+  .modal-body
+  .modal-footer
+
+= modal(id: 'confirmation-modal', size: :large) do
+  .modal-header
+  .modal-body
+  .modal-footer

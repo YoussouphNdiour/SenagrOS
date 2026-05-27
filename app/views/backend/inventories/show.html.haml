@@ -1,0 +1,20 @@
+- main_toolbar do |t|
+  - if resource.editable?
+    = t.edit    resource
+    = t.refresh resource, method: :post
+  - if resource.reflectable?
+    = t.reflect resource, method: :post
+  = t.export(:inventory_sheet, key: Printers::InventorySheetPrinter.build_key(id: resource.id, updated_at: Time.now))
+
+= main_informations attachment: true do
+  = attributes_list do |l|
+    - l.attribute :responsible, url: true
+    - l.attribute :achieved_at
+    - l.attribute :reflected
+    - l.attribute :reflected_at
+    - l.attribute :journal, url: true
+    - l.attribute :journal_entry, url: true if resource.journal_entry
+
+= cobbles do |c|
+  - c.cobble :items do
+    = cobble_list :items
