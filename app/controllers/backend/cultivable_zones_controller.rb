@@ -18,7 +18,7 @@
 
 module Backend
   class CultivableZonesController < Backend::BaseController
-    layout 'inertia', only: [:index, :show, :new, :edit]
+    layout 'inertia', only: %i[index show new edit]
 
     manage_restfully(t3e: { name: :name })
 
@@ -29,9 +29,11 @@ module Backend
         .to_a
 
       parcelles = zones.map do |z|
+        zone_obj = CultivableZone.find(z.id)
         z.as_json(only: %i[id name]).merge(
-          'area_ha' => z.area_ha&.to_f,
-          'geojson' => z.geojson
+          'area_ha'     => z.area_ha&.to_f,
+          'geojson'     => z.geojson,
+          'can_destroy' => zone_obj.destroyable?
         )
       end
 
@@ -103,8 +105,21 @@ module Backend
           'farmer_name'            => @cultivable_zone.farmer&.full_name.to_s,
           'created_at'             => @cultivable_zone.created_at&.iso8601
         },
-        productions: productions
+        productions: productions,
+        can_destroy: @cultivable_zone.destroyable?
       }
+    end
+
+    def destroy
+      return unless @cultivable_zone = find_and_check
+
+      if @cultivable_zone.destroyable?
+        @cultivable_zone.destroy!
+        redirect_to backend_cultivable_zones_path, notice: 'Parcelle supprimée.'
+      else
+        redirect_to backend_cultivable_zone_path(@cultivable_zone),
+                    alert: 'Impossible de supprimer : des productions sont associées à cette parcelle.'
+      end
     end
 
     def new
@@ -129,6 +144,7 @@ module Backend
 
     def edit
       return unless @cultivable_zone = find_and_check
+
       render inertia: 'Backend/Parcelles/Form', props: {
         parcelle: {
           'id'          => @cultivable_zone.id,
@@ -142,6 +158,7 @@ module Backend
 
     def update
       return unless @cultivable_zone = find_and_check
+
       if @cultivable_zone.update(permitted_cultivable_zone_params)
         redirect_to backend_cultivable_zone_path(@cultivable_zone), notice: 'Parcelle mise à jour.'
       else
