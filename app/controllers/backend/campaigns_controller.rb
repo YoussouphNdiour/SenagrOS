@@ -20,7 +20,7 @@ module Backend
   class CampaignsController < Backend::BaseController
     manage_restfully except: :show
 
-    layout 'inertia', only: [:index, :show]
+    layout 'inertia', only: %i[index show new edit]
 
     def index
       scope = Campaign.order(harvest_year: :desc)
@@ -31,7 +31,8 @@ module Backend
             'id'           => c.id,
             'name'         => c.name.to_s,
             'harvest_year' => c.harvest_year,
-            'closed'       => c.closed
+            'closed'       => c.closed,
+            'can_destroy'  => c.destroyable?
           }
         },
         meta: { 'total' => scope.count }
@@ -88,7 +89,8 @@ module Backend
           'closed_at'    => @campaign.closed_at&.iso8601,
           'created_at'   => @campaign.created_at&.iso8601
         },
-        productions: productions
+        productions: productions,
+        can_destroy: @campaign.destroyable?
       }
     end
 
@@ -126,5 +128,77 @@ module Backend
       end
       redirect_to backend_campaign_path(current_campaign)
     end
+
+    def new
+      @campaign = Campaign.new
+      render inertia: 'Backend/Campagnes/Form', props: {
+        campagne: nil,
+        errors: {}
+      }
+    end
+
+    def create
+      @campaign = Campaign.new(campaign_form_params)
+      if @campaign.save
+        redirect_to backend_campaign_path(@campaign), notice: 'Campagne créée avec succès.'
+      else
+        render inertia: 'Backend/Campagnes/Form', props: {
+          campagne: nil,
+          errors: @campaign.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v.first.to_s }
+        }, status: :unprocessable_entity
+      end
+    end
+
+    def edit
+      return unless @campaign = find_and_check(:campaign)
+
+      render inertia: 'Backend/Campagnes/Form', props: {
+        campagne: {
+          'id'           => @campaign.id,
+          'name'         => @campaign.name.to_s,
+          'harvest_year' => @campaign.harvest_year,
+          'description'  => @campaign.description.to_s,
+          'closed'       => @campaign.closed
+        },
+        errors: {}
+      }
+    end
+
+    def update
+      return unless @campaign = find_and_check(:campaign)
+
+      if @campaign.update(campaign_form_params)
+        redirect_to backend_campaign_path(@campaign), notice: 'Campagne mise à jour.'
+      else
+        render inertia: 'Backend/Campagnes/Form', props: {
+          campagne: {
+            'id'           => @campaign.id,
+            'name'         => @campaign.name.to_s,
+            'harvest_year' => @campaign.harvest_year,
+            'description'  => @campaign.description.to_s,
+            'closed'       => @campaign.closed
+          },
+          errors: @campaign.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v.first.to_s }
+        }, status: :unprocessable_entity
+      end
+    end
+
+    def destroy
+      return unless @campaign = find_and_check(:campaign)
+
+      if @campaign.destroyable?
+        @campaign.destroy!
+        redirect_to backend_campaigns_path, notice: 'Campagne supprimée.'
+      else
+        redirect_to backend_campaign_path(@campaign),
+                    alert: 'Impossible de supprimer : des productions sont liées à cette campagne.'
+      end
+    end
+
+    private
+
+      def campaign_form_params
+        params.require(:campagne).permit(:name, :harvest_year, :description)
+      end
   end
 end
