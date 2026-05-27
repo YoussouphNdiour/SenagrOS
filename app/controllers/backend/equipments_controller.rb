@@ -18,7 +18,7 @@
 
 module Backend
   class EquipmentsController < Backend::MattersController
-    layout 'inertia', only: [:index, :show, :new, :edit]
+    layout 'inertia', only: %i[index show new edit]
 
     # params:
     #   :q Text search
@@ -161,6 +161,7 @@ module Backend
       end
 
       render inertia: 'Backend/Equipements/Show', props: {
+        can_destroy: @equipment.destroyable?,
         equipement: {
           'id'                    => @equipment.id,
           'name'                  => @equipment.name.to_s,
@@ -201,6 +202,7 @@ module Backend
 
     def edit
       return unless @equipment = find_and_check
+
       render inertia: 'Backend/Equipements/Form', props: {
         equipement: equipement_form_props(@equipment),
         errors: {}
@@ -209,6 +211,7 @@ module Backend
 
     def update
       return unless @equipment = find_and_check
+
       if @equipment.update(permitted_equipement_params)
         redirect_to backend_equipment_path(@equipment), notice: 'Équipement mis à jour.'
       else
@@ -231,7 +234,8 @@ module Backend
           'work_number'  => e.work_number.to_s,
           'name'         => e.name.to_s,
           'born_at'      => e.born_at&.iso8601,
-          'variant_name' => e.variant&.name.to_s
+          'variant_name' => e.variant&.name.to_s,
+          'can_destroy'  => e.destroyable?
         }
       end
 
@@ -243,6 +247,18 @@ module Backend
           'per_page' => 50
         }
       }
+    end
+
+    def destroy
+      return unless @equipment = find_and_check
+
+      if @equipment.destroyable?
+        @equipment.destroy!
+        redirect_to backend_equipments_path, notice: 'Équipement supprimé.'
+      else
+        redirect_to backend_equipment_path(@equipment),
+                    alert: 'Impossible de supprimer : cet équipement a des participations à des interventions.'
+      end
     end
 
     def tool_costs_xslx_export

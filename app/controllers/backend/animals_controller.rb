@@ -175,7 +175,8 @@ module Backend
           'work_number' => a.work_number.to_s,
           'variety'     => a.variety.to_s,
           'born_at'     => a.born_at&.iso8601,
-          'dead_at'     => a.dead_at&.iso8601
+          'dead_at'     => a.dead_at&.iso8601,
+          'can_destroy' => a.destroyable?
         }
       end
 
@@ -215,6 +216,7 @@ module Backend
         end
 
       render inertia: 'Backend/Animaux/Show', props: {
+        can_destroy: @animal.destroyable?,
         animal: {
           'id'                    => @animal.id,
           'name'                  => @animal.name.to_s,
@@ -268,6 +270,18 @@ module Backend
           animal: animal_json(@animal),
           errors: @animal.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v }
         }, status: :unprocessable_entity
+      end
+    end
+
+    def destroy
+      return unless @animal = find_and_check
+
+      if @animal.destroyable?
+        @animal.destroy!
+        redirect_to backend_animals_path, notice: 'Animal supprimé.'
+      else
+        redirect_to backend_animal_path(@animal),
+                    alert: 'Impossible de supprimer : cet animal a des participations à des interventions.'
       end
     end
 

@@ -93,7 +93,8 @@ module Backend
           'number'      => w.number.to_s,
           'work_number' => w.work_number.to_s,
           'born_at'     => w.born_at&.iso8601,
-          'dead_at'     => w.dead_at&.iso8601
+          'dead_at'     => w.dead_at&.iso8601,
+          'can_destroy' => w.destroyable?
         }
       end
 
@@ -125,6 +126,7 @@ module Backend
         end
 
       render inertia: 'Backend/Travailleurs/Show', props: {
+        can_destroy: @worker.destroyable?,
         travailleur: {
           'id'                    => @worker.id,
           'name'                  => @worker.name.to_s,
@@ -177,6 +179,18 @@ module Backend
           travailleur: worker_json(@worker),
           errors: @worker.errors.messages.each_with_object({}) { |(k, v), h| h[k.to_s] = v }
         }, status: :unprocessable_entity
+      end
+    end
+
+    def destroy
+      return unless @worker = find_and_check
+
+      if @worker.destroyable?
+        @worker.destroy!
+        redirect_to backend_workers_path, notice: 'Travailleur supprimé.'
+      else
+        redirect_to backend_worker_path(@worker),
+                    alert: "Impossible de supprimer : ce travailleur a des interventions ou relevés d'heures liés."
       end
     end
 
