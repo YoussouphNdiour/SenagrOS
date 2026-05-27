@@ -17,7 +17,7 @@ test('ActionGroup renders buttons', () => {
 test('ConfirmDeleteButton shows confirm dialog', () => {
   vi.spyOn(window, 'confirm').mockReturnValue(true)
   const onDelete = vi.fn()
-  render(<ConfirmDeleteButton onDelete={onDelete} />)
+  render(<ConfirmDeleteButton onDelete={onDelete} canDestroy={true} resourceName="cet élément" />)
   fireEvent.click(screen.getByText('Supprimer'))
   expect(window.confirm).toHaveBeenCalled()
   expect(onDelete).toHaveBeenCalledOnce()
@@ -27,7 +27,7 @@ test('ConfirmDeleteButton shows confirm dialog', () => {
 test('ConfirmDeleteButton does not call onDelete when cancelled', () => {
   vi.spyOn(window, 'confirm').mockReturnValue(false)
   const onDelete = vi.fn()
-  render(<ConfirmDeleteButton onDelete={onDelete} />)
+  render(<ConfirmDeleteButton onDelete={onDelete} canDestroy={true} resourceName="cet élément" />)
   fireEvent.click(screen.getByText('Supprimer'))
   expect(onDelete).not.toHaveBeenCalled()
   vi.restoreAllMocks()
