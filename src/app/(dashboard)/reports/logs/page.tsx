@@ -1,0 +1,162 @@
+'use client';
+
+import { useState } from 'react';
+import { trpc } from '@/lib/trpc';
+import { KpiCard } from '@/components/ui/KpiCard';
+import { LogActivityChart } from '@/components/charts/LogActivityChart';
+import { ExportBar } from '@/components/charts/ExportBar';
+import { Activity, Sprout, Stethoscope, Droplets } from 'lucide-react';
+
+const TYPE_LABELS: Record<string, string> = {
+  activity: 'Activités',
+  observation: 'Observations',
+  input: 'Intrants',
+  harvest: 'Récoltes',
+  seeding: 'Semis',
+  transplanting: 'Repiquage',
+  birth: 'Naissances',
+  maintenance: 'Maintenance',
+  medical: 'Soins',
+  lab_test: 'Analyses',
+  movement: 'Mouvements',
+  irrigation: 'Irrigation',
+};
+
+export default function LogsReportPage() {
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
+  const [typeFilter, setTypeFilter] = useState('');
+
+  const { data, isLoading } = trpc.report.logs.useQuery({
+    type: typeFilter || undefined,
+    dateFrom: dateFrom || undefined,
+    dateTo: dateTo || undefined,
+  });
+
+  if (isLoading || !data) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-2xl font-bold text-gray-800">Rapport Activités</h1>
+        <div className="h-80 animate-pulse rounded-xl bg-gray-100" />
+      </div>
+    );
+  }
+
+  const exportData = data.items.map((item) => ({
+    Nom: item.name,
+    Type: TYPE_LABELS[item.type] ?? item.type,
+    Statut: item.status,
+    Date: new Date(item.timestamp).toLocaleDateString('fr-FR'),
+  }));
+
+  const harvestCount = data.byType.find((t) => t.type === 'harvest')?.count ?? 0;
+  const medicalCount = data.byType.find((t) => t.type === 'medical')?.count ?? 0;
+  const irrigationCount = data.byType.find((t) => t.type === 'irrigation')?.count ?? 0;
+
+  return (
+    <div id="report-logs" className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-800">Rapport Activités</h1>
+          <p className="mt-1 text-sm text-gray-500">Activité par type de log</p>
+        </div>
+        <ExportBar data={exportData} filename="rapport-activites" pdfElementId="report-logs" />
+      </div>
+
+      {/* Filters */}
+      <div className="flex flex-wrap gap-4">
+        <div>
+          <label className="mb-1 block text-xs text-gray-500">Type</label>
+          <select
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value)}
+            className="rounded-lg border border-gray-200 px-3 py-2 text-sm"
+          >
+            <option value="">Tous</option>
+            {Object.entries(TYPE_LABELS).map(([value, label]) => (
+              <option key={value} value={value}>{label}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="mb-1 block text-xs text-gray-500">Du</label>
+          <input
+            type="date"
+            value={dateFrom}
+            onChange={(e) => setDateFrom(e.target.value)}
+            className="rounded-lg border border-gray-200 px-3 py-2 text-sm"
+          />
+        </div>
+        <div>
+          <label className="mb-1 block text-xs text-gray-500">Au</label>
+          <input
+            type="date"
+            value={dateTo}
+            onChange={(e) => setDateTo(e.target.value)}
+            className="rounded-lg border border-gray-200 px-3 py-2 text-sm"
+          />
+        </div>
+      </div>
+
+      {/* KPIs */}
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <KpiCard title="Total activités" value={data.total} icon={Activity} color="green" />
+        <KpiCard title="Récoltes" value={harvestCount} icon={Sprout} color="blue" />
+        <KpiCard title="Soins" value={medicalCount} icon={Stethoscope} color="orange" />
+        <KpiCard title="Irrigations" value={irrigationCount} icon={Droplets} color="purple" />
+      </div>
+
+      {/* Chart */}
+      <LogActivityChart data={data.byType} />
+
+      {/* Timeline table */}
+      <div className="rounded-xl bg-white shadow-sm">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left text-sm">
+            <thead>
+              <tr className="border-b border-gray-100">
+                <th className="px-4 py-3 font-medium text-gray-500">Date</th>
+                <th className="px-4 py-3 font-medium text-gray-500">Type</th>
+                <th className="px-4 py-3 font-medium text-gray-500">Nom</th>
+                <th className="px-4 py-3 font-medium text-gray-500">Statut</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.items.map((item) => (
+                <tr key={item.id} className="border-b border-gray-50">
+                  <td className="px-4 py-3 text-gray-400">
+                    {new Date(item.timestamp).toLocaleDateString('fr-FR')}
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className="rounded bg-green-50 px-2 py-0.5 text-xs font-medium text-green-700">
+                      {TYPE_LABELS[item.type] ?? item.type}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 font-medium text-gray-700">{item.name}</td>
+                  <td className="px-4 py-3">
+                    <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${
+                      item.status === 'done'
+                        ? 'bg-green-100 text-green-700'
+                        : item.status === 'pending'
+                          ? 'bg-yellow-100 text-yellow-700'
+                          : 'bg-gray-100 text-gray-600'
+                    }`}>
+                      {item.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+              {data.items.length === 0 && (
+                <tr>
+                  <td colSpan={4} className="px-4 py-8 text-center text-gray-400">
+                    Aucune activité trouvée
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+}
