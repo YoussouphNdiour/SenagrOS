@@ -149,12 +149,12 @@ Montrer : creer un calendrier haricot vert, l'assigner a P-06, voir la timeline
 ## Phase 9 : Offline / PWA (1 session)
 
 ### Livrables
-- [ ] ServiceWorker avec cache-first
-- [ ] Queue de sync mutations offline (IndexedDB)
-- [ ] OfflineBanner
-- [ ] Page `/offline`
-- [ ] Manifest PWA (install prompt)
-- [ ] Tests offline
+- [x] ServiceWorker avec cache-first
+- [x] Queue de sync mutations offline (IndexedDB)
+- [x] OfflineBanner
+- [x] Page `/offline`
+- [x] Manifest PWA (install prompt)
+- [x] Tests offline
 
 ---
 

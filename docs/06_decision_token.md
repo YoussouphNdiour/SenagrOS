@@ -85,11 +85,11 @@
 
 ## Decisions a prendre (ouvertes)
 
-### DT-OPEN-001 : Strategie de sync offline
-Options :
-- a) Queue simple (store mutations, replay au retour reseau)
-- b) CRDT (Conflict-free Replicated Data Types)
-- c) IndexedDB + sync periodique
+### DT-OPEN-001 : Strategie de sync offline — FERMEE
+- **Date de decision** : 2026-09-04
+- **Choix retenu** : (a) Queue simple (store mutations, replay au retour reseau)
+- **Raison** : Suffisant pour le MVP, implementation simple avec IndexedDB + FIFO replay + last-write-wins. CRDT (b) et sync periodique (c) reportes a une phase ulterieure si les conflits deviennent un probleme terrain.
+- **Implementation** : `src/lib/offline/sync-queue.ts` — `IndexedDBQueue` + `MemoryQueue` (SSR), `src/hooks/useOfflineSync.ts`
 
 ### DT-OPEN-002 : Storage fichiers
 Options :

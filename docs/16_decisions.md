@@ -321,4 +321,39 @@ Chaque session ajoute ses decisions ici. Ne pas supprimer les entrees precedente
 
 ---
 
+## SESSION-010 — 2026-09-04 — Phase 9 : Offline / PWA
+
+**Decisions prises :**
+1. @serwist/next au lieu de next-pwa — next-pwa abandonne en 2024, @serwist/next est le fork actif avec support Next.js 15 App Router et types TypeScript integres
+2. ServiceWorker dans `src/app/sw.ts` (App Router convention) — Chemin resolu par @serwist/next, coherent avec la structure App Router
+3. `OfflineSyncQueue` avec 2 implementations (`IndexedDBQueue` prod + `MemoryQueue` SSR/test) — Pattern Adapter pour eviter les erreurs `indexedDB is not defined` cote serveur
+4. `useSyncExternalStore` pour l'etat offline (pas useState/useEffect) — API React stable pour les sources externes, evite les race conditions hydratation
+5. Replay FIFO via fetch natif — Les mutations en queue sont rejouees dans l'ordre d'insertion (First-In First-Out), simple et deterministe
+6. Last-write-wins pour les conflits — Pas de CRDT pour le MVP, la derniere mutation l'emporte. Documente comme dette technique
+7. `manifest.ts` via Next.js Metadata API (`MetadataRoute.Manifest`) — Pas de fichier JSON statique, genere le `manifest.webmanifest` dynamiquement avec typage TypeScript
+8. Icones SVG placeholder (`icon-192x192.svg`, `icon-512x512.svg`) — Pas de PNG fourni par le design, SVG suffisant pour le PWA install prompt
+9. SW desactive en mode dev (`disable: process.env.NODE_ENV === 'development'`) — Evite les conflits HMR et les caches obsoletes pendant le developpement
+10. Page `/offline` hors du groupe `(dashboard)` — Page accessible sans auth ni layout, rendue par le SW quand le reseau est absent
+
+**Problemes rencontres :**
+- Aucun probleme bloquant (session de creation pure)
+
+**Livrables completes :**
+1. `next.config.ts` — Mise a jour avec @serwist/next plugin (withSerwist wrapper, swSrc, swDest, disable dev)
+2. `src/app/sw.ts` — ServiceWorker @serwist avec defaultCache + cache navigations offline fallback vers /offline
+3. `src/app/manifest.ts` — MetadataRoute.Manifest avec name, short_name, theme_color #16a34a, display standalone, 2 icones SVG
+4. `public/icons/icon-192x192.svg` + `public/icons/icon-512x512.svg` — Icones SVG placeholder vertes
+5. `src/app/offline/page.tsx` — Page hors ligne avec WifiOff, "Vous etes hors ligne", bouton Reessayer (Server Component)
+6. `src/lib/offline/sync-queue.ts` — Interface `OfflineSyncQueue` + `IndexedDBQueue` + `MemoryQueue` + factory `createSyncQueue()`
+7. `src/hooks/useOfflineSync.ts` — Hook React avec `useSyncExternalStore`, detection online/offline, replay automatique au retour reseau
+8. `src/components/layout/OfflineBanner.tsx` — Banniere orange "Hors ligne" + bleue "Synchronisation en cours" avec counts
+9. `src/components/layout/InstallPrompt.tsx` — Bouton "Installer SenagrOS" avec BeforeInstallPromptEvent handler
+10. `src/components/layout/DashboardShell.tsx` — Mise a jour avec OfflineBanner et InstallPrompt
+11. `e2e/offline.spec.ts` — 3 scenarios E2E (banner online/offline, page /offline, manifest.webmanifest JSON)
+
+**Prochaines etapes :**
+1. Demarrer Phase 10 : i18n & Polish (FR/EN/WO, responsive mobile, recherche globale)
+
+---
+
 *Ajouter une entree ci-dessus a chaque session. Ne jamais supprimer.*
