@@ -1,9 +1,10 @@
 'use client';
 
 import { useState } from 'react';
+import { BottomNav } from './BottomNav';
+import { OfflineBanner } from './OfflineBanner';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
-import { BottomNav } from './BottomNav';
 
 interface DashboardShellProps {
   user: {
@@ -25,6 +26,7 @@ export function DashboardShell({ user, children }: DashboardShellProps) {
 
       {/* Main content */}
       <div className="flex flex-1 flex-col overflow-hidden">
+        <OfflineBanner />
         <Topbar user={user} onMenuClick={() => setSidebarOpen(true)} />
 
         <main className="flex-1 overflow-y-auto p-4 pb-20 md:p-6 md:pb-6">
