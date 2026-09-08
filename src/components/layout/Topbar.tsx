@@ -2,6 +2,7 @@
 
 import { Bell, LogOut, Menu, User } from 'lucide-react';
 import { signOut } from 'next-auth/react';
+import { LocaleSwitcher } from './LocaleSwitcher';
 
 interface TopbarProps {
   user: {
@@ -27,6 +28,7 @@ export function Topbar({ user, onMenuClick }: TopbarProps) {
       </div>
 
       <div className="flex items-center gap-3">
+        <LocaleSwitcher />
         <button className="relative rounded-lg p-2 text-gray-500 hover:bg-gray-100">
           <Bell className="h-5 w-5" />
         </button>

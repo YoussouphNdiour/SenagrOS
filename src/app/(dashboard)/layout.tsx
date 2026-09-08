@@ -1,6 +1,8 @@
 import { redirect } from 'next/navigation';
 import { auth } from '@/server/auth';
 import { DashboardShell } from '@/components/layout/DashboardShell';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 
 export default async function DashboardLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
@@ -8,5 +10,11 @@ export default async function DashboardLayout({ children }: { children: React.Re
     redirect('/login');
   }
 
-  return <DashboardShell user={session.user}>{children}</DashboardShell>;
+  const messages = await getMessages();
+
+  return (
+    <NextIntlClientProvider messages={messages}>
+      <DashboardShell user={session.user}>{children}</DashboardShell>
+    </NextIntlClientProvider>
+  );
 }
