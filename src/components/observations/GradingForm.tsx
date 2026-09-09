@@ -55,13 +55,13 @@ export function GradingForm() {
   );
 
   // --- Maturity index ---
-  const [matureAtDate, setMatureAtDate] = useState(0);
-  const [matureAtForecast, setMatureAtForecast] = useState(0);
-  const [immature, setImmature] = useState(0);
+  const matureAtDate = 0;
+  const matureAtForecast = 0;
+  const immature = 0;
 
   // --- Comments ---
-  const [estimatedYield, setEstimatedYield] = useState('');
-  const [estimatedHarvestDate, setEstimatedHarvestDate] = useState('');
+  const estimatedYield = '';
+  const estimatedHarvestDate = '';
   const [observerRemarks, setObserverRemarks] = useState('');
   const [supervisorRemarks, setSupervisorRemarks] = useState('');
 
@@ -80,15 +80,6 @@ export function GradingForm() {
   const marketablePct = useMemo(
     () => (totalTotal > 0 ? Math.round((marketableTotal / totalTotal) * 10000) / 100 : 0),
     [marketableTotal, totalTotal],
-  );
-
-  const maturityTotal = useMemo(
-    () => matureAtDate + matureAtForecast + immature,
-    [matureAtDate, matureAtForecast, immature],
-  );
-  const maturityPct = useMemo(
-    () => (maturityTotal > 0 ? Math.round((matureAtDate / maturityTotal) * 10000) / 100 : 0),
-    [matureAtDate, maturityTotal],
   );
 
   // --- Handlers ---

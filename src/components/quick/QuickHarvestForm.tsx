@@ -19,7 +19,6 @@ export function QuickHarvestForm() {
   const t = useTranslations('quick');
 
   const [parcelleId, setParcelleId] = useState('');
-  const [parcelleName, setParcelleName] = useState('');
   const [quantite, setQuantite] = useState('');
   const [qualite, setQualite] = useState('A');
   const [notes, setNotes] = useState('');
@@ -47,7 +46,7 @@ export function QuickHarvestForm() {
     setError(null);
     createMutation.mutate({
       type: 'harvest',
-      name: parcelleName ? `Récolte — ${parcelleName}` : 'Récolte rapide',
+      name: t('titleHarvest'),
       timestamp: new Date().toISOString(),
       status: 'done',
       notes: notes || undefined,

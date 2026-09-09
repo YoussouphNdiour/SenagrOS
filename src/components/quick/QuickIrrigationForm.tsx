@@ -19,7 +19,6 @@ export function QuickIrrigationForm() {
   const t = useTranslations('quick');
 
   const [parcelleId, setParcelleId] = useState('');
-  const [parcelleName, setParcelleName] = useState('');
   const [dureeMin, setDureeMin] = useState('');
   const [volumeLitres, setVolumeLitres] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +45,7 @@ export function QuickIrrigationForm() {
     setError(null);
     createMutation.mutate({
       type: 'irrigation',
-      name: parcelleName ? `Irrigation — ${parcelleName}` : 'Irrigation rapide',
+      name: t('titleIrrigation'),
       timestamp: new Date().toISOString(),
       status: 'done',
       data: {

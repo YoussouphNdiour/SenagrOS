@@ -19,7 +19,6 @@ export function QuickInputForm() {
   const t = useTranslations('quick');
 
   const [parcelleId, setParcelleId] = useState('');
-  const [parcelleName, setParcelleName] = useState('');
   const [produit, setProduit] = useState('');
   const [dose, setDose] = useState('');
   const [unite, setUnite] = useState('');

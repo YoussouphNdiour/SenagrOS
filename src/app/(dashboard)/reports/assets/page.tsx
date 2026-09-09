@@ -52,7 +52,6 @@ export default function AssetsReportPage() {
     [t('colDate')]: item.createdAt ? new Date(item.createdAt).toLocaleDateString('fr-FR') : '',
   }));
 
-  const landCount = data.byType.find((t) => t.type === 'land')?.count ?? 0;
   const plantCount = data.byType.find((t) => t.type === 'plant')?.count ?? 0;
   const animalCount = data.byType.find((t) => t.type === 'animal')?.count ?? 0;
   const equipCount = data.byType.find((t) => t.type === 'equipment')?.count ?? 0;

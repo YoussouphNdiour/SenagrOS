@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import {
   formTypeLabels,
-  defectTypeLabels,
 } from '@/lib/validators/observation.validator';
 
 interface ObservationDetailClientProps {

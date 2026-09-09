@@ -12,7 +12,6 @@ export default async function VentesPage() {
   }
 
   const t = await getTranslations('finances');
-  const tc = await getTranslations('common');
 
   return (
     <div>

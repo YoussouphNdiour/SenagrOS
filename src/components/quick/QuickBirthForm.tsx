@@ -19,7 +19,6 @@ export function QuickBirthForm() {
   const t = useTranslations('quick');
 
   const [animalParentId, setAnimalParentId] = useState('');
-  const [animalParentName, setAnimalParentName] = useState('');
   const [sexe, setSexe] = useState('male');
   const [poidsKg, setPoidsKg] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +45,7 @@ export function QuickBirthForm() {
     setError(null);
     createMutation.mutate({
       type: 'birth',
-      name: animalParentName ? `Naissance — ${animalParentName}` : 'Naissance rapide',
+      name: t('titleBirth'),
       timestamp: new Date().toISOString(),
       status: 'done',
       data: {

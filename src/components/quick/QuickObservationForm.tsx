@@ -19,7 +19,6 @@ export function QuickObservationForm() {
   const t = useTranslations('quick');
 
   const [parcelleId, setParcelleId] = useState('');
-  const [parcelleName, setParcelleName] = useState('');
   const [obsType, setObsType] = useState('emergence_density');
   const [notes, setNotes] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -53,7 +52,7 @@ export function QuickObservationForm() {
     setError(null);
     createMutation.mutate({
       type: 'observation',
-      name: parcelleName ? `Observation — ${parcelleName}` : 'Observation rapide',
+      name: t('titleObservation'),
       timestamp: new Date().toISOString(),
       status: 'done',
       notes: notes || undefined,

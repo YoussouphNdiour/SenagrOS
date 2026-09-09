@@ -1,7 +1,6 @@
 'use client';
 
 import { trpc } from '@/lib/trpc';
-import { KpiCard } from '@/components/ui/KpiCard';
 import { RevenueExpenseChart } from '@/components/charts/RevenueExpenseChart';
 import { WeatherWidget } from '@/components/charts/WeatherWidget';
 import {
