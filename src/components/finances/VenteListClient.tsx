@@ -2,10 +2,10 @@
 
 import { useState } from 'react';
 import { Trash2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { Card, CardHeader } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
 import { formatFCFA } from '@/lib/validators/finance.validator';
 
@@ -18,9 +18,9 @@ function formatDate(value: Date | string | null | undefined): string {
   return `${day}/${month}/${year}`;
 }
 
-const periodOptions = [{ value: 'month', label: 'Ce mois-ci' }];
-
 export function VenteListClient() {
+  const t = useTranslations('finances');
+  const tc = useTranslations('common');
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
 
@@ -42,24 +42,17 @@ export function VenteListClient() {
   return (
     <Card padding={false}>
       <div className="p-5">
-        <CardHeader title="Historique des ventes" />
+        <CardHeader title={t('ventesTitle')} />
 
         <div className="mb-4 flex flex-wrap items-end gap-3">
           <div className="w-64">
             <Input
-              placeholder="Rechercher produit, client..."
+              placeholder={t('financeSearchPlaceholder')}
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
                 setPage(1);
               }}
-            />
-          </div>
-          <div className="w-44">
-            <Select
-              options={periodOptions}
-              value="month"
-              onChange={() => {}}
             />
           </div>
         </div>
@@ -71,7 +64,7 @@ export function VenteListClient() {
         </div>
       ) : data?.items.length === 0 ? (
         <div className="px-5 pb-8 pt-2 text-center text-sm text-gray-500">
-          Aucune vente enregistrée. Cliquez sur «&nbsp;Nouvelle vente&nbsp;» pour commencer.
+          {tc('noData')}
         </div>
       ) : (
         <>
@@ -79,12 +72,12 @@ export function VenteListClient() {
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-y border-gray-100 bg-gray-50 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                  <th className="px-5 py-3">Date</th>
-                  <th className="px-5 py-3">Produit</th>
-                  <th className="px-5 py-3">Client</th>
-                  <th className="px-5 py-3 text-right">Quantité</th>
-                  <th className="px-5 py-3 text-right">Prix Unit.</th>
-                  <th className="px-5 py-3 text-right">Montant</th>
+                  <th className="px-5 py-3">{t('venteColDate')}</th>
+                  <th className="px-5 py-3">{t('venteColProduct')}</th>
+                  <th className="px-5 py-3">{t('venteColClient')}</th>
+                  <th className="px-5 py-3 text-right">{t('venteColQuantity')}</th>
+                  <th className="px-5 py-3 text-right">{t('venteColUnitPrice')}</th>
+                  <th className="px-5 py-3 text-right">{t('venteColAmount')}</th>
                   <th className="px-5 py-3" />
                 </tr>
               </thead>
@@ -117,7 +110,7 @@ export function VenteListClient() {
                         className="inline-flex items-center rounded p-1 text-gray-400 transition hover:bg-red-50 hover:text-red-500 disabled:opacity-40"
                         disabled={deleteMutation.isPending}
                         onClick={() => deleteMutation.mutate({ id: row.id })}
-                        title="Supprimer"
+                        title={tc('delete')}
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -131,7 +124,7 @@ export function VenteListClient() {
           {data && data.pages > 1 && (
             <div className="flex items-center justify-between border-t border-gray-100 px-5 py-3">
               <p className="text-xs text-gray-500">
-                Page {data.page} / {data.pages} ({data.total} résultats)
+                {tc('page')} {data.page} / {data.pages} ({data.total} {tc('results')})
               </p>
               <div className="flex gap-2">
                 <Button
@@ -140,7 +133,7 @@ export function VenteListClient() {
                   disabled={page <= 1}
                   onClick={() => setPage((p) => p - 1)}
                 >
-                  Précédent
+                  {tc('previous')}
                 </Button>
                 <Button
                   variant="outline"
@@ -148,7 +141,7 @@ export function VenteListClient() {
                   disabled={page >= data.pages}
                   onClick={() => setPage((p) => p + 1)}
                 >
-                  Suivant
+                  {tc('next')}
                 </Button>
               </div>
             </div>

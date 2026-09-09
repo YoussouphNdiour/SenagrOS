@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Search, TrendingDown, TrendingUp, Scale } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { Card, CardHeader } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
@@ -24,35 +25,6 @@ interface JournalEntry extends Record<string, unknown> {
 
 const currentYear = new Date().getFullYear();
 
-const yearOptions = [{ value: String(currentYear), label: String(currentYear) }];
-
-const typeOptions = [
-  { value: '', label: 'Tous les types' },
-  { value: 'charges', label: 'Charges' },
-  { value: 'produits', label: 'Produits' },
-  { value: 'ventes', label: 'Ventes' },
-  { value: 'achats', label: 'Achats' },
-  { value: 'caisse', label: 'Caisse' },
-  { value: 'banque', label: 'Banque' },
-];
-
-const categoryOptions = [
-  { value: '', label: 'Toutes les catégories' },
-  { value: 'vente_produit', label: 'Vente de produit' },
-  { value: 'vente_betail', label: 'Vente de bétail' },
-  { value: 'prestation', label: 'Prestation de service' },
-  { value: 'achat_intrant', label: 'Achat intrant' },
-  { value: 'achat_equipement', label: 'Achat équipement' },
-  { value: 'achat_semence', label: 'Achat semence' },
-  { value: 'main_oeuvre', label: "Main d'œuvre" },
-  { value: 'transport', label: 'Transport' },
-  { value: 'entretien', label: 'Entretien' },
-  { value: 'energie', label: 'Énergie' },
-  { value: 'loyer', label: 'Loyer' },
-  { value: 'subvention', label: 'Subvention' },
-  { value: 'autre', label: 'Autre' },
-];
-
 function formatDate(date: Date | null): string {
   if (!date) return '—';
   return new Date(date).toLocaleDateString('fr-FR', {
@@ -63,12 +35,43 @@ function formatDate(date: Date | null): string {
 }
 
 export function ComptabiliteClient() {
+  const t = useTranslations('finances');
+  const tc = useTranslations('common');
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [selectedType, setSelectedType] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [startDate, setStartDate] = useState(`${currentYear}-01-01`);
   const [endDate, setEndDate] = useState(`${currentYear}-12-31`);
+
+  const yearOptions = [{ value: String(currentYear), label: String(currentYear) }];
+
+  const typeOptions = [
+    { value: '', label: tc('allTypes') },
+    { value: 'charges', label: t('accountCharges') },
+    { value: 'produits', label: t('accountProduits') },
+    { value: 'ventes', label: t('accountVentes') },
+    { value: 'achats', label: t('accountAchats') },
+    { value: 'caisse', label: t('accountCaisse') },
+    { value: 'banque', label: t('accountBanque') },
+  ];
+
+  const categoryOptions = [
+    { value: '', label: tc('allTypes') },
+    { value: 'vente_produit', label: t('transCatVenteProduit') },
+    { value: 'vente_betail', label: t('transCatVenteBetail') },
+    { value: 'prestation', label: t('transCatPrestation') },
+    { value: 'achat_intrant', label: t('transCatAchatIntrant') },
+    { value: 'achat_equipement', label: t('transCatAchatEquipement') },
+    { value: 'achat_semence', label: t('transCatAchatSemence') },
+    { value: 'main_oeuvre', label: t('transCatMainOeuvre') },
+    { value: 'transport', label: t('transCatTransport') },
+    { value: 'entretien', label: t('transCatEntretien') },
+    { value: 'energie', label: t('transCatEnergie') },
+    { value: 'loyer', label: t('transCatLoyer') },
+    { value: 'subvention', label: t('transCatSubvention') },
+    { value: 'autre', label: t('transCatAutre') },
+  ];
 
   const { data, isLoading } = trpc.finance.listJournal.useQuery({
     search: search || undefined,
@@ -83,7 +86,7 @@ export function ComptabiliteClient() {
   const columns = [
     {
       key: 'date',
-      header: 'Date',
+      header: tc('date'),
       render: (row: JournalEntry) => (
         <span className="whitespace-nowrap text-gray-600">{formatDate(row.date)}</span>
       ),
@@ -104,7 +107,7 @@ export function ComptabiliteClient() {
     },
     {
       key: 'debit',
-      header: 'Débit (FCFA)',
+      header: t('comptaTotalDebit'),
       render: (row: JournalEntry) => {
         const amount = Number(row.debit);
         return amount > 0 ? (
@@ -117,7 +120,7 @@ export function ComptabiliteClient() {
     },
     {
       key: 'credit',
-      header: 'Crédit (FCFA)',
+      header: t('comptaTotalCredit'),
       render: (row: JournalEntry) => {
         const amount = Number(row.credit);
         return amount > 0 ? (
@@ -140,7 +143,7 @@ export function ComptabiliteClient() {
       <div className="space-y-4">
         <div className="flex flex-wrap items-center gap-2">
           <p className="text-sm font-medium text-gray-600">
-            Période comptable —{' '}
+            {t('comptaYear')} —{' '}
             <span className="font-bold text-gray-800">{currentYear}</span>
           </p>
         </div>
@@ -152,7 +155,7 @@ export function ComptabiliteClient() {
             value={String(currentYear)}
             onChange={() => {}}
             className="w-28"
-            aria-label="Année"
+            aria-label={t('comptaYear')}
           />
 
           {/* Account / type select */}
@@ -164,7 +167,7 @@ export function ComptabiliteClient() {
               setPage(1);
             }}
             className="w-44"
-            aria-label="Type"
+            aria-label={t('comptaType')}
           />
 
           {/* Category select */}
@@ -176,7 +179,7 @@ export function ComptabiliteClient() {
               setPage(1);
             }}
             className="w-52"
-            aria-label="Catégorie"
+            aria-label={t('comptaCategory')}
           />
 
           {/* Date range */}
@@ -188,7 +191,7 @@ export function ComptabiliteClient() {
               setPage(1);
             }}
             className="w-40"
-            aria-label="Date de début"
+            aria-label={t('comptaDateFrom')}
           />
           <Input
             type="date"
@@ -198,7 +201,7 @@ export function ComptabiliteClient() {
               setPage(1);
             }}
             className="w-40"
-            aria-label="Date de fin"
+            aria-label={t('comptaDateTo')}
           />
 
           {/* Search */}
@@ -206,7 +209,7 @@ export function ComptabiliteClient() {
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
-              placeholder="Rechercher (catégorie, description, mode...)"
+              placeholder={t('comptaSearch')}
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
@@ -221,19 +224,19 @@ export function ComptabiliteClient() {
       {/* KPI summary row */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <KpiCard
-          title="Total Débit"
+          title={t('comptaTotalDebit')}
           value={formatFCFA(totalDebit)}
           icon={TrendingDown}
           color="red"
         />
         <KpiCard
-          title="Total Crédit"
+          title={t('comptaTotalCredit')}
           value={formatFCFA(totalCredit)}
           icon={TrendingUp}
           color="green"
         />
         <KpiCard
-          title="Solde"
+          title={t('comptaSolde')}
           value={formatFCFA(solde)}
           icon={Scale}
           color={solde >= 0 ? 'blue' : 'orange'}
@@ -243,7 +246,7 @@ export function ComptabiliteClient() {
       {/* Journal table */}
       <Card padding={false}>
         <div className="p-5">
-          <CardHeader title="Journal comptable" />
+          <CardHeader title={t('comptaJournal')} />
         </div>
 
         {isLoading ? (
@@ -254,7 +257,7 @@ export function ComptabiliteClient() {
           <DataTable<JournalEntry>
             columns={columns}
             data={(data?.items ?? []) as JournalEntry[]}
-            emptyMessage="Aucune écriture comptable sur cette période."
+            emptyMessage={t('comptaNoData')}
           />
         )}
       </Card>
@@ -263,7 +266,7 @@ export function ComptabiliteClient() {
       {data && data.pages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-gray-500">
-            {data.total} écriture{data.total > 1 ? 's' : ''} — Page {data.page}/{data.pages}
+            {data.total} — {tc('page')} {data.page}/{data.pages}
           </p>
           <div className="flex gap-2">
             <Button
@@ -272,7 +275,7 @@ export function ComptabiliteClient() {
               disabled={page <= 1}
               onClick={() => setPage((p) => p - 1)}
             >
-              Précédent
+              {tc('previous')}
             </Button>
             <Button
               variant="outline"
@@ -280,7 +283,7 @@ export function ComptabiliteClient() {
               disabled={page >= data.pages}
               onClick={() => setPage((p) => p + 1)}
             >
-              Suivant
+              {tc('next')}
             </Button>
           </div>
         </div>
@@ -288,14 +291,14 @@ export function ComptabiliteClient() {
 
       {/* Compte de résultat */}
       <Card>
-        <CardHeader title={`Compte de résultat — Année ${currentYear}`} />
+        <CardHeader title={`${t('comptaJournal')} — ${currentYear}`} />
         <div className="mt-2 space-y-3">
           <div className="flex items-center justify-between rounded-lg bg-red-50 px-4 py-3">
-            <span className="text-sm font-medium text-gray-700">Total Charges (Débit)</span>
+            <span className="text-sm font-medium text-gray-700">{t('comptaTotalCharges')}</span>
             <span className="font-bold text-red-600">{formatFCFA(totalDebit)}</span>
           </div>
           <div className="flex items-center justify-between rounded-lg bg-green-50 px-4 py-3">
-            <span className="text-sm font-medium text-gray-700">Total Produits (Crédit)</span>
+            <span className="text-sm font-medium text-gray-700">{t('comptaTotalProduits')}</span>
             <span className="font-bold text-green-600">{formatFCFA(totalCredit)}</span>
           </div>
           <div

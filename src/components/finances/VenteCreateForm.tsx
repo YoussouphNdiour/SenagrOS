@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
@@ -11,12 +12,6 @@ import {
   formatFCFA,
   paymentMethodLabels,
 } from '@/lib/validators/finance.validator';
-
-const paymentMethodOptions = [
-  { value: 'cash', label: paymentMethodLabels.cash },
-  { value: 'bank', label: paymentMethodLabels.bank },
-  { value: 'mobile_money', label: paymentMethodLabels.mobile_money },
-];
 
 interface FormErrors {
   productName?: string;
@@ -28,6 +23,14 @@ interface FormErrors {
 export function VenteCreateForm() {
   const router = useRouter();
   const utils = trpc.useUtils();
+  const t = useTranslations('finances');
+  const tc = useTranslations('common');
+
+  const paymentMethodOptions = [
+    { value: 'cash', label: paymentMethodLabels.cash },
+    { value: 'bank', label: paymentMethodLabels.bank },
+    { value: 'mobile_money', label: paymentMethodLabels.mobile_money },
+  ];
 
   const [productName, setProductName] = useState('');
   const [quantity, setQuantity] = useState('');
@@ -89,12 +92,12 @@ export function VenteCreateForm() {
       )}
 
       <Card>
-        <h2 className="mb-4 text-lg font-semibold text-gray-700">Informations produit</h2>
+        <h2 className="mb-4 text-lg font-semibold text-gray-700">{t('venteFormProductSection')}</h2>
         <div className="space-y-4">
           <Input
             id="productName"
-            label="Produit *"
-            placeholder="Ex: Mil, Arachide, Tomate..."
+            label={t('venteFormProduct')}
+            placeholder={t('venteFormProductPlaceholder')}
             value={productName}
             onChange={(e) => setProductName(e.target.value)}
             error={errors.productName}
@@ -103,7 +106,7 @@ export function VenteCreateForm() {
           <div className="grid gap-4 sm:grid-cols-3">
             <Input
               id="quantity"
-              label="Quantité *"
+              label={t('venteFormQuantity')}
               type="number"
               min="0.001"
               step="0.001"
@@ -114,7 +117,7 @@ export function VenteCreateForm() {
             />
             <Input
               id="unitPrice"
-              label="Prix unitaire (FCFA) *"
+              label={t('venteFormUnitPrice')}
               type="number"
               min="1"
               step="1"
@@ -125,8 +128,8 @@ export function VenteCreateForm() {
             />
             <Input
               id="unit"
-              label="Unité"
-              placeholder="kg, sac, tonne..."
+              label={t('venteFormUnit')}
+              placeholder={t('venteFormUnitPlaceholder')}
               value={unit}
               onChange={(e) => setUnit(e.target.value)}
             />
@@ -134,7 +137,7 @@ export function VenteCreateForm() {
 
           {total !== null && (
             <div className="rounded-lg bg-green-50 px-4 py-3">
-              <p className="text-sm text-gray-600">Total calculé</p>
+              <p className="text-sm text-gray-600">{t('venteFormTotal')}</p>
               <p className="text-xl font-bold text-green-700">{formatFCFA(total)}</p>
             </div>
           )}
@@ -142,12 +145,12 @@ export function VenteCreateForm() {
       </Card>
 
       <Card>
-        <h2 className="mb-4 text-lg font-semibold text-gray-700">Client & paiement</h2>
+        <h2 className="mb-4 text-lg font-semibold text-gray-700">{t('venteFormClientSection')}</h2>
         <div className="space-y-4">
           <Input
             id="clientName"
-            label="Nom du client"
-            placeholder="Nom ou raison sociale"
+            label={t('venteFormClient')}
+            placeholder={t('venteFormClientPlaceholder')}
             value={clientName}
             onChange={(e) => setClientName(e.target.value)}
           />
@@ -155,7 +158,7 @@ export function VenteCreateForm() {
           <div className="grid gap-4 sm:grid-cols-2">
             <Input
               id="date"
-              label="Date *"
+              label={t('venteFormDate')}
               type="date"
               value={date}
               onChange={(e) => setDate(e.target.value)}
@@ -163,7 +166,7 @@ export function VenteCreateForm() {
             />
             <Select
               id="paymentMethod"
-              label="Mode de paiement"
+              label={t('venteFormPayment')}
               options={paymentMethodOptions}
               value={paymentMethod}
               onChange={(e) =>
@@ -175,11 +178,11 @@ export function VenteCreateForm() {
       </Card>
 
       <Card>
-        <h2 className="mb-4 text-lg font-semibold text-gray-700">Notes</h2>
+        <h2 className="mb-4 text-lg font-semibold text-gray-700">{t('venteFormNotesSection')}</h2>
         <textarea
           className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
           rows={3}
-          placeholder="Remarques ou informations complémentaires..."
+          placeholder={t('venteFormNotesPlaceholder')}
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
         />
@@ -191,10 +194,10 @@ export function VenteCreateForm() {
           variant="outline"
           onClick={() => router.push('/ventes')}
         >
-          Annuler
+          {tc('cancel')}
         </Button>
         <Button type="submit" disabled={createMutation.isPending}>
-          {createMutation.isPending ? 'Enregistrement...' : 'Enregistrer la vente'}
+          {createMutation.isPending ? tc('registering') : tc('save')}
         </Button>
       </div>
     </form>

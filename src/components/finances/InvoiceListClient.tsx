@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Trash2, CheckCircle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { Badge } from '@/components/ui/Badge';
 import { Input } from '@/components/ui/Input';
@@ -26,13 +27,6 @@ const statusBadgeVariant: Record<InvoiceStatus, BadgeVariant> = {
 
 type TabKey = '' | InvoiceType;
 
-const tabs: { key: TabKey; label: string }[] = [
-  { key: '', label: 'Tous' },
-  { key: 'devis', label: invoiceTypeLabels.devis },
-  { key: 'proforma', label: invoiceTypeLabels.proforma },
-  { key: 'facture', label: invoiceTypeLabels.facture },
-];
-
 interface InvoiceRow {
   id: string;
   invoiceNumber: string;
@@ -45,9 +39,18 @@ interface InvoiceRow {
 
 export function InvoiceListClient() {
   const utils = trpc.useUtils();
+  const t = useTranslations('finances');
+  const tc = useTranslations('common');
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState<TabKey>('');
   const [page, setPage] = useState(1);
+
+  const tabs: { key: TabKey; label: string }[] = [
+    { key: '', label: tc('total') },
+    { key: 'devis', label: invoiceTypeLabels.devis },
+    { key: 'proforma', label: invoiceTypeLabels.proforma },
+    { key: 'facture', label: invoiceTypeLabels.facture },
+  ];
 
   const { data, isLoading } = trpc.finance.listInvoices.useQuery({
     type: typeFilter !== '' ? typeFilter : undefined,
@@ -71,7 +74,7 @@ export function InvoiceListClient() {
   });
 
   const handleDelete = (id: string) => {
-    if (confirm('Supprimer ce document ?')) {
+    if (confirm(tc('delete'))) {
       deleteMutation.mutate({ id });
     }
   };
@@ -86,10 +89,10 @@ export function InvoiceListClient() {
       {/* Header */}
       <div className="border-b border-gray-100 px-5 pt-5">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-lg font-semibold text-gray-800">Documents</h2>
+          <h2 className="text-lg font-semibold text-gray-800">{t('invoiceColDoc')}</h2>
           <div className="w-64">
             <Input
-              placeholder="N° ou client..."
+              placeholder={t('invoiceColClient')}
               value={search}
               onChange={(e) => {
                 setSearch(e.target.value);
@@ -129,7 +132,7 @@ export function InvoiceListClient() {
           </div>
         ) : !data || data.items.length === 0 ? (
           <p className="py-10 text-center text-sm text-gray-400">
-            Aucun document. Créez votre premier devis ou facture.
+            {tc('noData')}
           </p>
         ) : (
           <>
@@ -138,10 +141,10 @@ export function InvoiceListClient() {
                 <thead>
                   <tr className="border-b border-gray-100 text-left text-xs font-medium uppercase tracking-wide text-gray-400">
                     <th className="pb-3 pr-4">N°</th>
-                    <th className="pb-3 pr-4">Client</th>
-                    <th className="pb-3 pr-4">Date</th>
-                    <th className="pb-3 pr-4 text-right">Montant (FCFA)</th>
-                    <th className="pb-3 pr-4">Statut</th>
+                    <th className="pb-3 pr-4">{t('invoiceColClient')}</th>
+                    <th className="pb-3 pr-4">{t('invoiceColDate')}</th>
+                    <th className="pb-3 pr-4 text-right">{t('invoiceColAmount')}</th>
+                    <th className="pb-3 pr-4">{t('invoiceColStatus')}</th>
                     <th className="pb-3" />
                   </tr>
                 </thead>
@@ -168,7 +171,7 @@ export function InvoiceListClient() {
                           {row.type === 'facture' && (
                             <button
                               type="button"
-                              title={row.status === 'paid' ? 'Marquer comme envoyée' : 'Marquer comme payée'}
+                              title={row.status === 'paid' ? t('invoiceStatusSent') : t('invoiceStatusPaid')}
                               onClick={() => handleTogglePaid(row)}
                               disabled={updateMutation.isPending}
                               className="rounded p-1 text-gray-400 transition hover:text-green-600 disabled:opacity-40"
@@ -178,7 +181,7 @@ export function InvoiceListClient() {
                           )}
                           <button
                             type="button"
-                            title="Supprimer"
+                            title={tc('delete')}
                             onClick={() => handleDelete(row.id)}
                             disabled={deleteMutation.isPending}
                             className="rounded p-1 text-gray-400 transition hover:text-red-600 disabled:opacity-40"
@@ -196,7 +199,7 @@ export function InvoiceListClient() {
             {data.pages > 1 && (
               <div className="mt-4 flex items-center justify-between">
                 <p className="text-sm text-gray-500">
-                  Page {data.page} / {data.pages} ({data.total} résultats)
+                  {tc('page')} {data.page} / {data.pages} ({data.total} {tc('results')})
                 </p>
                 <div className="flex gap-2">
                   <Button
@@ -205,7 +208,7 @@ export function InvoiceListClient() {
                     disabled={page <= 1}
                     onClick={() => setPage((p) => p - 1)}
                   >
-                    Précédent
+                    {tc('previous')}
                   </Button>
                   <Button
                     variant="outline"
@@ -213,7 +216,7 @@ export function InvoiceListClient() {
                     disabled={page >= data.pages}
                     onClick={() => setPage((p) => p + 1)}
                   >
-                    Suivant
+                    {tc('next')}
                   </Button>
                 </div>
               </div>

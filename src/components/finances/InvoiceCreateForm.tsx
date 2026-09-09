@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, X } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
@@ -33,6 +34,8 @@ const typeOptions = (Object.keys(invoiceTypeLabels) as InvoiceType[]).map((v) =>
 export function InvoiceCreateForm() {
   const router = useRouter();
   const utils = trpc.useUtils();
+  const t = useTranslations('finances');
+  const tc = useTranslations('common');
 
   const [type, setType] = useState<InvoiceType>('devis');
   const [clientName, setClientName] = useState('');
@@ -86,7 +89,7 @@ export function InvoiceCreateForm() {
     );
 
     if (validItems.length === 0) {
-      setError('Ajoutez au moins un article valide.');
+      setError(t('invoiceFormAddLine'));
       return;
     }
 
@@ -114,11 +117,11 @@ export function InvoiceCreateForm() {
         <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600">{error}</div>
       )}
 
-      {/* Type & client */}
+      {/* Type */}
       <div className="rounded-xl bg-white p-5 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold text-gray-700">Type de document</h2>
+        <h2 className="mb-4 text-lg font-semibold text-gray-700">{t('invoiceFormDocType')}</h2>
         <Select
-          label="Type"
+          label={tc('type')}
           id="invoice-type"
           options={typeOptions}
           value={type}
@@ -126,11 +129,12 @@ export function InvoiceCreateForm() {
         />
       </div>
 
+      {/* Client */}
       <div className="rounded-xl bg-white p-5 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold text-gray-700">Client</h2>
+        <h2 className="mb-4 text-lg font-semibold text-gray-700">{t('invoiceFormClientSection')}</h2>
         <div className="space-y-4">
           <Input
-            label="Nom du client"
+            label={t('invoiceFormClientName')}
             id="client-name"
             value={clientName}
             onChange={(e) => setClientName(e.target.value)}
@@ -138,7 +142,7 @@ export function InvoiceCreateForm() {
             placeholder="Mamadou Diallo"
           />
           <Input
-            label="Email (optionnel)"
+            label={t('invoiceFormClientEmail')}
             id="client-email"
             type="email"
             value={clientEmail}
@@ -146,7 +150,7 @@ export function InvoiceCreateForm() {
             placeholder="client@exemple.com"
           />
           <Input
-            label="Téléphone (optionnel)"
+            label={t('invoiceFormClientPhone')}
             id="client-phone"
             type="tel"
             value={clientPhone}
@@ -158,10 +162,10 @@ export function InvoiceCreateForm() {
 
       {/* Dates */}
       <div className="rounded-xl bg-white p-5 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold text-gray-700">Dates</h2>
+        <h2 className="mb-4 text-lg font-semibold text-gray-700">{t('invoiceFormDateSection')}</h2>
         <div className="grid gap-4 sm:grid-cols-2">
           <Input
-            label="Date d'émission"
+            label={t('invoiceFormIssueDate')}
             id="issue-date"
             type="date"
             value={issueDate}
@@ -169,7 +173,7 @@ export function InvoiceCreateForm() {
             required
           />
           <Input
-            label="Date d'échéance (optionnel)"
+            label={t('invoiceFormDueDate')}
             id="due-date"
             type="date"
             value={dueDate}
@@ -180,14 +184,14 @@ export function InvoiceCreateForm() {
 
       {/* Articles */}
       <div className="rounded-xl bg-white p-5 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold text-gray-700">Articles</h2>
+        <h2 className="mb-4 text-lg font-semibold text-gray-700">{t('invoiceFormLinesSection')}</h2>
         <div className="space-y-3">
           {/* Column headers */}
           <div className="hidden grid-cols-[1fr_80px_110px_110px_32px] gap-2 sm:grid">
-            <span className="text-xs font-medium text-gray-400">Produit / Service</span>
-            <span className="text-xs font-medium text-gray-400">Qté</span>
-            <span className="text-xs font-medium text-gray-400">Prix unit.</span>
-            <span className="text-xs font-medium text-gray-400">Total</span>
+            <span className="text-xs font-medium text-gray-400">{t('invoiceFormProduct')}</span>
+            <span className="text-xs font-medium text-gray-400">{t('invoiceFormQty')}</span>
+            <span className="text-xs font-medium text-gray-400">{t('invoiceFormUnitPrice')}</span>
+            <span className="text-xs font-medium text-gray-400">{t('invoiceFormTotal')}</span>
             <span />
           </div>
 
@@ -199,7 +203,7 @@ export function InvoiceCreateForm() {
                 className="grid grid-cols-1 gap-2 sm:grid-cols-[1fr_80px_110px_110px_32px] sm:items-center"
               >
                 <Input
-                  placeholder="Produit ou service"
+                  placeholder={t('invoiceFormProduct')}
                   value={item.productName}
                   onChange={(e) => updateItem(index, 'productName', e.target.value)}
                 />
@@ -207,7 +211,7 @@ export function InvoiceCreateForm() {
                   type="number"
                   min="0"
                   step="0.01"
-                  placeholder="Qté"
+                  placeholder={t('invoiceFormQty')}
                   value={item.quantity}
                   onChange={(e) => updateItem(index, 'quantity', e.target.value)}
                 />
@@ -215,7 +219,7 @@ export function InvoiceCreateForm() {
                   type="number"
                   min="0"
                   step="1"
-                  placeholder="Prix unit."
+                  placeholder={t('invoiceFormUnitPrice')}
                   value={item.unitPrice}
                   onChange={(e) => updateItem(index, 'unitPrice', e.target.value)}
                 />
@@ -243,16 +247,16 @@ export function InvoiceCreateForm() {
           onClick={addItem}
         >
           <Plus className="h-4 w-4" />
-          Ajouter un article
+          {t('invoiceFormAddLine')}
         </Button>
       </div>
 
       {/* Tax & notes */}
       <div className="rounded-xl bg-white p-5 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold text-gray-700">Taxes & notes</h2>
+        <h2 className="mb-4 text-lg font-semibold text-gray-700">{t('invoiceFormTaxSection')}</h2>
         <div className="space-y-4">
           <Input
-            label="Taxes (FCFA, optionnel)"
+            label={t('invoiceFormTax')}
             id="tax-amount"
             type="number"
             min="0"
@@ -265,13 +269,12 @@ export function InvoiceCreateForm() {
               htmlFor="notes"
               className="mb-1 block text-sm font-medium text-gray-700"
             >
-              Notes (optionnel)
+              {t('invoiceFormNotes')}
             </label>
             <textarea
               id="notes"
               rows={3}
               className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
-              placeholder="Conditions de paiement, instructions de livraison..."
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
             />
@@ -287,12 +290,12 @@ export function InvoiceCreateForm() {
         </div>
         {tax > 0 && (
           <div className="mt-1 flex items-center justify-between text-sm text-gray-600">
-            <span>Taxes</span>
+            <span>{t('invoiceFormTax')}</span>
             <span>{formatFCFA(tax)}</span>
           </div>
         )}
         <div className="mt-2 flex items-center justify-between border-t border-gray-200 pt-2 text-base font-bold text-gray-800">
-          <span>Total</span>
+          <span>{tc('total')}</span>
           <span className="text-green-700">{formatFCFA(grandTotal)}</span>
         </div>
       </div>
@@ -304,10 +307,10 @@ export function InvoiceCreateForm() {
           type="button"
           onClick={() => router.push('/facturation')}
         >
-          Annuler
+          {tc('cancel')}
         </Button>
         <Button type="submit" disabled={createMutation.isPending}>
-          {createMutation.isPending ? 'Création...' : 'Créer le document'}
+          {createMutation.isPending ? tc('creating') : tc('create')}
         </Button>
       </div>
     </form>

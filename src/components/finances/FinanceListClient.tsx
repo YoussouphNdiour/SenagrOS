@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Search, Trash2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { Card, CardHeader } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -13,20 +14,6 @@ import {
   transactionCategoryLabels,
 } from '@/lib/validators/finance.validator';
 import type { TransactionType, TransactionCategory } from '@/lib/validators/finance.validator';
-
-const typeOptions = [
-  { value: '', label: 'Tous les types' },
-  ...( Object.entries(transactionTypeLabels) as [TransactionType, string][]).map(
-    ([value, label]) => ({ value, label }),
-  ),
-];
-
-const categoryOptions = [
-  { value: '', label: 'Toutes les catégories' },
-  ...(Object.entries(transactionCategoryLabels) as [TransactionCategory, string][]).map(
-    ([value, label]) => ({ value, label }),
-  ),
-];
 
 function getTypeBadgeVariant(type: TransactionType): 'success' | 'danger' | 'info' | 'warning' {
   switch (type) {
@@ -65,10 +52,26 @@ interface Transaction {
 }
 
 export function FinanceListClient() {
+  const t = useTranslations('finances');
+  const tc = useTranslations('common');
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('');
   const [page, setPage] = useState(1);
+
+  const typeOptions = [
+    { value: '', label: tc('allTypes') },
+    ...( Object.entries(transactionTypeLabels) as [TransactionType, string][]).map(
+      ([value, label]) => ({ value, label }),
+    ),
+  ];
+
+  const categoryOptions = [
+    { value: '', label: tc('allTypes') },
+    ...(Object.entries(transactionCategoryLabels) as [TransactionCategory, string][]).map(
+      ([value, label]) => ({ value, label }),
+    ),
+  ];
 
   const currentMonth = new Date().toLocaleDateString('fr-FR', {
     month: 'long',
@@ -95,7 +98,7 @@ export function FinanceListClient() {
 
   return (
     <Card>
-      <CardHeader title={`Journal des transactions — ${currentMonth}`} />
+      <CardHeader title={`${t('financesTitle')} — ${currentMonth}`} />
 
       {/* Filters row */}
       <div className="mb-4 flex flex-wrap items-end gap-3">
@@ -103,7 +106,7 @@ export function FinanceListClient() {
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
-            placeholder="Rechercher une transaction..."
+            placeholder={t('financeSearchPlaceholder')}
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
@@ -141,18 +144,18 @@ export function FinanceListClient() {
         </div>
       ) : items.length === 0 ? (
         <p className="py-10 text-center text-sm text-gray-500">
-          Aucune transaction ne correspond aux filtres.
+          {tc('noData')}
         </p>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-100 text-left text-xs font-medium uppercase tracking-wide text-gray-500">
-                <th className="pb-3 pr-4">Date</th>
-                <th className="pb-3 pr-4">Description</th>
-                <th className="pb-3 pr-4">Catégorie</th>
-                <th className="pb-3 pr-4">Type</th>
-                <th className="pb-3 pr-4 text-right">Montant</th>
+                <th className="pb-3 pr-4">{t('financeColDate')}</th>
+                <th className="pb-3 pr-4">{t('financeColDescription')}</th>
+                <th className="pb-3 pr-4">{t('financeColCategory')}</th>
+                <th className="pb-3 pr-4">{t('financeColType')}</th>
+                <th className="pb-3 pr-4 text-right">{t('financeColAmount')}</th>
                 <th className="pb-3 w-12" />
               </tr>
             </thead>
@@ -182,13 +185,13 @@ export function FinanceListClient() {
                     <button
                       type="button"
                       onClick={() => {
-                        if (confirm('Supprimer cette transaction ?')) {
+                        if (confirm(t('financeDeleteConfirm'))) {
                           deleteMutation.mutate({ id: tx.id });
                         }
                       }}
                       disabled={deleteMutation.isPending}
                       className="rounded p-1 text-gray-400 hover:bg-red-50 hover:text-red-500 disabled:opacity-40"
-                      title="Supprimer"
+                      title={tc('delete')}
                     >
                       <Trash2 className="h-4 w-4" />
                     </button>
@@ -204,7 +207,7 @@ export function FinanceListClient() {
       {data && data.pages > 1 && (
         <div className="mt-4 flex items-center justify-between">
           <p className="text-sm text-gray-500">
-            {data.total} transaction{data.total > 1 ? 's' : ''} — Page {data.page}/{data.pages}
+            {data.total} — {tc('page')} {data.page}/{data.pages}
           </p>
           <div className="flex gap-2">
             <Button
@@ -213,7 +216,7 @@ export function FinanceListClient() {
               disabled={page <= 1}
               onClick={() => setPage((p) => p - 1)}
             >
-              Précédent
+              {tc('previous')}
             </Button>
             <Button
               variant="outline"
@@ -221,7 +224,7 @@ export function FinanceListClient() {
               disabled={page >= data.pages}
               onClick={() => setPage((p) => p + 1)}
             >
-              Suivant
+              {tc('next')}
             </Button>
           </div>
         </div>
