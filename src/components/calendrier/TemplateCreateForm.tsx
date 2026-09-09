@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -22,6 +23,8 @@ const cropOptions = Object.entries(cropTypeLabels).map(([value, label]) => ({
 
 export function TemplateCreateForm() {
   const router = useRouter();
+  const t = useTranslations('calendrier');
+  const tc = useTranslations('common');
 
   const [name, setName] = useState('');
   const [cropType, setCropType] = useState('');
@@ -90,27 +93,27 @@ export function TemplateCreateForm() {
   return (
     <Card>
       <h2 className="mb-6 text-lg font-semibold text-gray-800">
-        Nouveau modèle de calendrier
+        {t('formNewTemplate')}
       </h2>
 
       {/* Header fields */}
       <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
         <Input
-          label="Nom du calendrier"
+          label={t('fieldTemplateName')}
           type="text"
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Ex: Haricot vert Euforia — cycle 84j"
         />
         <Select
-          label="Culture"
+          label={t('fieldCropType')}
           options={cropOptions}
           value={cropType}
           onChange={(e) => handleCropTypeChange(e.target.value)}
-          placeholder="Sélectionner une culture"
+          placeholder={t('selectCrop')}
         />
         <Input
-          label="Variété"
+          label={t('fieldVariety')}
           type="text"
           value={variety}
           onChange={(e) => setVariety(e.target.value)}
@@ -118,35 +121,35 @@ export function TemplateCreateForm() {
         />
         <div className="flex items-end">
           <div className="rounded-lg bg-green-50 px-4 py-2.5 text-sm font-medium text-green-700">
-            Durée totale : {totalDays} jours
+            {t('fieldTotalDuration')} : {totalDays} {t('templateDays')}
           </div>
         </div>
       </div>
 
       {/* Notes */}
       <div className="mb-6">
-        <label htmlFor="template-notes" className="mb-1 block text-sm font-medium text-gray-700">Notes</label>
+        <label htmlFor="template-notes" className="mb-1 block text-sm font-medium text-gray-700">{tc('notes')}</label>
         <textarea
           id="template-notes"
           className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
           rows={2}
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          placeholder="Notes optionnelles..."
+          placeholder={t('notesOptional')}
         />
       </div>
 
       {/* Stages table */}
       <div className="mb-6">
-        <h3 className="mb-3 text-sm font-semibold text-gray-700">Stades du cycle cultural</h3>
+        <h3 className="mb-3 text-sm font-semibold text-gray-700">{t('cycleStages')}</h3>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-gray-200 text-left">
-                <th className="px-2 py-2 font-medium text-gray-600 w-10">#</th>
-                <th className="px-2 py-2 font-medium text-gray-600">Nom du stade</th>
-                <th className="px-2 py-2 font-medium text-gray-600 w-28">Durée (jours)</th>
-                <th className="px-2 py-2 font-medium text-gray-600">Actions associées</th>
+                <th className="px-2 py-2 font-medium text-gray-600 w-10">{t('stageColHash')}</th>
+                <th className="px-2 py-2 font-medium text-gray-600">{t('stageColName')}</th>
+                <th className="px-2 py-2 font-medium text-gray-600 w-28">{t('stageColDuration')}</th>
+                <th className="px-2 py-2 font-medium text-gray-600">{t('stageColActions')}</th>
                 <th className="px-2 py-2 w-10" />
               </tr>
             </thead>
@@ -160,7 +163,7 @@ export function TemplateCreateForm() {
                       value={stage.name}
                       onChange={(e) => updateStage(index, 'name', e.target.value)}
                       className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-200"
-                      placeholder="Nom du stade"
+                      placeholder={t('stageNamePlaceholder')}
                     />
                   </td>
                   <td className="px-2 py-2">
@@ -215,20 +218,20 @@ export function TemplateCreateForm() {
           className="mt-3 flex items-center gap-1 text-sm font-medium text-green-600 hover:text-green-700 transition"
         >
           <Plus className="h-4 w-4" />
-          Ajouter un stade
+          {t('addStage')}
         </button>
       </div>
 
       {/* Submit */}
       <div className="flex justify-end gap-3">
         <Button variant="outline" onClick={() => router.push('/calendrier/templates')}>
-          Annuler
+          {tc('cancel')}
         </Button>
         <Button
           onClick={handleSubmit}
           disabled={mutation.isPending || !name || !cropType || stages.filter((s) => s.name).length === 0}
         >
-          {mutation.isPending ? 'Enregistrement...' : 'Enregistrer'}
+          {mutation.isPending ? tc('saving') : t('saveTemplate')}
         </Button>
       </div>
     </Card>

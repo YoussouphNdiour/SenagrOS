@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -17,13 +18,15 @@ const typeOptions = Object.entries(planTypeLabels).map(([value, label]) => ({
   label,
 }));
 
-const seasonOptions = [
-  { value: '', label: 'Aucune' },
-  ...Object.entries(seasonLabels).map(([value, label]) => ({ value, label })),
-];
-
 export function PlanCreateForm() {
   const router = useRouter();
+  const t = useTranslations('plans');
+  const tc = useTranslations('common');
+
+  const seasonOptions = [
+    { value: '', label: tc('noResult') },
+    ...Object.entries(seasonLabels).map(([value, label]) => ({ value, label })),
+  ];
 
   const [name, setName] = useState('');
   const [type, setType] = useState('crop');
@@ -55,37 +58,37 @@ export function PlanCreateForm() {
   return (
     <form onSubmit={handleSubmit}>
       <Card>
-        <h2 className="mb-4 text-lg font-semibold text-gray-800">Informations du plan</h2>
+        <h2 className="mb-4 text-lg font-semibold text-gray-800">{t('formSectionInfo')}</h2>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Input
-            label="Nom du plan *"
-            placeholder="Ex: Campagne Hivernage 2026"
+            label={t('fieldName')}
+            placeholder={t('namePlaceholder')}
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
           />
           <Select
-            label="Type *"
+            label={t('fieldType')}
             options={typeOptions}
             value={type}
             onChange={(e) => setType(e.target.value)}
           />
           <Select
-            label="Saison"
+            label={t('fieldSeason')}
             options={seasonOptions}
             value={season}
             onChange={(e) => setSeason(e.target.value)}
           />
           <div /> {/* spacer */}
           <Input
-            label="Date de début"
+            label={t('fieldStartDate')}
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
           />
           <Input
-            label="Date de fin"
+            label={t('fieldEndDate')}
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
@@ -93,12 +96,12 @@ export function PlanCreateForm() {
         </div>
 
         <div className="mt-4">
-          <label htmlFor="plan-notes" className="mb-1 block text-sm font-medium text-gray-700">Notes</label>
+          <label htmlFor="plan-notes" className="mb-1 block text-sm font-medium text-gray-700">{tc('notes')}</label>
           <textarea
             id="plan-notes"
             className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
             rows={3}
-            placeholder="Notes ou objectifs du plan..."
+            placeholder={t('notesPlaceholder')}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
           />
@@ -107,15 +110,15 @@ export function PlanCreateForm() {
 
       <div className="mt-6 flex justify-end gap-3">
         <Button type="button" variant="outline" onClick={() => router.back()}>
-          Annuler
+          {tc('cancel')}
         </Button>
         <Button type="submit" disabled={mutation.isPending || !name.trim()}>
-          {mutation.isPending ? 'Création...' : 'Créer le plan'}
+          {mutation.isPending ? tc('creating') : t('createButton')}
         </Button>
       </div>
 
       {mutation.isError && (
-        <p className="mt-2 text-sm text-red-500">Erreur : {mutation.error.message}</p>
+        <p className="mt-2 text-sm text-red-500">{tc('error')} : {mutation.error.message}</p>
       )}
     </form>
   );

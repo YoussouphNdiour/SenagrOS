@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -34,6 +35,9 @@ const logStatusVariant: Record<string, 'success' | 'warning' | 'danger' | 'info'
 
 export function PlanDetailClient({ id }: PlanDetailClientProps) {
   const router = useRouter();
+  const t = useTranslations('plans');
+  const tl = useTranslations('logs');
+  const tc = useTranslations('common');
   const [showAddLog, setShowAddLog] = useState(false);
   const [selectedLogId, setSelectedLogId] = useState('');
 
@@ -71,7 +75,7 @@ export function PlanDetailClient({ id }: PlanDetailClientProps) {
 
   if (!plan) {
     return (
-      <div className="py-12 text-center text-gray-500">Plan introuvable</div>
+      <div className="py-12 text-center text-gray-500">{tc('noData')}</div>
     );
   }
 
@@ -122,19 +126,19 @@ export function PlanDetailClient({ id }: PlanDetailClientProps) {
             className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition"
           >
             <Edit className="h-4 w-4" />
-            Éditer
+            {tc('edit')}
           </Link>
           <button
             type="button"
             onClick={() => {
-              if (confirm('Supprimer ce plan ?')) {
+              if (confirm(t('deleteConfirm'))) {
                 deleteMutation.mutate({ id });
               }
             }}
             className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 transition"
           >
             <Trash2 className="h-4 w-4" />
-            Supprimer
+            {tc('delete')}
           </button>
         </div>
       </div>
@@ -143,17 +147,17 @@ export function PlanDetailClient({ id }: PlanDetailClientProps) {
       <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
         <Card>
           <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-400">
-            Informations
+            {tc('information')}
           </h3>
           <dl className="space-y-2">
-            <InfoRow label="Type" value={planTypeLabels[plan.type as PlanType] ?? plan.type} />
-            <InfoRow label="Statut" value={planStatusLabels[(plan.status ?? 'active') as PlanStatus] ?? plan.status} />
+            <InfoRow label={tc('type')} value={planTypeLabels[plan.type as PlanType] ?? plan.type} />
+            <InfoRow label={tc('status')} value={planStatusLabels[(plan.status ?? 'active') as PlanStatus] ?? plan.status} />
             {plan.season && (
-              <InfoRow label="Saison" value={seasonLabels[plan.season] ?? plan.season} />
+              <InfoRow label={t('fieldSeason')} value={seasonLabels[plan.season] ?? plan.season} />
             )}
-            {plan.startDate && <InfoRow label="Date début" value={plan.startDate} />}
-            {plan.endDate && <InfoRow label="Date fin" value={plan.endDate} />}
-            {plan.notes && <InfoRow label="Notes" value={plan.notes} />}
+            {plan.startDate && <InfoRow label={t('fieldStartDate')} value={plan.startDate} />}
+            {plan.endDate && <InfoRow label={t('fieldEndDate')} value={plan.endDate} />}
+            {plan.notes && <InfoRow label={tc('notes')} value={plan.notes} />}
           </dl>
         </Card>
 
@@ -164,7 +168,7 @@ export function PlanDetailClient({ id }: PlanDetailClientProps) {
           <div className="flex items-center gap-4">
             <div className="flex-1">
               <div className="mb-1 flex justify-between text-sm">
-                <span className="text-gray-600">Logs complétés</span>
+                <span className="text-gray-600">{tl('kpiDone')}</span>
                 <span className="font-medium text-gray-800">
                   {doneLogs} / {totalLogs}
                 </span>
@@ -182,14 +186,14 @@ export function PlanDetailClient({ id }: PlanDetailClientProps) {
             <div className="flex items-center gap-2">
               <CheckCircle className="h-5 w-5 text-green-500" />
               <div>
-                <p className="text-sm text-gray-500">Terminés</p>
+                <p className="text-sm text-gray-500">{tl('kpiDone')}</p>
                 <p className="text-lg font-semibold text-gray-800">{doneLogs}</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
               <Clock className="h-5 w-5 text-orange-500" />
               <div>
-                <p className="text-sm text-gray-500">En attente</p>
+                <p className="text-sm text-gray-500">{tl('kpiPending')}</p>
                 <p className="text-lg font-semibold text-gray-800">{totalLogs - doneLogs}</p>
               </div>
             </div>
@@ -201,7 +205,7 @@ export function PlanDetailClient({ id }: PlanDetailClientProps) {
       <Card>
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-800">
-            Logs associés ({totalLogs})
+            {tl('title')} ({totalLogs})
           </h3>
           <Button
             variant="outline"
@@ -209,11 +213,11 @@ export function PlanDetailClient({ id }: PlanDetailClientProps) {
           >
             {showAddLog ? (
               <>
-                <X className="mr-1.5 h-4 w-4" /> Fermer
+                <X className="mr-1.5 h-4 w-4" /> {tc('close')}
               </>
             ) : (
               <>
-                <Plus className="mr-1.5 h-4 w-4" /> Ajouter un log
+                <Plus className="mr-1.5 h-4 w-4" /> {tc('add')}
               </>
             )}
           </Button>
@@ -243,7 +247,7 @@ export function PlanDetailClient({ id }: PlanDetailClientProps) {
                 }}
                 disabled={!selectedLogId || addLogMutation.isPending}
               >
-                {addLogMutation.isPending ? 'Ajout...' : 'Associer'}
+                {addLogMutation.isPending ? tc('saving') : tc('validate')}
               </Button>
             </div>
             {addLogMutation.isError && (
@@ -254,8 +258,7 @@ export function PlanDetailClient({ id }: PlanDetailClientProps) {
 
         {logs.length === 0 ? (
           <div className="py-8 text-center text-gray-500">
-            <p>Aucun log associé à ce plan</p>
-            <p className="mt-1 text-sm">Utilisez le bouton ci-dessus pour associer des logs</p>
+            <p>{tc('noData')}</p>
           </div>
         ) : (
           <div className="space-y-2">
@@ -272,7 +275,7 @@ export function PlanDetailClient({ id }: PlanDetailClientProps) {
                     {log.name}
                   </Link>
                   <Badge variant={logStatusVariant[log.status ?? 'pending'] ?? 'default'}>
-                    {log.status === 'done' ? 'Terminé' : log.status === 'cancelled' ? 'Annulé' : 'En attente'}
+                    {log.status === 'done' ? tl('kpiDone') : log.status === 'cancelled' ? tl('kpiCancelled') : tl('kpiPending')}
                   </Badge>
                   <Badge variant="info">{log.type}</Badge>
                   {log.timestamp && (
@@ -284,7 +287,7 @@ export function PlanDetailClient({ id }: PlanDetailClientProps) {
                 <button
                   type="button"
                   onClick={() => {
-                    if (confirm('Retirer ce log du plan ?')) {
+                    if (confirm(t('deleteConfirm'))) {
                       removeLogMutation.mutate({ planId: id, logId: log.id });
                     }
                   }}

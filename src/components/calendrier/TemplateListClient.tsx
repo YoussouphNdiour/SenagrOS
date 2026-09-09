@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -20,6 +21,8 @@ interface StageItem {
 
 export function TemplateListClient() {
   const router = useRouter();
+  const t = useTranslations('calendrier');
+  const tc = useTranslations('common');
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
 
@@ -43,7 +46,7 @@ export function TemplateListClient() {
       <div className="mb-4">
         <Input
           type="text"
-          placeholder="Rechercher un modèle..."
+          placeholder={t('searchTemplate')}
           value={search}
           onChange={(e) => {
             setSearch(e.target.value);
@@ -53,12 +56,12 @@ export function TemplateListClient() {
       </div>
 
       {isLoading ? (
-        <p className="text-sm text-gray-500">Chargement...</p>
+        <p className="text-sm text-gray-500">{tc('loading')}</p>
       ) : items.length === 0 ? (
         <Card>
           <div className="py-8 text-center text-gray-500">
-            <p className="text-lg font-medium">Aucun modèle de calendrier</p>
-            <p className="mt-1 text-sm">Créez votre premier modèle pour commencer</p>
+            <p className="text-lg font-medium">{t('noTemplates')}</p>
+            <p className="mt-1 text-sm">{t('createFirstTemplate')}</p>
           </div>
         </Card>
       ) : (
@@ -81,10 +84,10 @@ export function TemplateListClient() {
                         <Badge variant="default">{template.variety}</Badge>
                       )}
                       <Badge variant="success">
-                        {template.totalDays ?? 0} jours
+                        {template.totalDays ?? 0} {t('templateDays')}
                       </Badge>
                       <Badge variant="default">
-                        {stages.length} stades
+                        {stages.length} {t('templateStages')}
                       </Badge>
                     </div>
                     {stages.length > 0 && (
@@ -106,7 +109,7 @@ export function TemplateListClient() {
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
-                      if (confirm('Supprimer ce modèle ?')) {
+                      if (confirm(t('deleteTemplateConfirm'))) {
                         deleteMutation.mutate({ id: template.id });
                       }
                     }}
@@ -128,17 +131,17 @@ export function TemplateListClient() {
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page <= 1}
           >
-            Précédent
+            {tc('previous')}
           </Button>
           <span className="text-sm text-gray-600">
-            Page {page} / {pages}
+            {tc('page')} {page} / {pages}
           </span>
           <Button
             variant="outline"
             onClick={() => setPage((p) => Math.min(pages, p + 1))}
             disabled={page >= pages}
           >
-            Suivant
+            {tc('next')}
           </Button>
         </div>
       )}

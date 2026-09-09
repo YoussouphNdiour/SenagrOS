@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -16,16 +17,6 @@ import {
 import type { PlanType, PlanStatus } from '@/lib/validators/plan.validator';
 import { Trash2 } from 'lucide-react';
 
-const typeOptions = [
-  { value: '', label: 'Tous les types' },
-  ...Object.entries(planTypeLabels).map(([value, label]) => ({ value, label })),
-];
-
-const statusOptions = [
-  { value: '', label: 'Tous les statuts' },
-  ...Object.entries(planStatusLabels).map(([value, label]) => ({ value, label })),
-];
-
 const statusVariant: Record<string, 'success' | 'warning' | 'danger' | 'info' | 'default'> = {
   active: 'info',
   completed: 'success',
@@ -33,12 +24,24 @@ const statusVariant: Record<string, 'success' | 'warning' | 'danger' | 'info' | 
 };
 
 export function PlanListClient() {
+  const t = useTranslations('plans');
+  const tc = useTranslations('common');
   const [search, setSearch] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [page, setPage] = useState(1);
 
   const utils = trpc.useUtils();
+
+  const typeOptions = [
+    { value: '', label: tc('allTypes') },
+    ...Object.entries(planTypeLabels).map(([value, label]) => ({ value, label })),
+  ];
+
+  const statusOptions = [
+    { value: '', label: tc('allStatuses') },
+    ...Object.entries(planStatusLabels).map(([value, label]) => ({ value, label })),
+  ];
 
   const { data, isLoading } = trpc.plan.list.useQuery({
     search: search || undefined,
@@ -64,7 +67,7 @@ export function PlanListClient() {
         <div className="flex-1">
           <Input
             type="text"
-            placeholder="Rechercher un plan..."
+            placeholder={t('searchPlaceholder')}
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
@@ -95,12 +98,12 @@ export function PlanListClient() {
       </div>
 
       {isLoading ? (
-        <p className="text-sm text-gray-500">Chargement...</p>
+        <p className="text-sm text-gray-500">{tc('loading')}</p>
       ) : items.length === 0 ? (
         <Card>
           <div className="py-8 text-center text-gray-500">
-            <p className="text-lg font-medium">Aucun plan trouvé</p>
-            <p className="mt-1 text-sm">Créez votre premier plan de campagne</p>
+            <p className="text-lg font-medium">{t('noPlans')}</p>
+            <p className="mt-1 text-sm">{t('createFirstPlan')}</p>
           </div>
         </Card>
       ) : (
@@ -125,9 +128,9 @@ export function PlanListClient() {
                   </div>
                   {(plan.startDate || plan.endDate) && (
                     <p className="mt-2 text-sm text-gray-500">
-                      {plan.startDate && `Du ${plan.startDate}`}
+                      {plan.startDate && `${tc('from')} ${plan.startDate}`}
                       {plan.startDate && plan.endDate && ' '}
-                      {plan.endDate && `au ${plan.endDate}`}
+                      {plan.endDate && `${tc('to')} ${plan.endDate}`}
                     </p>
                   )}
                 </Link>
@@ -135,7 +138,7 @@ export function PlanListClient() {
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    if (confirm('Supprimer ce plan ?')) {
+                    if (confirm(t('deleteConfirm'))) {
                       deleteMutation.mutate({ id: plan.id });
                     }
                   }}
@@ -156,17 +159,17 @@ export function PlanListClient() {
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page <= 1}
           >
-            Précédent
+            {tc('previous')}
           </Button>
           <span className="text-sm text-gray-600">
-            Page {page} / {pages}
+            {tc('page')} {page} / {pages}
           </span>
           <Button
             variant="outline"
             onClick={() => setPage((p) => Math.min(pages, p + 1))}
             disabled={page >= pages}
           >
-            Suivant
+            {tc('next')}
           </Button>
         </div>
       )}

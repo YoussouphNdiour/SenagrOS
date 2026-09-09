@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -13,6 +14,8 @@ import type { Stage } from '@/lib/validators/calendar.validator';
 
 export function AssignCalendarForm() {
   const router = useRouter();
+  const t = useTranslations('calendrier');
+  const tc = useTranslations('common');
 
   const [assetId, setAssetId] = useState('');
   const [calendarId, setCalendarId] = useState('');
@@ -64,26 +67,26 @@ export function AssignCalendarForm() {
   return (
     <Card>
       <h2 className="mb-6 text-lg font-semibold text-gray-800">
-        Assigner un calendrier à une parcelle
+        {t('formAssign')}
       </h2>
 
       <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
         <Select
-          label="Parcelle"
+          label={t('fieldParcel')}
           options={parcelOptions}
           value={assetId}
           onChange={(e) => setAssetId(e.target.value)}
-          placeholder="Sélectionner une parcelle"
+          placeholder={t('selectParcel')}
         />
         <Select
-          label="Modèle de calendrier"
+          label={t('fieldModelTemplate')}
           options={templateOptions}
           value={calendarId}
           onChange={(e) => setCalendarId(e.target.value)}
-          placeholder="Sélectionner un modèle"
+          placeholder={t('selectTemplate')}
         />
         <Input
-          label="Date de semis effective"
+          label={t('fieldSowingDate')}
           type="date"
           value={sowingDate}
           onChange={(e) => setSowingDate(e.target.value)}
@@ -92,14 +95,14 @@ export function AssignCalendarForm() {
 
       {/* Notes */}
       <div className="mb-6">
-        <label htmlFor="assign-notes" className="mb-1 block text-sm font-medium text-gray-700">Notes</label>
+        <label htmlFor="assign-notes" className="mb-1 block text-sm font-medium text-gray-700">{tc('notes')}</label>
         <textarea
           id="assign-notes"
           className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
           rows={2}
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          placeholder="Notes optionnelles..."
+          placeholder={t('notesOptional')}
         />
       </div>
 
@@ -107,15 +110,15 @@ export function AssignCalendarForm() {
       {previewDates.length > 0 && (
         <div className="mb-6">
           <h3 className="mb-3 text-sm font-semibold text-gray-700">
-            Dates prévisionnelles calculées
+            {t('previewDates')}
           </h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-200 text-left">
-                  <th className="px-3 py-2 font-medium text-gray-600">Stade</th>
-                  <th className="px-3 py-2 font-medium text-gray-600">Date prévue</th>
-                  <th className="px-3 py-2 font-medium text-gray-600">Statut</th>
+                  <th className="px-3 py-2 font-medium text-gray-600">{t('colStage')}</th>
+                  <th className="px-3 py-2 font-medium text-gray-600">{t('colExpectedDate')}</th>
+                  <th className="px-3 py-2 font-medium text-gray-600">{t('colStatus')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -130,7 +133,7 @@ export function AssignCalendarForm() {
                       })}
                     </td>
                     <td className="px-3 py-2">
-                      <Badge variant="default">À venir</Badge>
+                      <Badge variant="default">{t('statusUpcoming')}</Badge>
                     </td>
                   </tr>
                 ))}
@@ -143,13 +146,13 @@ export function AssignCalendarForm() {
       {/* Submit */}
       <div className="flex justify-end gap-3">
         <Button variant="outline" onClick={() => router.push('/calendrier')}>
-          Annuler
+          {tc('cancel')}
         </Button>
         <Button
           onClick={handleSubmit}
           disabled={mutation.isPending || !assetId || !calendarId || !sowingDate}
         >
-          {mutation.isPending ? 'Assignation...' : 'Assigner'}
+          {mutation.isPending ? tc('assigning') : t('assignButton')}
         </Button>
       </div>
     </Card>

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { DataTable } from '@/components/ui/DataTable';
 import { Badge } from '@/components/ui/Badge';
@@ -32,6 +33,8 @@ type AssetRow = Record<string, unknown> & {
 
 export function IntrantListClient({ category }: IntrantListClientProps) {
   const router = useRouter();
+  const t = useTranslations('intrants');
+  const tc = useTranslations('common');
   const [search, setSearch] = useState('');
   const [subcategory, setSubcategory] = useState('');
   const [page, setPage] = useState(1);
@@ -41,15 +44,15 @@ export function IntrantListClient({ category }: IntrantListClientProps) {
   const queryBase = { search: search || undefined, page, limit: 25 };
 
   const phytoQuery = trpc.input.listPhyto.useQuery(
-    { ...queryBase, subcategory: subcategoryFilter as Parameters<typeof trpc.input.listPhyto.useQuery>[0]['subcategory'] },
+    { ...queryBase, subcategory: subcategoryFilter as unknown as undefined },
     { enabled: category === 'phyto' },
   );
   const fertiQuery = trpc.input.listFerti.useQuery(
-    { ...queryBase, subcategory: subcategoryFilter as Parameters<typeof trpc.input.listFerti.useQuery>[0]['subcategory'] },
+    { ...queryBase, subcategory: subcategoryFilter as unknown as undefined },
     { enabled: category === 'ferti' },
   );
   const semenceQuery = trpc.input.listSemence.useQuery(
-    { ...queryBase, subcategory: subcategoryFilter as Parameters<typeof trpc.input.listSemence.useQuery>[0]['subcategory'] },
+    { ...queryBase, subcategory: subcategoryFilter as unknown as undefined },
     { enabled: category === 'semence' },
   );
 
@@ -71,20 +74,20 @@ export function IntrantListClient({ category }: IntrantListClientProps) {
   const columns =
     category === 'phyto'
       ? [
-          { key: 'name', header: 'Nom' },
+          { key: 'name', header: tc('name') },
           {
             key: 'commercial_name',
-            header: 'Nom commercial',
+            header: t('fieldCommercialName'),
             render: (row: AssetRow) => (row.data?.commercial_name as string) ?? '—',
           },
           {
             key: 'active_ingredient',
-            header: 'Matiere active',
+            header: t('fieldActiveIngredient'),
             render: (row: AssetRow) => (row.data?.active_ingredient as string) ?? '—',
           },
           {
             key: 'subcategory',
-            header: 'Sous-categorie',
+            header: t('fieldSubcategory'),
             render: (row: AssetRow) => {
               const sub = (row.data?.input_subcategory as string) ?? '';
               return <Badge>{subcatLabels[sub] ?? sub}</Badge>;
@@ -92,26 +95,26 @@ export function IntrantListClient({ category }: IntrantListClientProps) {
           },
           {
             key: 'form',
-            header: 'Forme',
+            header: t('fieldForm'),
             render: (row: AssetRow) => formLabels[(row.data?.form as string) ?? ''] ?? '—',
           },
         ]
       : category === 'ferti'
         ? [
-            { key: 'name', header: 'Nom' },
+            { key: 'name', header: tc('name') },
             {
               key: 'commercial_name',
-              header: 'Nom commercial',
+              header: t('fieldCommercialName'),
               render: (row: AssetRow) => (row.data?.commercial_name as string) ?? '—',
             },
             {
               key: 'composition_npk',
-              header: 'NPK',
+              header: t('fieldCompositionNpk'),
               render: (row: AssetRow) => (row.data?.composition_npk as string) ?? '—',
             },
             {
               key: 'subcategory',
-              header: 'Sous-categorie',
+              header: t('fieldSubcategory'),
               render: (row: AssetRow) => {
                 const sub = (row.data?.input_subcategory as string) ?? '';
                 return <Badge>{subcatLabels[sub] ?? sub}</Badge>;
@@ -119,25 +122,25 @@ export function IntrantListClient({ category }: IntrantListClientProps) {
             },
             {
               key: 'form',
-              header: 'Forme',
+              header: t('fieldForm'),
               render: (row: AssetRow) => formLabels[(row.data?.form as string) ?? ''] ?? '—',
             },
           ]
         : [
-            { key: 'name', header: 'Nom' },
+            { key: 'name', header: tc('name') },
             {
               key: 'variety',
-              header: 'Variete',
+              header: t('fieldVariety'),
               render: (row: AssetRow) => (row.data?.variety as string) ?? '—',
             },
             {
               key: 'lot_number',
-              header: 'Lot',
+              header: t('fieldLotNumber'),
               render: (row: AssetRow) => (row.data?.lot_number as string) ?? '—',
             },
             {
               key: 'germination_rate',
-              header: 'Taux germination',
+              header: t('fieldGerminationRate'),
               render: (row: AssetRow) => {
                 const rate = row.data?.germination_rate as number | undefined;
                 return rate != null ? `${rate}%` : '—';
@@ -145,7 +148,7 @@ export function IntrantListClient({ category }: IntrantListClientProps) {
             },
             {
               key: 'certification',
-              header: 'Certification',
+              header: t('fieldCertification'),
               render: (row: AssetRow) => (row.data?.certification as string) ?? '—',
             },
           ];
@@ -155,7 +158,7 @@ export function IntrantListClient({ category }: IntrantListClientProps) {
       <div className="mb-4 flex flex-wrap items-end gap-3">
         <div className="w-64">
           <Input
-            placeholder="Rechercher..."
+            placeholder={t('searchPlaceholder')}
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
@@ -165,7 +168,7 @@ export function IntrantListClient({ category }: IntrantListClientProps) {
         </div>
         <div className="w-52">
           <Select
-            options={[{ value: '', label: 'Toutes sous-categories' }, ...subcatOptions]}
+            options={[{ value: '', label: t('selectSubcategory') }, ...subcatOptions]}
             value={subcategory}
             onChange={(e) => {
               setSubcategory(e.target.value);
@@ -184,14 +187,14 @@ export function IntrantListClient({ category }: IntrantListClientProps) {
           <DataTable
             columns={columns}
             data={(data?.items ?? []) as AssetRow[]}
-            emptyMessage="Aucun intrant"
+            emptyMessage={t('emptyMessage')}
             onRowClick={(row) => router.push(`/intrants/${row.id}`)}
           />
 
           {data && data.pages > 1 && (
             <div className="mt-4 flex items-center justify-between">
               <p className="text-sm text-gray-500">
-                Page {data.page} / {data.pages} ({data.total} resultats)
+                {tc('page')} {data.page} / {data.pages} ({data.total} {tc('results')})
               </p>
               <div className="flex gap-2">
                 <Button
@@ -200,7 +203,7 @@ export function IntrantListClient({ category }: IntrantListClientProps) {
                   disabled={page <= 1}
                   onClick={() => setPage((p) => p - 1)}
                 >
-                  Precedent
+                  {tc('previous')}
                 </Button>
                 <Button
                   variant="outline"
@@ -208,7 +211,7 @@ export function IntrantListClient({ category }: IntrantListClientProps) {
                   disabled={page >= data.pages}
                   onClick={() => setPage((p) => p + 1)}
                 >
-                  Suivant
+                  {tc('next')}
                 </Button>
               </div>
             </div>

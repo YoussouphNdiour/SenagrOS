@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -25,6 +26,8 @@ import {
 export function IntrantCreateForm() {
   const router = useRouter();
   const utils = trpc.useUtils();
+  const t = useTranslations('intrants');
+  const tc = useTranslations('common');
 
   const [category, setCategory] = useState<'phyto' | 'ferti' | 'semence' | ''>('');
   const [formState, setFormState] = useState<Record<string, string>>({
@@ -59,7 +62,7 @@ export function IntrantCreateForm() {
     setError('');
 
     if (!category) {
-      setError('Veuillez choisir une categorie');
+      setError(t('selectCategory'));
       return;
     }
 
@@ -122,12 +125,12 @@ export function IntrantCreateForm() {
 
       {/* Step 1 — Category */}
       <div className="rounded-xl bg-white p-5 shadow-sm">
-        <h2 className="mb-4 text-lg font-semibold text-gray-700">1. Categorie</h2>
+        <h2 className="mb-4 text-lg font-semibold text-gray-700">{t('step1Category')}</h2>
         <Select
-          label="Type d'intrant"
+          label={t('fieldCategory')}
           options={inputCategoryValues.map((v) => ({ value: v, label: inputCategoryLabels[v] }))}
           value={category}
-          placeholder="Choisir une categorie"
+          placeholder={t('selectCategory')}
           onChange={(e) => {
             setCategory(e.target.value as 'phyto' | 'ferti' | 'semence');
             setFormState((s) => ({ ...s, inputSubcategory: '' }));
@@ -139,22 +142,22 @@ export function IntrantCreateForm() {
         <>
           {/* Step 2 — Subcategory */}
           <div className="rounded-xl bg-white p-5 shadow-sm">
-            <h2 className="mb-4 text-lg font-semibold text-gray-700">2. Sous-categorie</h2>
+            <h2 className="mb-4 text-lg font-semibold text-gray-700">{t('step2Subcategory')}</h2>
             <Select
-              label="Sous-categorie"
+              label={t('fieldSubcategory')}
               options={subcatOptions}
               value={formState.inputSubcategory ?? ''}
-              placeholder="Choisir une sous-categorie"
+              placeholder={t('selectSubcategory')}
               onChange={(e) => set('inputSubcategory', e.target.value)}
             />
           </div>
 
           {/* Step 3 — Specific fields */}
           <div className="rounded-xl bg-white p-5 shadow-sm">
-            <h2 className="mb-4 text-lg font-semibold text-gray-700">3. Informations</h2>
+            <h2 className="mb-4 text-lg font-semibold text-gray-700">{t('step3Information')}</h2>
             <div className="space-y-4">
               <Input
-                label="Nom"
+                label={t('fieldName')}
                 value={formState.name ?? ''}
                 onChange={(e) => set('name', e.target.value)}
                 required
@@ -163,31 +166,31 @@ export function IntrantCreateForm() {
               {category === 'phyto' && (
                 <>
                   <Input
-                    label="Nom commercial"
+                    label={t('fieldCommercialName')}
                     value={formState.commercialName ?? ''}
                     onChange={(e) => set('commercialName', e.target.value)}
                     required
                   />
                   <Input
-                    label="Matiere active"
+                    label={t('fieldActiveIngredient')}
                     value={formState.activeIngredient ?? ''}
                     onChange={(e) => set('activeIngredient', e.target.value)}
                   />
                   <Input
-                    label="Dose recommandee"
+                    label={t('fieldRecommendedDose')}
                     value={formState.recommendedDose ?? ''}
                     onChange={(e) => set('recommendedDose', e.target.value)}
                     helperText="Ex: 0.5 L/ha"
                   />
                   <Input
-                    label="DAR (jours)"
+                    label={t('fieldDar')}
                     type="number"
                     min="0"
                     value={formState.darDays ?? ''}
                     onChange={(e) => set('darDays', e.target.value)}
                   />
                   <Select
-                    label="Classe toxicite"
+                    label={t('fieldToxicityClass')}
                     options={[
                       { value: 'I', label: 'Classe I' },
                       { value: 'II', label: 'Classe II' },
@@ -195,14 +198,14 @@ export function IntrantCreateForm() {
                       { value: 'IV', label: 'Classe IV' },
                     ]}
                     value={formState.toxicityClass ?? ''}
-                    placeholder="Choisir"
+                    placeholder={t('selectChoose')}
                     onChange={(e) => set('toxicityClass', e.target.value)}
                   />
                   <Select
-                    label="Forme"
+                    label={t('fieldForm')}
                     options={formValues.map((v) => ({ value: v, label: formLabels[v] }))}
                     value={formState.form ?? ''}
-                    placeholder="Choisir"
+                    placeholder={t('selectChoose')}
                     onChange={(e) => set('form', e.target.value)}
                   />
                 </>
@@ -211,27 +214,27 @@ export function IntrantCreateForm() {
               {category === 'ferti' && (
                 <>
                   <Input
-                    label="Nom commercial"
+                    label={t('fieldCommercialName')}
                     value={formState.commercialName ?? ''}
                     onChange={(e) => set('commercialName', e.target.value)}
                     required
                   />
                   <Input
-                    label="Composition NPK"
+                    label={t('fieldCompositionNpk')}
                     value={formState.compositionNpk ?? ''}
                     onChange={(e) => set('compositionNpk', e.target.value)}
                     helperText="Ex: 15-15-15"
                   />
                   <Input
-                    label="Dose recommandee"
+                    label={t('fieldRecommendedDose')}
                     value={formState.recommendedDose ?? ''}
                     onChange={(e) => set('recommendedDose', e.target.value)}
                   />
                   <Select
-                    label="Forme"
+                    label={t('fieldForm')}
                     options={formValues.map((v) => ({ value: v, label: formLabels[v] }))}
                     value={formState.form ?? ''}
-                    placeholder="Choisir"
+                    placeholder={t('selectChoose')}
                     onChange={(e) => set('form', e.target.value)}
                   />
                 </>
@@ -240,23 +243,23 @@ export function IntrantCreateForm() {
               {category === 'semence' && (
                 <>
                   <Input
-                    label="Culture"
+                    label={t('fieldCropType')}
                     value={formState.cropType ?? ''}
                     onChange={(e) => set('cropType', e.target.value)}
                     required
                   />
                   <Input
-                    label="Variete"
+                    label={t('fieldVariety')}
                     value={formState.variety ?? ''}
                     onChange={(e) => set('variety', e.target.value)}
                   />
                   <Input
-                    label="N° lot"
+                    label={t('fieldLotNumber')}
                     value={formState.lotNumber ?? ''}
                     onChange={(e) => set('lotNumber', e.target.value)}
                   />
                   <Input
-                    label="Taux de germination (%)"
+                    label={t('fieldGerminationRate')}
                     type="number"
                     min="0"
                     max="100"
@@ -264,23 +267,23 @@ export function IntrantCreateForm() {
                     onChange={(e) => set('germinationRate', e.target.value)}
                   />
                   <Input
-                    label="Provenance"
+                    label={t('fieldOrigin')}
                     value={formState.origin ?? ''}
                     onChange={(e) => set('origin', e.target.value)}
                   />
                   <Input
-                    label="Traitement semence"
+                    label={t('fieldSeedTreatment')}
                     value={formState.seedTreatment ?? ''}
                     onChange={(e) => set('seedTreatment', e.target.value)}
                   />
                   <Select
-                    label="Certification"
+                    label={t('fieldCertification')}
                     options={[
-                      { value: 'certifiee', label: 'Certifiee' },
-                      { value: 'paysanne', label: 'Paysanne' },
+                      { value: 'certifiee', label: t('subcatSemenceCertifiee') },
+                      { value: 'paysanne', label: t('subcatSemencePaysanne') },
                     ]}
                     value={formState.certification ?? ''}
-                    placeholder="Choisir"
+                    placeholder={t('selectChoose')}
                     onChange={(e) => set('certification', e.target.value)}
                   />
                 </>
@@ -290,10 +293,10 @@ export function IntrantCreateForm() {
 
           {/* Stock fields */}
           <div className="rounded-xl bg-white p-5 shadow-sm">
-            <h2 className="mb-4 text-lg font-semibold text-gray-700">4. Stock & prix</h2>
+            <h2 className="mb-4 text-lg font-semibold text-gray-700">{t('step4Stock')}</h2>
             <div className="grid gap-4 sm:grid-cols-2">
               <Input
-                label="Stock initial"
+                label={t('fieldStockInitial')}
                 type="number"
                 min="0"
                 step="0.01"
@@ -301,20 +304,20 @@ export function IntrantCreateForm() {
                 onChange={(e) => set('stockInitial', e.target.value)}
               />
               <Select
-                label="Unite"
+                label={t('fieldUnit')}
                 options={stockUnitValues.map((v) => ({ value: v, label: stockUnitLabels[v] }))}
                 value={formState.stockUnit ?? 'kg'}
                 onChange={(e) => set('stockUnit', e.target.value)}
               />
               <Input
-                label="Prix unitaire (XOF)"
+                label={t('fieldUnitPrice')}
                 type="number"
                 min="0"
                 value={formState.unitPriceXof ?? '0'}
                 onChange={(e) => set('unitPriceXof', e.target.value)}
               />
               <Input
-                label="Seuil d'alerte"
+                label={t('fieldStockThreshold')}
                 type="number"
                 min="0"
                 step="0.01"
@@ -326,7 +329,7 @@ export function IntrantCreateForm() {
 
           {/* Notes */}
           <div className="rounded-xl bg-white p-5 shadow-sm">
-            <h2 className="mb-4 text-lg font-semibold text-gray-700">Notes</h2>
+            <h2 className="mb-4 text-lg font-semibold text-gray-700">{tc('notes')}</h2>
             <textarea
               className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
               rows={3}
@@ -338,10 +341,10 @@ export function IntrantCreateForm() {
           {/* Actions */}
           <div className="flex justify-end gap-3">
             <Button variant="outline" type="button" onClick={() => router.push('/intrants')}>
-              Annuler
+              {tc('cancel')}
             </Button>
             <Button type="submit" disabled={createMutation.isPending}>
-              {createMutation.isPending ? 'Creation...' : "Creer l'intrant"}
+              {createMutation.isPending ? tc('creating') : t('createButton')}
             </Button>
           </div>
         </>

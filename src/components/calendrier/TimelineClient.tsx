@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { Card } from '@/components/ui/Card';
 import { Select } from '@/components/ui/Select';
@@ -27,8 +28,6 @@ interface TimelineEntry {
   stageStatuses: unknown;
 }
 
-const MONTH_NAMES = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Jun', 'Jul', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
-
 function getStageColor(status: string, expectedDate: string, actualDate: string | null): string {
   if (status === 'completed') {
     if (actualDate && actualDate > expectedDate) return 'bg-orange-500'; // late
@@ -40,6 +39,8 @@ function getStageColor(status: string, expectedDate: string, actualDate: string 
 }
 
 export function TimelineClient() {
+  const t = useTranslations('calendrier');
+  const tc = useTranslations('common');
   const [cropTypeFilter, setCropTypeFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [selectedStage, setSelectedStage] = useState<{
@@ -95,7 +96,7 @@ export function TimelineClient() {
 
     const total = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
 
-    // Build month headers
+    // Build month headers using locale-aware month names
     const months: { label: string; widthPct: number }[] = [];
     const cur = new Date(start);
     while (cur <= end) {
@@ -107,7 +108,7 @@ export function TimelineClient() {
       const days = Math.ceil((effectiveEnd.getTime() - effectiveStart.getTime()) / (1000 * 60 * 60 * 24)) + 1;
 
       months.push({
-        label: `${MONTH_NAMES[cur.getMonth()]} ${cur.getFullYear()}`,
+        label: cur.toLocaleDateString('fr-FR', { month: 'short', year: 'numeric' }),
         widthPct: (days / total) * 100,
       });
 
@@ -125,19 +126,19 @@ export function TimelineClient() {
   };
 
   const cropTypeOptions = [
-    { value: '', label: 'Toutes les cultures' },
+    { value: '', label: t('selectCrop') },
     ...Object.entries(cropTypeLabels).map(([v, l]) => ({ value: v, label: l })),
   ];
 
   const statusOptions = [
-    { value: '', label: 'Tous les statuts' },
-    { value: 'active', label: 'Actif' },
-    { value: 'completed', label: 'Terminé' },
-    { value: 'cancelled', label: 'Annulé' },
+    { value: '', label: tc('allStatuses') },
+    { value: 'active', label: t('kpiActive') },
+    { value: 'completed', label: t('statusCompleted') },
+    { value: 'cancelled', label: tc('allStatuses') },
   ];
 
   if (isLoading) {
-    return <p className="text-sm text-gray-500">Chargement de la timeline...</p>;
+    return <p className="text-sm text-gray-500">{tc('loading')}</p>;
   }
 
   const entries = (items ?? []) as TimelineEntry[];
@@ -165,8 +166,8 @@ export function TimelineClient() {
       {entries.length === 0 ? (
         <Card>
           <div className="py-8 text-center text-gray-500">
-            <p className="text-lg font-medium">Aucun calendrier assigné</p>
-            <p className="mt-1 text-sm">Assignez un modèle à une parcelle pour voir la timeline</p>
+            <p className="text-lg font-medium">{tc('noData')}</p>
+            <p className="mt-1 text-sm">{t('assignCalendar')}</p>
           </div>
         </Card>
       ) : (
@@ -174,16 +175,16 @@ export function TimelineClient() {
           {/* Legend */}
           <div className="mb-4 flex flex-wrap gap-4 text-xs">
             <span className="flex items-center gap-1">
-              <span className="inline-block h-3 w-3 rounded-full bg-green-500" /> Terminé à temps
+              <span className="inline-block h-3 w-3 rounded-full bg-green-500" /> {t('statusCompleted')}
             </span>
             <span className="flex items-center gap-1">
-              <span className="inline-block h-3 w-3 rounded-full bg-orange-500" /> Terminé en retard
+              <span className="inline-block h-3 w-3 rounded-full bg-orange-500" /> {t('legendLateCompleted')}
             </span>
             <span className="flex items-center gap-1">
-              <span className="inline-block h-3 w-3 rounded-full bg-blue-500" /> En cours
+              <span className="inline-block h-3 w-3 rounded-full bg-blue-500" /> {t('legendInProgress')}
             </span>
             <span className="flex items-center gap-1">
-              <span className="inline-block h-3 w-3 rounded-full bg-gray-300" /> À venir
+              <span className="inline-block h-3 w-3 rounded-full bg-gray-300" /> {t('legendUpcoming')}
             </span>
           </div>
 
@@ -193,7 +194,7 @@ export function TimelineClient() {
               {/* Month headers */}
               <div className="flex border-b border-gray-200">
                 <div className="w-48 shrink-0 px-3 py-2 text-xs font-medium text-gray-500">
-                  Parcelle
+                  {t('colParcel')}
                 </div>
                 <div className="flex flex-1">
                   {monthHeaders.map((m) => (
@@ -281,23 +282,23 @@ export function TimelineClient() {
             </h3>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-500">Parcelle</span>
+                <span className="text-gray-500">{t('stagePopupParcel')}</span>
                 <span className="font-medium">{selectedStage.entry.assetName}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Culture</span>
+                <span className="text-gray-500">{t('stagePopupCrop')}</span>
                 <span className="font-medium">
                   {cropTypeLabels[selectedStage.entry.cropType] ?? selectedStage.entry.cropType}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Date prévue</span>
+                <span className="text-gray-500">{t('stagePopupExpectedDate')}</span>
                 <span className="font-medium">
                   {new Date(selectedStage.stage.expectedDate).toLocaleDateString('fr-FR')}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Date réelle</span>
+                <span className="text-gray-500">{t('stagePopupActualDate')}</span>
                 <span className="font-medium">
                   {selectedStage.stage.actualDate
                     ? new Date(selectedStage.stage.actualDate).toLocaleDateString('fr-FR')
@@ -305,7 +306,7 @@ export function TimelineClient() {
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-500">Statut</span>
+                <span className="text-gray-500">{t('stagePopupStatus')}</span>
                 <Badge
                   variant={
                     selectedStage.stage.status === 'completed'
@@ -324,13 +325,12 @@ export function TimelineClient() {
                 selectedStage.stage.actualDate &&
                 selectedStage.stage.actualDate > selectedStage.stage.expectedDate && (
                   <div className="rounded-lg bg-orange-50 p-3 text-orange-700">
-                    Retard de{' '}
                     {Math.ceil(
                       (new Date(selectedStage.stage.actualDate).getTime() -
                         new Date(selectedStage.stage.expectedDate).getTime()) /
                         (1000 * 60 * 60 * 24),
                     )}{' '}
-                    jour(s)
+                    {t('delayDays')}
                   </div>
                 )}
             </div>
@@ -339,7 +339,7 @@ export function TimelineClient() {
             {(selectedStage.stage.status === 'pending' ||
               selectedStage.stage.status === 'in_progress') && (
               <div className="mt-4 border-t border-gray-200 pt-4">
-                <p className="mb-2 text-sm font-medium text-gray-700">Marquer comme terminé</p>
+                <p className="mb-2 text-sm font-medium text-gray-700">{t('markCompleted')}</p>
                 <div className="flex gap-2">
                   <input
                     type="date"
@@ -359,7 +359,7 @@ export function TimelineClient() {
                     }}
                     disabled={updateMutation.isPending}
                   >
-                    {updateMutation.isPending ? '...' : 'Valider'}
+                    {updateMutation.isPending ? '...' : tc('validate')}
                   </Button>
                 </div>
               </div>
@@ -367,7 +367,7 @@ export function TimelineClient() {
 
             <div className="mt-4 flex justify-end">
               <Button variant="outline" onClick={() => setSelectedStage(null)}>
-                Fermer
+                {tc('close')}
               </Button>
             </div>
           </div>

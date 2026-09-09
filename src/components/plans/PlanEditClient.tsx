@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -23,17 +24,19 @@ const statusOptions = Object.entries(planStatusLabels).map(([value, label]) => (
   label,
 }));
 
-const seasonOptions = [
-  { value: '', label: 'Aucune' },
-  ...Object.entries(seasonLabels).map(([value, label]) => ({ value, label })),
-];
-
 interface PlanEditClientProps {
   id: string;
 }
 
 export function PlanEditClient({ id }: PlanEditClientProps) {
   const router = useRouter();
+  const t = useTranslations('plans');
+  const tc = useTranslations('common');
+
+  const seasonOptions = [
+    { value: '', label: tc('noResult') },
+    ...Object.entries(seasonLabels).map(([value, label]) => ({ value, label })),
+  ];
 
   const { data: plan, isLoading } = trpc.plan.getById.useQuery({ id });
 
@@ -90,41 +93,41 @@ export function PlanEditClient({ id }: PlanEditClientProps) {
   return (
     <form onSubmit={handleSubmit}>
       <Card>
-        <h2 className="mb-4 text-lg font-semibold text-gray-800">Modifier le plan</h2>
+        <h2 className="mb-4 text-lg font-semibold text-gray-800">{t('formSectionInfo')}</h2>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Input
-            label="Nom du plan *"
+            label={t('fieldName')}
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
           />
           <Select
-            label="Type *"
+            label={t('fieldType')}
             options={typeOptions}
             value={type}
             onChange={(e) => setType(e.target.value)}
           />
           <Select
-            label="Statut"
+            label={tc('status')}
             options={statusOptions}
             value={status}
             onChange={(e) => setStatus(e.target.value)}
           />
           <Select
-            label="Saison"
+            label={t('fieldSeason')}
             options={seasonOptions}
             value={season}
             onChange={(e) => setSeason(e.target.value)}
           />
           <Input
-            label="Date de début"
+            label={t('fieldStartDate')}
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
           />
           <Input
-            label="Date de fin"
+            label={t('fieldEndDate')}
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
@@ -132,7 +135,7 @@ export function PlanEditClient({ id }: PlanEditClientProps) {
         </div>
 
         <div className="mt-4">
-          <label htmlFor="plan-notes-edit" className="mb-1 block text-sm font-medium text-gray-700">Notes</label>
+          <label htmlFor="plan-notes-edit" className="mb-1 block text-sm font-medium text-gray-700">{tc('notes')}</label>
           <textarea
             id="plan-notes-edit"
             className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
@@ -145,15 +148,15 @@ export function PlanEditClient({ id }: PlanEditClientProps) {
 
       <div className="mt-6 flex justify-end gap-3">
         <Button type="button" variant="outline" onClick={() => router.back()}>
-          Annuler
+          {tc('cancel')}
         </Button>
         <Button type="submit" disabled={mutation.isPending || !name.trim()}>
-          {mutation.isPending ? 'Enregistrement...' : 'Enregistrer'}
+          {mutation.isPending ? tc('saving') : t('saveButton')}
         </Button>
       </div>
 
       {mutation.isError && (
-        <p className="mt-2 text-sm text-red-500">Erreur : {mutation.error.message}</p>
+        <p className="mt-2 text-sm text-red-500">{tc('error')} : {mutation.error.message}</p>
       )}
     </form>
   );
