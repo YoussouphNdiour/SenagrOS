@@ -6,26 +6,29 @@ import { KpiCard } from '@/components/ui/KpiCard';
 import { LogActivityChart } from '@/components/charts/LogActivityChart';
 import { ExportBar } from '@/components/charts/ExportBar';
 import { Activity, Sprout, Stethoscope, Droplets } from 'lucide-react';
-
-const TYPE_LABELS: Record<string, string> = {
-  activity: 'Activités',
-  observation: 'Observations',
-  input: 'Intrants',
-  harvest: 'Récoltes',
-  seeding: 'Semis',
-  transplanting: 'Repiquage',
-  birth: 'Naissances',
-  maintenance: 'Maintenance',
-  medical: 'Soins',
-  lab_test: 'Analyses',
-  movement: 'Mouvements',
-  irrigation: 'Irrigation',
-};
+import { useTranslations } from 'next-intl';
 
 export default function LogsReportPage() {
+  const t = useTranslations('reports');
+  const tc = useTranslations('common');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
   const [typeFilter, setTypeFilter] = useState('');
+
+  const TYPE_LABELS: Record<string, string> = {
+    activity: t('logTypeActivity'),
+    observation: t('logTypeObservation'),
+    input: t('logTypeInput'),
+    harvest: t('logTypeHarvest'),
+    seeding: t('logTypeSeeding'),
+    transplanting: t('logTypeTransplanting'),
+    birth: t('logTypeBirth'),
+    maintenance: t('logTypeMaintenance'),
+    medical: t('logTypeMedical'),
+    lab_test: t('logTypeLabTest'),
+    movement: t('logTypeMovement'),
+    irrigation: t('logTypeIrrigation'),
+  };
 
   const { data, isLoading } = trpc.report.logs.useQuery({
     type: typeFilter || undefined,
@@ -36,17 +39,17 @@ export default function LogsReportPage() {
   if (isLoading || !data) {
     return (
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-gray-800">Rapport Activités</h1>
+        <h1 className="text-2xl font-bold text-gray-800">{t('logsTitle')}</h1>
         <div className="h-80 animate-pulse rounded-xl bg-gray-100" />
       </div>
     );
   }
 
   const exportData = data.items.map((item) => ({
-    Nom: item.name,
-    Type: TYPE_LABELS[item.type] ?? item.type,
-    Statut: item.status,
-    Date: new Date(item.timestamp).toLocaleDateString('fr-FR'),
+    [t('colNomLog')]: item.name,
+    [t('colTypeLog')]: TYPE_LABELS[item.type] ?? item.type,
+    [t('colStatutLog')]: item.status,
+    [t('colDateLog')]: new Date(item.timestamp).toLocaleDateString('fr-FR'),
   }));
 
   const harvestCount = data.byType.find((t) => t.type === 'harvest')?.count ?? 0;
@@ -57,8 +60,8 @@ export default function LogsReportPage() {
     <div id="report-logs" className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Rapport Activités</h1>
-          <p className="mt-1 text-sm text-gray-500">Activité par type de log</p>
+          <h1 className="text-2xl font-bold text-gray-800">{t('logsTitle')}</h1>
+          <p className="mt-1 text-sm text-gray-500">{t('logsSubtitle')}</p>
         </div>
         <ExportBar data={exportData} filename="rapport-activites" pdfElementId="report-logs" />
       </div>
@@ -66,20 +69,20 @@ export default function LogsReportPage() {
       {/* Filters */}
       <div className="flex flex-wrap gap-4">
         <div>
-          <label className="mb-1 block text-xs text-gray-500">Type</label>
+          <label className="mb-1 block text-xs text-gray-500">{tc('type')}</label>
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
             className="rounded-lg border border-gray-200 px-3 py-2 text-sm"
           >
-            <option value="">Tous</option>
+            <option value="">{tc('allTypes')}</option>
             {Object.entries(TYPE_LABELS).map(([value, label]) => (
               <option key={value} value={value}>{label}</option>
             ))}
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-xs text-gray-500">Du</label>
+          <label className="mb-1 block text-xs text-gray-500">{t('filterFrom')}</label>
           <input
             type="date"
             value={dateFrom}
@@ -88,7 +91,7 @@ export default function LogsReportPage() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs text-gray-500">Au</label>
+          <label className="mb-1 block text-xs text-gray-500">{t('filterTo')}</label>
           <input
             type="date"
             value={dateTo}
@@ -100,10 +103,10 @@ export default function LogsReportPage() {
 
       {/* KPIs */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <KpiCard title="Total activités" value={data.total} icon={Activity} color="green" />
-        <KpiCard title="Récoltes" value={harvestCount} icon={Sprout} color="blue" />
-        <KpiCard title="Soins" value={medicalCount} icon={Stethoscope} color="orange" />
-        <KpiCard title="Irrigations" value={irrigationCount} icon={Droplets} color="purple" />
+        <KpiCard title={t('kpiTotalActivites')} value={data.total} icon={Activity} color="green" />
+        <KpiCard title={t('kpiRecoltes')} value={harvestCount} icon={Sprout} color="blue" />
+        <KpiCard title={t('kpiSoins')} value={medicalCount} icon={Stethoscope} color="orange" />
+        <KpiCard title={t('kpiIrrigations')} value={irrigationCount} icon={Droplets} color="purple" />
       </div>
 
       {/* Chart */}
@@ -115,10 +118,10 @@ export default function LogsReportPage() {
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-gray-100">
-                <th className="px-4 py-3 font-medium text-gray-500">Date</th>
-                <th className="px-4 py-3 font-medium text-gray-500">Type</th>
-                <th className="px-4 py-3 font-medium text-gray-500">Nom</th>
-                <th className="px-4 py-3 font-medium text-gray-500">Statut</th>
+                <th className="px-4 py-3 font-medium text-gray-500">{t('colDateLog')}</th>
+                <th className="px-4 py-3 font-medium text-gray-500">{t('colTypeLog')}</th>
+                <th className="px-4 py-3 font-medium text-gray-500">{t('colNomLog')}</th>
+                <th className="px-4 py-3 font-medium text-gray-500">{t('colStatutLog')}</th>
               </tr>
             </thead>
             <tbody>
@@ -149,7 +152,7 @@ export default function LogsReportPage() {
               {data.items.length === 0 && (
                 <tr>
                   <td colSpan={4} className="px-4 py-8 text-center text-gray-400">
-                    Aucune activité trouvée
+                    {t('noActivities')}
                   </td>
                 </tr>
               )}

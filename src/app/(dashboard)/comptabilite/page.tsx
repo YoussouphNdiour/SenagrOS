@@ -1,5 +1,6 @@
 import { auth } from '@/server/auth';
 import { redirect } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { ComptabiliteClient } from '@/components/finances/ComptabiliteClient';
 
 export default async function ComptabilitePage() {
@@ -8,14 +9,14 @@ export default async function ComptabilitePage() {
     redirect('/dashboard');
   }
 
+  const t = await getTranslations('finances');
+
   return (
     <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Comptabilité</h1>
-          <p className="text-sm text-gray-500">
-            Bilan, clôture mensuelle et exports comptables
-          </p>
+          <h1 className="text-2xl font-bold text-gray-800">{t('comptaTitle')}</h1>
+          <p className="text-sm text-gray-500">{t('comptaSubtitle')}</p>
         </div>
       </div>
 

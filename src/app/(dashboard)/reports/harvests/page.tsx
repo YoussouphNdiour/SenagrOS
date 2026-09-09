@@ -6,6 +6,7 @@ import { KpiCard } from '@/components/ui/KpiCard';
 import { HarvestComparisonChart } from '@/components/charts/HarvestComparisonChart';
 import { ExportBar } from '@/components/charts/ExportBar';
 import { Sprout, Weight, Wallet, BarChart3 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 function formatFCFA(value: number) {
   return new Intl.NumberFormat('fr-FR').format(Math.round(value));
@@ -16,6 +17,7 @@ function formatKg(value: number) {
 }
 
 export default function HarvestsReportPage() {
+  const t = useTranslations('reports');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
 
@@ -27,7 +29,7 @@ export default function HarvestsReportPage() {
   if (isLoading || !data) {
     return (
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-gray-800">Rapport Récoltes</h1>
+        <h1 className="text-2xl font-bold text-gray-800">{t('harvestsTitle')}</h1>
         <div className="h-80 animate-pulse rounded-xl bg-gray-100" />
       </div>
     );
@@ -37,18 +39,18 @@ export default function HarvestsReportPage() {
   const totalValue = data.byCrop.reduce((s, c) => s + c.totalValue, 0);
 
   const exportData = data.byCrop.map((crop) => ({
-    Culture: crop.name,
-    'Récolté (kg)': Math.round(crop.totalKg),
-    'Valeur (FCFA)': Math.round(crop.totalValue),
-    'Nb récoltes': crop.count,
+    [t('colCulture')]: crop.name,
+    [t('colRecolte')]: Math.round(crop.totalKg),
+    [t('colValeur')]: Math.round(crop.totalValue),
+    [t('colNbRecoltes')]: crop.count,
   }));
 
   return (
     <div id="report-harvests" className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-gray-800">Rapport Récoltes</h1>
-          <p className="mt-1 text-sm text-gray-500">Rendements par culture</p>
+          <h1 className="text-2xl font-bold text-gray-800">{t('harvestsTitle')}</h1>
+          <p className="mt-1 text-sm text-gray-500">{t('harvestsSubtitle')}</p>
         </div>
         <ExportBar data={exportData} filename="rapport-recoltes" pdfElementId="report-harvests" />
       </div>
@@ -56,7 +58,7 @@ export default function HarvestsReportPage() {
       {/* Filters */}
       <div className="flex gap-4">
         <div>
-          <label className="mb-1 block text-xs text-gray-500">Du</label>
+          <label className="mb-1 block text-xs text-gray-500">{t('filterFrom')}</label>
           <input
             type="date"
             value={dateFrom}
@@ -65,7 +67,7 @@ export default function HarvestsReportPage() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs text-gray-500">Au</label>
+          <label className="mb-1 block text-xs text-gray-500">{t('filterTo')}</label>
           <input
             type="date"
             value={dateTo}
@@ -77,10 +79,10 @@ export default function HarvestsReportPage() {
 
       {/* KPIs */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <KpiCard title="Total récoltes" value={data.total} icon={Sprout} color="green" />
-        <KpiCard title="Cultures" value={data.byCrop.length} icon={BarChart3} color="blue" />
-        <KpiCard title="Poids total" value={`${formatKg(totalKg)} kg`} icon={Weight} color="orange" />
-        <KpiCard title="Valeur totale" value={`${formatFCFA(totalValue)} FCFA`} icon={Wallet} color="purple" />
+        <KpiCard title={t('kpiTotalRecoltes')} value={data.total} icon={Sprout} color="green" />
+        <KpiCard title={t('kpiNbCultures')} value={data.byCrop.length} icon={BarChart3} color="blue" />
+        <KpiCard title={t('kpiPoidsTotal')} value={`${formatKg(totalKg)} kg`} icon={Weight} color="orange" />
+        <KpiCard title={t('kpiValeurTotale')} value={`${formatFCFA(totalValue)} FCFA`} icon={Wallet} color="purple" />
       </div>
 
       {/* Chart */}
@@ -92,10 +94,10 @@ export default function HarvestsReportPage() {
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-gray-100">
-                <th className="px-4 py-3 font-medium text-gray-500">Culture</th>
-                <th className="px-4 py-3 font-medium text-gray-500">Récolté (kg)</th>
-                <th className="px-4 py-3 font-medium text-gray-500">Valeur (FCFA)</th>
-                <th className="px-4 py-3 font-medium text-gray-500">Nb récoltes</th>
+                <th className="px-4 py-3 font-medium text-gray-500">{t('colCulture')}</th>
+                <th className="px-4 py-3 font-medium text-gray-500">{t('colRecolte')}</th>
+                <th className="px-4 py-3 font-medium text-gray-500">{t('colValeur')}</th>
+                <th className="px-4 py-3 font-medium text-gray-500">{t('colNbRecoltes')}</th>
               </tr>
             </thead>
             <tbody>
@@ -110,7 +112,7 @@ export default function HarvestsReportPage() {
               {data.byCrop.length === 0 && (
                 <tr>
                   <td colSpan={4} className="px-4 py-8 text-center text-gray-400">
-                    Aucune récolte trouvée
+                    {t('noHarvests')}
                   </td>
                 </tr>
               )}

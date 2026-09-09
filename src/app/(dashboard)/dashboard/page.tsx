@@ -17,27 +17,29 @@ import {
   BookOpen,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 
 function formatFCFA(value: number) {
   return new Intl.NumberFormat('fr-FR').format(value) + ' FCFA';
 }
 
-const MODULE_SHORTCUTS = [
-  { label: 'Animaux', href: '/assets?type=animal', icon: Rabbit, color: 'bg-orange-50 text-orange-600' },
-  { label: 'Cultures', href: '/assets?type=plant', icon: Sprout, color: 'bg-green-50 text-green-600' },
-  { label: 'Stocks', href: '/intrants', icon: Package, color: 'bg-blue-50 text-blue-600' },
-  { label: 'Tâches', href: '/logs', icon: ClipboardList, color: 'bg-purple-50 text-purple-600' },
-  { label: 'Comptes', href: '/reports', icon: Wallet, color: 'bg-emerald-50 text-emerald-600' },
-  { label: 'Journal', href: '/logs', icon: BookOpen, color: 'bg-amber-50 text-amber-600' },
-];
-
 export default function DashboardPage() {
+  const t = useTranslations('dashboard');
   const { data, isLoading } = trpc.report.dashboard.useQuery();
+
+  const MODULE_SHORTCUTS = [
+    { label: t('moduleAnimaux'), href: '/assets?type=animal', icon: Rabbit, color: 'bg-orange-50 text-orange-600' },
+    { label: t('moduleCultures'), href: '/assets?type=plant', icon: Sprout, color: 'bg-green-50 text-green-600' },
+    { label: t('moduleStocks'), href: '/intrants', icon: Package, color: 'bg-blue-50 text-blue-600' },
+    { label: t('moduleTaches'), href: '/logs', icon: ClipboardList, color: 'bg-purple-50 text-purple-600' },
+    { label: t('moduleComptes'), href: '/reports', icon: Wallet, color: 'bg-emerald-50 text-emerald-600' },
+    { label: t('moduleJournal'), href: '/logs', icon: BookOpen, color: 'bg-amber-50 text-amber-600' },
+  ];
 
   if (isLoading || !data) {
     return (
       <div className="space-y-6">
-        <h1 className="text-2xl font-bold text-gray-800">Tableau de bord</h1>
+        <h1 className="text-2xl font-bold text-gray-800">{t('title')}</h1>
         <div className="grid gap-4 sm:grid-cols-2">
           {[1, 2].map((i) => (
             <div key={i} className="h-28 animate-pulse rounded-xl bg-gray-100" />
@@ -51,8 +53,8 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-gray-800">Tableau de bord</h1>
-        <p className="mt-1 text-sm text-gray-500">Vue d&apos;ensemble de votre exploitation</p>
+        <h1 className="text-2xl font-bold text-gray-800">{t('title')}</h1>
+        <p className="mt-1 text-sm text-gray-500">{t('subtitle')}</p>
       </div>
 
       {/* KPI Cards */}
@@ -60,7 +62,7 @@ export default function DashboardPage() {
         <div className="rounded-xl bg-gradient-to-r from-[#2E7D32] to-[#43A047] p-5 text-white shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-green-100">Patrimoine total</p>
+              <p className="text-sm text-green-100">{t('patrimoine')}</p>
               <p className="mt-1 text-2xl font-bold">{data.patrimoine} actifs</p>
             </div>
             <div className="rounded-xl bg-white/20 p-3">
@@ -72,7 +74,7 @@ export default function DashboardPage() {
         <div className="rounded-xl bg-gradient-to-r from-[#66BB6A] to-[#81C784] p-5 text-white shadow-sm">
           <div className="flex items-center justify-between">
             <div>
-              <p className="text-sm text-green-100">Bénéfice net</p>
+              <p className="text-sm text-green-100">{t('beneficeNet')}</p>
               <p className="mt-1 text-2xl font-bold">{formatFCFA(data.beneficeNet)}</p>
             </div>
             <div className="rounded-xl bg-white/20 p-3">
@@ -97,7 +99,7 @@ export default function DashboardPage() {
         <div className="rounded-xl bg-white p-5 shadow-sm">
           <div className="mb-3 flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-orange-500" />
-            <h3 className="text-lg font-semibold text-gray-800">Alertes</h3>
+            <h3 className="text-lg font-semibold text-gray-800">{t('alerts')}</h3>
             <span className="rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">
               {data.lowStockItems.length + data.overdueStages.length + (data.pendingTasks > 0 ? 1 : 0)}
             </span>
@@ -107,7 +109,7 @@ export default function DashboardPage() {
               <div key={item.id} className="flex items-center gap-2 rounded-lg bg-orange-50 px-3 py-2 text-sm">
                 <Package className="h-4 w-4 text-orange-500" />
                 <span className="text-gray-700">
-                  Stock bas : <strong>{item.assetName}</strong> — {item.quantity} {item.unit}
+                  {t('stockLow')} : <strong>{item.assetName}</strong> — {item.quantity} {item.unit}
                 </span>
               </div>
             ))}
@@ -115,7 +117,7 @@ export default function DashboardPage() {
               <div key={stage.id} className="flex items-center gap-2 rounded-lg bg-yellow-50 px-3 py-2 text-sm">
                 <Bug className="h-4 w-4 text-yellow-600" />
                 <span className="text-gray-700">
-                  Stade en retard : <strong>{stage.assetName}</strong> — {stage.calendarName}
+                  {t('stageDelayed')} : <strong>{stage.assetName}</strong> — {stage.calendarName}
                 </span>
               </div>
             ))}
@@ -123,7 +125,7 @@ export default function DashboardPage() {
               <div className="flex items-center gap-2 rounded-lg bg-blue-50 px-3 py-2 text-sm">
                 <ClipboardList className="h-4 w-4 text-blue-500" />
                 <span className="text-gray-700">
-                  <strong>{data.pendingTasks}</strong> tâche{data.pendingTasks > 1 ? 's' : ''} en attente
+                  <strong>{data.pendingTasks}</strong> {t('pendingTasks')}
                 </span>
               </div>
             )}
@@ -133,7 +135,7 @@ export default function DashboardPage() {
 
       {/* Module Shortcuts */}
       <div className="rounded-xl bg-white p-5 shadow-sm">
-        <h3 className="mb-4 text-lg font-semibold text-gray-800">Modules</h3>
+        <h3 className="mb-4 text-lg font-semibold text-gray-800">{t('modules')}</h3>
         <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
           {MODULE_SHORTCUTS.map((mod) => (
             <Link
@@ -152,9 +154,9 @@ export default function DashboardPage() {
 
       {/* Recent Tasks */}
       <div className="rounded-xl bg-white p-5 shadow-sm">
-        <h3 className="mb-4 text-lg font-semibold text-gray-800">Tâches récentes</h3>
+        <h3 className="mb-4 text-lg font-semibold text-gray-800">{t('recentTasks')}</h3>
         {data.recentLogs.length === 0 ? (
-          <p className="text-sm text-gray-400">Aucune tâche planifiée</p>
+          <p className="text-sm text-gray-400">{t('noTasks')}</p>
         ) : (
           <div className="space-y-2">
             {data.recentLogs.map((log) => (

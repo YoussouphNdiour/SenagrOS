@@ -1,5 +1,6 @@
 import { auth } from '@/server/auth';
 import { redirect } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { AssignCalendarForm } from '@/components/calendrier/AssignCalendarForm';
 
 export default async function AssignCalendarPage() {
@@ -8,13 +9,13 @@ export default async function AssignCalendarPage() {
     redirect('/dashboard');
   }
 
+  const t = await getTranslations('calendrier');
+
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Assigner un calendrier</h1>
-        <p className="text-sm text-gray-500">
-          Associez un modèle de calendrier à une parcelle avec une date de semis
-        </p>
+        <h1 className="text-2xl font-bold text-gray-800">{t('formAssign')}</h1>
+        <p className="text-sm text-gray-500">{t('subtitle')}</p>
       </div>
 
       <AssignCalendarForm />
