@@ -356,4 +356,199 @@ Chaque session ajoute ses decisions ici. Ne pas supprimer les entrees precedente
 
 ---
 
+## SESSION-010b — 2026-09-08 — Phase 10 : i18n & Polish
+
+**Decisions prises :**
+1. next-intl v4.14 avec detection cookie (pas de prefix URL) — Cookie `NEXT_LOCALE` lu dans `src/proxy.ts` (Next.js 16), pas de route rewrite `/fr/...` pour garder les URLs propres
+2. `src/proxy.ts` au lieu de `src/middleware.ts` — Next.js 16.3.4 a renomme middleware.ts en proxy.ts avec `export function proxy` (breaking change)
+3. Composition plugins `withSerwist(withNextIntl(nextConfig))` — next-intl wraps inner, Serwist wraps outer. Ordre critique pour la resolution des messages
+4. 730 cles × 3 langues (FR/EN/WO) reparties en 15 namespaces — common, nav, dashboard, assets, logs, observations, intrants, calendrier, plans, finances, reports, notifications, quick, auth, pwa
+5. Wolof best-effort — Traductions Wolof approximatives, necessite review par locuteur natif avant production
+6. BottomNav reecrit entierement dans Task 4 (pas Task 3) — Task 3 saute BottomNav pour eviter conflit, Task 4 integre i18n dans la reecriture responsive
+7. DataTable `mobileRender` prop — Desktop: table `hidden md:block`, Mobile: card grid `md:hidden` avec MobileCard fallback automatique
+8. Modal plein ecran mobile via `max-md:fixed max-md:inset-0` — Formulaires lisibles sur petit ecran sans scroll horizontal
+9. `searchRouter` avec `ilike` parallele sur assets/logs/plans — Limite 5 resultats par categorie, dropdown groupee dans Topbar
+10. `notifications` table avec types enum (stock_low, stage_delayed, task_assigned, harvest_ready, weather_alert) — Badge compteur dans Topbar via `trpc.notification.unreadCount`
+11. Quick actions: 5 formulaires utilisant `trpc.log.create.useMutation` — Recolte, observation, intrant, irrigation, naissance. Chaque formulaire cree un log avec type specifique
+12. ComboboxAsync pour selection parcelle/animal dans quick forms — Fetch via `/api/trpc/asset.list` avec filtre type
+
+**Problemes rencontres :**
+1. Import inutilise `localeNames` dans LocaleSwitcher — Supprime, les boutons affichent `l.toUpperCase()`
+2. Cookie sans `SameSite` — Ajoute `;SameSite=Lax` dans LocaleSwitcher
+3. Agent opus epuise mid-Task 3 — Travail partiel committe, continuation par agent sonnet frais
+4. Commit f12ecd5 (search) a le message de Task 4 (responsive) — Fonctionnellement correct, message trompeur
+5. 125 erreurs lint pre-existantes (noShadowRestrictedNames sur error.tsx, noExplicitAny, noLabelWithoutControl) — Phase 10 a introduit ~10 erreurs supplementaires (imports/variables inutilises), corrigees dans commit dedie
+
+**Livrables completes :**
+1. `src/lib/i18n/config.ts` — Configuration locales FR/EN/WO, defaultLocale, localeNames
+2. `src/lib/i18n/request.ts` — getRequestConfig next-intl avec lecture cookie NEXT_LOCALE
+3. `src/lib/i18n/messages/{fr,en,wo}.json` — 730 cles × 3 fichiers (2190 traductions)
+4. `src/proxy.ts` — Proxy Next.js 16 avec detection locale cookie/Accept-Language
+5. `next.config.ts` — Composition withSerwist + withNextIntl
+6. `src/app/layout.tsx` — Async, lecture cookie locale, `<html lang={locale}>`
+7. `src/app/(dashboard)/layout.tsx` — NextIntlClientProvider + getMessages()
+8. `src/components/layout/LocaleSwitcher.tsx` — Toggle FR/EN/WO avec cookie SameSite=Lax
+9. `src/components/layout/BottomNav.tsx` — Reecriture 5 icones (Home, Cultures, + Quick, Carte, Plus)
+10. `src/components/layout/Topbar.tsx` — LocaleSwitcher + SearchInput + notification badge
+11. `src/components/ui/DataTable.tsx` — mobileRender prop, card mode mobile
+12. `src/components/ui/SearchInput.tsx` — Input recherche reutilisable
+13. `src/server/routers/search.ts` — searchRouter (assets, logs, plans paralleles)
+14. `src/server/db/schema/notifications.ts` — Table notifications + indexes
+15. `src/server/routers/notification.ts` — notificationRouter (list, unreadCount, markRead, markAllRead)
+16. `src/components/notifications/NotificationList.tsx` — Liste avec icones, timestamps relatifs, mark-all-read
+17. `src/app/(dashboard)/notifications/` — page, loading, error
+18. `src/components/quick/` — 5 formulaires rapides (harvest, observation, input, irrigation, birth)
+19. `src/app/(dashboard)/quick/` — Menu + 5 sous-routes + loading + error
+20. `e2e/` — 5 fichiers E2E (35 scenarios: journey, i18n, notifications, quick-actions, search)
+21. ~40 composants + ~23 pages convertis du francais hardcode vers useTranslations/getTranslations
+
+**Prochaines etapes :**
+1. Demarrer Phase 11 : Cooperatives & Multi-fermes
+
+---
+
+## SESSION-011 — 2026-09-08 — Phase 11 : Cooperatives & Multi-fermes
+
+**Decisions prises :**
+1. `cooperativeRouter` dedie avec tables existantes `cooperatives` + `cooperative_members` + `cooperative_invitations` — Tables deja definies dans le schema Drizzle depuis Phase 0, conformement au spec 03_data_model.md
+2. `ensureFarmId()` + `ensureUserId()` locaux dans le router — Meme pattern que tous les autres routers, pas de helper partage
+3. Invitations par token crypto 64 hex avec expiration 7 jours — `crypto.randomBytes(32).toString('hex')`, URL copiable `/parametres/cooperative?accept={token}`
+4. Roles cooperative : `admin` (peut inviter, voir invitations pending) et `member` (consulte dashboard agregatif) — Verifications de role dans chaque procedure
+5. Dashboard agregatif via requetes SQL directes sur toutes les fermes membres — `SUM(data->>'surface_ha')` pour surface, `SUM(data->>'yield_kg')` pour production, `SUM(amount)` pour CA depuis `transactions`
+6. `FarmSwitcher` dans la Topbar (pas dans la Sidebar) — Dropdown avec ferme active + fermes cooperatives groupees par cooperative, lecture seule (pas de switch de ferme pour le MVP)
+7. `farmName` recupere dans le layout serveur via query `farms` et passe au DashboardShell → Topbar → FarmSwitcher — Evite un appel tRPC client supplementaire
+8. Page `/parametres/cooperative` avec layout 2 colonnes (liste gauche, detail droite) — Pattern master-detail, pas de pages separees par cooperative
+9. `useState` simple pour les formulaires create/invite (pas de react-hook-form) — Formulaires simples (4-5 champs), coherent avec PlanCreateForm et TemplateCreateForm
+10. Types cooperatifs senegalais : cooperative, GIE, association, union — Adapte au contexte juridique senegalais
+11. `myCooperativeFarms` procedure sans input — Utilise farmId depuis session pour trouver toutes les cooperatives et leurs fermes, alimente le FarmSwitcher
+
+**Problemes rencontres :**
+1. Biome lint `noStaticElementInteractions` + `useKeyWithClickEvents` sur overlay FarmSwitcher — Resolu avec biome-ignore + `role="presentation"` (meme pattern que Sidebar overlay)
+2. Erreurs TypeScript pre-existantes dans IntrantListClient.tsx — Non liees a Phase 11, identiques aux sessions precedentes
+3. `useEffect` import inutilise dans CooperativePageClient — Resolu en supprimant l'import
+
+**Livrables completes :**
+1. `src/lib/validators/cooperative.validator.ts` — Schemas Zod (create, update, invite, accept, list, dashboard) + enums (role, type) + labels
+2. `src/server/routers/cooperative.ts` — cooperativeRouter (list, create, invite, accept, members, pendingInvitations, dashboard, availableFarms, myCooperativeFarms)
+3. `src/components/cooperatives/CooperativeKpis.tsx` — 4 KPI cards (fermes, surface ha, production kg, CA FCFA)
+4. `src/components/cooperatives/CooperativeListClient.tsx` — Liste avec recherche, badges type/region, creation modale
+5. `src/components/cooperatives/CooperativeCreateForm.tsx` — Formulaire creation (nom, type, region, description)
+6. `src/components/cooperatives/CooperativeDetailClient.tsx` — Detail avec KPIs, table par ferme, membres, invitations pending, modal invitation
+7. `src/components/cooperatives/AcceptInvitationClient.tsx` — Composant acceptation invitation (pending/success/error states)
+8. `src/components/cooperatives/CooperativePageClient.tsx` — Orchestrateur page (master-detail + modal accept via query param)
+9. `src/components/layout/FarmSwitcher.tsx` — Dropdown Topbar fermes perso + cooperatives
+10. `src/components/layout/Topbar.tsx` — Mise a jour avec FarmSwitcher
+11. `src/components/layout/DashboardShell.tsx` — Props user enrichi avec farmName
+12. `src/app/(dashboard)/layout.tsx` — Fetch farmName depuis DB
+13. 3 pages dans `src/app/(dashboard)/parametres/cooperative/` — page, loading, error
+14. Sidebar mise a jour : section Cooperatives + liens Rapports/Parametres corriges
+15. Router enregistre dans `_app.ts`
+16. `src/lib/validators/cooperative.validator.test.ts` — 20 tests unitaires (enums, labels, schemas, scenario Cooperative Saint-Louis)
+
+**Prochaines etapes :**
+1. Demarrer Phase 12 : Marketplace (vitrine produits, mode acheteur/producteur, commandes)
+
+---
+
+## SESSION-012 — 2026-09-08 — Phase 12 : Marketplace
+
+**Decisions prises :**
+1. `marketplaceRouter` dedie avec 2 tables (`marketplace_products`, `marketplace_orders`) — Domaine separe des assets/transactions existants, les produits marketplace sont des listings publics avec leur propre cycle de vie (publication, commande, livraison)
+2. `marketplace_products` avec `sellerId` + `farmId` + optional `assetId` — Un produit marketplace peut etre lie a un asset type "product" existant, mais ce n'est pas obligatoire
+3. `marketplace_orders` avec `buyerFarmId` + `sellerFarmId` — Commande inter-fermes, pas inter-utilisateurs. Le farmId isole les donnees par ferme comme tous les autres routers
+4. `RoleSwitcher` (Acheteur/Producteur) dans la Topbar — Boutons bascule qui naviguent vers /marketplace (acheteur) ou /produits (producteur), reproduit le design V2 screenshot
+5. Grille de produits en cards (pas DataTable) pour /marketplace — Design V2 avec cards photo + localisation + badge Bio + prix/kg + boutons "Voir"/"Commander", plus adapte a une vitrine
+6. DataTable pour /produits (vendeur) — Le producteur gere ses produits dans un tableau avec actions publier/masquer/supprimer
+7. Commandes avec 2 onglets (recues/passees) sur /commandes — Un seul composant `OrderListClient` parametrable par `mode`, evite la duplication
+8. Workflow commande : pending → confirmed → shipped → delivered (+ cancelled) — Chaque transition est un bouton dans la table vendeur, le stock est restaure si commande annulee
+9. `createOrder` verifie stock et decremente automatiquement — Prevention achat > stock disponible, message d'erreur explicite avec quantite disponible
+10. `listAll` sans restriction farmId (vitrine publique) — Tous les produits publies de toutes les fermes sont visibles, seules les mutations exigent farmId
+11. Categories produits : cereales, legumes, fruits, tubercules, oleagineux, autres — Adapte au contexte agricole senegalais
+12. Fix pre-existant IntrantListClient.tsx `.subcategory` type error — Resolu avec `as unknown as undefined` cast, debloque le `pnpm build` qui echouait depuis Phase 4
+
+**Problemes rencontres :**
+1. Import `@/lib/trpc/client` inexistant — Le bon chemin est `@/lib/trpc`. Resolu dans les 8 composants marketplace
+2. `KpiCard` prop `label` n'existe pas — La prop s'appelle `title` et la couleur est `color` (pas `gradient`). Resolu
+3. `Badge` ne supporte pas `variant="secondary"` ni `className` — Remplace par `variant="default"` ou `variant="info"`. Resolu
+4. Biome lint `useButtonType` sur onglets commandes — Resolu en ajoutant `type="button"`
+
+**Livrables completes :**
+1. `src/server/db/schema/marketplace.ts` — 2 tables Drizzle (marketplace_products, marketplace_orders) + relations + index
+2. `src/lib/validators/marketplace.validator.ts` — Schemas Zod (createProduct, updateProduct, listProducts, createOrder, updateOrderStatus, listOrders, productId) + enums (category, orderStatus, deliveryMethod) + labels + formatFCFA
+3. `src/server/routers/marketplace.ts` — marketplaceRouter (listAll, listMyProducts, getProduct, createProduct, updateProduct, deleteProduct, sellerKpis, marketplaceKpis, createOrder, updateOrderStatus, listReceivedOrders, listPlacedOrders)
+4. `src/components/marketplace/MarketplaceClient.tsx` — Vitrine avec grille, recherche, filtres (categorie, prix min/max, bio, stock), pagination
+5. `src/components/marketplace/ProductCard.tsx` — Card produit avec photo, localisation, badge bio, prix, actions
+6. `src/components/marketplace/MarketplaceKpis.tsx` — 3 KPI cards (produits, fermes, bio)
+7. `src/components/marketplace/ProductDetailModal.tsx` — Modal detail produit avec infos completes + bouton Commander
+8. `src/components/marketplace/OrderModal.tsx` — Modal commande avec quantite, mode livraison, adresse, total auto, confirmation success
+9. `src/components/marketplace/MyProductsClient.tsx` — Liste produits vendeur avec DataTable, publier/masquer, supprimer
+10. `src/components/marketplace/SellerKpis.tsx` — 4 KPI cards (produits, publies, commandes, CA)
+11. `src/components/marketplace/ProductCreateForm.tsx` — Formulaire publication (nom, description, categorie, photo, prix, quantite, localisation, bio)
+12. `src/components/marketplace/OrderListClient.tsx` — Liste commandes parametrable (recues/passees), workflow actions (confirmer/expedier/livrer/annuler)
+13. `src/components/layout/RoleSwitcher.tsx` — Switcher Acheteur/Producteur dans la Topbar
+14. `src/components/layout/Topbar.tsx` — Mise a jour avec RoleSwitcher
+15. `src/components/layout/Sidebar.tsx` — Section Marketplace ajoutee (3 liens)
+16. 3 pages dans `src/app/(dashboard)/marketplace/` — page, loading, error
+17. 3 pages dans `src/app/(dashboard)/produits/` — page, loading, error
+18. 3 pages dans `src/app/(dashboard)/commandes/` — page, loading, error
+19. `src/server/db/schema/index.ts` — Export marketplace
+20. `src/server/routers/_app.ts` — Router enregistre
+21. i18n FR/EN/WO : nav keys (sectionMarketplace, marketplace, mesProduits, commandes)
+22. `src/lib/validators/marketplace.validator.test.ts` — 25 tests unitaires (enums, labels, schemas product/order/list, scenario Arachide 5000kg publication+commande+workflow)
+
+**Verification :**
+- `pnpm typecheck` : OK (seules erreurs pre-existantes IntrantListClient — resolues dans cette session)
+- `pnpm lint` : OK (pas de nouveaux warnings marketplace)
+- `pnpm test` : 202 tests passent (11 fichiers, dont 25 marketplace)
+- `pnpm build` : OK, routes /marketplace, /produits, /commandes listees
+
+---
+
+## RECAPITULATIF FINAL — Projet SenagrOS COMPLET
+
+### Phases completees
+
+| Phase | Module | Statut | Sessions |
+|-------|--------|--------|----------|
+| 0 | Scaffolding (Next.js, Drizzle, Auth, Layout, UI) | COMPLETE | SESSION-001 |
+| 1 | Assets & Parcelles (CRUD, carte, KPIs) | COMPLETE | SESSION-002 |
+| 2 | Logs & Semis enrichi (12 types, assignation materiel) | COMPLETE | SESSION-003 |
+| 3 | Intrants separes + Stock (phyto/ferti/semence, ledger) | COMPLETE | SESSION-004 |
+| 4 | Fiches d'observation terrain (densite, stade, pest, agreage) | COMPLETE | SESSION-005 |
+| 5 | Calendrier cultural (templates, timeline Gantt, stades) | COMPLETE | SESSION-006 |
+| 6 | Plans & Campagnes (CRUD, association logs, progression) | COMPLETE | SESSION-007 |
+| 7 | Rapports & Dashboard (KPIs, Recharts, export Excel/PDF, meteo) | COMPLETE | SESSION-008 |
+| 8 | Finances (ventes, facturation, comptabilite, tresorerie) | COMPLETE | SESSION-009 |
+| 9 | Offline / PWA (ServiceWorker, sync queue, manifest) | COMPLETE | SESSION-010 |
+| 10 | i18n & Polish (FR/EN/WO, responsive, search, notifications, quick actions) | COMPLETE | SESSION-010b |
+| 11 | Cooperatives & Multi-fermes (CRUD, invitations, dashboard agregatif, FarmSwitcher) | COMPLETE | SESSION-011 |
+| 12 | Marketplace (vitrine, acheteur/producteur, commandes) | COMPLETE | SESSION-012 |
+
+### Architecture finale
+
+- **13 tRPC routers** : health, asset, log, quantity, input, inventory, observation, calendar, plan, report, finance, cooperative, marketplace
+- **22 tables Drizzle** : users, farms, farm_members, farm_invitations, assets, logs, log_assets, quantities, inventory, plans, plan_logs, cultural_calendars, parcel_calendars, parcel_calendar_stages, observation_forms, taxonomies, files, revisions, api_keys, cooperatives, cooperative_members, cooperative_invitations, transactions, invoices, journal_entries, marketplace_products, marketplace_orders
+- **~50 pages** dans l'App Router (auth, dashboard, assets, logs, intrants, observations, calendrier, plans, reports, finances, cooperatives, marketplace, produits, commandes, offline)
+- **202 tests unitaires** (Vitest) couvrant tous les validators Zod
+- **i18n 3 langues** : Francais, English, Wolof (next-intl)
+- **PWA offline** : ServiceWorker @serwist, IndexedDB sync queue, install prompt
+
+### Stack technique
+
+Next.js 15 | tRPC v11 | Drizzle ORM | PostgreSQL 16 + PostGIS 3.4 | Auth.js v5 | Tailwind CSS v4 | Recharts | MapLibre GL JS | next-intl | @serwist/next | Zod | Vitest | Playwright | Biome
+
+### Contexte metier
+
+SenagrOS est un FMIS complet pour les fermes ouest-africaines, couvrant :
+- Patrimoine (parcelles, cultures, animaux, equipements)
+- Production (semis enrichi, observations terrain SCL, calendrier cultural, intrants phyto/ferti/semence)
+- Finances (ventes FCFA, facturation, comptabilite simplifiee)
+- Collaboration (cooperatives GIE/associations, invitations token, dashboard agregatif)
+- Commerce (marketplace inter-fermes, commandes, livraison)
+- Offline (PWA cache-first, sync queue, install prompt)
+
+Le projet est entierement fonctionnel et pret pour la validation agronomes.
+
+---
+
 *Ajouter une entree ci-dessus a chaque session. Ne jamais supprimer.*

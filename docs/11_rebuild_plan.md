@@ -161,31 +161,41 @@ Montrer : creer un calendrier haricot vert, l'assigner a P-06, voir la timeline
 ## Phase 10 : i18n & Polish (1 session)
 
 ### Livrables
-- [ ] Traductions completes FR/EN/WO
-- [ ] Responsive mobile (BottomNav, formulaires plein ecran)
-- [ ] Recherche globale
-- [ ] Notifications in-app
-- [ ] Quick actions
-- [ ] Tests E2E complets
+- [x] Traductions completes FR/EN/WO (730 cles × 3 langues, next-intl cookie-based)
+- [x] Responsive mobile (BottomNav 5 icones, DataTable card mode, Modal plein ecran, KPI grid responsive)
+- [x] Recherche globale (SearchInput Topbar, searchRouter assets/logs/plans, dropdown groupe)
+- [x] Notifications in-app (table notifications, router CRUD, page /notifications, badge Topbar)
+- [x] Quick actions (menu /quick, 5 formulaires rapides: recolte, observation, intrant, irrigation, naissance)
+- [x] Tests E2E complets (5 fichiers, 35 scenarios: journey, i18n, notifications, quick-actions, search)
 
 ---
 
 ## Phase 11 : Cooperatives & Multi-fermes (P1)
 
 ### Livrables
-- [ ] CRUD Cooperatives
-- [ ] Invitations par token
-- [ ] Dashboard agregatif
-- [ ] Tests
+- [x] CRUD Cooperatives (list, create, members, pendingInvitations, availableFarms, myCooperativeFarms)
+- [x] Invitations par token (invite, accept, copier lien)
+- [x] Dashboard agregatif (surface totale, production totale, CA total, detail par ferme)
+- [x] FarmSwitcher dans la Topbar (fermes perso + fermes cooperative)
+- [x] Page /parametres/cooperative (gestion cooperative, membres, invitations)
+- [x] Sidebar section Cooperatives
+- [x] Tests (20 tests unitaires validators + scenario Saint-Louis)
 
 ---
 
 ## Phase 12 : Marketplace (P2)
 
 ### Livrables
-- [ ] Vitrine produits
-- [ ] Mode acheteur/producteur
-- [ ] Commandes
+- [x] Vitrine produits (/marketplace — grille produits, filtres, recherche, KPIs)
+- [x] Mode acheteur/producteur (RoleSwitcher dans la Topbar)
+- [x] Publication produit (/produits — liste, creation, publier/masquer, supprimer)
+- [x] Commandes (/commandes — onglets recues/passees, workflow pending→confirmed→shipped→delivered)
+- [x] Schema DB (marketplace_products, marketplace_orders)
+- [x] Router tRPC (marketplaceRouter — 11 procedures)
+- [x] Sidebar section Marketplace (3 liens)
+- [x] i18n FR/EN/WO pour les nav keys
+- [x] Tests (25 tests unitaires validators + scenario Arachide)
+- [x] Build production OK
 
 ---
 
