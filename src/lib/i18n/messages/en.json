@@ -861,5 +861,23 @@
     "close": "Close",
     "retry": "Retry",
     "offlineTitle": "You are offline"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "subtitle": "Your alerts and activity updates",
+    "markAllRead": "Mark all as read",
+    "filterUnread": "Unread only",
+    "empty": "No notifications",
+    "emptySubtitle": "You're all caught up!",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {current} of {total}",
+    "timeJustNow": "Just now",
+    "timeMinutes": "{count} min ago",
+    "timeHours": "{count} h ago",
+    "timeDays": "{count} d ago",
+    "typeStockLow": "Low stock",
+    "typeStageDelayed": "Delayed stage",
+    "typeTaskAssigned": "Task assigned"
   }
 }

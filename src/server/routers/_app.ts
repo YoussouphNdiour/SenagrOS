@@ -12,6 +12,7 @@ import { financeRouter } from './finance';
 import { cooperativeRouter } from './cooperative';
 import { marketplaceRouter } from './marketplace';
 import { searchRouter } from './search';
+import { notificationRouter } from './notification';
 
 export const appRouter = router({
   health: publicProcedure.query(() => ({ status: 'ok' })),
@@ -28,6 +29,7 @@ export const appRouter = router({
   cooperative: cooperativeRouter,
   marketplace: marketplaceRouter,
   search: searchRouter,
+  notification: notificationRouter,
 });
 
 export type AppRouter = typeof appRouter;

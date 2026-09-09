@@ -861,5 +861,23 @@
     "close": "Fermer",
     "retry": "Réessayer",
     "offlineTitle": "Vous êtes hors ligne"
+  },
+  "notifications": {
+    "title": "Notifications",
+    "subtitle": "Vos alertes et mises à jour d'activité",
+    "markAllRead": "Tout marquer comme lu",
+    "filterUnread": "Non lus uniquement",
+    "empty": "Aucune notification",
+    "emptySubtitle": "Vous êtes à jour !",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "page": "Page {current} sur {total}",
+    "timeJustNow": "À l'instant",
+    "timeMinutes": "Il y a {count} min",
+    "timeHours": "Il y a {count} h",
+    "timeDays": "Il y a {count} j",
+    "typeStockLow": "Stock bas",
+    "typeStageDelayed": "Stade en retard",
+    "typeTaskAssigned": "Tâche assignée"
   }
 }

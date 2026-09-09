@@ -861,5 +861,23 @@
     "close": "Tëj",
     "retry": "Jëf ci kanam",
     "offlineTitle": "Hors ligne nga"
+  },
+  "notifications": {
+    "title": "Xabaar yi",
+    "subtitle": "Saxal ak yëngu ak jëfandikoo bi",
+    "markAllRead": "Bind lépp lu jàng",
+    "filterUnread": "Bi du jàng rekk",
+    "empty": "Amul xabaar",
+    "emptySubtitle": "Dafa yomb!",
+    "previous": "Ci kanam",
+    "next": "Ci ginaaw",
+    "page": "Xët {current} ci {total}",
+    "timeJustNow": "Léegi léegi",
+    "timeMinutes": "{count} min ci kanam",
+    "timeHours": "{count} waxtu ci kanam",
+    "timeDays": "{count} fan ci kanam",
+    "typeStockLow": "Stock bu tooy",
+    "typeStageDelayed": "Stade bu yàq",
+    "typeTaskAssigned": "Liggéey bu def"
   }
 }
