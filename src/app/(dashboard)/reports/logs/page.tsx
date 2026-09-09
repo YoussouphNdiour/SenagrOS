@@ -102,7 +102,7 @@ export default function LogsReportPage() {
       </div>
 
       {/* KPIs */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard title={t('kpiTotalActivites')} value={data.total} icon={Activity} color="green" />
         <KpiCard title={t('kpiRecoltes')} value={harvestCount} icon={Sprout} color="blue" />
         <KpiCard title={t('kpiSoins')} value={medicalCount} icon={Stethoscope} color="orange" />

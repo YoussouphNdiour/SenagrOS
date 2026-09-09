@@ -13,7 +13,7 @@ export function LogKpis() {
   const { data: cancelledData } = trpc.log.list.useQuery({ status: 'cancelled', limit: 1 });
 
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <KpiCard
         title={t('kpiTotal')}
         value={allData?.total ?? 0}

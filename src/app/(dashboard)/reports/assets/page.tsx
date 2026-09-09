@@ -103,7 +103,7 @@ export default function AssetsReportPage() {
       </div>
 
       {/* KPIs */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard title={t('kpiTotalActifs')} value={data.total} icon={Landmark} color="green" />
         <KpiCard title={t('kpiCultures')} value={plantCount} icon={Sprout} color="blue" />
         <KpiCard title={t('kpiAnimaux')} value={animalCount} icon={Rabbit} color="orange" />

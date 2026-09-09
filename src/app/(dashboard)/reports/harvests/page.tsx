@@ -78,7 +78,7 @@ export default function HarvestsReportPage() {
       </div>
 
       {/* KPIs */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard title={t('kpiTotalRecoltes')} value={data.total} icon={Sprout} color="green" />
         <KpiCard title={t('kpiNbCultures')} value={data.byCrop.length} icon={BarChart3} color="blue" />
         <KpiCard title={t('kpiPoidsTotal')} value={`${formatKg(totalKg)} kg`} icon={Weight} color="orange" />

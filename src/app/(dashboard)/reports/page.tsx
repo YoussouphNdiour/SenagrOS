@@ -34,7 +34,7 @@ export default function ReportsPage() {
     return (
       <div className="space-y-6">
         <h1 className="text-2xl font-bold text-gray-800">{t('title')}</h1>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="h-28 animate-pulse rounded-xl bg-gray-100" />
           ))}
@@ -83,7 +83,7 @@ export default function ReportsPage() {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <KpiCard
           title={t('kpiPatrimoine')}
           value={`${dashboard.patrimoine} ${t('actifs')}`}
@@ -121,7 +121,7 @@ export default function ReportsPage() {
       )}
 
       {/* Quick Links */}
-      <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Link
           href="/reports/assets"
           className="rounded-xl border border-gray-200 bg-white p-4 text-center transition-colors hover:border-green-300 hover:bg-green-50"
