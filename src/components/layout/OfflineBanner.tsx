@@ -1,10 +1,12 @@
 'use client';
 
 import { useOfflineSync } from '@/hooks/useOfflineSync';
+import { useTranslations } from 'next-intl';
 import { RefreshCw, WifiOff } from 'lucide-react';
 
 export function OfflineBanner() {
   const { isOnline, pendingCount, isSyncing } = useOfflineSync();
+  const t = useTranslations('pwa');
 
   // Nothing to show when online and not syncing
   if (isOnline && !isSyncing) return null;
@@ -18,8 +20,8 @@ export function OfflineBanner() {
       >
         <RefreshCw className="h-4 w-4 animate-spin" aria-hidden="true" />
         <span>
-          Synchronisation en cours
-          {pendingCount > 0 && ` — ${pendingCount} opération${pendingCount > 1 ? 's' : ''} en attente`}
+          {t('syncing')}
+          {pendingCount > 0 && ` — ${pendingCount} ${t('pending')}`}
         </span>
       </div>
     );
@@ -34,9 +36,8 @@ export function OfflineBanner() {
     >
       <WifiOff className="h-4 w-4" aria-hidden="true" />
       <span>
-        Hors ligne
-        {pendingCount > 0 &&
-          ` — ${pendingCount} opération${pendingCount > 1 ? 's' : ''} en attente de synchronisation`}
+        {t('offline')}
+        {pendingCount > 0 && ` — ${pendingCount} ${t('pendingSync')}`}
       </span>
     </div>
   );

@@ -3,6 +3,7 @@
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { createAssetSchema } from '@/lib/validators/asset.validator';
 import { Input } from '@/components/ui/Input';
@@ -13,27 +14,30 @@ import type { z } from 'zod';
 
 type CreateAssetInput = z.infer<typeof createAssetSchema>;
 
-const typeOptions = [
-  { value: 'land', label: 'Parcelle' },
-  { value: 'plant', label: 'Culture' },
-  { value: 'animal', label: 'Animal' },
-  { value: 'equipment', label: 'Equipement' },
-  { value: 'structure', label: 'Structure' },
-  { value: 'material', label: 'Intrant' },
-  { value: 'sensor', label: 'Capteur' },
-  { value: 'water', label: "Point d'eau" },
-  { value: 'seed', label: 'Semence' },
-  { value: 'product', label: 'Produit' },
-  { value: 'compost', label: 'Compost' },
-  { value: 'group', label: 'Groupe' },
-];
-
 interface AssetCreateFormProps {
   farmId: string;
 }
 
 export function AssetCreateForm({ farmId }: AssetCreateFormProps) {
   const router = useRouter();
+  const t = useTranslations('assets');
+  const tc = useTranslations('common');
+
+  const typeOptions = [
+    { value: 'land', label: t('typeLand') },
+    { value: 'plant', label: t('typePlant') },
+    { value: 'animal', label: t('typeAnimal') },
+    { value: 'equipment', label: t('typeEquipment') },
+    { value: 'structure', label: t('typeStructure') },
+    { value: 'material', label: t('typeMaterial') },
+    { value: 'sensor', label: t('typeSensor') },
+    { value: 'water', label: t('typeWater') },
+    { value: 'seed', label: t('typeSeed') },
+    { value: 'product', label: t('typeProduct') },
+    { value: 'compost', label: t('typeCompost') },
+    { value: 'group', label: t('typeGroup') },
+  ];
+
   const createMutation = trpc.asset.create.useMutation({
     onSuccess: (data) => {
       router.push(`/assets/${data.id}`);
@@ -65,17 +69,17 @@ export function AssetCreateForm({ farmId }: AssetCreateFormProps) {
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
       <Card>
-        <h3 className="mb-4 text-lg font-semibold text-gray-800">Informations generales</h3>
+        <h3 className="mb-4 text-lg font-semibold text-gray-800">{t('formSectionGeneral')}</h3>
         <div className="grid gap-4 sm:grid-cols-2">
           <Select
-            label="Type d'asset"
+            label={t('fieldType')}
             options={typeOptions}
             error={errors.type?.message}
             {...register('type')}
           />
           <Input
-            label="Nom"
-            placeholder="Ex: Parcelle Nord A"
+            label={t('fieldName')}
+            placeholder={t('namePlaceholder')}
             error={errors.name?.message}
             {...register('name')}
           />
@@ -83,8 +87,8 @@ export function AssetCreateForm({ farmId }: AssetCreateFormProps) {
 
         <div className="mt-4">
           <Input
-            label="Notes"
-            placeholder="Description ou remarques..."
+            label={t('fieldNotes')}
+            placeholder={tc('notes')}
             error={errors.notes?.message}
             {...register('notes')}
           />
@@ -93,11 +97,11 @@ export function AssetCreateForm({ farmId }: AssetCreateFormProps) {
         <div className="mt-4 flex gap-4">
           <label className="flex items-center gap-2 text-sm text-gray-700">
             <input type="checkbox" {...register('isLocation')} className="rounded" />
-            Emplacement
+            {t('fieldIsLocation')}
           </label>
           <label className="flex items-center gap-2 text-sm text-gray-700">
             <input type="checkbox" {...register('isFixed')} className="rounded" />
-            Fixe
+            {t('fieldIsFixed')}
           </label>
         </div>
       </Card>
@@ -105,32 +109,32 @@ export function AssetCreateForm({ farmId }: AssetCreateFormProps) {
       {/* Type-specific data fields */}
       {selectedType === 'land' && (
         <Card>
-          <h3 className="mb-4 text-lg font-semibold text-gray-800">Donnees parcelle</h3>
+          <h3 className="mb-4 text-lg font-semibold text-gray-800">{t('formSectionLand')}</h3>
           <div className="grid gap-4 sm:grid-cols-2">
             <Input
-              label="Surface (ha)"
+              label={t('fieldSurface')}
               type="number"
               step="0.01"
               placeholder="Ex: 2.30"
               {...register('data.surface_ha' as any)}
             />
             <Input
-              label="Type de sol"
+              label={t('fieldSoilType')}
               placeholder="Ex: argileux"
               {...register('data.soil_type' as any)}
             />
             <Input
-              label="Type d'irrigation"
+              label={t('fieldIrrigationType')}
               placeholder="Ex: goutte_a_goutte"
               {...register('data.irrigation_type' as any)}
             />
             <Input
-              label="Code parcelle"
+              label={t('fieldCodeParcelle')}
               placeholder="Ex: 2P5D2-5374"
               {...register('data.code_parcelle' as any)}
             />
             <Input
-              label="Ilot"
+              label={t('fieldIlot')}
               placeholder="Ex: DIAMA"
               {...register('data.ilot' as any)}
             />
@@ -140,40 +144,40 @@ export function AssetCreateForm({ farmId }: AssetCreateFormProps) {
 
       {selectedType === 'plant' && (
         <Card>
-          <h3 className="mb-4 text-lg font-semibold text-gray-800">Donnees culture</h3>
+          <h3 className="mb-4 text-lg font-semibold text-gray-800">{t('formSectionPlant')}</h3>
           <div className="grid gap-4 sm:grid-cols-2">
             <Input
-              label="Type de culture"
+              label={t('fieldCropType')}
               placeholder="Ex: haricot_vert"
               {...register('data.crop_type' as any)}
             />
             <Input
-              label="Variete"
+              label={t('fieldVariety')}
               placeholder="Ex: Euforia"
               {...register('data.variety' as any)}
             />
             <Input
-              label="Date de plantation"
+              label={t('fieldPlantingDate')}
               type="date"
               {...register('data.planting_date' as any)}
             />
             <Input
-              label="Date de recolte prevue"
+              label={t('fieldExpectedHarvestDate')}
               type="date"
               {...register('data.expected_harvest_date' as any)}
             />
             <Input
-              label="Ecart entre rangs (cm)"
+              label={t('fieldRowSpacing')}
               type="number"
               {...register('data.row_spacing_cm' as any)}
             />
             <Input
-              label="Ecart entre plants (cm)"
+              label={t('fieldPlantSpacing')}
               type="number"
               {...register('data.plant_spacing_cm' as any)}
             />
             <Input
-              label="Densite (plants/ha)"
+              label={t('fieldDensity')}
               type="number"
               {...register('data.density_plants_ha' as any)}
             />
@@ -183,34 +187,34 @@ export function AssetCreateForm({ farmId }: AssetCreateFormProps) {
 
       {selectedType === 'equipment' && (
         <Card>
-          <h3 className="mb-4 text-lg font-semibold text-gray-800">Donnees equipement</h3>
+          <h3 className="mb-4 text-lg font-semibold text-gray-800">{t('formSectionEquipment')}</h3>
           <div className="grid gap-4 sm:grid-cols-2">
             <Input
-              label="Type d'equipement"
+              label={t('fieldEquipmentType')}
               placeholder="Ex: semoir"
               {...register('data.equipment_type' as any)}
             />
             <Input
-              label="Marque"
+              label={t('fieldBrand')}
               placeholder="Ex: John Deere"
               {...register('data.brand' as any)}
             />
             <Input
-              label="Modele"
+              label={t('fieldModel')}
               placeholder="Ex: 1750"
               {...register('data.model' as any)}
             />
             <Input
-              label="Numero de serie"
+              label={t('fieldSerialNumber')}
               {...register('data.serial_number' as any)}
             />
             <Input
-              label="Date d'achat"
+              label={t('fieldPurchaseDate')}
               type="date"
               {...register('data.purchase_date' as any)}
             />
             <Input
-              label="Prix d'achat (FCFA)"
+              label={t('fieldPurchasePrice')}
               type="number"
               {...register('data.purchase_price_xof' as any)}
             />
@@ -225,19 +229,19 @@ export function AssetCreateForm({ farmId }: AssetCreateFormProps) {
           variant="outline"
           onClick={() => router.back()}
         >
-          Annuler
+          {tc('cancel')}
         </Button>
         <Button
           type="submit"
           disabled={createMutation.isPending}
         >
-          {createMutation.isPending ? 'Creation...' : "Creer l'asset"}
+          {createMutation.isPending ? tc('creating') : t('createButton')}
         </Button>
       </div>
 
       {createMutation.isError && (
         <p className="text-sm text-red-500">
-          Erreur: {createMutation.error.message}
+          {tc('error')}: {createMutation.error.message}
         </p>
       )}
     </form>

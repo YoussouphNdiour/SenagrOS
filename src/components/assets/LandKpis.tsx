@@ -1,6 +1,7 @@
 'use client';
 
 import { MapPin, Ruler, CheckCircle } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { KpiCard } from '@/components/ui/KpiCard';
 
@@ -9,6 +10,7 @@ interface LandKpisProps {
 }
 
 export function LandKpis({ farmId }: LandKpisProps) {
+  const t = useTranslations('assets');
   const { data } = trpc.asset.list.useQuery({
     farmId,
     type: 'land',
@@ -34,19 +36,19 @@ export function LandKpis({ farmId }: LandKpisProps) {
   return (
     <div className="grid gap-4 sm:grid-cols-3">
       <KpiCard
-        title="Total parcelles"
+        title={t('kpiTotalParcelles')}
         value={total}
         icon={MapPin}
         color="green"
       />
       <KpiCard
-        title="Surface totale (ha)"
+        title={t('kpiSurface')}
         value={totalSurface.toFixed(2)}
         icon={Ruler}
         color="blue"
       />
       <KpiCard
-        title="Parcelles actives"
+        title={t('kpiActiveParcelles')}
         value={active}
         icon={CheckCircle}
         color="orange"

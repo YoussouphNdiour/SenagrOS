@@ -2,6 +2,7 @@
 
 import {
   BarChart3,
+  Building2,
   Calendar,
   ClipboardList,
   Droplets,
@@ -9,11 +10,9 @@ import {
   Leaf,
   Map,
   Package,
-  Settings,
   Sprout,
+  Store,
   Tractor,
-  Users,
-  Warehouse,
   X,
   FileText,
   Wheat,
@@ -23,9 +22,11 @@ import {
   Wallet,
   Receipt,
   BookOpen,
+  ClipboardCheck,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -35,66 +36,78 @@ interface SidebarProps {
 import type { LucideIcon } from 'lucide-react';
 
 interface NavLink {
-  label: string;
+  labelKey: string;
   href: string;
   icon: LucideIcon;
 }
 
 interface NavSection {
-  section: string;
+  sectionKey: string;
   items: NavLink[];
 }
 
 type NavItem = NavLink | NavSection;
 
 const navItems: NavItem[] = [
-  { label: 'Tableau de bord', href: '/dashboard', icon: Home },
+  { labelKey: 'dashboard', href: '/dashboard', icon: Home },
   {
-    section: 'Exploitation',
+    sectionKey: 'sectionExploitation',
     items: [
-      { label: 'Assets', href: '/assets', icon: Package },
-      { label: 'Parcelles', href: '/assets/land', icon: Map },
-      { label: 'Cultures', href: '/assets/plant', icon: Sprout },
-      { label: 'Animaux', href: '/assets/animal', icon: Leaf },
-      { label: 'Equipements', href: '/assets/equipment', icon: Tractor },
+      { labelKey: 'assets', href: '/assets', icon: Package },
+      { labelKey: 'parcelles', href: '/assets/land', icon: Map },
+      { labelKey: 'cultures', href: '/assets/plant', icon: Sprout },
+      { labelKey: 'animaux', href: '/assets/animal', icon: Leaf },
+      { labelKey: 'equipements', href: '/assets/equipment', icon: Tractor },
     ],
   },
   {
-    section: 'Production',
+    sectionKey: 'sectionProduction',
     items: [
-      { label: 'Journal', href: '/logs', icon: FileText },
-      { label: 'Activités', href: '/logs/activity', icon: ClipboardList },
-      { label: 'Semis', href: '/logs/seeding', icon: Wheat },
-      { label: 'Observations', href: '/observations', icon: Eye },
-      { label: 'Récoltes', href: '/logs/harvest', icon: Scissors },
-      { label: 'Intrants', href: '/intrants', icon: Package },
-      { label: 'Irrigation', href: '/logs/irrigation', icon: Droplets },
-      { label: 'Calendrier', href: '/calendrier', icon: Calendar },
-      { label: 'Plans', href: '/plans', icon: ClipboardList },
+      { labelKey: 'journal', href: '/logs', icon: FileText },
+      { labelKey: 'activites', href: '/logs/activity', icon: ClipboardList },
+      { labelKey: 'semis', href: '/logs/seeding', icon: Wheat },
+      { labelKey: 'observations', href: '/observations', icon: Eye },
+      { labelKey: 'recoltes', href: '/logs/harvest', icon: Scissors },
+      { labelKey: 'intrants', href: '/intrants', icon: Package },
+      { labelKey: 'irrigation', href: '/logs/irrigation', icon: Droplets },
+      { labelKey: 'calendrier', href: '/calendrier', icon: Calendar },
+      { labelKey: 'plans', href: '/plans', icon: ClipboardList },
     ],
   },
   {
-    section: 'Ventes & Finances',
+    sectionKey: 'sectionSalesFinances',
     items: [
-      { label: 'Ventes', href: '/ventes', icon: ShoppingCart },
-      { label: 'Finances', href: '/finances', icon: Wallet },
-      { label: 'Facturation', href: '/facturation', icon: Receipt },
-      { label: 'Comptabilité', href: '/comptabilite', icon: BookOpen },
+      { labelKey: 'ventes', href: '/ventes', icon: ShoppingCart },
+      { labelKey: 'finances', href: '/finances', icon: Wallet },
+      { labelKey: 'facturation', href: '/facturation', icon: Receipt },
+      { labelKey: 'comptabilite', href: '/comptabilite', icon: BookOpen },
     ],
   },
   {
-    section: 'Gestion',
+    sectionKey: 'sectionMarketplace',
     items: [
-      { label: 'Stocks', href: '/dashboard/stocks', icon: Warehouse },
-      { label: 'Rapports', href: '/dashboard/rapports', icon: BarChart3 },
-      { label: 'Employés', href: '/dashboard/employes', icon: Users },
-      { label: 'Paramètres', href: '/dashboard/parametres', icon: Settings },
+      { labelKey: 'marketplace', href: '/marketplace', icon: Store },
+      { labelKey: 'mesProduits', href: '/produits', icon: Package },
+      { labelKey: 'commandes', href: '/commandes', icon: ClipboardCheck },
+    ],
+  },
+  {
+    sectionKey: 'sectionCooperatives',
+    items: [
+      { labelKey: 'cooperatives', href: '/parametres/cooperative', icon: Building2 },
+    ],
+  },
+  {
+    sectionKey: 'sectionManagement',
+    items: [
+      { labelKey: 'rapports', href: '/reports', icon: BarChart3 },
     ],
   },
 ];
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
+  const t = useTranslations('nav');
 
   return (
     <>
@@ -144,7 +157,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                   }`}
                 >
                   <Icon className="h-5 w-5" />
-                  {link.label}
+                  {t(link.labelKey)}
                 </Link>
               );
             }
@@ -153,7 +166,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             return (
               <div key={idx}>
                 <p className="mb-1 mt-4 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
-                  {group.section}
+                  {t(group.sectionKey)}
                 </p>
                 {group.items.map((subItem) => {
                   const SubIcon = subItem.icon;
@@ -170,7 +183,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                       }`}
                     >
                       <SubIcon className="h-5 w-5" />
-                      {subItem.label}
+                      {t(subItem.labelKey)}
                     </Link>
                   );
                 })}

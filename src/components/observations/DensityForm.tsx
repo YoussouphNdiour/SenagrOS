@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -15,6 +16,8 @@ function buildRepetitions(count: number): { rep: number; plantCount: number }[] 
 
 export function DensityForm() {
   const router = useRouter();
+  const t = useTranslations('observations');
+  const tc = useTranslations('common');
 
   // --- Header fields ---
   const [assetId, setAssetId] = useState('');
@@ -111,61 +114,61 @@ export function DensityForm() {
       {/* Header fields */}
       <Card>
         <h2 className="mb-4 text-lg font-semibold text-gray-800">
-          Fiche de comptage — Densité de levée
+          {t('formDensityTitle')}
         </h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Select
-            label="Parcelle"
+            label={t('fieldParcel')}
             options={parcelOptions}
             value={assetId}
             onChange={(e) => setAssetId(e.target.value)}
-            placeholder="Sélectionner une parcelle"
+            placeholder={t('selectParcel')}
           />
           <Input
-            label="Culture"
+            label={t('fieldCropType')}
             type="text"
             value={cropType}
             onChange={(e) => setCropType(e.target.value)}
           />
           <Input
-            label="Variété"
+            label={t('fieldVariety')}
             type="text"
             value={variety}
             onChange={(e) => setVariety(e.target.value)}
           />
           <Input
-            label="Date observation"
+            label={t('fieldObservationDate')}
             type="date"
             value={observationDate}
             onChange={(e) => setObservationDate(e.target.value)}
           />
           <Input
-            label="Densité semis théorique (plants/ha)"
+            label={t('fieldTheoreticalDensity')}
             type="number"
             value={theoreticalDensity || ''}
             onChange={(e) => setTheoreticalDensity(Number(e.target.value))}
           />
           <Input
-            label="Surface échantillon (m²)"
+            label={t('fieldSampleArea')}
             type="number"
             step="0.01"
             value={sampleAreaM2}
             onChange={(e) => setSampleAreaM2(Number(e.target.value))}
           />
           <Input
-            label="Heure début"
+            label={t('fieldStartTime')}
             type="time"
             value={startTime}
             onChange={(e) => setStartTime(e.target.value)}
           />
           <Input
-            label="Heure fin"
+            label={t('fieldEndTime')}
             type="time"
             value={endTime}
             onChange={(e) => setEndTime(e.target.value)}
           />
           <Input
-            label="Surface observée (ha)"
+            label={t('fieldObservedSurface')}
             type="number"
             step="0.01"
             value={observedSurfaceHa}
@@ -177,7 +180,7 @@ export function DensityForm() {
       {/* Repetitions configuration */}
       <Card>
         <div className="mb-4 flex items-center gap-4">
-          <label className="text-sm font-medium text-gray-700">Nombre de répétitions</label>
+          <label className="text-sm font-medium text-gray-700">{t('fieldRepetitions')}</label>
           <input
             type="number"
             min={1}
@@ -193,13 +196,13 @@ export function DensityForm() {
           <table className="w-full border-collapse text-sm">
             <thead>
               <tr className="border-b border-gray-200 bg-gray-50">
-                <th className="px-3 py-2 text-left font-medium text-gray-600">Rép. #</th>
+                <th className="px-3 py-2 text-left font-medium text-gray-600">{t('fieldRepNo')}</th>
                 <th className="px-3 py-2 text-left font-medium text-gray-600">
-                  Nombre de plants
+                  {t('fieldPlantCount')}
                 </th>
-                <th className="px-3 py-2 text-left font-medium text-gray-600">Rép. #</th>
+                <th className="px-3 py-2 text-left font-medium text-gray-600">{t('fieldRepNo')}</th>
                 <th className="px-3 py-2 text-left font-medium text-gray-600">
-                  Nombre de plants
+                  {t('fieldPlantCount')}
                 </th>
               </tr>
             </thead>
@@ -259,20 +262,20 @@ export function DensityForm() {
 
       {/* Auto-calculated results */}
       <Card className="border-2 border-green-500">
-        <h3 className="mb-3 text-base font-semibold text-gray-800">Résultats calculés</h3>
+        <h3 className="mb-3 text-base font-semibold text-gray-800">{t('sectionResults')}</h3>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="text-center">
-            <p className="text-sm text-gray-500">Total plants</p>
+            <p className="text-sm text-gray-500">{t('totalPlants')}</p>
             <p className="text-3xl font-bold text-green-700">{results.totalPlants}</p>
           </div>
           <div className="text-center">
-            <p className="text-sm text-gray-500">Densité réelle (plts/ha)</p>
+            <p className="text-sm text-gray-500">{t('realDensity')}</p>
             <p className="text-3xl font-bold text-green-700">
               {results.realDensityPerHa.toLocaleString('fr-FR')}
             </p>
           </div>
           <div className="text-center">
-            <p className="text-sm text-gray-500">Taux de levée (%)</p>
+            <p className="text-sm text-gray-500">{t('emergenceRate')}</p>
             <p className="text-3xl font-bold text-green-700">{results.emergenceRatePct}%</p>
           </div>
         </div>
@@ -280,27 +283,29 @@ export function DensityForm() {
 
       {/* Remarks */}
       <Card>
-        <h3 className="mb-3 text-base font-semibold text-gray-800">Remarques</h3>
+        <h3 className="mb-3 text-base font-semibold text-gray-800">{t('sectionRemarks')}</h3>
         <div className="space-y-4">
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">
-              Remarques observateur
+              {t('observerRemarks')}
             </label>
             <textarea
               value={observerRemarks}
               onChange={(e) => setObserverRemarks(e.target.value)}
               rows={3}
+              placeholder={t('observerRemarksPlaceholder')}
               className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
             />
           </div>
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">
-              Remarques chef de ferme
+              {t('supervisorRemarks')}
             </label>
             <textarea
               value={supervisorRemarks}
               onChange={(e) => setSupervisorRemarks(e.target.value)}
               rows={3}
+              placeholder={t('supervisorRemarksPlaceholder')}
               className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
             />
           </div>
@@ -313,7 +318,7 @@ export function DensityForm() {
           onClick={handleSubmit}
           disabled={!assetId || !cropType || !observationDate || theoreticalDensity <= 0 || createDensity.isPending}
         >
-          {createDensity.isPending ? 'Enregistrement...' : 'Enregistrer la fiche'}
+          {createDensity.isPending ? tc('registering') : t('recordButton')}
         </Button>
       </div>
     </div>

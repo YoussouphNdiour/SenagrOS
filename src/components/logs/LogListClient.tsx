@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Search, Trash2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { DataTable } from '@/components/ui/DataTable';
 import { Badge } from '@/components/ui/Badge';
@@ -25,34 +26,26 @@ interface Log extends Record<string, unknown> {
   updatedAt: Date | null;
 }
 
-const typeLabels: Record<LogType, string> = {
-  activity: 'Activite',
-  observation: 'Observation',
-  input: 'Intrant',
-  harvest: 'Recolte',
-  seeding: 'Semis',
-  transplanting: 'Repiquage',
-  birth: 'Naissance',
-  maintenance: 'Maintenance',
-  medical: 'Medical',
-  lab_test: 'Analyse labo',
-  movement: 'Mouvement',
-  irrigation: 'Irrigation',
+const typeKeys: Record<LogType, string> = {
+  activity: 'typeActivity',
+  observation: 'typeObservation',
+  input: 'typeInput',
+  harvest: 'typeHarvest',
+  seeding: 'typeSeeding',
+  transplanting: 'typeTransplanting',
+  birth: 'typeBirth',
+  maintenance: 'typeMaintenance',
+  medical: 'typeMedical',
+  lab_test: 'typeLabTest',
+  movement: 'typeMovement',
+  irrigation: 'typeIrrigation',
 };
 
-const typeOptions = (Object.entries(typeLabels) as [LogType, string][]).map(
-  ([value, label]) => ({ value, label }),
-);
-
-const statusLabels: Record<LogStatus, string> = {
-  pending: 'En attente',
-  done: 'Termine',
-  cancelled: 'Annule',
+const statusKeys: Record<LogStatus, string> = {
+  pending: 'statusPending',
+  done: 'statusDone',
+  cancelled: 'statusCancelled',
 };
-
-const statusOptions = (Object.entries(statusLabels) as [LogStatus, string][]).map(
-  ([value, label]) => ({ value, label }),
-);
 
 const statusVariant: Record<LogStatus, 'warning' | 'success' | 'danger'> = {
   pending: 'warning',
@@ -73,12 +66,22 @@ interface LogListClientProps {
 
 export function LogListClient({ filterType }: LogListClientProps) {
   const router = useRouter();
+  const t = useTranslations('logs');
+  const tc = useTranslations('common');
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [selectedType, setSelectedType] = useState<LogType | ''>(filterType ?? '');
   const [selectedStatus, setSelectedStatus] = useState<LogStatus | ''>('');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
+
+  const typeOptions = (Object.entries(typeKeys) as [LogType, string][]).map(
+    ([value, key]) => ({ value, label: t(key) }),
+  );
+
+  const statusOptions = (Object.entries(statusKeys) as [LogStatus, string][]).map(
+    ([value, key]) => ({ value, label: t(key) }),
+  );
 
   const { data, isLoading } = trpc.log.list.useQuery({
     type: selectedType !== '' ? selectedType : undefined,
@@ -98,30 +101,30 @@ export function LogListClient({ filterType }: LogListClientProps) {
   const columns = [
     {
       key: 'name',
-      header: 'Nom',
+      header: tc('name'),
       render: (row: Log) => (
         <span className="font-medium text-gray-900">{row.name}</span>
       ),
     },
     {
       key: 'type',
-      header: 'Type',
+      header: tc('type'),
       render: (row: Log) => (
-        <Badge variant="info">{typeLabels[row.type] ?? row.type}</Badge>
+        <Badge variant="info">{typeKeys[row.type] ? t(typeKeys[row.type]) : row.type}</Badge>
       ),
     },
     {
       key: 'status',
-      header: 'Statut',
+      header: tc('status'),
       render: (row: Log) => (
         <Badge variant={getStatusVariant(row.status)}>
-          {statusLabels[row.status] ?? row.status ?? '—'}
+          {statusKeys[row.status] ? t(statusKeys[row.status]) : (row.status ?? '—')}
         </Badge>
       ),
     },
     {
       key: 'timestamp',
-      header: 'Date',
+      header: tc('date'),
       render: (row: Log) =>
         row.timestamp
           ? new Date(row.timestamp).toLocaleDateString('fr-FR')
@@ -134,12 +137,12 @@ export function LogListClient({ filterType }: LogListClientProps) {
         <button
           onClick={(e) => {
             e.stopPropagation();
-            if (confirm('Supprimer ce log ?')) {
+            if (confirm(t('deleteConfirm'))) {
               deleteMutation.mutate({ id: row.id });
             }
           }}
           className="rounded p-1 text-gray-400 hover:bg-red-50 hover:text-red-500"
-          title="Supprimer"
+          title={tc('delete')}
         >
           <Trash2 className="h-4 w-4" />
         </button>
@@ -156,7 +159,7 @@ export function LogListClient({ filterType }: LogListClientProps) {
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
-            placeholder="Rechercher un log..."
+            placeholder={t('searchPlaceholder')}
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
@@ -168,7 +171,7 @@ export function LogListClient({ filterType }: LogListClientProps) {
 
         {!filterType && (
           <Select
-            options={[{ value: '', label: 'Tous les types' }, ...typeOptions]}
+            options={[{ value: '', label: tc('allTypes') }, ...typeOptions]}
             value={selectedType}
             onChange={(e) => {
               setSelectedType(e.target.value as LogType | '');
@@ -179,7 +182,7 @@ export function LogListClient({ filterType }: LogListClientProps) {
         )}
 
         <Select
-          options={[{ value: '', label: 'Tous les statuts' }, ...statusOptions]}
+          options={[{ value: '', label: tc('allStatuses') }, ...statusOptions]}
           value={selectedStatus}
           onChange={(e) => {
             setSelectedStatus(e.target.value as LogStatus | '');
@@ -190,7 +193,7 @@ export function LogListClient({ filterType }: LogListClientProps) {
 
         <div className="flex items-end gap-2">
           <div>
-            <label className="mb-1 block text-xs text-gray-500">Du</label>
+            <label className="mb-1 block text-xs text-gray-500">{tc('from')}</label>
             <input
               type="date"
               value={dateFrom}
@@ -202,7 +205,7 @@ export function LogListClient({ filterType }: LogListClientProps) {
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs text-gray-500">Au</label>
+            <label className="mb-1 block text-xs text-gray-500">{tc('to')}</label>
             <input
               type="date"
               value={dateTo}
@@ -217,7 +220,7 @@ export function LogListClient({ filterType }: LogListClientProps) {
 
         <Button onClick={() => router.push('/logs/new')}>
           <Plus className="h-4 w-4" />
-          Nouveau
+          {tc('new')}
         </Button>
       </div>
 
@@ -230,7 +233,7 @@ export function LogListClient({ filterType }: LogListClientProps) {
         <DataTable<Log>
           columns={columns}
           data={(data?.items ?? []) as Log[]}
-          emptyMessage="Aucun log trouve"
+          emptyMessage={t('emptyMessage')}
           onRowClick={(row) => router.push(`/logs/${row.id}`)}
         />
       )}
@@ -239,7 +242,7 @@ export function LogListClient({ filterType }: LogListClientProps) {
       {data && data.pages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-gray-500">
-            {data.total} resultat{data.total > 1 ? 's' : ''} — Page {data.page}/{data.pages}
+            {data.total} {tc('results')} — {tc('page')} {data.page}/{data.pages}
           </p>
           <div className="flex gap-2">
             <Button
@@ -248,7 +251,7 @@ export function LogListClient({ filterType }: LogListClientProps) {
               disabled={page <= 1}
               onClick={() => setPage((p) => p - 1)}
             >
-              Precedent
+              {tc('previous')}
             </Button>
             <Button
               variant="outline"
@@ -256,7 +259,7 @@ export function LogListClient({ filterType }: LogListClientProps) {
               disabled={page >= data.pages}
               onClick={() => setPage((p) => p + 1)}
             >
-              Suivant
+              {tc('next')}
             </Button>
           </div>
         </div>

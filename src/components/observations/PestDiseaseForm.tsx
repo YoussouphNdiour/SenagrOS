@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -35,6 +36,8 @@ function buildInitialObservations(numTargets: number): ObservationRow[] {
 
 export function PestDiseaseForm() {
   const router = useRouter();
+  const t = useTranslations('observations');
+  const tc = useTranslations('common');
 
   // Header fields
   const [assetId, setAssetId] = useState('');
@@ -175,38 +178,38 @@ export function PestDiseaseForm() {
   return (
     <Card>
       <h2 className="mb-6 text-xl font-bold text-gray-800">
-        Observation Maladies-Ravageurs
+        {t('formPestTitle')}
       </h2>
 
       {/* Header fields */}
       <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
         <Select
-          label="Parcelle"
+          label={t('fieldParcel')}
           options={parcelOptions}
           value={assetId}
           onChange={(e) => setAssetId(e.target.value)}
-          placeholder="Choisir une parcelle"
+          placeholder={t('selectParcel')}
         />
         <Input
-          label="Culture"
+          label={t('fieldCropType')}
           type="text"
           value={cropType}
           onChange={(e) => setCropType(e.target.value)}
         />
         <Input
-          label="Vari\u00e9t\u00e9"
+          label={t('fieldVariety')}
           type="text"
           value={variety}
           onChange={(e) => setVariety(e.target.value)}
         />
         <Input
-          label="Date observation"
+          label={t('fieldObservationDate')}
           type="date"
           value={observationDate}
           onChange={(e) => setObservationDate(e.target.value)}
         />
         <Input
-          label="Nombre de cibles"
+          label={t('fieldNumTargets')}
           type="number"
           min={1}
           max={50}
@@ -214,7 +217,7 @@ export function PestDiseaseForm() {
           onChange={(e) => handleNumTargetsChange(parseInt(e.target.value, 10) || 1)}
         />
         <Input
-          label="Seuil traitement (%)"
+          label={t('fieldTreatmentThreshold')}
           type="number"
           min={0}
           max={100}
@@ -223,19 +226,19 @@ export function PestDiseaseForm() {
           onChange={(e) => setTreatmentThreshold(parseFloat(e.target.value) || 0)}
         />
         <Input
-          label="Heure d\u00e9but"
+          label={t('fieldStartTime')}
           type="time"
           value={startTime}
           onChange={(e) => setStartTime(e.target.value)}
         />
         <Input
-          label="Heure fin"
+          label={t('fieldEndTime')}
           type="time"
           value={endTime}
           onChange={(e) => setEndTime(e.target.value)}
         />
         <Input
-          label="Surface observ\u00e9e (ha)"
+          label={t('fieldObservedSurface')}
           type="number"
           value={observedSurfaceHa}
           onChange={(e) => setObservedSurfaceHa(e.target.value)}
@@ -244,13 +247,13 @@ export function PestDiseaseForm() {
 
       {/* Observation Grid */}
       <div className="mb-6">
-        <h3 className="mb-3 text-lg font-semibold text-gray-700">Grille d'observation</h3>
+        <h3 className="mb-3 text-lg font-semibold text-gray-700">{t('observationGrid')}</h3>
         <div className="overflow-x-auto rounded-lg border border-gray-200">
           <table className="min-w-full border-collapse">
             <thead>
               <tr className="bg-gray-50">
                 <th className="sticky left-0 bg-gray-50 px-2 py-2 text-left text-xs font-semibold text-gray-600">
-                  Ravageur / Maladie
+                  {t('formPestTitle')}
                 </th>
                 {Array.from({ length: numTargets }, (_, i) => (
                   <th
@@ -261,16 +264,16 @@ export function PestDiseaseForm() {
                   </th>
                 ))}
                 <th className="px-2 py-2 text-center text-xs font-semibold text-gray-600">
-                  Total
+                  {t('colTotal')}
                 </th>
                 <th className="px-2 py-2 text-center text-xs font-semibold text-gray-600">
-                  % Infest\u00e9
+                  {t('colPctInfested')}
                 </th>
                 <th className="px-2 py-2 text-center text-xs font-semibold text-gray-600">
-                  Seuil
+                  {t('colThreshold')}
                 </th>
                 <th className="px-2 py-2 text-center text-xs font-semibold text-gray-600">
-                  Alerte
+                  {t('colAlert')}
                 </th>
               </tr>
             </thead>
@@ -281,7 +284,7 @@ export function PestDiseaseForm() {
                   colSpan={numTargets + 5}
                   className="px-2 py-1.5 text-xs font-bold uppercase tracking-wider text-gray-500"
                 >
-                  Ravageurs
+                  {t('sectionRavageurs')}
                 </td>
               </tr>
               {ravageurRows.map(renderRow)}
@@ -292,7 +295,7 @@ export function PestDiseaseForm() {
                   colSpan={numTargets + 5}
                   className="px-2 py-1.5 text-xs font-bold uppercase tracking-wider text-gray-500"
                 >
-                  Maladies
+                  {t('sectionMaladies')}
                 </td>
               </tr>
               {maladieRows.map(renderRow)}
@@ -305,26 +308,26 @@ export function PestDiseaseForm() {
       <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
         <div>
           <label className="mb-1 block text-sm font-medium text-gray-700">
-            Pr\u00e9conisation traitement
+            {t('treatmentLabel')}
           </label>
           <textarea
             className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
             rows={3}
             value={supervisorRemarks}
             onChange={(e) => setSupervisorRemarks(e.target.value)}
-            placeholder="Remarques du superviseur..."
+            placeholder={t('supervisorRemarksPlaceholder')}
           />
         </div>
         <div>
           <label className="mb-1 block text-sm font-medium text-gray-700">
-            Remarques observateur
+            {t('observerRemarks')}
           </label>
           <textarea
             className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
             rows={3}
             value={observerRemarks}
             onChange={(e) => setObserverRemarks(e.target.value)}
-            placeholder="Remarques de l'observateur..."
+            placeholder={t('observerRemarksPlaceholder')}
           />
         </div>
       </div>
@@ -335,13 +338,13 @@ export function PestDiseaseForm() {
           onClick={handleSubmit}
           disabled={!assetId || !cropType || !observationDate || createMutation.isPending}
         >
-          {createMutation.isPending ? 'Enregistrement...' : 'Enregistrer l\u0027observation'}
+          {createMutation.isPending ? tc('registering') : t('recordObsButton')}
         </Button>
       </div>
 
       {createMutation.isError && (
         <p className="mt-3 text-sm text-red-600">
-          Erreur: {createMutation.error.message}
+          {tc('error')}: {createMutation.error.message}
         </p>
       )}
     </Card>

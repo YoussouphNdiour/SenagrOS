@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Pencil, CheckCircle, Trash2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -11,25 +12,40 @@ import type { logTypeValues, logStatusValues } from '@/lib/validators/log.valida
 type LogType = (typeof logTypeValues)[number];
 type LogStatus = (typeof logStatusValues)[number];
 
-const typeLabels: Record<LogType, string> = {
-  activity: 'Activite',
-  observation: 'Observation',
-  input: 'Intrant',
-  harvest: 'Recolte',
-  seeding: 'Semis',
-  transplanting: 'Repiquage',
-  birth: 'Naissance',
-  maintenance: 'Maintenance',
-  medical: 'Medical',
-  lab_test: 'Analyse labo',
-  movement: 'Mouvement',
-  irrigation: 'Irrigation',
+const typeKeys: Record<LogType, string> = {
+  activity: 'typeActivity',
+  observation: 'typeObservation',
+  input: 'typeInput',
+  harvest: 'typeHarvest',
+  seeding: 'typeSeeding',
+  transplanting: 'typeTransplanting',
+  birth: 'typeBirth',
+  maintenance: 'typeMaintenance',
+  medical: 'typeMedical',
+  lab_test: 'typeLabTest',
+  movement: 'typeMovement',
+  irrigation: 'typeIrrigation',
 };
 
-const statusLabels: Record<LogStatus, string> = {
-  pending: 'En attente',
-  done: 'Termine',
-  cancelled: 'Annule',
+const statusKeys: Record<LogStatus, string> = {
+  pending: 'statusPending',
+  done: 'statusDone',
+  cancelled: 'statusCancelled',
+};
+
+const assetTypeKeys: Record<string, string> = {
+  land: 'typeLand',
+  plant: 'typePlant',
+  animal: 'typeAnimal',
+  equipment: 'typeEquipment',
+  structure: 'typeStructure',
+  material: 'typeMaterial',
+  sensor: 'typeSensor',
+  water: 'typeWater',
+  seed: 'typeSeed',
+  product: 'typeProduct',
+  compost: 'typeCompost',
+  group: 'typeGroup',
 };
 
 const statusVariant: Record<LogStatus, 'success' | 'warning' | 'danger'> = {
@@ -38,27 +54,15 @@ const statusVariant: Record<LogStatus, 'success' | 'warning' | 'danger'> = {
   cancelled: 'danger',
 };
 
-const assetTypeLabels: Record<string, string> = {
-  land: 'Parcelle',
-  plant: 'Culture',
-  animal: 'Animal',
-  equipment: 'Equipement',
-  structure: 'Structure',
-  material: 'Intrant',
-  sensor: 'Capteur',
-  water: "Point d'eau",
-  seed: 'Semence',
-  product: 'Produit',
-  compost: 'Compost',
-  group: 'Groupe',
-};
-
 interface LogDetailClientProps {
   logId: string;
 }
 
 export function LogDetailClient({ logId }: LogDetailClientProps) {
   const router = useRouter();
+  const t = useTranslations('logs');
+  const tc = useTranslations('common');
+  const ta = useTranslations('assets');
   const { data: log, isLoading } = trpc.log.getById.useQuery({ id: logId });
 
   const completeMutation = trpc.log.complete.useMutation({
@@ -80,7 +84,7 @@ export function LogDetailClient({ logId }: LogDetailClientProps) {
   if (!log) {
     return (
       <div className="flex h-64 items-center justify-center text-gray-500">
-        Log introuvable
+        {t('notFound')}
       </div>
     );
   }
@@ -96,13 +100,13 @@ export function LogDetailClient({ logId }: LogDetailClientProps) {
       : [];
 
   const typeLabelDisplay =
-    log.type in typeLabels
-      ? typeLabels[log.type as LogType]
+    log.type in typeKeys
+      ? t(typeKeys[log.type as LogType])
       : log.type;
 
   const statusLabelDisplay =
-    log.status && log.status in statusLabels
-      ? statusLabels[log.status as LogStatus]
+    log.status && log.status in statusKeys
+      ? t(statusKeys[log.status as LogStatus])
       : (log.status ?? '—');
 
   const logStatus = log.status as LogStatus | null;
@@ -116,7 +120,7 @@ export function LogDetailClient({ logId }: LogDetailClientProps) {
             type="button"
             onClick={() => router.back()}
             className="rounded-lg p-2 text-gray-400 hover:bg-gray-100"
-            aria-label="Retour"
+            aria-label={tc('back')}
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
@@ -136,7 +140,7 @@ export function LogDetailClient({ logId }: LogDetailClientProps) {
             onClick={() => router.push(`/logs/${log.id}/edit`)}
           >
             <Pencil className="h-4 w-4" />
-            Modifier
+            {t('modify')}
           </Button>
           {logStatus !== 'done' && (
             <Button
@@ -145,20 +149,20 @@ export function LogDetailClient({ logId }: LogDetailClientProps) {
               disabled={completeMutation.isPending}
             >
               <CheckCircle className="h-4 w-4" />
-              Terminer
+              {t('complete')}
             </Button>
           )}
           <Button
             variant="danger"
             onClick={() => {
-              if (confirm('Supprimer ce log ?')) {
+              if (confirm(t('deleteConfirm'))) {
                 deleteMutation.mutate({ id: log.id });
               }
             }}
             disabled={deleteMutation.isPending}
           >
             <Trash2 className="h-4 w-4" />
-            Supprimer
+            {tc('delete')}
           </Button>
         </div>
       </div>
@@ -167,18 +171,18 @@ export function LogDetailClient({ logId }: LogDetailClientProps) {
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Main info */}
         <Card>
-          <h3 className="mb-3 text-lg font-semibold text-gray-800">Informations</h3>
+          <h3 className="mb-3 text-lg font-semibold text-gray-800">{tc('information')}</h3>
           <dl className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <dt className="text-gray-500">Type</dt>
+              <dt className="text-gray-500">{tc('type')}</dt>
               <dd className="font-medium">{typeLabelDisplay}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-gray-500">Statut</dt>
+              <dt className="text-gray-500">{tc('status')}</dt>
               <dd className="font-medium">{statusLabelDisplay}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-gray-500">Date</dt>
+              <dt className="text-gray-500">{tc('date')}</dt>
               <dd className="font-medium">
                 {log.timestamp
                   ? new Date(log.timestamp).toLocaleString('fr-FR', {
@@ -190,7 +194,7 @@ export function LogDetailClient({ logId }: LogDetailClientProps) {
             </div>
             {log.notes && (
               <div className="flex justify-between">
-                <dt className="text-gray-500">Notes</dt>
+                <dt className="text-gray-500">{tc('notes')}</dt>
                 <dd className="font-medium max-w-xs text-right">{log.notes}</dd>
               </div>
             )}
@@ -200,7 +204,7 @@ export function LogDetailClient({ logId }: LogDetailClientProps) {
         {/* JSONB data fields */}
         {dataEntries.length > 0 && (
           <Card>
-            <h3 className="mb-3 text-lg font-semibold text-gray-800">Donnees specifiques</h3>
+            <h3 className="mb-3 text-lg font-semibold text-gray-800">{t('detailSpecific')}</h3>
             <dl className="space-y-2 text-sm">
               {dataEntries.map(([key, value]) => (
                 <div key={key} className="flex justify-between">
@@ -224,7 +228,7 @@ export function LogDetailClient({ logId }: LogDetailClientProps) {
         return (
           <Card>
             <h3 className="mb-3 text-lg font-semibold text-gray-800">
-              Equipements ({eqIds.length})
+              {t('detailEquipments')} ({eqIds.length})
             </h3>
             <ul className="divide-y divide-gray-100">
               {eqIds.map((eqId) => (
@@ -234,7 +238,7 @@ export function LogDetailClient({ logId }: LogDetailClientProps) {
                   onClick={() => router.push(`/assets/${eqId}`)}
                 >
                   <span className="font-medium text-gray-800 text-sm">{eqId}</span>
-                  <Badge variant="info">Equipement</Badge>
+                  <Badge variant="info">{ta('typeEquipment')}</Badge>
                 </li>
               ))}
             </ul>
@@ -249,7 +253,7 @@ export function LogDetailClient({ logId }: LogDetailClientProps) {
         return (
           <Card>
             <h3 className="mb-3 text-lg font-semibold text-gray-800">
-              Employes ({wIds.length})
+              {t('detailEmployees')} ({wIds.length})
             </h3>
             <ul className="divide-y divide-gray-100">
               {wIds.map((wId) => (
@@ -266,7 +270,7 @@ export function LogDetailClient({ logId }: LogDetailClientProps) {
       {log.assets && log.assets.length > 0 && (
         <Card>
           <h3 className="mb-3 text-lg font-semibold text-gray-800">
-            Assets ({log.assets.length})
+            {t('detailAssets')} ({log.assets.length})
           </h3>
           <ul className="divide-y divide-gray-100">
             {log.assets.map((asset) => (
@@ -277,8 +281,8 @@ export function LogDetailClient({ logId }: LogDetailClientProps) {
               >
                 <span className="font-medium text-gray-800">{asset.name}</span>
                 <Badge variant="info">
-                  {asset.type in assetTypeLabels
-                    ? assetTypeLabels[asset.type]
+                  {asset.type in assetTypeKeys
+                    ? ta(assetTypeKeys[asset.type])
                     : asset.type}
                 </Badge>
               </li>
@@ -291,16 +295,16 @@ export function LogDetailClient({ logId }: LogDetailClientProps) {
       {log.quantities && log.quantities.length > 0 && (
         <Card>
           <h3 className="mb-3 text-lg font-semibold text-gray-800">
-            Quantites ({log.quantities.length})
+            {t('detailQuantities')} ({log.quantities.length})
           </h3>
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-200 text-left text-gray-500">
-                  <th className="pb-2 font-medium">Mesure</th>
-                  <th className="pb-2 font-medium">Valeur</th>
-                  <th className="pb-2 font-medium">Unite</th>
-                  <th className="pb-2 font-medium">Label</th>
+                  <th className="pb-2 font-medium">{t('colMeasure')}</th>
+                  <th className="pb-2 font-medium">{t('colValue')}</th>
+                  <th className="pb-2 font-medium">{t('colUnit')}</th>
+                  <th className="pb-2 font-medium">{t('colLabel')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-100">

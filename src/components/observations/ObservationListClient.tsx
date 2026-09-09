@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { DataTable } from '@/components/ui/DataTable';
 import { Badge } from '@/components/ui/Badge';
@@ -33,6 +34,8 @@ const formTypeBadgeVariant: Record<string, 'success' | 'info' | 'warning' | 'dan
 
 export function ObservationListClient() {
   const router = useRouter();
+  const t = useTranslations('observations');
+  const tc = useTranslations('common');
   const [formType, setFormType] = useState('');
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
@@ -49,7 +52,7 @@ export function ObservationListClient() {
   const columns = [
     {
       key: 'observationDate',
-      header: 'Date',
+      header: t('stageColDate'),
       render: (row: ObservationRow) => {
         const d = new Date(row.observationDate);
         return d.toLocaleDateString('fr-FR', {
@@ -61,7 +64,7 @@ export function ObservationListClient() {
     },
     {
       key: 'formType',
-      header: 'Type de fiche',
+      header: t('stageColFormType'),
       render: (row: ObservationRow) => (
         <Badge variant={formTypeBadgeVariant[row.formType] ?? 'info'}>
           {formTypeLabels[row.formType] ?? row.formType}
@@ -70,28 +73,28 @@ export function ObservationListClient() {
     },
     {
       key: 'assetName',
-      header: 'Parcelle',
+      header: t('stageColParcel'),
     },
     {
       key: 'cropType',
-      header: 'Culture',
+      header: t('stageColCrop'),
       render: (row: ObservationRow) => row.cropType ?? '—',
     },
     {
       key: 'observerName',
-      header: 'Observateur',
+      header: t('stageColObserver'),
     },
     {
       key: 'result',
-      header: 'Résultat clé',
+      header: t('stageColResult'),
       render: (row: ObservationRow) => {
         const calc = row.calculated as Record<string, number> | null;
         if (!calc) return '—';
         if (row.formType === 'emergence_density' && calc.emergence_rate_pct != null) {
-          return `${calc.emergence_rate_pct}% levée`;
+          return `${calc.emergence_rate_pct}${t('resultLevee')}`;
         }
         if (row.formType === 'pre_harvest_grading' && calc.marketable_pct != null) {
-          return `${calc.marketable_pct}% valorisable`;
+          return `${calc.marketable_pct}${t('resultValorizable')}`;
         }
         return '—';
       },
@@ -99,7 +102,7 @@ export function ObservationListClient() {
   ];
 
   const formTypeOptions = [
-    { value: '', label: 'Tous les types' },
+    { value: '', label: t('allTypes') },
     ...observationFormTypeValues.map((v) => ({
       value: v,
       label: formTypeLabels[v],
@@ -111,7 +114,7 @@ export function ObservationListClient() {
       <div className="mb-4 flex flex-wrap items-end gap-3">
         <div className="w-52">
           <Select
-            label="Type de fiche"
+            label={t('stageColFormType')}
             options={formTypeOptions}
             value={formType}
             onChange={(e) => {
@@ -122,7 +125,7 @@ export function ObservationListClient() {
         </div>
         <div className="w-40">
           <Input
-            label="Date début"
+            label={t('dateFrom')}
             type="date"
             value={dateFrom}
             onChange={(e) => {
@@ -133,7 +136,7 @@ export function ObservationListClient() {
         </div>
         <div className="w-40">
           <Input
-            label="Date fin"
+            label={t('dateTo')}
             type="date"
             value={dateTo}
             onChange={(e) => {
@@ -153,14 +156,14 @@ export function ObservationListClient() {
           <DataTable
             columns={columns}
             data={(data?.items ?? []) as ObservationRow[]}
-            emptyMessage="Aucune observation"
+            emptyMessage={t('noObservations')}
             onRowClick={(row) => router.push(`/observations/${row.id}`)}
           />
 
           {data && data.pages > 1 && (
             <div className="mt-4 flex items-center justify-between">
               <p className="text-sm text-gray-500">
-                Page {data.page} / {data.pages} ({data.total} résultats)
+                {tc('page')} {data.page} / {data.pages} ({data.total} {tc('results')})
               </p>
               <div className="flex gap-2">
                 <Button
@@ -169,7 +172,7 @@ export function ObservationListClient() {
                   disabled={page <= 1}
                   onClick={() => setPage((p) => p - 1)}
                 >
-                  Précédent
+                  {tc('previous')}
                 </Button>
                 <Button
                   variant="outline"
@@ -177,7 +180,7 @@ export function ObservationListClient() {
                   disabled={page >= data.pages}
                   onClick={() => setPage((p) => p + 1)}
                 >
-                  Suivant
+                  {tc('next')}
                 </Button>
               </div>
             </div>

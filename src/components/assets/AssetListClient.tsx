@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Plus, Search, Archive } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { DataTable } from '@/components/ui/DataTable';
 import { Badge } from '@/components/ui/Badge';
@@ -26,29 +27,20 @@ interface Asset extends Record<string, unknown> {
   archivedAt: Date | null;
 }
 
-const typeLabels: Record<AssetType, string> = {
-  land: 'Parcelle',
-  plant: 'Culture',
-  animal: 'Animal',
-  equipment: 'Equipement',
-  structure: 'Structure',
-  material: 'Intrant',
-  sensor: 'Capteur',
-  water: "Point d'eau",
-  seed: 'Semence',
-  product: 'Produit',
-  compost: 'Compost',
-  group: 'Groupe',
+const typeKeys: Record<AssetType, string> = {
+  land: 'typeLand',
+  plant: 'typePlant',
+  animal: 'typeAnimal',
+  equipment: 'typeEquipment',
+  structure: 'typeStructure',
+  material: 'typeMaterial',
+  sensor: 'typeSensor',
+  water: 'typeWater',
+  seed: 'typeSeed',
+  product: 'typeProduct',
+  compost: 'typeCompost',
+  group: 'typeGroup',
 };
-
-const typeOptions = (Object.entries(typeLabels) as [AssetType, string][]).map(
-  ([value, label]) => ({ value, label }),
-);
-
-const statusOptions = [
-  { value: 'active', label: 'Actif' },
-  { value: 'inactive', label: 'Inactif' },
-];
 
 const statusVariant: Record<AssetStatus, 'success' | 'warning' | 'danger'> = {
   active: 'success',
@@ -70,10 +62,21 @@ interface AssetListClientProps {
 
 export function AssetListClient({ farmId, filterType }: AssetListClientProps) {
   const router = useRouter();
+  const t = useTranslations('assets');
+  const tc = useTranslations('common');
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
   const [selectedType, setSelectedType] = useState<AssetType | ''>(filterType ?? '');
   const [selectedStatus, setSelectedStatus] = useState<AssetStatus | ''>('');
+
+  const typeOptions = (Object.entries(typeKeys) as [AssetType, string][]).map(
+    ([value, key]) => ({ value, label: t(key) }),
+  );
+
+  const statusOptions = [
+    { value: 'active', label: t('statusActive') },
+    { value: 'inactive', label: t('statusInactive') },
+  ];
 
   const { data, isLoading } = trpc.asset.list.useQuery({
     farmId,
@@ -92,21 +95,21 @@ export function AssetListClient({ farmId, filterType }: AssetListClientProps) {
   const columns = [
     {
       key: 'name',
-      header: 'Nom',
+      header: tc('name'),
       render: (row: Asset) => (
         <span className="font-medium text-gray-900">{row.name}</span>
       ),
     },
     {
       key: 'type',
-      header: 'Type',
+      header: tc('type'),
       render: (row: Asset) => (
-        <Badge variant="info">{typeLabels[row.type] ?? row.type}</Badge>
+        <Badge variant="info">{typeKeys[row.type] ? t(typeKeys[row.type]) : row.type}</Badge>
       ),
     },
     {
       key: 'status',
-      header: 'Statut',
+      header: tc('status'),
       render: (row: Asset) => (
         <Badge variant={getStatusVariant(row.status)}>
           {row.status ?? '—'}
@@ -115,7 +118,7 @@ export function AssetListClient({ farmId, filterType }: AssetListClientProps) {
     },
     {
       key: 'createdAt',
-      header: 'Cree le',
+      header: t('detailCreatedAt'),
       render: (row: Asset) =>
         row.createdAt
           ? new Date(row.createdAt).toLocaleDateString('fr-FR')
@@ -128,12 +131,12 @@ export function AssetListClient({ farmId, filterType }: AssetListClientProps) {
         <button
           onClick={(e) => {
             e.stopPropagation();
-            if (confirm('Archiver cet asset ?')) {
+            if (confirm(t('archiveConfirm'))) {
               archiveMutation.mutate({ id: row.id });
             }
           }}
           className="rounded p-1 text-gray-400 hover:bg-red-50 hover:text-red-500"
-          title="Archiver"
+          title={tc('archive')}
         >
           <Archive className="h-4 w-4" />
         </button>
@@ -150,7 +153,7 @@ export function AssetListClient({ farmId, filterType }: AssetListClientProps) {
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
-            placeholder="Rechercher un asset..."
+            placeholder={t('searchPlaceholder')}
             value={search}
             onChange={(e) => {
               setSearch(e.target.value);
@@ -162,7 +165,7 @@ export function AssetListClient({ farmId, filterType }: AssetListClientProps) {
 
         {!filterType && (
           <Select
-            options={[{ value: '', label: 'Tous les types' }, ...typeOptions]}
+            options={[{ value: '', label: tc('allTypes') }, ...typeOptions]}
             value={selectedType}
             onChange={(e) => {
               setSelectedType(e.target.value as AssetType | '');
@@ -173,7 +176,7 @@ export function AssetListClient({ farmId, filterType }: AssetListClientProps) {
         )}
 
         <Select
-          options={[{ value: '', label: 'Tous les statuts' }, ...statusOptions]}
+          options={[{ value: '', label: tc('allStatuses') }, ...statusOptions]}
           value={selectedStatus}
           onChange={(e) => {
             setSelectedStatus(e.target.value as AssetStatus | '');
@@ -184,7 +187,7 @@ export function AssetListClient({ farmId, filterType }: AssetListClientProps) {
 
         <Button onClick={() => router.push('/assets/new')}>
           <Plus className="h-4 w-4" />
-          Nouveau
+          {tc('new')}
         </Button>
       </div>
 
@@ -197,7 +200,7 @@ export function AssetListClient({ farmId, filterType }: AssetListClientProps) {
         <DataTable<Asset>
           columns={columns}
           data={(data?.items ?? []) as Asset[]}
-          emptyMessage="Aucun asset trouve"
+          emptyMessage={tc('noResult')}
           onRowClick={(row) => router.push(`/assets/${row.id}`)}
         />
       )}
@@ -206,7 +209,7 @@ export function AssetListClient({ farmId, filterType }: AssetListClientProps) {
       {data && data.pages > 1 && (
         <div className="flex items-center justify-between">
           <p className="text-sm text-gray-500">
-            {data.total} resultat{data.total > 1 ? 's' : ''} — Page {data.page}/{data.pages}
+            {data.total} {tc('results')} — {tc('page')} {data.page}/{data.pages}
           </p>
           <div className="flex gap-2">
             <Button
@@ -215,7 +218,7 @@ export function AssetListClient({ farmId, filterType }: AssetListClientProps) {
               disabled={page <= 1}
               onClick={() => setPage((p) => p - 1)}
             >
-              Precedent
+              {tc('previous')}
             </Button>
             <Button
               variant="outline"
@@ -223,7 +226,7 @@ export function AssetListClient({ farmId, filterType }: AssetListClientProps) {
               disabled={page >= data.pages}
               onClick={() => setPage((p) => p + 1)}
             >
-              Suivant
+              {tc('next')}
             </Button>
           </div>
         </div>

@@ -2,6 +2,7 @@
 
 import { Download, X } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface BeforeInstallPromptEvent extends Event {
   readonly platforms: string[];
@@ -12,6 +13,7 @@ interface BeforeInstallPromptEvent extends Event {
 export function InstallPrompt() {
   const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
   const [dismissed, setDismissed] = useState(false);
+  const t = useTranslations('pwa');
 
   useEffect(() => {
     function handleBeforeInstallPrompt(e: Event) {
@@ -64,7 +66,7 @@ export function InstallPrompt() {
     >
       <div className="flex items-center gap-2 text-sm">
         <Download className="h-4 w-4 shrink-0" aria-hidden="true" />
-        <span>Installez SenagrOS pour un accès hors ligne rapide.</span>
+        <span>{t('install')}</span>
       </div>
 
       <div className="flex items-center gap-2">
@@ -73,13 +75,13 @@ export function InstallPrompt() {
           onClick={handleInstall}
           className="rounded-md bg-white px-3 py-1 text-sm font-medium text-green-700 hover:bg-green-50 focus:outline-none focus:ring-2 focus:ring-white"
         >
-          Installer
+          {t('installButton')}
         </button>
 
         <button
           type="button"
           onClick={handleDismiss}
-          aria-label="Fermer"
+          aria-label={t('close')}
           className="rounded p-1 hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-white"
         >
           <X className="h-4 w-4" aria-hidden="true" />

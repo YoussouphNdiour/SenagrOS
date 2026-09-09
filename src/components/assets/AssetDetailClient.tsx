@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Archive } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -10,19 +11,19 @@ import type { assetTypeValues } from '@/lib/validators/asset.validator';
 
 type AssetType = (typeof assetTypeValues)[number];
 
-const typeLabels: Record<AssetType, string> = {
-  land: 'Parcelle',
-  plant: 'Culture',
-  animal: 'Animal',
-  equipment: 'Equipement',
-  structure: 'Structure',
-  material: 'Intrant',
-  sensor: 'Capteur',
-  water: "Point d'eau",
-  seed: 'Semence',
-  product: 'Produit',
-  compost: 'Compost',
-  group: 'Groupe',
+const typeKeys: Record<AssetType, string> = {
+  land: 'typeLand',
+  plant: 'typePlant',
+  animal: 'typeAnimal',
+  equipment: 'typeEquipment',
+  structure: 'typeStructure',
+  material: 'typeMaterial',
+  sensor: 'typeSensor',
+  water: 'typeWater',
+  seed: 'typeSeed',
+  product: 'typeProduct',
+  compost: 'typeCompost',
+  group: 'typeGroup',
 };
 
 const statusVariant: Record<string, 'success' | 'warning' | 'danger' | 'default'> = {
@@ -44,6 +45,8 @@ interface AssetDetailClientProps {
 
 export function AssetDetailClient({ assetId }: AssetDetailClientProps) {
   const router = useRouter();
+  const t = useTranslations('assets');
+  const tc = useTranslations('common');
   const { data: asset, isLoading } = trpc.asset.getById.useQuery({ id: assetId });
 
   const archiveMutation = trpc.asset.archive.useMutation({
@@ -61,7 +64,7 @@ export function AssetDetailClient({ assetId }: AssetDetailClientProps) {
   if (!asset) {
     return (
       <div className="flex h-64 items-center justify-center text-gray-500">
-        Asset introuvable
+        {t('notFound')}
       </div>
     );
   }
@@ -77,8 +80,8 @@ export function AssetDetailClient({ assetId }: AssetDetailClientProps) {
       : [];
 
   const typeLabelDisplay =
-    asset.type in typeLabels
-      ? typeLabels[asset.type as AssetType]
+    asset.type in typeKeys
+      ? t(typeKeys[asset.type as AssetType])
       : asset.type;
 
   return (
@@ -90,7 +93,7 @@ export function AssetDetailClient({ assetId }: AssetDetailClientProps) {
             type="button"
             onClick={() => router.back()}
             className="rounded-lg p-2 text-gray-400 hover:bg-gray-100"
-            aria-label="Retour"
+            aria-label={tc('back')}
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
@@ -111,14 +114,14 @@ export function AssetDetailClient({ assetId }: AssetDetailClientProps) {
           <Button
             variant="outline"
             onClick={() => {
-              if (confirm('Archiver cet asset ?')) {
+              if (confirm(t('archiveConfirm'))) {
                 archiveMutation.mutate({ id: asset.id });
               }
             }}
             disabled={archiveMutation.isPending}
           >
             <Archive className="h-4 w-4" />
-            Archiver
+            {tc('archive')}
           </Button>
         </div>
       </div>
@@ -127,30 +130,30 @@ export function AssetDetailClient({ assetId }: AssetDetailClientProps) {
       <div className="grid gap-6 lg:grid-cols-2">
         {/* Main info */}
         <Card>
-          <h3 className="mb-3 text-lg font-semibold text-gray-800">Informations</h3>
+          <h3 className="mb-3 text-lg font-semibold text-gray-800">{t('detailInfo')}</h3>
           <dl className="space-y-2 text-sm">
             <div className="flex justify-between">
-              <dt className="text-gray-500">Type</dt>
+              <dt className="text-gray-500">{t('detailType')}</dt>
               <dd className="font-medium">{typeLabelDisplay}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-gray-500">Statut</dt>
+              <dt className="text-gray-500">{t('detailStatus')}</dt>
               <dd className="font-medium">{asset.status ?? '—'}</dd>
             </div>
             {asset.isLocation && (
               <div className="flex justify-between">
-                <dt className="text-gray-500">Emplacement</dt>
-                <dd className="font-medium">Oui</dd>
+                <dt className="text-gray-500">{t('detailLocation')}</dt>
+                <dd className="font-medium">{tc('yes')}</dd>
               </div>
             )}
             {asset.isFixed && (
               <div className="flex justify-between">
-                <dt className="text-gray-500">Fixe</dt>
-                <dd className="font-medium">Oui</dd>
+                <dt className="text-gray-500">{t('detailFixed')}</dt>
+                <dd className="font-medium">{tc('yes')}</dd>
               </div>
             )}
             <div className="flex justify-between">
-              <dt className="text-gray-500">Cree le</dt>
+              <dt className="text-gray-500">{t('detailCreatedAt')}</dt>
               <dd className="font-medium">
                 {asset.createdAt
                   ? new Date(asset.createdAt).toLocaleDateString('fr-FR')
@@ -163,7 +166,7 @@ export function AssetDetailClient({ assetId }: AssetDetailClientProps) {
         {/* JSONB data fields */}
         {dataEntries.length > 0 && (
           <Card>
-            <h3 className="mb-3 text-lg font-semibold text-gray-800">Donnees specifiques</h3>
+            <h3 className="mb-3 text-lg font-semibold text-gray-800">{t('detailSpecific')}</h3>
             <dl className="space-y-2 text-sm">
               {dataEntries.map(([key, value]) => (
                 <div key={key} className="flex justify-between">
@@ -184,7 +187,7 @@ export function AssetDetailClient({ assetId }: AssetDetailClientProps) {
       {asset.children && asset.children.length > 0 && (
         <Card>
           <h3 className="mb-3 text-lg font-semibold text-gray-800">
-            Sous-assets ({asset.children.length})
+            {t('detailSubAssets')} ({asset.children.length})
           </h3>
           <ul className="divide-y divide-gray-100">
             {asset.children.map((child) => (
@@ -196,8 +199,8 @@ export function AssetDetailClient({ assetId }: AssetDetailClientProps) {
                 <span className="font-medium text-gray-800">{child.name}</span>
                 <div className="flex items-center gap-2">
                   <Badge variant="info">
-                    {child.type in typeLabels
-                      ? typeLabels[child.type as AssetType]
+                    {child.type in typeKeys
+                      ? t(typeKeys[child.type as AssetType])
                       : child.type}
                   </Badge>
                   <Badge variant={getStatusVariant(child.status)}>

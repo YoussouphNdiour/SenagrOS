@@ -15,7 +15,7 @@ interface DataTableProps<T> {
 export function DataTable<T extends Record<string, unknown>>({
   columns,
   data,
-  emptyMessage = 'Aucune donnée',
+  emptyMessage = '—',
   onRowClick,
 }: DataTableProps<T>) {
   return (

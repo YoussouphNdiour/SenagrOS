@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -31,6 +32,8 @@ const EMPTY_LENGTHS: LengthClass = {
 
 export function GradingForm() {
   const router = useRouter();
+  const t = useTranslations('observations');
+  const tc = useTranslations('common');
 
   // --- Header fields ---
   const [assetId, setAssetId] = useState('');
@@ -142,55 +145,55 @@ export function GradingForm() {
       {/* Header fields */}
       <Card>
         <h2 className="mb-4 text-lg font-semibold text-gray-800">
-          Fiche d&apos;agr&eacute;age qualit&eacute; pr&eacute;-r&eacute;colte
+          {t('formGradingTitle')}
         </h2>
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <Select
-            label="Parcelle"
+            label={t('fieldParcel')}
             options={parcelOptions}
             value={assetId}
             onChange={(e) => setAssetId(e.target.value)}
-            placeholder="Sélectionner une parcelle"
+            placeholder={t('selectParcel')}
           />
           <Input
-            label="Culture"
+            label={t('fieldCropType')}
             type="text"
             value={cropType}
             onChange={(e) => setCropType(e.target.value)}
           />
           <Input
-            label="Variété"
+            label={t('fieldVariety')}
             type="text"
             value={variety}
             onChange={(e) => setVariety(e.target.value)}
           />
           <Input
-            label="Date observation"
+            label={t('fieldObservationDate')}
             type="date"
             value={observationDate}
             onChange={(e) => setObservationDate(e.target.value)}
           />
           <Input
-            label="Taille échantillon"
+            label={t('labelSample')}
             type="number"
             min={1}
             value={sampleSize}
             onChange={(e) => setSampleSize(Number(e.target.value))}
           />
           <Input
-            label="Heure début"
+            label={t('fieldStartTime')}
             type="time"
             value={startTime}
             onChange={(e) => setStartTime(e.target.value)}
           />
           <Input
-            label="Heure fin"
+            label={t('fieldEndTime')}
             type="time"
             value={endTime}
             onChange={(e) => setEndTime(e.target.value)}
           />
           <Input
-            label="Surface observée (ha)"
+            label={t('fieldObservedSurface')}
             type="number"
             step="0.01"
             value={observedSurfaceHa}
@@ -201,7 +204,7 @@ export function GradingForm() {
 
       {/* Longueurs totales */}
       <Card>
-        <h3 className="mb-3 text-base font-semibold text-gray-800">Longueurs totales</h3>
+        <h3 className="mb-3 text-base font-semibold text-gray-800">{t('labelTotalPods')}</h3>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           {lengthKeys.map(({ key, label }) => (
             <Input
@@ -215,13 +218,13 @@ export function GradingForm() {
           ))}
         </div>
         <p className="mt-3 text-sm text-gray-600">
-          Total : <span className="font-bold text-green-700">{totalTotal}</span>
+          {tc('total')} : <span className="font-bold text-green-700">{totalTotal}</span>
         </p>
       </Card>
 
       {/* Longueurs valorisables */}
       <Card>
-        <h3 className="mb-3 text-base font-semibold text-gray-800">Longueurs valorisables</h3>
+        <h3 className="mb-3 text-base font-semibold text-gray-800">{t('labelMarketable')}</h3>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
           {lengthKeys.map(({ key, label }) => (
             <Input
@@ -235,23 +238,23 @@ export function GradingForm() {
           ))}
         </div>
         <p className="mt-3 text-sm text-gray-600">
-          Total : <span className="font-bold text-green-700">{marketableTotal}</span>
+          {tc('total')} : <span className="font-bold text-green-700">{marketableTotal}</span>
         </p>
         <p className="mt-1 text-sm">
-          % Valorisable :{' '}
+          {t('labelMarketablePct')} :{' '}
           <span className="font-bold text-green-700">{marketablePct.toFixed(2)}%</span>
         </p>
       </Card>
 
       {/* Défauts majeurs */}
       <Card>
-        <h3 className="mb-3 text-base font-semibold text-gray-800">Défauts majeurs</h3>
+        <h3 className="mb-3 text-base font-semibold text-gray-800">{t('labelDefectPct')}</h3>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse text-sm">
             <thead>
               <tr className="border-b border-gray-200 bg-gray-50">
-                <th className="px-3 py-2 text-left font-medium text-gray-600">Type</th>
-                <th className="px-3 py-2 text-left font-medium text-gray-600">Nombre</th>
+                <th className="px-3 py-2 text-left font-medium text-gray-600">{tc('type')}</th>
+                <th className="px-3 py-2 text-left font-medium text-gray-600">{tc('quantity')}</th>
                 <th className="px-3 py-2 text-left font-medium text-gray-600">%</th>
               </tr>
             </thead>
@@ -283,81 +286,31 @@ export function GradingForm() {
         </div>
       </Card>
 
-      {/* Indice de maturité */}
-      <Card>
-        <h3 className="mb-3 text-base font-semibold text-gray-800">Indice de maturité</h3>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-          <Input
-            label="Épis matures à date"
-            type="number"
-            min={0}
-            value={matureAtDate || ''}
-            onChange={(e) => setMatureAtDate(Number(e.target.value))}
-          />
-          <Input
-            label="Matures à date prévisionnelle"
-            type="number"
-            min={0}
-            value={matureAtForecast || ''}
-            onChange={(e) => setMatureAtForecast(Number(e.target.value))}
-          />
-          <Input
-            label="Immatures"
-            type="number"
-            min={0}
-            value={immature || ''}
-            onChange={(e) => setImmature(Number(e.target.value))}
-          />
-        </div>
-        <div className="mt-3 space-y-1 text-sm text-gray-600">
-          <p>
-            Total : <span className="font-bold text-green-700">{maturityTotal}</span>
-          </p>
-          <p>
-            % Maturité :{' '}
-            <span className="font-bold text-green-700">{maturityPct.toFixed(2)}%</span>
-          </p>
-        </div>
-      </Card>
-
       {/* Commentaires */}
       <Card>
-        <h3 className="mb-3 text-base font-semibold text-gray-800">Commentaires</h3>
+        <h3 className="mb-3 text-base font-semibold text-gray-800">{t('sectionRemarks')}</h3>
         <div className="space-y-4">
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <Input
-              label="Rendement prévisionnel (épis/ha)"
-              type="number"
-              min={0}
-              value={estimatedYield}
-              onChange={(e) => setEstimatedYield(e.target.value)}
-            />
-            <Input
-              label="Date prévisionnelle récolte"
-              type="date"
-              value={estimatedHarvestDate}
-              onChange={(e) => setEstimatedHarvestDate(e.target.value)}
-            />
-          </div>
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">
-              Remarques observateur
+              {t('observerRemarks')}
             </label>
             <textarea
               value={observerRemarks}
               onChange={(e) => setObserverRemarks(e.target.value)}
               rows={3}
+              placeholder={t('observerRemarksPlaceholder')}
               className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
             />
           </div>
           <div>
             <label className="mb-1 block text-sm font-medium text-gray-700">
-              Remarques chef de ferme
+              {t('supervisorRemarks')}
             </label>
             <textarea
               value={supervisorRemarks}
               onChange={(e) => setSupervisorRemarks(e.target.value)}
               rows={3}
+              placeholder={t('supervisorRemarksPlaceholder')}
               className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
             />
           </div>
@@ -372,7 +325,7 @@ export function GradingForm() {
             !assetId || !cropType || !observationDate || createGrading.isPending
           }
         >
-          {createGrading.isPending ? 'Enregistrement...' : 'Enregistrer la fiche'}
+          {createGrading.isPending ? tc('registering') : t('recordButton')}
         </Button>
       </div>
     </div>

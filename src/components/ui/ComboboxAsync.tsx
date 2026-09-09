@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { ChevronDown, Search, X, Loader2 } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 interface ComboboxAsyncProps<T> {
   label?: string;
@@ -19,7 +20,7 @@ interface ComboboxAsyncProps<T> {
 export function ComboboxAsync<T>({
   label,
   error,
-  placeholder = 'Rechercher...',
+  placeholder,
   value,
   onChange,
   searchFn,
@@ -28,6 +29,8 @@ export function ComboboxAsync<T>({
   disabled = false,
   className = '',
 }: ComboboxAsyncProps<T>) {
+  const t = useTranslations('common');
+  const resolvedPlaceholder = placeholder ?? t('search');
   const [query, setQuery] = useState('');
   const [items, setItems] = useState<T[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -127,7 +130,7 @@ export function ComboboxAsync<T>({
           value={selectedLabel || query}
           onChange={handleInputChange}
           onFocus={handleFocus}
-          placeholder={placeholder}
+          placeholder={resolvedPlaceholder}
           disabled={disabled}
           className="w-full bg-transparent px-3 py-2.5 text-sm outline-none placeholder:text-gray-400 disabled:cursor-not-allowed disabled:opacity-50"
         />
@@ -143,10 +146,10 @@ export function ComboboxAsync<T>({
           {isLoading && items.length === 0 ? (
             <li className="flex items-center justify-center px-4 py-3 text-sm text-gray-400">
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Chargement...
+              {t('loading')}
             </li>
           ) : items.length === 0 ? (
-            <li className="px-4 py-3 text-sm text-gray-400">Aucun resultat</li>
+            <li className="px-4 py-3 text-sm text-gray-400">{t('noResult')}</li>
           ) : (
             items.map((item) => {
               const itemValue = getValue(item);
@@ -192,7 +195,7 @@ interface ComboboxAsyncMultiProps<T> {
 export function ComboboxAsyncMulti<T>({
   label,
   error,
-  placeholder = 'Rechercher...',
+  placeholder,
   value = [],
   onChange,
   searchFn,
@@ -201,6 +204,8 @@ export function ComboboxAsyncMulti<T>({
   disabled = false,
   className = '',
 }: ComboboxAsyncMultiProps<T>) {
+  const t = useTranslations('common');
+  const resolvedPlaceholder = placeholder ?? t('search');
   const [query, setQuery] = useState('');
   const [items, setItems] = useState<T[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -341,7 +346,7 @@ export function ComboboxAsyncMulti<T>({
           value={query}
           onChange={handleInputChange}
           onFocus={handleFocus}
-          placeholder={placeholder}
+          placeholder={resolvedPlaceholder}
           disabled={disabled}
           className="w-full bg-transparent px-3 py-2.5 text-sm outline-none placeholder:text-gray-400 disabled:cursor-not-allowed disabled:opacity-50"
         />
@@ -357,10 +362,10 @@ export function ComboboxAsyncMulti<T>({
           {isLoading && items.length === 0 ? (
             <li className="flex items-center justify-center px-4 py-3 text-sm text-gray-400">
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Chargement...
+              {t('loading')}
             </li>
           ) : items.length === 0 ? (
-            <li className="px-4 py-3 text-sm text-gray-400">Aucun resultat</li>
+            <li className="px-4 py-3 text-sm text-gray-400">{t('noResult')}</li>
           ) : (
             items.map((item) => {
               const itemValue = getValue(item);

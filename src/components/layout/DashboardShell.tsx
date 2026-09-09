@@ -12,6 +12,7 @@ interface DashboardShellProps {
     name?: string | null;
     email?: string | null;
     role: string;
+    farmName?: string | null;
   };
   children: React.ReactNode;
 }
