@@ -85,10 +85,10 @@ const navItems: NavItem[] = [
   {
     section: 'Gestion',
     items: [
-      { label: 'Stocks', href: '/dashboard/stocks', icon: Warehouse },
-      { label: 'Rapports', href: '/dashboard/rapports', icon: BarChart3 },
-      { label: 'Employés', href: '/dashboard/employes', icon: Users },
-      { label: 'Paramètres', href: '/dashboard/parametres', icon: Settings },
+      { label: 'Stocks', href: '/stocks', icon: Warehouse },
+      { label: 'Rapports', href: '/reports', icon: BarChart3 },
+      { label: 'Employés', href: '/employes', icon: Users },
+      { label: 'Paramètres', href: '/parametres', icon: Settings },
     ],
   },
 ];

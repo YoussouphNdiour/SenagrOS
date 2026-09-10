@@ -9,6 +9,7 @@ import { calendarRouter } from './calendar';
 import { planRouter } from './plan';
 import { reportRouter } from './report';
 import { financeRouter } from './finance';
+import { farmMemberRouter } from './farm-member';
 
 export const appRouter = router({
   health: publicProcedure.query(() => ({ status: 'ok' })),
@@ -22,6 +23,7 @@ export const appRouter = router({
   plan: planRouter,
   report: reportRouter,
   finance: financeRouter,
+  farmMember: farmMemberRouter,
 });
 
 export type AppRouter = typeof appRouter;
