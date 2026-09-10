@@ -41,15 +41,15 @@ export function IntrantListClient({ category }: IntrantListClientProps) {
   const queryBase = { search: search || undefined, page, limit: 25 };
 
   const phytoQuery = trpc.input.listPhyto.useQuery(
-    { ...queryBase, subcategory: subcategoryFilter as Parameters<typeof trpc.input.listPhyto.useQuery>[0]['subcategory'] },
+    { ...queryBase, subcategory: subcategoryFilter as Extract<Parameters<typeof trpc.input.listPhyto.useQuery>[0], object>['subcategory'] },
     { enabled: category === 'phyto' },
   );
   const fertiQuery = trpc.input.listFerti.useQuery(
-    { ...queryBase, subcategory: subcategoryFilter as Parameters<typeof trpc.input.listFerti.useQuery>[0]['subcategory'] },
+    { ...queryBase, subcategory: subcategoryFilter as Extract<Parameters<typeof trpc.input.listFerti.useQuery>[0], object>['subcategory'] },
     { enabled: category === 'ferti' },
   );
   const semenceQuery = trpc.input.listSemence.useQuery(
-    { ...queryBase, subcategory: subcategoryFilter as Parameters<typeof trpc.input.listSemence.useQuery>[0]['subcategory'] },
+    { ...queryBase, subcategory: subcategoryFilter as Extract<Parameters<typeof trpc.input.listSemence.useQuery>[0], object>['subcategory'] },
     { enabled: category === 'semence' },
   );
 
