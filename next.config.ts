@@ -2,6 +2,7 @@ import withSerwist from '@serwist/next';
 
 const nextConfig = {
   output: 'standalone',
+  turbopack: {},
 };
 
 export default withSerwist({

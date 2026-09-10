@@ -13,16 +13,11 @@ FROM base AS build
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-# Build arguments injected at build time
-ARG DATABASE_URL
-ARG NEXTAUTH_SECRET
-ARG NEXTAUTH_URL
-ARG AUTH_TRUST_HOST=true
-
-ENV DATABASE_URL=$DATABASE_URL
-ENV NEXTAUTH_SECRET=$NEXTAUTH_SECRET
-ENV NEXTAUTH_URL=$NEXTAUTH_URL
-ENV AUTH_TRUST_HOST=$AUTH_TRUST_HOST
+# Dummy values for build (real values injected at runtime via docker-compose)
+ENV DATABASE_URL=postgresql://dummy:dummy@localhost:5432/dummy
+ENV NEXTAUTH_SECRET=build-placeholder
+ENV NEXTAUTH_URL=http://localhost:3000
+ENV AUTH_TRUST_HOST=true
 ENV NEXT_TELEMETRY_DISABLED=1
 
 RUN pnpm build
