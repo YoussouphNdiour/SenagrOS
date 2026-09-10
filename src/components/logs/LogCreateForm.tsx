@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Plus, Trash2 } from 'lucide-react';
@@ -81,6 +82,8 @@ interface LogCreateFormProps {
 
 export function LogCreateForm({ defaultType }: LogCreateFormProps) {
   const router = useRouter();
+  const { data: session } = useSession();
+  const farmId = (session?.user as { farmId?: string } | undefined)?.farmId ?? '';
   const [equipmentIds, setEquipmentIds] = useState<string[]>([]);
   const [workerIds, setWorkerIds] = useState<string[]>([]);
 
@@ -128,7 +131,8 @@ export function LogCreateForm({ defaultType }: LogCreateFormProps) {
 
   // Search functions for ComboboxAsync
   const searchEquipment = async (query: string): Promise<AssetItem[]> => {
-    const res = await fetch(`/api/trpc/asset.list?input=${encodeURIComponent(JSON.stringify({ json: { type: 'equipment', search: query || undefined, page: 1, limit: 20 } }))}`);
+    if (!farmId) return [];
+    const res = await fetch(`/api/trpc/asset.list?input=${encodeURIComponent(JSON.stringify({ json: { farmId, type: 'equipment', search: query || undefined, page: 1, limit: 20 } }))}`);
     const json = await res.json();
     return json?.result?.data?.json?.items ?? [];
   };
@@ -142,20 +146,26 @@ export function LogCreateForm({ defaultType }: LogCreateFormProps) {
   };
 
   const searchSeed = async (query: string): Promise<AssetItem[]> => {
-    const res = await fetch(`/api/trpc/asset.list?input=${encodeURIComponent(JSON.stringify({ json: { type: 'seed', search: query || undefined, page: 1, limit: 20 } }))}`);
+    if (!farmId) return [];
+    const res = await fetch(`/api/trpc/asset.list?input=${encodeURIComponent(JSON.stringify({ json: { farmId, type: 'seed', search: query || undefined, page: 1, limit: 20 } }))}`);
     const json = await res.json();
     return json?.result?.data?.json?.items ?? [];
   };
 
   const searchLand = async (query: string): Promise<AssetItem[]> => {
-    const res = await fetch(`/api/trpc/asset.list?input=${encodeURIComponent(JSON.stringify({ json: { type: 'land', search: query || undefined, page: 1, limit: 20 } }))}`);
+    if (!farmId) return [];
+    const res = await fetch(`/api/trpc/asset.list?input=${encodeURIComponent(JSON.stringify({ json: { farmId, type: 'land', search: query || undefined, page: 1, limit: 20 } }))}`);
     const json = await res.json();
     return json?.result?.data?.json?.items ?? [];
   };
 
-  const searchWorkers = async (_query: string): Promise<UserItem[]> => {
-    // TODO: integrate with user.list when available
-    return [];
+  const searchWorkers = async (query: string): Promise<UserItem[]> => {
+    const res = await fetch(`/api/trpc/farmMember.list?input=${encodeURIComponent(JSON.stringify({ json: { search: query || undefined } }))}`);
+    const json = await res.json();
+    return (json?.result?.data?.json?.items ?? []).map((m: { id: string; name: string | null }) => ({
+      id: m.id,
+      name: m.name ?? 'Sans nom',
+    }));
   };
 
   const onSubmit = (values: CreateLogInput) => {
