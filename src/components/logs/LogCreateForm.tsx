@@ -540,9 +540,19 @@ export function LogCreateForm({ defaultType }: LogCreateFormProps) {
         <Card>
           <h3 className="mb-4 text-lg font-semibold text-gray-800">Détails irrigation</h3>
           <div className="grid gap-4 sm:grid-cols-2">
-            <Input
+            <Select
               label="Méthode"
-              placeholder="Ex: goutte à goutte"
+              placeholder="Sélectionner une méthode"
+              options={[
+                { value: 'goutte_a_goutte', label: 'Goutte à goutte' },
+                { value: 'aspersion', label: 'Aspersion' },
+                { value: 'micro_aspersion', label: 'Micro-aspersion' },
+                { value: 'pivot', label: 'Pivot' },
+                { value: 'gravitaire', label: 'Gravitaire' },
+                { value: 'submersion', label: 'Submersion' },
+                { value: 'californien', label: 'Californien' },
+                { value: 'manuel', label: 'Manuel' },
+              ]}
               {...register('data.method' as any)}
             />
             <Input

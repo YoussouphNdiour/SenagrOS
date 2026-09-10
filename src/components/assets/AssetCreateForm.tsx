@@ -13,6 +13,29 @@ import type { z } from 'zod';
 
 type CreateAssetInput = z.infer<typeof createAssetSchema>;
 
+const irrigationTypeOptions = [
+  { value: 'goutte_a_goutte', label: 'Goutte à goutte' },
+  { value: 'aspersion', label: 'Aspersion' },
+  { value: 'micro_aspersion', label: 'Micro-aspersion' },
+  { value: 'pivot', label: 'Pivot' },
+  { value: 'gravitaire', label: 'Gravitaire' },
+  { value: 'submersion', label: 'Submersion' },
+  { value: 'californien', label: 'Californien' },
+  { value: 'manuel', label: 'Manuel' },
+  { value: 'pluvial', label: 'Pluvial (non irrigué)' },
+];
+
+const soilTypeOptions = [
+  { value: 'argileux', label: 'Argileux' },
+  { value: 'sableux', label: 'Sableux' },
+  { value: 'limoneux', label: 'Limoneux' },
+  { value: 'argilo_sableux', label: 'Argilo-sableux' },
+  { value: 'limono_argileux', label: 'Limono-argileux' },
+  { value: 'limono_sableux', label: 'Limono-sableux' },
+  { value: 'lateritique', label: 'Latéritique' },
+  { value: 'tourbeux', label: 'Tourbeux' },
+];
+
 const typeOptions = [
   { value: 'land', label: 'Parcelle' },
   { value: 'plant', label: 'Culture' },
@@ -114,14 +137,16 @@ export function AssetCreateForm({ farmId }: AssetCreateFormProps) {
               placeholder="Ex: 2.30"
               {...register('data.surface_ha' as any)}
             />
-            <Input
+            <Select
               label="Type de sol"
-              placeholder="Ex: argileux"
+              placeholder="Sélectionner un type de sol"
+              options={soilTypeOptions}
               {...register('data.soil_type' as any)}
             />
-            <Input
+            <Select
               label="Type d'irrigation"
-              placeholder="Ex: goutte_a_goutte"
+              placeholder="Sélectionner un type d'irrigation"
+              options={irrigationTypeOptions}
               {...register('data.irrigation_type' as any)}
             />
             <Input
