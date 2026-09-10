@@ -12,6 +12,7 @@ const registerSchema = z.object({
   email: z.email('Email invalide'),
   password: z.string().min(6, 'Minimum 6 caractères'),
   confirmPassword: z.string(),
+  role: z.enum(['owner', 'worker']),
 }).refine((data) => data.password === data.confirmPassword, {
   message: 'Les mots de passe ne correspondent pas',
   path: ['confirmPassword'],
@@ -25,6 +26,7 @@ export default function RegisterPage() {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<RegisterForm>({
     resolver: zodResolver(registerSchema),
@@ -40,6 +42,7 @@ export default function RegisterPage() {
           name: data.name,
           email: data.email,
           password: data.password,
+          role: data.role,
         }),
       });
 
@@ -83,6 +86,45 @@ export default function RegisterPage() {
             />
             {errors.name && (
               <p className="mt-1 text-sm text-red-500">{errors.name.message}</p>
+            )}
+          </div>
+
+          <div>
+            <label className="mb-2 block text-sm font-medium text-gray-700">
+              Type de compte
+            </label>
+            <div className="flex gap-4">
+              <label className={`flex flex-1 cursor-pointer items-center gap-3 rounded-lg border-2 px-4 py-3 transition ${
+                watch('role') === 'owner' ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'
+              }`}>
+                <input
+                  type="radio"
+                  value="owner"
+                  {...register('role')}
+                  className="accent-green-600"
+                />
+                <div>
+                  <p className="text-sm font-medium text-gray-800">Propriétaire</p>
+                  <p className="text-xs text-gray-500">Gérer ma ferme</p>
+                </div>
+              </label>
+              <label className={`flex flex-1 cursor-pointer items-center gap-3 rounded-lg border-2 px-4 py-3 transition ${
+                watch('role') === 'worker' ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'
+              }`}>
+                <input
+                  type="radio"
+                  value="worker"
+                  {...register('role')}
+                  className="accent-green-600"
+                />
+                <div>
+                  <p className="text-sm font-medium text-gray-800">Travailleur</p>
+                  <p className="text-xs text-gray-500">Rejoindre une ferme</p>
+                </div>
+              </label>
+            </div>
+            {errors.role && (
+              <p className="mt-1 text-sm text-red-500">{errors.role.message}</p>
             )}
           </div>
 

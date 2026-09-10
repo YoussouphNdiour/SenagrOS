@@ -6,11 +6,18 @@ import { users } from '@/server/db/schema';
 
 export async function POST(request: Request) {
   try {
-    const { name, email, password } = await request.json();
+    const { name, email, password, role } = await request.json();
 
-    if (!name || !email || !password) {
+    if (!name || !email || !password || !role) {
       return NextResponse.json(
         { error: 'Tous les champs sont requis' },
+        { status: 400 }
+      );
+    }
+
+    if (role !== 'owner' && role !== 'worker') {
+      return NextResponse.json(
+        { error: 'Type de compte invalide' },
         { status: 400 }
       );
     }
@@ -35,7 +42,7 @@ export async function POST(request: Request) {
       name,
       email,
       passwordHash,
-      role: 'worker',
+      role,
       locale: 'fr',
       isActive: true,
     });
