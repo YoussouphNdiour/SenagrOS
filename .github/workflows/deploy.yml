@@ -3,6 +3,7 @@ name: Build & Deploy SenagrOS
 on:
   push:
     branches: [main]
+  workflow_dispatch:
 
 env:
   REGISTRY: ghcr.io
@@ -108,7 +109,7 @@ jobs:
           sleep 30
           for i in $(seq 1 12); do
             STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 "http://2.59.156.226:3400" || true)
-            if [ "$STATUS" = "200" ] || [ "$STATUS" = "302" ]; then
+            if [ "$STATUS" = "200" ] || [ "$STATUS" = "302" ] || [ "$STATUS" = "307" ]; then
               echo "SenagrOS is live! (HTTP $STATUS)"
               exit 0
             fi
