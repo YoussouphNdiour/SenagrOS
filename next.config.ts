@@ -1,6 +1,8 @@
 import withSerwist from '@serwist/next';
 
-const nextConfig = {};
+const nextConfig = {
+  output: 'standalone',
+};
 
 export default withSerwist({
   swSrc: 'src/app/sw.ts',

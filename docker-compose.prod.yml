@@ -1,0 +1,43 @@
+services:
+  app:
+    image: ghcr.io/youssouphndiour/senagros:latest
+    container_name: senagros-app
+    restart: unless-stopped
+    ports:
+      - "3400:3000"
+    environment:
+      DATABASE_URL: postgresql://senagros:${POSTGRES_PASSWORD}@db:5432/senagros
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      NEXTAUTH_URL: http://2.59.156.226:3400
+      AUTH_TRUST_HOST: "true"
+      NODE_ENV: production
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - senagros_net
+
+  db:
+    image: postgis/postgis:16-3.4
+    container_name: senagros-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: senagros
+      POSTGRES_USER: senagros
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - senagros_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U senagros -d senagros"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - senagros_net
+
+volumes:
+  senagros_pgdata:
+
+networks:
+  senagros_net:
+    driver: bridge
