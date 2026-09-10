@@ -15,3 +15,4 @@ export * from './cooperatives';
 export * from './calendars';
 export * from './observation-forms';
 export * from './finance';
+export * from './marketplace';
