@@ -48,12 +48,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Pull image on VPS via Portainer
+        run: |
+          # Pull the image using Portainer Docker API with registry auth
+          # Registry ID 1 = GHCR configured in Portainer
+          echo "Pulling image on VPS..."
+          PULL_RESULT=$(curl -sk -X POST \
+            -H "X-API-Key: ${{ secrets.PORTAINER_API_KEY }}" \
+            -H "X-Registry-Auth: $(echo -n '{"registryId":1}' | base64)" \
+            "${{ secrets.PORTAINER_URL }}/api/endpoints/${{ secrets.PORTAINER_ENDPOINT_ID }}/docker/images/create?fromImage=ghcr.io/${{ env.IMAGE_NAME }}&tag=latest" \
+            2>&1)
+          echo "$PULL_RESULT" | tail -5
+          echo "Image pulled."
+
       - name: Deploy stack via Portainer
         run: |
           STACK_ID=$(curl -sk \
             -H "X-API-Key: ${{ secrets.PORTAINER_API_KEY }}" \
             "${{ secrets.PORTAINER_URL }}/api/stacks" \
-            | jq -r '.[] | select(.Name=="senagros") | .Id')
+            | jq -r '.[] | select(.Name=="senagros-fmis") | .Id')
 
           COMPOSE=$(cat docker-compose.prod.yml)
           ENV_VARS='[
@@ -64,19 +77,20 @@ jobs:
 
           if [ -z "$STACK_ID" ] || [ "$STACK_ID" = "null" ]; then
             echo "Creating new stack..."
-            curl -sk -X POST \
+            RESULT=$(curl -sk -X POST \
               -H "X-API-Key: ${{ secrets.PORTAINER_API_KEY }}" \
               -H "Content-Type: application/json" \
               "${{ secrets.PORTAINER_URL }}/api/stacks/create/standalone/string?endpointId=${{ secrets.PORTAINER_ENDPOINT_ID }}" \
               -d "$(jq -n \
-                --arg name "senagros" \
+                --arg name "senagros-fmis" \
                 --arg compose "$COMPOSE" \
                 --argjson env "$ENV_VARS" \
                 '{Name: $name, StackFileContent: $compose, Env: $env}'
-              )"
+              )")
+            echo "$RESULT" | jq -r '.Id // .message // .' 2>/dev/null || echo "$RESULT"
           else
             echo "Updating existing stack $STACK_ID..."
-            curl -sk -X PUT \
+            RESULT=$(curl -sk -X PUT \
               -H "X-API-Key: ${{ secrets.PORTAINER_API_KEY }}" \
               -H "Content-Type: application/json" \
               "${{ secrets.PORTAINER_URL }}/api/stacks/$STACK_ID?endpointId=${{ secrets.PORTAINER_ENDPOINT_ID }}" \
@@ -84,21 +98,22 @@ jobs:
                 --arg compose "$COMPOSE" \
                 --argjson env "$ENV_VARS" \
                 '{StackFileContent: $compose, Env: $env, PullImage: true, Prune: true}'
-              )"
+              )")
+            echo "$RESULT" | jq -r '.Id // .message // .' 2>/dev/null || echo "$RESULT"
           fi
 
-      - name: Wait and health check
+      - name: Health check
         run: |
-          echo "Waiting for deployment..."
-          sleep 20
-          for i in $(seq 1 10); do
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" "http://2.59.156.226:3400" || true)
+          echo "Waiting 30s for containers to start..."
+          sleep 30
+          for i in $(seq 1 12); do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 "http://2.59.156.226:3400" || true)
             if [ "$STATUS" = "200" ] || [ "$STATUS" = "302" ]; then
               echo "SenagrOS is live! (HTTP $STATUS)"
               exit 0
             fi
-            echo "Attempt $i: HTTP $STATUS - waiting..."
+            echo "Attempt $i/12: HTTP $STATUS - waiting 10s..."
             sleep 10
           done
-          echo "WARNING: Health check did not return 200/302 after 10 attempts"
+          echo "Health check failed after 12 attempts. Check container logs in Portainer."
           exit 1

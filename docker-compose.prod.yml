@@ -1,7 +1,7 @@
 services:
   app:
     image: ghcr.io/youssouphndiour/senagros:latest
-    container_name: senagros-app
+    container_name: senagros-fmis-app
     restart: unless-stopped
     ports:
       - "3400:3000"
@@ -19,7 +19,7 @@ services:
 
   db:
     image: postgis/postgis:16-3.4
-    container_name: senagros-db
+    container_name: senagros-fmis-db
     restart: unless-stopped
     environment:
       POSTGRES_DB: senagros
