@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SenagrOS — Guide Utilisateur Complet</title>
+  <style>
+    :root {
+      --green-50: #f0fdf4;
+      --green-100: #dcfce7;
+      --green-200: #bbf7d0;
+      --green-500: #22c55e;
+      --green-600: #16a34a;
+      --green-700: #15803d;
+      --green-800: #166534;
+      --green-900: #14532d;
+      --gray-50: #f9fafb;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-500: #6b7280;
+      --gray-600: #4b5563;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --orange-500: #f97316;
+      --blue-500: #3b82f6;
+      --red-500: #ef4444;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      color: var(--gray-800);
+      background: var(--gray-50);
+      line-height: 1.7;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, var(--green-800) 0%, var(--green-600) 100%);
+      color: white;
+      padding: 80px 20px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 12px;
+      letter-spacing: -1px;
+    }
+    .hero .subtitle {
+      font-size: 1.3rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto 30px;
+    }
+    .hero .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      backdrop-filter: blur(4px);
+    }
+
+    /* ===== NAV ===== */
+    .toc {
+      background: white;
+      border-bottom: 1px solid var(--gray-200);
+      padding: 20px;
+      position: relative;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .toc-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .toc h2 {
+      font-size: 1rem;
+      color: var(--green-700);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 6px;
+    }
+    .toc a {
+      color: var(--gray-700);
+      text-decoration: none;
+      font-size: 0.88rem;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .toc a:hover {
+      background: var(--green-50);
+      color: var(--green-700);
+    }
+    .toc a .num {
+      color: var(--green-600);
+      font-weight: 700;
+      margin-right: 4px;
+    }
+
+    /* ===== CONTENT ===== */
+    .content {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    /* ===== SECTION ===== */
+    .section {
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      margin-bottom: 48px;
+      overflow: hidden;
+      border: 1px solid var(--gray-200);
+    }
+    .section-header {
+      padding: 32px 40px 24px;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .section-header .section-num {
+      display: inline-block;
+      background: var(--green-600);
+      color: white;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      text-align: center;
+      line-height: 36px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-right: 12px;
+      vertical-align: middle;
+    }
+    .section-header h2 {
+      display: inline;
+      font-size: 1.6rem;
+      color: var(--gray-900);
+      vertical-align: middle;
+    }
+    .section-header p {
+      margin-top: 8px;
+      color: var(--gray-500);
+      font-size: 0.95rem;
+      padding-left: 48px;
+    }
+    .section-body {
+      padding: 32px 40px;
+    }
+    .section-body h3 {
+      font-size: 1.15rem;
+      color: var(--green-800);
+      margin: 24px 0 12px;
+      padding-bottom: 6px;
+      border-bottom: 2px solid var(--green-100);
+    }
+    .section-body h3:first-child { margin-top: 0; }
+    .section-body p {
+      margin-bottom: 12px;
+      color: var(--gray-700);
+    }
+    .section-body ul, .section-body ol {
+      margin: 8px 0 16px 24px;
+      color: var(--gray-700);
+    }
+    .section-body li { margin-bottom: 6px; }
+
+    /* ===== SCREENSHOT ===== */
+    .screenshot {
+      margin: 20px 0;
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .screenshot img {
+      width: 100%;
+      display: block;
+    }
+    .screenshot-caption {
+      background: var(--gray-50);
+      padding: 10px 16px;
+      font-size: 0.85rem;
+      color: var(--gray-500);
+      border-top: 1px solid var(--gray-200);
+      text-align: center;
+      font-style: italic;
+    }
+
+    /* ===== STEPS ===== */
+    .steps {
+      counter-reset: step;
+      list-style: none;
+      margin: 16px 0;
+      padding: 0;
+    }
+    .steps li {
+      counter-increment: step;
+      padding: 12px 16px 12px 52px;
+      position: relative;
+      margin-bottom: 8px;
+      background: var(--green-50);
+      border-radius: 8px;
+      border-left: 3px solid var(--green-500);
+    }
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: 14px;
+      top: 12px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--green-600);
+      color: white;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-align: center;
+      line-height: 26px;
+    }
+
+    /* ===== INFO BOXES ===== */
+    .info-box {
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin: 16px 0;
+      font-size: 0.92rem;
+    }
+    .info-box.tip {
+      background: #f0f9ff;
+      border-left: 4px solid var(--blue-500);
+      color: #1e40af;
+    }
+    .info-box.warning {
+      background: #fffbeb;
+      border-left: 4px solid var(--orange-500);
+      color: #92400e;
+    }
+    .info-box.important {
+      background: #fef2f2;
+      border-left: 4px solid var(--red-500);
+      color: #991b1b;
+    }
+    .info-box strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    /* ===== TABLE ===== */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.9rem;
+    }
+    .data-table th {
+      background: var(--green-700);
+      color: white;
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: 600;
+    }
+    .data-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .data-table tr:nth-child(even) td {
+      background: var(--gray-50);
+    }
+    .data-table code {
+      background: var(--gray-100);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.85em;
+      color: var(--green-800);
+    }
+
+    /* ===== FOOTER ===== */
+    .footer {
+      background: var(--gray-900);
+      color: var(--gray-300);
+      text-align: center;
+      padding: 40px 20px;
+      font-size: 0.9rem;
+    }
+    .footer strong { color: white; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 2rem; }
+      .hero .subtitle { font-size: 1rem; }
+      .section-body, .section-header { padding: 20px; }
+      .toc-grid { grid-template-columns: 1fr 1fr; }
+      .section-header p { padding-left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ==================== HERO ==================== -->
+<div class="hero">
+  <h1>SenagrOS</h1>
+  <p class="subtitle">Guide Utilisateur Complet<br>Systeme de Gestion Agricole pour l'Afrique de l'Ouest</p>
+  <span class="badge">Version 1.0 — Septembre 2026</span>
+</div>
+
+<!-- ==================== TABLE OF CONTENTS ==================== -->
+<nav class="toc">
+  <div class="toc-inner">
+    <h2>Sommaire</h2>
+    <div class="toc-grid">
+      <a href="#auth"><span class="num">1</span> Connexion & Inscription</a>
+      <a href="#dashboard"><span class="num">2</span> Tableau de bord</a>
+      <a href="#assets"><span class="num">3</span> Assets (Parcelles)</a>
+      <a href="#cultures"><span class="num">4</span> Cultures</a>
+      <a href="#animaux"><span class="num">5</span> Animaux</a>
+      <a href="#equipements"><span class="num">6</span> Equipements</a>
+      <a href="#intrants"><span class="num">7</span> Intrants</a>
+      <a href="#journal"><span class="num">8</span> Journal d'activites</a>
+      <a href="#semis"><span class="num">9</span> Semis</a>
+      <a href="#application-intrant"><span class="num">9b</span> Application intrant</a>
+      <a href="#irrigation"><span class="num">10</span> Irrigation</a>
+      <a href="#maintenance"><span class="num">10b</span> Maintenance</a>
+      <a href="#soin-medical"><span class="num">10c</span> Soin medical</a>
+      <a href="#observations"><span class="num">11</span> Observations</a>
+      <a href="#calendrier"><span class="num">12</span> Calendrier</a>
+      <a href="#plans"><span class="num">13</span> Plans de culture</a>
+      <a href="#recoltes"><span class="num">13b</span> Recoltes</a>
+      <a href="#ventes"><span class="num">14</span> Ventes</a>
+      <a href="#facturation"><span class="num">15</span> Facturation</a>
+      <a href="#finances"><span class="num">16</span> Finances</a>
+      <a href="#comptabilite"><span class="num">17</span> Comptabilite</a>
+      <a href="#reports"><span class="num">18</span> Rapports</a>
+      <a href="#marketplace"><span class="num">19</span> Marketplace</a>
+      <a href="#produits"><span class="num">20</span> Mes produits</a>
+      <a href="#commandes"><span class="num">21</span> Commandes</a>
+      <a href="#cooperatives"><span class="num">22</span> Cooperatives</a>
+      <a href="#notifications"><span class="num">23</span> Notifications</a>
+      <a href="#quick"><span class="num">24</span> Actions rapides</a>
+      <a href="#workflow"><span class="num">25</span> Workflow complet</a>
+    </div>
+  </div>
+</nav>
+
+<div class="content">
+
+<!-- ==================== 1. AUTH ==================== -->
+<div class="section" id="auth">
+  <div class="section-header">
+    <span class="section-num">1</span>
+    <h2>Connexion & Inscription</h2>
+    <p>Accedez a votre exploitation ou creez un nouveau compte</p>
+  </div>
+  <div class="section-body">
+    <h3>Se connecter</h3>
+    <p>Rendez-vous sur la page de connexion et saisissez votre adresse email et votre mot de passe.</p>
+    <div class="screenshot">
+      <img src="screenshots/00-login.png" alt="Page de connexion SenagrOS">
+      <div class="screenshot-caption">Page de connexion — Saisissez email et mot de passe</div>
+    </div>
+
+    <h3>Creer un compte</h3>
+    <p>Deux types de comptes sont disponibles :</p>
+    <ul>
+      <li><strong>Proprietaire de ferme</strong> : Vous creez votre exploitation. Vous choisissez le nom de votre ferme et devenez administrateur.</li>
+      <li><strong>Travailleur</strong> : Vous rejoignez une ferme existante avec un code d'invitation fourni par le proprietaire.</li>
+    </ul>
+    <div class="screenshot">
+      <img src="screenshots/00-register.png" alt="Page d'inscription SenagrOS">
+      <div class="screenshot-caption">Page d'inscription — Choix du type de compte (Proprietaire ou Travailleur)</div>
+    </div>
+
+    <ol class="steps">
+      <li>Choisissez votre type de compte : <strong>Je cree ma ferme</strong> ou <strong>J'ai un code d'invitation</strong></li>
+      <li>Remplissez vos informations personnelles (nom, email, mot de passe)</li>
+      <li>Pour un proprietaire : saisissez le nom et la description de votre ferme</li>
+      <li>Pour un travailleur : collez le code d'invitation recu</li>
+      <li>Cliquez sur <strong>Creer mon compte</strong></li>
+    </ol>
+
+    <div class="info-box tip">
+      <strong>Conseil</strong>
+      Le proprietaire peut ensuite inviter des travailleurs depuis les parametres de la ferme en generant des codes d'invitation.
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 2. DASHBOARD ==================== -->
+<div class="section" id="dashboard">
+  <div class="section-header">
+    <span class="section-num">2</span>
+    <h2>Tableau de bord</h2>
+    <p>Vue d'ensemble de votre exploitation agricole</p>
+  </div>
+  <div class="section-body">
+    <p>Le tableau de bord affiche en un coup d'oeil :</p>
+    <ul>
+      <li><strong>Statistiques cles</strong> : nombre de parcelles, cultures en cours, cheptel, logs recents</li>
+      <li><strong>Graphiques</strong> : evolution des activites, repartition des cultures</li>
+      <li><strong>Modules rapides</strong> : acces direct aux sections les plus utilisees</li>
+      <li><strong>Taches recentes</strong> : derniers logs et interventions</li>
+    </ul>
+    <div class="screenshot">
+      <img src="screenshots/01-dashboard.png" alt="Tableau de bord SenagrOS">
+      <div class="screenshot-caption">Tableau de bord — Vue d'ensemble de l'exploitation SCL Diama</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 3. ASSETS ==================== -->
+<div class="section" id="assets">
+  <div class="section-header">
+    <span class="section-num">3</span>
+    <h2>Assets — Parcelles</h2>
+    <p>Gerez vos parcelles, terres et unites de production</p>
+  </div>
+  <div class="section-body">
+    <p>La page <strong>Assets</strong> liste tous vos actifs agricoles. Utilisez les filtres et le bouton <strong>Nouveau</strong> pour ajouter une parcelle.</p>
+    <div class="screenshot">
+      <img src="screenshots/02-assets.png" alt="Liste des assets">
+      <div class="screenshot-caption">Vue globale des assets — Tableau avec filtres par type</div>
+    </div>
+
+    <h3>Creer une parcelle</h3>
+    <ol class="steps">
+      <li>Cliquez sur <strong>Nouveau</strong> puis selectionnez le type <strong>land</strong></li>
+      <li>Saisissez le nom (ex: "Parcelle Arachide Nord"), la superficie en hectares</li>
+      <li>Ajoutez les coordonnees GPS (latitude, longitude) pour la cartographie</li>
+      <li>Ajoutez une description et des notes si necessaire</li>
+      <li>Cliquez sur <strong>Creer</strong></li>
+    </ol>
+    <div class="screenshot">
+      <img src="screenshots/03-parcelles.png" alt="Parcelles">
+      <div class="screenshot-caption">Liste des parcelles avec la Parcelle Arachide Nord (3.5 ha)</div>
+    </div>
+
+    <div class="info-box tip">
+      <strong>Conseil</strong>
+      Ajoutez toujours les coordonnees GPS de vos parcelles pour beneficier de la vue cartographique avec MapLibre.
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 4. CULTURES ==================== -->
+<div class="section" id="cultures">
+  <div class="section-header">
+    <span class="section-num">4</span>
+    <h2>Cultures</h2>
+    <p>Suivi des cultures et plantations en cours</p>
+  </div>
+  <div class="section-body">
+    <p>Gerez vos cultures actives avec la variete, le cycle cultural et la saison.</p>
+    <div class="screenshot">
+      <img src="screenshots/27-cultures.png" alt="Page cultures">
+      <div class="screenshot-caption">Liste des cultures — Arachide 55-437, cycle 120 jours</div>
+    </div>
+
+    <h3>Ajouter une culture</h3>
+    <ol class="steps">
+      <li>Depuis la page <strong>Cultures</strong>, cliquez sur <strong>Nouveau</strong></li>
+      <li>Selectionnez le type <strong>Culture</strong></li>
+      <li>Renseignez : nom, type de culture, variete</li>
+      <li>Indiquez les dates de plantation et de recolte prevue</li>
+      <li>Renseignez l'ecartement entre rangs, entre plants et la densite</li>
+      <li>Validez avec <strong>Creer l'asset</strong></li>
+    </ol>
+    <div class="screenshot">
+      <img src="screenshots/53-asset-plant-form.png" alt="Formulaire culture partie haute">
+      <div class="screenshot-caption">Formulaire Culture — Oignon Galmi Violet, plantation 15/11/2026, recolte 20/03/2027</div>
+    </div>
+    <div class="screenshot">
+      <img src="screenshots/53b-asset-plant-form-bottom.png" alt="Formulaire culture partie basse">
+      <div class="screenshot-caption">Donnees culture — Ecart rangs 30 cm, ecart plants 10 cm, densite 333 000 plants/ha</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 5. ANIMAUX ==================== -->
+<div class="section" id="animaux">
+  <div class="section-header">
+    <span class="section-num">5</span>
+    <h2>Animaux</h2>
+    <p>Gestion du cheptel et de l'elevage</p>
+  </div>
+  <div class="section-body">
+    <p>Suivez votre cheptel : bovins, ovins, caprins, volailles, etc.</p>
+    <div class="screenshot">
+      <img src="screenshots/28-animaux.png" alt="Page animaux">
+      <div class="screenshot-caption">Liste des animaux — Troupeau bovins N'Dama, 12 tetes</div>
+    </div>
+
+    <h3>Ajouter un animal</h3>
+    <ol class="steps">
+      <li>Cliquez sur <strong>Nouveau</strong></li>
+      <li>Selectionnez le type <strong>Animal</strong></li>
+      <li>Renseignez le nom (ex: Troupeau Bovins N'Dama)</li>
+      <li>Ajoutez des notes detaillees (race, nombre de tetes, type d'elevage, zone)</li>
+      <li>Cliquez sur <strong>Creer l'asset</strong></li>
+    </ol>
+    <div class="screenshot">
+      <img src="screenshots/42-animaux-form.png" alt="Formulaire animaux rempli">
+      <div class="screenshot-caption">Formulaire Animal — Troupeau Bovins N'Dama, race trypanotolerant, 12 tetes, zone Kolda</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 6. EQUIPEMENTS ==================== -->
+<div class="section" id="equipements">
+  <div class="section-header">
+    <span class="section-num">6</span>
+    <h2>Equipements</h2>
+    <p>Inventaire du materiel agricole</p>
+  </div>
+  <div class="section-body">
+    <p>Enregistrez vos equipements : semoirs, tracteurs, pulverisateurs, etc.</p>
+    <div class="screenshot">
+      <img src="screenshots/29-equipements.png" alt="Page equipements">
+      <div class="screenshot-caption">Liste des equipements — Semoir mecanique Super Eco</div>
+    </div>
+
+    <h3>Ajouter un equipement</h3>
+    <ol class="steps">
+      <li>Cliquez sur <strong>Nouveau</strong></li>
+      <li>Selectionnez le type <strong>Equipement</strong></li>
+      <li>Renseignez le nom, le type d'equipement, la marque et le modele</li>
+      <li>Indiquez le numero de serie, la date d'achat et le prix (FCFA)</li>
+      <li>Cliquez sur <strong>Creer l'asset</strong></li>
+    </ol>
+    <div class="screenshot">
+      <img src="screenshots/52-asset-equipment-form.png" alt="Formulaire equipement partie haute">
+      <div class="screenshot-caption">Formulaire Equipement — Semoir pneumatique John Deere 1750 MaxEmerge</div>
+    </div>
+    <div class="screenshot">
+      <img src="screenshots/52b-asset-equipment-form-bottom.png" alt="Formulaire equipement partie basse">
+      <div class="screenshot-caption">Donnees equipement — N° serie JD-SN-2024-78534, achat 15/03/2024, 8 500 000 FCFA</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 7. INTRANTS ==================== -->
+<div class="section" id="intrants">
+  <div class="section-header">
+    <span class="section-num">7</span>
+    <h2>Intrants</h2>
+    <p>Gestion des stocks phytosanitaires, engrais et semences</p>
+  </div>
+  <div class="section-body">
+    <p>Le module Intrants gere 3 categories de produits :</p>
+    <table class="data-table">
+      <tr>
+        <th>Categorie</th>
+        <th>Sous-categories</th>
+        <th>Champs specifiques</th>
+      </tr>
+      <tr>
+        <td><strong>Phytosanitaires</strong></td>
+        <td>Herbicide, Fongicide, Insecticide, Acaricide, Nematicide, Molluscicide, Regulateur, Adjuvant</td>
+        <td>Matiere active, DAR (jours), Classe toxicite, Dose recommandee</td>
+      </tr>
+      <tr>
+        <td><strong>Engrais</strong></td>
+        <td>Mineral, Organique, Amendement calcique, Oligo-elements, Biostimulant</td>
+        <td>Composition NPK, Dose recommandee, Forme</td>
+      </tr>
+      <tr>
+        <td><strong>Semences</strong></td>
+        <td>Certifiee, Paysanne, Hybride, OGM</td>
+        <td>Variete, Taux germination, PMG, Origine</td>
+      </tr>
+    </table>
+
+    <div class="screenshot">
+      <img src="screenshots/04-intrants.png" alt="Page intrants">
+      <div class="screenshot-caption">Page d'accueil des intrants — 3 onglets : Phyto, Engrais, Semences</div>
+    </div>
+
+    <h3>Ajouter un phytosanitaire</h3>
+    <ol class="steps">
+      <li>Cliquez sur <strong>+ Nouveau</strong></li>
+      <li>Selectionnez la categorie <strong>Phytosanitaire</strong></li>
+      <li>Choisissez la sous-categorie (ex: Herbicide)</li>
+      <li>Remplissez : nom, nom commercial, matiere active, dose, DAR, classe toxicite</li>
+      <li>Renseignez le stock initial, l'unite (L, kg), le prix et le seuil d'alerte</li>
+      <li>Validez avec <strong>Creer l'intrant</strong></li>
+    </ol>
+    <div class="screenshot">
+      <img src="screenshots/06-intrant-phyto-form.png" alt="Formulaire phytosanitaire">
+      <div class="screenshot-caption">Formulaire phytosanitaire — Glyphosate 360 SL (Roundup Turbo)</div>
+    </div>
+    <div class="screenshot">
+      <img src="screenshots/54-intrants-phyto-list.png" alt="Liste phyto">
+      <div class="screenshot-caption">Liste des phytosanitaires — Glyphosate 360 SL, sous-categorie Herbicide, forme Liquide</div>
+    </div>
+
+    <h3>Ajouter un engrais</h3>
+    <ol class="steps">
+      <li>Selectionnez la categorie <strong>Fertilisation</strong></li>
+      <li>Choisissez la sous-categorie (ex: Engrais mineral)</li>
+      <li>Renseignez la composition NPK (ex: 15-15-15)</li>
+      <li>Indiquez le stock en kg et le prix unitaire en XOF</li>
+    </ol>
+    <div class="screenshot">
+      <img src="screenshots/07-intrant-engrais-form.png" alt="Formulaire engrais">
+      <div class="screenshot-caption">Formulaire engrais — NPK 15-15-15 (ICS), 500 kg a 450 FCFA/kg</div>
+    </div>
+    <div class="screenshot">
+      <img src="screenshots/09-intrants-engrais-list.png" alt="Liste engrais">
+      <div class="screenshot-caption">Liste des engrais avec stock et valeur</div>
+    </div>
+
+    <h3>Semences</h3>
+    <div class="screenshot">
+      <img src="screenshots/08-intrants-semences.png" alt="Liste semences">
+      <div class="screenshot-caption">Liste des semences — Arachide 55-437 certifiee</div>
+    </div>
+
+    <h3>Ajouter une semence (Asset)</h3>
+    <p>Les semences peuvent aussi etre enregistrees comme assets dans le module Assets :</p>
+    <ol class="steps">
+      <li>Allez dans <strong>Assets > Nouveau</strong></li>
+      <li>Selectionnez le type <strong>Semence</strong></li>
+      <li>Renseignez : culture, variete, n° de lot, taux de germination, provenance</li>
+      <li>Indiquez le traitement applique et la certification</li>
+      <li>Cliquez sur <strong>Creer l'asset</strong></li>
+    </ol>
+    <div class="screenshot">
+      <img src="screenshots/51-asset-seed-form.png" alt="Formulaire semence partie haute">
+      <div class="screenshot-caption">Formulaire Semence — Arachide 55-437 Lot A, certifiee ISRA Saint-Louis</div>
+    </div>
+    <div class="screenshot">
+      <img src="screenshots/51b-asset-seed-form-bottom.png" alt="Formulaire semence partie basse">
+      <div class="screenshot-caption">Donnees semence — Lot LOT-2026-042, germination 94%, Thirame 50% DS, R1 certifiee</div>
+    </div>
+
+    <div class="info-box warning">
+      <strong>Alerte stock</strong>
+      Quand le stock descend sous le seuil d'alerte defini, l'intrant apparait en rouge dans la colonne "En alerte" du tableau de bord.
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 8. JOURNAL ==================== -->
+<div class="section" id="journal">
+  <div class="section-header">
+    <span class="section-num">8</span>
+    <h2>Journal d'activites</h2>
+    <p>Historique complet de toutes les interventions sur l'exploitation</p>
+  </div>
+  <div class="section-body">
+    <p>Le journal centralise tous les logs : activites, semis, irrigation, recoltes, observations, soins, etc.</p>
+    <div class="screenshot">
+      <img src="screenshots/22-journal.png" alt="Journal d'activites">
+      <div class="screenshot-caption">Journal — 4 logs enregistres (Semis, Observation, Irrigation, Recolte)</div>
+    </div>
+
+    <p>Chaque log peut etre filtre par :</p>
+    <ul>
+      <li><strong>Type</strong> : Activite, Semis, Irrigation, Recolte, Observation, Application intrant, etc.</li>
+      <li><strong>Statut</strong> : En attente, Termine, Annule</li>
+      <li><strong>Periode</strong> : Date debut / fin</li>
+    </ul>
+
+    <h3>Types de logs disponibles</h3>
+    <table class="data-table">
+      <tr><th>Type</th><th>Usage</th><th>Champs specifiques</th></tr>
+      <tr><td>Activite</td><td>Travaux generaux</td><td>Duree, description</td></tr>
+      <tr><td>Semis</td><td>Mise en terre</td><td>Methode, profondeur, ecartements, densite</td></tr>
+      <tr><td>Irrigation</td><td>Arrosage</td><td>Methode, duree (min), volume (L)</td></tr>
+      <tr><td>Recolte</td><td>Collecte</td><td>Quantite, qualite, parcelle</td></tr>
+      <tr><td>Application intrant</td><td>Traitement</td><td>Produit, dose, surface</td></tr>
+      <tr><td>Observation</td><td>Suivi terrain</td><td>Type d'observation, resultats</td></tr>
+      <tr><td>Maintenance</td><td>Entretien materiel</td><td>Equipement, intervention</td></tr>
+      <tr><td>Soin medical</td><td>Sante animale</td><td>Animal, traitement</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== 9. SEMIS ==================== -->
+<div class="section" id="semis">
+  <div class="section-header">
+    <span class="section-num">9</span>
+    <h2>Semis</h2>
+    <p>Enregistrer les operations de semis avec details techniques</p>
+  </div>
+  <div class="section-body">
+    <h3>Creer un log de semis</h3>
+    <ol class="steps">
+      <li>Allez dans <strong>Journal > Nouveau</strong></li>
+      <li>Selectionnez le type <strong>Semis</strong></li>
+      <li>Remplissez les informations generales : nom, date, statut</li>
+      <li>Dans la section <strong>Details du semis</strong> :
+        <ul>
+          <li>Type de semis : Manuel ou Machine</li>
+          <li>Profondeur de semis (cm)</li>
+          <li>Ecartement entre lignes (cm)</li>
+          <li>Ecartement entre plants (cm)</li>
+          <li>Densite de semis (kg/ha ou plants/ha)</li>
+        </ul>
+      </li>
+      <li>Optionnel : assignez des equipements et du personnel</li>
+      <li>Cliquez sur <strong>Creer le log</strong></li>
+    </ol>
+
+    <div class="screenshot">
+      <img src="screenshots/36-semis-form-top.png" alt="Formulaire semis rempli">
+      <div class="screenshot-caption">Formulaire Semis rempli — Type Machine, Semence Arachide 55-437, Parcelle Nord</div>
+    </div>
+    <div class="screenshot">
+      <img src="screenshots/37-semis-form-full.png" alt="Formulaire semis complet">
+      <div class="screenshot-caption">Vue complete — Equipement Semoir 4 rangs assigne, employe selectionne</div>
+    </div>
+
+    <div class="info-box tip">
+      <strong>Exemple realiste</strong>
+      Semis arachide 55-437 : semoir mecanique, profondeur 4 cm, ecartement lignes 50 cm, ecartement plants 15 cm, densite 120 kg/ha.
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 9b. APPLICATION INTRANT ==================== -->
+<div class="section" id="application-intrant">
+  <div class="section-header">
+    <span class="section-num">9b</span>
+    <h2>Application d'intrant</h2>
+    <p>Enregistrer les traitements phytosanitaires et fertilisations</p>
+  </div>
+  <div class="section-body">
+    <h3>Creer un log d'application intrant</h3>
+    <ol class="steps">
+      <li>Allez dans <strong>Journal > Nouveau</strong> et selectionnez <strong>Application intrant</strong></li>
+      <li>Choisissez le type d'intrant : Phytosanitaire, Fertilisant ou Semence</li>
+      <li>Indiquez la sous-categorie (Herbicide, Fongicide, etc.)</li>
+      <li>Renseignez la dose, l'unite (L/ha, kg/ha), la methode d'application</li>
+      <li>Indiquez la surface traitee en hectares</li>
+      <li>Cliquez sur <strong>Creer le log</strong></li>
+    </ol>
+    <div class="screenshot">
+      <img src="screenshots/55-log-intrant-form-top.png" alt="Formulaire application intrant partie haute">
+      <div class="screenshot-caption">Formulaire Application intrant — Insecticide Parcelle Arachide Nord, sous-categorie Insecticide, dose 2.5 L/ha</div>
+    </div>
+    <div class="screenshot">
+      <img src="screenshots/55b-log-intrant-form-bottom.png" alt="Formulaire application intrant partie basse">
+      <div class="screenshot-caption">Details — Methode pulverisation foliaire, surface traitee 3.5 ha, assignation materiel et personnel</div>
+    </div>
+
+    <div class="info-box warning">
+      <strong>Securite phytosanitaire</strong>
+      Notez toujours les conditions meteo (vent, temperature), le port d'EPI et le DAR (Delai Avant Recolte) dans les notes du log.
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 10. IRRIGATION ==================== -->
+<div class="section" id="irrigation">
+  <div class="section-header">
+    <span class="section-num">10</span>
+    <h2>Irrigation</h2>
+    <p>Suivi des arrosages et de la consommation d'eau</p>
+  </div>
+  <div class="section-body">
+    <h3>Enregistrer une irrigation</h3>
+    <ol class="steps">
+      <li>Allez dans <strong>Journal > Nouveau</strong> et selectionnez <strong>Irrigation</strong></li>
+      <li>Selectionnez la <strong>methode d'irrigation</strong> dans la liste deroulante :
+        <ul>
+          <li>Goutte-a-goutte</li>
+          <li>Aspersion</li>
+          <li>Gravitaire (submersion)</li>
+          <li>Micro-aspersion</li>
+          <li>Pivot central</li>
+          <li>Systeme californien</li>
+          <li>Manuel (arrosoir/seau)</li>
+          <li>Autre (preciser) — un champ libre apparait pour decrire votre methode</li>
+        </ul>
+      </li>
+      <li>Indiquez la <strong>duree</strong> en minutes et le <strong>volume</strong> en litres</li>
+      <li>Selectionnez la <strong>source d'eau</strong> (forage, puits, riviere, bassin, citerne, reseau)</li>
+      <li>Optionnel : renseignez le debit de pompe (L/min)</li>
+      <li>Cliquez sur <strong>Creer le log</strong></li>
+    </ol>
+    <div class="screenshot">
+      <img src="screenshots/38-irrigation-form-dropdown.png" alt="Formulaire irrigation avec liste deroulante">
+      <div class="screenshot-caption">Formulaire Irrigation — Liste deroulante des methodes, source d'eau et debit pompe</div>
+    </div>
+    <div class="screenshot">
+      <img src="screenshots/10-irrigation-form.png" alt="Formulaire irrigation rempli">
+      <div class="screenshot-caption">Formulaire d'irrigation rempli — Goutte-a-goutte, 240 min, 14 000 L</div>
+    </div>
+    <div class="screenshot">
+      <img src="screenshots/41-irrigation-list.png" alt="Liste irrigation">
+      <div class="screenshot-caption">Page /logs/irrigation — Liste des logs d'irrigation</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 10b. MAINTENANCE ==================== -->
+<div class="section" id="maintenance">
+  <div class="section-header">
+    <span class="section-num">10b</span>
+    <h2>Maintenance</h2>
+    <p>Suivi de l'entretien du materiel agricole</p>
+  </div>
+  <div class="section-body">
+    <h3>Enregistrer une maintenance</h3>
+    <ol class="steps">
+      <li>Allez dans <strong>Journal > Nouveau</strong> et selectionnez <strong>Maintenance</strong></li>
+      <li>Donnez un nom descriptif (ex: Revision semoir pneumatique JD-1750)</li>
+      <li>Dans la section <strong>Details maintenance</strong> :
+        <ul>
+          <li>Type de maintenance : Revision preventive, Reparation, Vidange, etc.</li>
+          <li>Cout (FCFA) : montant de l'intervention</li>
+        </ul>
+      </li>
+      <li>Ajoutez des notes detaillees sur les pieces changees et le travail effectue</li>
+      <li>Cliquez sur <strong>Creer le log</strong></li>
+    </ol>
+    <div class="screenshot">
+      <img src="screenshots/56-log-maintenance-form.png" alt="Formulaire maintenance">
+      <div class="screenshot-caption">Formulaire Maintenance — Revision preventive du semoir JD-1750, cout 175 000 FCFA</div>
+    </div>
+
+    <div class="info-box tip">
+      <strong>Maintenance preventive</strong>
+      Planifiez des revisions regulieres avant chaque campagne pour eviter les pannes en pleine saison. Notez les pieces remplacees et le kilometrage/heures moteur.
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 10c. SOIN MEDICAL ==================== -->
+<div class="section" id="soin-medical">
+  <div class="section-header">
+    <span class="section-num">10c</span>
+    <h2>Soin medical</h2>
+    <p>Suivi sanitaire du cheptel</p>
+  </div>
+  <div class="section-body">
+    <h3>Enregistrer un soin medical</h3>
+    <ol class="steps">
+      <li>Allez dans <strong>Journal > Nouveau</strong> et selectionnez <strong>Soin medical</strong></li>
+      <li>Donnez un nom descriptif (ex: Vaccination bovins troupeau Nord)</li>
+      <li>Dans la section <strong>Details soin medical</strong> :
+        <ul>
+          <li>Traitement : nom du medicament ou vaccin administre</li>
+          <li>Veterinaire : nom du praticien intervenant</li>
+        </ul>
+      </li>
+      <li>Ajoutez des notes (nombre de tetes traitees, posologie, rappels prevus)</li>
+      <li>Cliquez sur <strong>Creer le log</strong></li>
+    </ol>
+    <div class="screenshot">
+      <img src="screenshots/57-log-medical-form.png" alt="Formulaire soin medical">
+      <div class="screenshot-caption">Formulaire Soin medical — Vaccination fievre aphteuse, Dr. Mamadou Diallo (ISRA), 12 tetes</div>
+    </div>
+
+    <div class="info-box warning">
+      <strong>Carnet sanitaire</strong>
+      Conservez un historique precis des vaccinations et traitements pour chaque animal ou lot. Le veterinaire peut etre amene a consulter ces informations lors des controles sanitaires.
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 11. OBSERVATIONS ==================== -->
+<div class="section" id="observations">
+  <div class="section-header">
+    <span class="section-num">11</span>
+    <h2>Observations</h2>
+    <p>Fiches d'observation terrain : densite, stades, ravageurs, agreage</p>
+  </div>
+  <div class="section-body">
+    <p>4 types de fiches d'observation sont disponibles :</p>
+    <table class="data-table">
+      <tr><th>Type</th><th>Usage</th><th>Resultats calcules</th></tr>
+      <tr><td><strong>Densite de levee</strong></td><td>Comptage des plants apres levee</td><td>Densite reelle (plts/ha), taux de levee (%)</td></tr>
+      <tr><td><strong>Suivi stade cultural</strong></td><td>Progression phenologique</td><td>Stade BBCH, date estimee recolte</td></tr>
+      <tr><td><strong>Maladies-Ravageurs</strong></td><td>Detection et quantification</td><td>Taux d'attaque, severite</td></tr>
+      <tr><td><strong>Agreage pre-recolte</strong></td><td>Controle qualite avant recolte</td><td>Note qualite, criteres conformite</td></tr>
+    </table>
+
+    <div class="screenshot">
+      <img src="screenshots/21-observations.png" alt="Page observations">
+      <div class="screenshot-caption">Liste des observations — 1 fiche densite de levee (99.17% levee)</div>
+    </div>
+
+    <h3>Fiche Densite de levee</h3>
+    <p>Cette fiche permet de compter les plants sur des repetitions (10 par defaut) et calcule automatiquement la densite reelle et le taux de levee.</p>
+    <ol class="steps">
+      <li>Cliquez sur <strong>+ Densite</strong></li>
+      <li>Selectionnez la parcelle, la culture et la variete</li>
+      <li>Indiquez la densite theorique de semis et la surface d'echantillon</li>
+      <li>Comptez les plants sur chaque repetition (10 zones de 1 m2)</li>
+      <li>Les resultats se calculent automatiquement en temps reel</li>
+      <li>Ajoutez vos remarques (observateur et chef de ferme)</li>
+      <li>Cliquez sur <strong>Enregistrer la fiche</strong></li>
+    </ol>
+    <div class="screenshot">
+      <img src="screenshots/43-observation-densite-form.png" alt="Formulaire densite de levee">
+      <div class="screenshot-caption">Fiche Densite de levee — 10 repetitions, calcul automatique densite reelle et taux de levee</div>
+    </div>
+
+    <div class="info-box tip">
+      <strong>Exemple</strong>
+      10 comptages (12, 11, 13, 10, 12, 14, 11, 13, 12, 11) = 119 plants total = 119 000 plts/ha = 99.17% de taux de levee sur une densite theorique de 120 000 plts/ha.
+    </div>
+
+    <h3>Fiche Maladies-Ravageurs</h3>
+    <p>Grille d'observation complete avec 20 ravageurs et maladies pre-definis, 10 blocs d'echantillonnage, calcul automatique du pourcentage d'infestation et alerte quand le seuil de traitement est depasse.</p>
+    <ol class="steps">
+      <li>Cliquez sur <strong>+ Ravageurs</strong></li>
+      <li>Selectionnez la parcelle, la culture et la variete</li>
+      <li>Definissez le seuil de traitement (5% par defaut)</li>
+      <li>Pour chaque bloc (B1 a B10), comptez les plants atteints par ravageur/maladie</li>
+      <li>Le % infeste et l'alerte se calculent automatiquement</li>
+      <li>Ajoutez vos preconisations de traitement</li>
+    </ol>
+    <div class="screenshot">
+      <img src="screenshots/45-observation-ravageurs-form.png" alt="Formulaire ravageurs en-tete">
+      <div class="screenshot-caption">Fiche Maladies-Ravageurs — En-tete rempli : Parcelle Arachide Nord, culture Arachide 55-437, 10 cibles, seuil 5%</div>
+    </div>
+    <div class="screenshot">
+      <img src="screenshots/45b-observation-ravageurs-grille.png" alt="Grille ravageurs avec alertes">
+      <div class="screenshot-caption">Grille d'observation — Pucerons 70%, Thrips 60%, Mildiou 40% declenchent l'alerte rouge au-dessus du seuil de 5%</div>
+    </div>
+    <div class="screenshot">
+      <img src="screenshots/45c-observation-ravageurs-remarques.png" alt="Preconisations et remarques ravageurs">
+      <div class="screenshot-caption">Preconisations de traitement et remarques de l'observateur</div>
+    </div>
+
+    <h3>Suivi stade cultural</h3>
+    <p>Enregistrez le stade phenologique atteint par vos cultures pour suivre leur progression.</p>
+    <ol class="steps">
+      <li>Cliquez sur <strong>+ Stade</strong></li>
+      <li>Selectionnez le stade atteint dans la liste (Semis, Levee, Tallage, Floraison, Maturite...)</li>
+      <li>Indiquez la date a laquelle le stade a ete atteint</li>
+    </ol>
+    <div class="screenshot">
+      <img src="screenshots/44-observation-stade-form.png" alt="Formulaire stade cultural rempli">
+      <div class="screenshot-caption">Fiche Suivi stade cultural — Parcelle Arachide Nord, stade Floraison atteint le 12/08/2026, remarques observateur et chef de ferme</div>
+    </div>
+
+    <h3>Agreage pre-recolte</h3>
+    <p>Controle qualite avant recolte pour evaluer la conformite de la production aux criteres du marche.</p>
+    <ol class="steps">
+      <li>Cliquez sur <strong>+ Agreage</strong></li>
+      <li>Selectionnez la parcelle et la culture</li>
+      <li>Remplissez les criteres qualite (calibre, couleur, defauts, maturite)</li>
+      <li>Indiquez la note globale et les remarques</li>
+    </ol>
+    <div class="screenshot">
+      <img src="screenshots/46-observation-agreage-form.png" alt="Formulaire agreage rempli">
+      <div class="screenshot-caption">Fiche Agreage pre-recolte — Echantillon 20 gousses, calibres par categorie (>19cm, 19-16, 16-14, &lt;14)</div>
+    </div>
+    <div class="screenshot">
+      <img src="screenshots/46b-observation-agreage-resultats.png" alt="Resultats agreage">
+      <div class="screenshot-caption">Resultats agreage — 80% valorisable, defauts chenilles 10%, oiseaux 5%, malformations 5%</div>
+    </div>
+
+    <div class="screenshot">
+      <img src="screenshots/33-observations-list-updated.png" alt="Liste observations complete">
+      <div class="screenshot-caption">Liste des observations — Fiches Densite, Ravageurs, Stade et Agreage</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 12. CALENDRIER ==================== -->
+<div class="section" id="calendrier">
+  <div class="section-header">
+    <span class="section-num">12</span>
+    <h2>Calendrier</h2>
+    <p>Vue calendaire de toutes les activites et interventions</p>
+  </div>
+  <div class="section-body">
+    <p>Le calendrier affiche vos logs et taches planifiees dans une vue mensuelle interactive.</p>
+    <div class="screenshot">
+      <img src="screenshots/12-calendrier.png" alt="Calendrier">
+      <div class="screenshot-caption">Calendrier agricole — Vue mensuelle des activites</div>
+    </div>
+
+    <h3>Creer un modele de calendrier cultural</h3>
+    <p>Un modele definit les etapes du cycle d'une culture (semis, levee, tallage, floraison, maturite...) avec leur duree.</p>
+    <ol class="steps">
+      <li>Cliquez sur <strong>Templates</strong> puis <strong>+ Nouveau modele</strong></li>
+      <li>Selectionnez le type de culture — les etapes se pre-remplissent automatiquement</li>
+      <li>Ajustez les durees de chaque stade selon votre variete</li>
+      <li>Ajoutez les actions a realiser a chaque stade (semis, desherbage, recolte...)</li>
+      <li>Cliquez sur <strong>Enregistrer le modele</strong></li>
+    </ol>
+    <div class="screenshot">
+      <img src="screenshots/47-calendrier-template-header.png" alt="Formulaire modele calendrier en-tete">
+      <div class="screenshot-caption">Creation modele — Arachide 55-437, cycle 120 jours hivernage, notes et premiers stades</div>
+    </div>
+    <div class="screenshot">
+      <img src="screenshots/48-calendrier-template-form.png" alt="Stades du modele calendrier">
+      <div class="screenshot-caption">7 stades du cycle cultural : Semis (7j), Levee (10j), Croissance vegetative (25j), Floraison (20j), Fructification (30j), Maturation (20j), Recolte (8j)</div>
+    </div>
+    <div class="screenshot">
+      <img src="screenshots/47b-calendrier-templates-list.png" alt="Liste modeles calendrier">
+      <div class="screenshot-caption">Liste des modeles — Modele Arachide 55-437 avec badges culture, duree et stades</div>
+    </div>
+
+    <h3>Assigner un calendrier a une parcelle</h3>
+    <p>Une fois un modele cree, assignez-le a une parcelle avec une date de semis pour generer automatiquement les dates prevues de chaque stade.</p>
+    <ol class="steps">
+      <li>Cliquez sur <strong>+ Assigner un calendrier</strong></li>
+      <li>Selectionnez la <strong>parcelle</strong> et le <strong>modele</strong></li>
+      <li>Indiquez la <strong>date de semis</strong> — les dates prevues se calculent automatiquement</li>
+      <li>Verifiez l'apercu des dates puis cliquez sur <strong>Assigner</strong></li>
+    </ol>
+    <div class="screenshot">
+      <img src="screenshots/49-calendrier-assign.png" alt="Assigner calendrier a parcelle">
+      <div class="screenshot-caption">Assigner un calendrier — Parcelle Arachide Nord, modele 120j, date semis 01/07/2026, dates previsionnelles calculees</div>
+    </div>
+    <div class="screenshot">
+      <img src="screenshots/49b-calendrier-assign-dates.png" alt="Dates previsionnelles calendrier">
+      <div class="screenshot-caption">Dates previsionnelles calculees — Semis 01 juil., Levee 08 juil., Floraison 12 aout, Recolte 21 oct. 2026</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 13. PLANS ==================== -->
+<div class="section" id="plans">
+  <div class="section-header">
+    <span class="section-num">13</span>
+    <h2>Plans de culture</h2>
+    <p>Planifiez vos campagnes agricoles</p>
+  </div>
+  <div class="section-body">
+    <p>Creez des plans de culture pour organiser vos campagnes par saison.</p>
+    <div class="screenshot">
+      <img src="screenshots/23-plans.png" alt="Plans de culture">
+      <div class="screenshot-caption">Liste des plans — Plan hivernage 2026</div>
+    </div>
+    <ol class="steps">
+      <li>Cliquez sur <strong>Nouveau plan</strong></li>
+      <li>Donnez un nom (ex: "Plan hivernage 2026")</li>
+      <li>Selectionnez la saison : Hivernage (Jun-Oct), Contre-saison chaude (Mar-Jun), Contre-saison froide (Nov-Feb)</li>
+      <li>Definissez les dates de debut et fin</li>
+      <li>Ajoutez les cultures prevues et les parcelles associees</li>
+    </ol>
+    <div class="screenshot">
+      <img src="screenshots/50-plan-form.png" alt="Formulaire plan de culture rempli">
+      <div class="screenshot-caption">Formulaire plan — Campagne Oignon Contre-saison 2026-2027, objectif 30T, budget 1 200 000 FCFA</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 13b. RECOLTES ==================== -->
+<div class="section" id="recoltes">
+  <div class="section-header">
+    <span class="section-num">13b</span>
+    <h2>Recoltes</h2>
+    <p>Enregistrement des recoltes avec rendement, qualite et destination</p>
+  </div>
+  <div class="section-body">
+    <h3>Enregistrer une recolte</h3>
+    <ol class="steps">
+      <li>Allez dans <strong>Journal > Nouveau</strong> et selectionnez <strong>Recolte</strong></li>
+      <li>Remplissez les informations generales : nom, date, statut</li>
+      <li>Dans la section <strong>Details recolte</strong> :
+        <ul>
+          <li><strong>Rendement (kg)</strong> : poids total recolte</li>
+          <li><strong>Rendement par ha (kg/ha)</strong> : rendement moyen</li>
+          <li><strong>Qualite</strong> : Grade A, B ou C</li>
+          <li><strong>Destination</strong> : acheteur ou usage (ex: SUNEOR SA Kaolack)</li>
+          <li><strong>Prix par kg (FCFA)</strong> : prix de vente unitaire</li>
+        </ul>
+      </li>
+      <li>Assignez les equipements et le personnel utilises</li>
+      <li>Cliquez sur <strong>Creer le log</strong></li>
+    </ol>
+    <div class="screenshot">
+      <img src="screenshots/39-recolte-form.png" alt="Formulaire recolte rempli">
+      <div class="screenshot-caption">Formulaire Recolte — 2800 kg arachide Grade A, 800 kg/ha, destination SUNEOR SA, 350 FCFA/kg</div>
+    </div>
+    <div class="screenshot">
+      <img src="screenshots/40-recoltes-list.png" alt="Liste des recoltes">
+      <div class="screenshot-caption">Page /logs/harvest — Liste des logs de recolte</div>
+    </div>
+
+    <div class="info-box tip">
+      <strong>Coherence du workflow</strong>
+      3.5 ha x 800 kg/ha = 2800 kg recoltes. Prix campagne arachide : 350 FCFA/kg = 980 000 FCFA total. Les donnees de rendement alimentent automatiquement les rapports et la comptabilite.
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 14. VENTES ==================== -->
+<div class="section" id="ventes">
+  <div class="section-header">
+    <span class="section-num">14</span>
+    <h2>Ventes</h2>
+    <p>Suivi du chiffre d'affaires et historique des transactions</p>
+  </div>
+  <div class="section-body">
+    <p>La page Ventes affiche les KPIs financiers et l'historique des ventes.</p>
+    <div class="screenshot">
+      <img src="screenshots/19-ventes.png" alt="Page ventes">
+      <div class="screenshot-caption">Ventes — CA 700 000 FCFA, vente arachide a SUNEOR SA</div>
+    </div>
+
+    <h3>Enregistrer une vente</h3>
+    <ol class="steps">
+      <li>Cliquez sur <strong>+ Nouvelle vente</strong></li>
+      <li>Remplissez le produit, la quantite, le prix unitaire en FCFA et l'unite</li>
+      <li>Indiquez le client et le mode de paiement (Especes, Banque, Mobile Money)</li>
+      <li>Le montant total se calcule automatiquement</li>
+      <li>Cliquez sur <strong>Enregistrer</strong></li>
+    </ol>
+
+    <div class="info-box tip">
+      <strong>Modes de paiement</strong>
+      SenagrOS supporte 3 modes : <strong>Especes</strong> (cash), <strong>Banque</strong> (virement), <strong>Mobile Money</strong> (Orange Money, Wave, Free Money).
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 15. FACTURATION ==================== -->
+<div class="section" id="facturation">
+  <div class="section-header">
+    <span class="section-num">15</span>
+    <h2>Facturation</h2>
+    <p>Devis, pro formas et factures de vente</p>
+  </div>
+  <div class="section-body">
+    <p>Gerez 3 types de documents : <strong>Devis</strong>, <strong>Pro forma</strong> et <strong>Facture</strong>.</p>
+    <div class="screenshot">
+      <img src="screenshots/20-facturation.png" alt="Page facturation">
+      <div class="screenshot-caption">Facturation — FAC-2026-0001 pour SUNEOR SA, 700 000 FCFA</div>
+    </div>
+
+    <h3>Creer une facture</h3>
+    <ol class="steps">
+      <li>Cliquez sur <strong>+ Nouveau</strong></li>
+      <li>Selectionnez le type : Devis, Pro forma ou Facture</li>
+      <li>Renseignez le client : nom, email, telephone</li>
+      <li>Indiquez les dates d'emission et d'echeance</li>
+      <li>Ajoutez les articles : produit/service, quantite, prix unitaire</li>
+      <li>Le sous-total et le total se calculent automatiquement</li>
+      <li>Ajoutez les taxes et notes si necessaire</li>
+      <li>Cliquez sur <strong>Creer</strong></li>
+    </ol>
+
+    <p>Une fois creee, la facture est en statut <strong>Brouillon</strong>. Cliquez sur <strong>Payee</strong> pour la marquer comme reglee.</p>
+
+    <div class="info-box important">
+      <strong>Numerotation automatique</strong>
+      Les factures sont numerotees automatiquement : FAC-2026-0001, FAC-2026-0002, etc. Ne modifiez pas cette numerotation.
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 16. FINANCES ==================== -->
+<div class="section" id="finances">
+  <div class="section-header">
+    <span class="section-num">16</span>
+    <h2>Finances</h2>
+    <p>Vue d'ensemble financiere de l'exploitation</p>
+  </div>
+  <div class="section-body">
+    <p>Le module Finances consolide toutes les donnees financieres : revenus, depenses, marges.</p>
+    <div class="screenshot">
+      <img src="screenshots/13-finances.png" alt="Page finances">
+      <div class="screenshot-caption">Finances — Tableau de bord financier avec KPIs</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 17. COMPTABILITE ==================== -->
+<div class="section" id="comptabilite">
+  <div class="section-header">
+    <span class="section-num">17</span>
+    <h2>Comptabilite</h2>
+    <p>Journal comptable et bilan de l'exploitation</p>
+  </div>
+  <div class="section-body">
+    <p>Le module Comptabilite offre un journal comptable et un bilan simplifie adapte aux exploitations agricoles.</p>
+    <div class="screenshot">
+      <img src="screenshots/14-comptabilite.png" alt="Page comptabilite">
+      <div class="screenshot-caption">Comptabilite — Journal comptable et bilan</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 18. RAPPORTS ==================== -->
+<div class="section" id="reports">
+  <div class="section-header">
+    <span class="section-num">18</span>
+    <h2>Rapports</h2>
+    <p>Generation de rapports et analyses</p>
+  </div>
+  <div class="section-body">
+    <p>Generez des rapports detailles sur vos activites, rendements, finances et performances.</p>
+    <div class="screenshot">
+      <img src="screenshots/15-reports.png" alt="Page rapports">
+      <div class="screenshot-caption">Rapports — Tableaux de synthese et export</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 19. MARKETPLACE ==================== -->
+<div class="section" id="marketplace">
+  <div class="section-header">
+    <span class="section-num">19</span>
+    <h2>Marketplace</h2>
+    <p>Marche en ligne pour acheter et vendre des produits agricoles</p>
+  </div>
+  <div class="section-body">
+    <p>Le Marketplace connecte producteurs et acheteurs. Recherchez des produits, filtrez par categorie et region.</p>
+    <div class="screenshot">
+      <img src="screenshots/16-marketplace.png" alt="Marketplace">
+      <div class="screenshot-caption">Marketplace — Recherche et filtres de produits agricoles</div>
+    </div>
+    <p>Utilisez le <strong>switch Acheteur/Producteur</strong> dans la barre de navigation pour alterner entre les deux modes.</p>
+  </div>
+</div>
+
+<!-- ==================== 20. PRODUITS ==================== -->
+<div class="section" id="produits">
+  <div class="section-header">
+    <span class="section-num">20</span>
+    <h2>Mes produits</h2>
+    <p>Gerez vos produits publies sur le marketplace</p>
+  </div>
+  <div class="section-body">
+    <p>Publiez vos produits agricoles pour les vendre sur le marketplace. Suivez vos statistiques de CA.</p>
+    <div class="screenshot">
+      <img src="screenshots/17-produits.png" alt="Mes produits">
+      <div class="screenshot-caption">Mes produits — Bouton Publier et statistiques CA</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 21. COMMANDES ==================== -->
+<div class="section" id="commandes">
+  <div class="section-header">
+    <span class="section-num">21</span>
+    <h2>Commandes</h2>
+    <p>Gestion des commandes recues et passees</p>
+  </div>
+  <div class="section-body">
+    <p>Suivez les commandes avec 2 onglets : <strong>Commandes recues</strong> (en tant que vendeur) et <strong>Commandes passees</strong> (en tant qu'acheteur).</p>
+    <div class="screenshot">
+      <img src="screenshots/18-commandes.png" alt="Commandes">
+      <div class="screenshot-caption">Commandes — Onglets recues/passees avec filtres par statut</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 22. COOPERATIVES ==================== -->
+<div class="section" id="cooperatives">
+  <div class="section-header">
+    <span class="section-num">22</span>
+    <h2>Cooperatives</h2>
+    <p>Gestion des cooperatives agricoles</p>
+  </div>
+  <div class="section-body">
+    <p>Rejoignez ou creez une cooperative pour mutualiser les ressources et negocier les prix collectivement.</p>
+    <div class="screenshot">
+      <img src="screenshots/25-cooperatives.png" alt="Cooperatives">
+      <div class="screenshot-caption">Parametres cooperatives</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 23. NOTIFICATIONS ==================== -->
+<div class="section" id="notifications">
+  <div class="section-header">
+    <span class="section-num">23</span>
+    <h2>Notifications</h2>
+    <p>Alertes et messages systeme</p>
+  </div>
+  <div class="section-body">
+    <p>Les notifications vous informent des evenements importants : alertes de stock, taches planifiees, mises a jour du systeme.</p>
+    <div class="screenshot">
+      <img src="screenshots/24-notifications.png" alt="Notifications">
+      <div class="screenshot-caption">Centre de notifications</div>
+    </div>
+    <p>Le badge rouge dans la barre de navigation indique le nombre de notifications non lues.</p>
+  </div>
+</div>
+
+<!-- ==================== 24. QUICK ACTIONS ==================== -->
+<div class="section" id="quick">
+  <div class="section-header">
+    <span class="section-num">24</span>
+    <h2>Actions rapides</h2>
+    <p>Saisie simplifiee pour les operations courantes</p>
+  </div>
+  <div class="section-body">
+    <p>Les actions rapides permettent de saisir rapidement les operations les plus frequentes sans passer par le formulaire complet du journal.</p>
+    <div class="screenshot">
+      <img src="screenshots/26-quick-actions.png" alt="Actions rapides">
+      <div class="screenshot-caption">5 actions rapides disponibles</div>
+    </div>
+
+    <h3>Actions disponibles</h3>
+    <table class="data-table">
+      <tr><th>Action</th><th>Description</th><th>Route</th></tr>
+      <tr><td>Recolte rapide</td><td>Enregistrer une recolte en 4 champs</td><td><code>/quick/harvest</code></td></tr>
+      <tr><td>Vente rapide</td><td>Saisir une vente directe</td><td><code>/quick/sale</code></td></tr>
+      <tr><td>Depense rapide</td><td>Enregistrer une depense</td><td><code>/quick/expense</code></td></tr>
+      <tr><td>Observation rapide</td><td>Noter une observation terrain</td><td><code>/quick/observation</code></td></tr>
+      <tr><td>Tache rapide</td><td>Creer une tache a realiser</td><td><code>/quick/task</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== 25. WORKFLOW ==================== -->
+<div class="section" id="workflow">
+  <div class="section-header">
+    <span class="section-num">25</span>
+    <h2>Workflow agricole complet</h2>
+    <p>Le parcours logique de la preparation a la commercialisation</p>
+  </div>
+  <div class="section-body">
+    <p>SenagrOS suit le cycle agricole naturel. Voici le workflow recommande :</p>
+
+    <table class="data-table">
+      <tr><th>Etape</th><th>Module</th><th>Description</th><th>Exemple</th></tr>
+      <tr>
+        <td><strong>1. Foncier</strong></td>
+        <td>Assets > Parcelles</td>
+        <td>Creer vos parcelles avec superficie et GPS</td>
+        <td>Parcelle Arachide Nord, 3.5 ha</td>
+      </tr>
+      <tr>
+        <td><strong>2. Culture</strong></td>
+        <td>Assets > Cultures</td>
+        <td>Definir les cultures et varietes</td>
+        <td>Arachide 55-437, cycle 120j</td>
+      </tr>
+      <tr>
+        <td><strong>3. Materiel</strong></td>
+        <td>Assets > Equipements</td>
+        <td>Inventorier le materiel</td>
+        <td>Semoir mecanique Super Eco</td>
+      </tr>
+      <tr>
+        <td><strong>4. Intrants</strong></td>
+        <td>Intrants</td>
+        <td>Acheter et stocker les intrants</td>
+        <td>NPK 15-15-15, 500 kg</td>
+      </tr>
+      <tr>
+        <td><strong>5. Planification</strong></td>
+        <td>Plans</td>
+        <td>Planifier la campagne</td>
+        <td>Plan hivernage 2026</td>
+      </tr>
+      <tr>
+        <td><strong>6. Semis</strong></td>
+        <td>Journal > Semis</td>
+        <td>Enregistrer le semis</td>
+        <td>Machine, 120 kg/ha, ecart 50x15cm</td>
+      </tr>
+      <tr>
+        <td><strong>7. Irrigation</strong></td>
+        <td>Journal > Irrigation</td>
+        <td>Suivre les arrosages</td>
+        <td>Goutte-a-goutte, 14 000 L, 4h</td>
+      </tr>
+      <tr>
+        <td><strong>8. Maintenance</strong></td>
+        <td>Journal > Maintenance</td>
+        <td>Entretenir le materiel</td>
+        <td>Revision semoir JD-1750, 175 000 FCFA</td>
+      </tr>
+      <tr>
+        <td><strong>9. Soin medical</strong></td>
+        <td>Journal > Soin medical</td>
+        <td>Suivi sanitaire du cheptel</td>
+        <td>Vaccination fievre aphteuse, 12 tetes</td>
+      </tr>
+      <tr>
+        <td><strong>10. Observation</strong></td>
+        <td>Observations</td>
+        <td>Evaluer les cultures</td>
+        <td>Densite levee : 99.17%</td>
+      </tr>
+      <tr>
+        <td><strong>11. Recolte</strong></td>
+        <td>Quick > Recolte</td>
+        <td>Enregistrer les recoltes</td>
+        <td>2 800 kg arachide Grade A</td>
+      </tr>
+      <tr>
+        <td><strong>12. Vente</strong></td>
+        <td>Ventes</td>
+        <td>Vendre la production</td>
+        <td>SUNEOR SA, 350 FCFA/kg</td>
+      </tr>
+      <tr>
+        <td><strong>13. Facturation</strong></td>
+        <td>Facturation</td>
+        <td>Emettre les factures</td>
+        <td>FAC-2026-0001, 700 000 FCFA</td>
+      </tr>
+    </table>
+
+    <div class="info-box tip">
+      <strong>Saisons agricoles au Senegal</strong>
+      <ul style="margin-top: 8px;">
+        <li><strong>Hivernage</strong> (Juin — Octobre) : saison des pluies, cultures pluviales (mil, arachide, mais, riz)</li>
+        <li><strong>Contre-saison chaude</strong> (Mars — Juin) : cultures irriguees (tomate, oignon, gombo)</li>
+        <li><strong>Contre-saison froide</strong> (Novembre — Fevrier) : maraichage (chou, carotte, laitue)</li>
+      </ul>
+    </div>
+
+    <h3>Parametres regionaux</h3>
+    <table class="data-table">
+      <tr><th>Parametre</th><th>Valeur</th></tr>
+      <tr><td>Pays</td><td>Senegal</td></tr>
+      <tr><td>Devise</td><td>XOF (Franc CFA)</td></tr>
+      <tr><td>Fuseau horaire</td><td>Africa/Dakar (UTC+0)</td></tr>
+      <tr><td>Langues</td><td>Francais (defaut), English, Wolof</td></tr>
+      <tr><td>Unite de surface</td><td>Hectare (ha)</td></tr>
+    </table>
+  </div>
+</div>
+
+</div><!-- /content -->
+
+<!-- ==================== FOOTER ==================== -->
+<div class="footer">
+  <p><strong>SenagrOS</strong> — Systeme de Gestion Agricole pour l'Afrique de l'Ouest</p>
+  <p style="margin-top: 8px;">Version 1.0 | Septembre 2026 | Licence Open Source</p>
+  <p style="margin-top: 8px; font-size: 0.8rem; color: var(--gray-500);">Guide genere automatiquement avec captures d'ecran en conditions reelles</p>
+</div>
+
+</body>
+</html>

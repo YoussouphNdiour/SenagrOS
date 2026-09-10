@@ -8,6 +8,14 @@ import { Plus, Trash2 } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { createLogSchema } from '@/lib/validators/log.validator';
 import type { logTypeValues } from '@/lib/validators/log.validator';
+import {
+  phytoSubcategoryValues,
+  phytoSubcategoryLabels,
+  fertiSubcategoryValues,
+  fertiSubcategoryLabels,
+  semenceSubcategoryValues,
+  semenceSubcategoryLabels,
+} from '@/lib/validators/input.validator';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
@@ -109,6 +117,14 @@ export function LogCreateForm({ defaultType }: LogCreateFormProps) {
 
   const selectedType = watch('type');
   const sowingType = watch('data.sowing_type' as any);
+  const inputType = (watch('data.input_type' as any) as string | undefined) ?? 'phyto';
+
+  const inputSubcatOptions =
+    inputType === 'ferti'
+      ? fertiSubcategoryValues.map((v) => ({ value: v, label: fertiSubcategoryLabels[v] }))
+      : inputType === 'semence'
+        ? semenceSubcategoryValues.map((v) => ({ value: v, label: semenceSubcategoryLabels[v] }))
+        : phytoSubcategoryValues.map((v) => ({ value: v, label: phytoSubcategoryLabels[v] }));
 
   // Search functions for ComboboxAsync
   const searchEquipment = async (query: string): Promise<AssetItem[]> => {
@@ -397,9 +413,9 @@ export function LogCreateForm({ defaultType }: LogCreateFormProps) {
               ]}
               {...register('data.input_type' as any)}
             />
-            <Input
+            <Select
               label="Sous-catégorie"
-              placeholder="Ex: insecticide"
+              options={inputSubcatOptions}
               {...register('data.input_subcategory' as any)}
             />
             <Input
