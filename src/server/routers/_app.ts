@@ -10,6 +10,8 @@ import { planRouter } from './plan';
 import { reportRouter } from './report';
 import { financeRouter } from './finance';
 import { farmMemberRouter } from './farm-member';
+import { cooperativeRouter } from './cooperative';
+import { marketplaceRouter } from './marketplace';
 
 export const appRouter = router({
   health: publicProcedure.query(() => ({ status: 'ok' })),
@@ -24,6 +26,8 @@ export const appRouter = router({
   report: reportRouter,
   finance: financeRouter,
   farmMember: farmMemberRouter,
+  cooperative: cooperativeRouter,
+  marketplace: marketplaceRouter,
 });
 
 export type AppRouter = typeof appRouter;
