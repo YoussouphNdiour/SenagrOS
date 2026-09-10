@@ -129,7 +129,7 @@ export function ComboboxAsync<T>({
           onFocus={handleFocus}
           placeholder={placeholder}
           disabled={disabled}
-          className="w-full bg-transparent px-3 py-2.5 text-sm outline-none placeholder:text-gray-400 disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full bg-transparent px-3 py-2.5 text-sm text-gray-900 outline-none placeholder:text-gray-400 disabled:cursor-not-allowed disabled:opacity-50"
         />
         {isLoading ? (
           <Loader2 className="mr-3 h-4 w-4 shrink-0 animate-spin text-gray-400" />
@@ -343,7 +343,7 @@ export function ComboboxAsyncMulti<T>({
           onFocus={handleFocus}
           placeholder={placeholder}
           disabled={disabled}
-          className="w-full bg-transparent px-3 py-2.5 text-sm outline-none placeholder:text-gray-400 disabled:cursor-not-allowed disabled:opacity-50"
+          className="w-full bg-transparent px-3 py-2.5 text-sm text-gray-900 outline-none placeholder:text-gray-400 disabled:cursor-not-allowed disabled:opacity-50"
         />
         {isLoading ? (
           <Loader2 className="mr-3 h-4 w-4 shrink-0 animate-spin text-gray-400" />
