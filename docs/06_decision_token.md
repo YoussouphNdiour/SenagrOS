@@ -82,6 +82,36 @@
 - **Alternative rejetee** : React Native, Flutter
 - **Impact** : `next-pwa`, cache-first pour les pages, queue de sync pour mutations
 
+### DT-014 : Referentiel cultures dans des tables dediees (pas JSONB/taxonomies)
+- **Date** : 2026-09-15
+- **Raison** : Les cultures, familles et varietes ont des relations structurees (famille→culture→variete) et des attributs specifiques (cycle, saison, noms multilingues) qui justifient des tables relationnelles plutot que le pattern JSONB ou la table generique `taxonomies`
+- **Alternative rejetee** : Stocker les cultures comme taxonomies generiques (pas assez structure pour les cycles, noms trilingues, rotation)
+- **Impact** : 3 tables (crop_families, crops, crop_varieties) + router tRPC `cropRouter` avec 12 procedures
+
+### DT-015 : Rotation culturale avec 4 niveaux de compatibilite
+- **Date** : 2026-09-15
+- **Raison** : Les agronomes distinguent 4 niveaux (recommande/neutre/a eviter/interdit) avec des regles specifiques au Senegal (ex: arachide→mil recommande, mil→mil a eviter)
+- **Alternative rejetee** : Binaire (compatible/incompatible) — trop simpliste pour les preconisations agronomiques
+- **Impact** : Table `crop_rotation_rules` avec enum `rotation_compatibility`, seed 9 regles senegalaises
+
+### DT-016 : Saisons comme entites a part entiere (pas juste un enum sur la ferme)
+- **Date** : 2026-09-15
+- **Raison** : Chaque campagne a des dates debut/fin, un statut (planning→active→completed), un an, et est liee a une ferme specifique. Permet le suivi historique des campagnes
+- **Alternative rejetee** : Simple champ `season_type` sur la ferme (pas de tracabilite par annee)
+- **Impact** : Table `seasons` avec enum `season_type`
+
+### DT-017 : Application intrant multi-produits (melange de cuve)
+- **Date** : 2026-09-15
+- **Raison** : Les agronomes appliquent souvent 2-3 produits en melange dans le meme passage. L'ancien schema ne gerait qu'un seul produit par log
+- **Alternative rejetee** : Un log par produit (perd la tracabilite du melange de cuve)
+- **Impact** : Schema `inputDataSchema` enrichi avec `products[]` array, `weatherConditionsSchema`, 4 cards dans LogCreateForm
+
+### DT-018 : Reseau d'irrigation comme sous-objet JSONB dans l'asset parcelle
+- **Date** : 2026-09-15
+- **Raison** : Le reseau d'irrigation est un attribut de la parcelle (pas une entite autonome). 11 champs techniques (source, type, debit, pompe, filtration, fertigation, condition)
+- **Alternative rejetee** : Table separee `irrigation_networks` (surcharge pour un attribut de parcelle)
+- **Impact** : Sous-objet `irrigation_network` dans le JSONB `data` du type `land`
+
 ---
 
 ## Decisions a prendre (ouvertes)

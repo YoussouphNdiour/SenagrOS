@@ -12,6 +12,7 @@ import { financeRouter } from './finance';
 import { farmMemberRouter } from './farm-member';
 import { cooperativeRouter } from './cooperative';
 import { marketplaceRouter } from './marketplace';
+import { cropRouter } from './crop';
 
 export const appRouter = router({
   health: publicProcedure.query(() => ({ status: 'ok' })),
@@ -28,6 +29,7 @@ export const appRouter = router({
   farmMember: farmMemberRouter,
   cooperative: cooperativeRouter,
   marketplace: marketplaceRouter,
+  crop: cropRouter,
 });
 
 export type AppRouter = typeof appRouter;

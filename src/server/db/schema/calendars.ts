@@ -51,6 +51,8 @@ export const parcelCalendars = pgTable('parcel_calendars', {
     .notNull(),
   sowingDate: date('sowing_date').notNull(),
   stageStatuses: jsonb('stage_statuses').default([]),
+  expectedHarvestDate: date('expected_harvest_date'),
+  actualHarvestDate: date('actual_harvest_date'),
   status: varchar('status', { length: 20 }).default('active'),
   notes: text('notes'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),

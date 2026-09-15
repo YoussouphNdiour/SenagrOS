@@ -28,15 +28,56 @@ export const observationDataSchema = z.object({
   form_data: z.record(z.string(), z.unknown()).optional(),
 });
 
+export const inputProductSchema = z.object({
+  product_id: z.string().uuid().optional(),
+  product_name: z.string().min(1),
+  subcategory: z.string().optional(),
+  dose_per_ha: z.number().positive(),
+  dose_unit: z.string().max(20),
+  quantity_total: z.number().positive().optional(),
+  quantity_unit: z.string().max(20).optional(),
+});
+
+export const weatherConditionsSchema = z.object({
+  temperature_c: z.number().optional(),
+  wind_speed_kmh: z.number().nonnegative().optional(),
+  wind_direction: z.enum(['N', 'NE', 'E', 'SE', 'S', 'SO', 'O', 'NO']).optional(),
+  humidity_percent: z.number().min(0).max(100).optional(),
+  rain_last_24h: z.boolean().optional(),
+  rain_forecast_24h: z.boolean().optional(),
+});
+
 export const inputDataSchema = z.object({
   input_type: z.enum(['phyto', 'ferti', 'semence']),
   input_subcategory: z.string().optional(),
+
+  // Parcelles ciblées
+  target_parcel_ids: z.array(z.string().uuid()).optional(),
+  treated_surface_ha: z.number().positive().optional(),
+
+  // Multi-produits (mélange de cuve)
+  products: z.array(inputProductSchema).optional(),
+
+  // Rétro-compatibilité single product
   product_id: z.string().uuid().optional(),
   dose: z.number().optional(),
   dose_unit: z.string().optional(),
   method: z.string().optional(),
   machine_id: z.string().uuid().optional(),
-  treated_surface_ha: z.number().optional(),
+
+  // Partie ciblée
+  target_part: z.enum([
+    'sol', 'feuillage', 'racines', 'fruits',
+    'tiges', 'semences', 'plante_entiere',
+  ]).optional(),
+
+  // Volume de bouillie
+  water_volume_liters: z.number().positive().optional(),
+  spray_volume_per_ha: z.number().positive().optional(),
+  spray_volume_total: z.number().positive().optional(),
+
+  // Conditions météo
+  weather: weatherConditionsSchema.optional(),
 });
 
 export const harvestDataSchema = z.object({

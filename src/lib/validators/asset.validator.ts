@@ -17,6 +17,23 @@ export const landDataSchema = z.object({
   irrigation_type: z.string().optional(),
   code_parcelle: z.string().optional(),
   ilot: z.string().optional(),
+  // Réseau d'irrigation
+  irrigation_network: z.object({
+    source: z.enum(['forage', 'fleuve', 'lac', 'bassin', 'pluie', 'autre']).optional(),
+    network_type: z.enum([
+      'goutte_a_goutte', 'aspersion', 'micro_aspersion',
+      'pivot', 'californien', 'gravitaire', 'submersion',
+    ]).optional(),
+    pipe_diameter_mm: z.number().positive().optional(),
+    dripper_spacing_cm: z.number().positive().optional(),
+    flow_rate_m3_h: z.number().positive().optional(),
+    pump_type: z.string().optional(),
+    pump_power_cv: z.number().positive().optional(),
+    filtration: z.enum(['disque', 'sable', 'tamis', 'aucun']).optional(),
+    fertigation_equipped: z.boolean().optional(),
+    installation_date: z.string().optional(),
+    network_condition: z.enum(['bon', 'moyen', 'degrade', 'hors_service']).optional(),
+  }).optional(),
 });
 
 export const plantDataSchema = z.object({
@@ -50,6 +67,16 @@ export const materialDataSchema = z.object({
   dar_days: z.number().nonnegative().optional(),
   toxicity_class: z.string().optional(),
   form: z.string().optional(),
+  // Délai De Réentrée
+  ddr_days: z.number().nonnegative().optional(),
+  // Doses homologuées
+  dose_min: z.number().positive().optional(),
+  dose_max: z.number().positive().optional(),
+  dose_unit: z.string().optional(),
+  max_applications_per_cycle: z.number().int().positive().optional(),
+  // Cibles et cultures
+  target_organisms: z.array(z.string()).optional(),
+  target_crops: z.array(z.string()).optional(),
 });
 
 export const seedDataSchema = z.object({

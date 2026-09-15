@@ -52,12 +52,12 @@
 
 | Type | Description | Champs specifiques (JSONB data) |
 |------|-------------|--------------------------------|
-| `land` | Parcelle / ilot | surface_ha, soil_type, irrigation_type, code_parcelle |
+| `land` | Parcelle / ilot | surface_ha, soil_type, irrigation_type, code_parcelle, **irrigation_network** (source, network_type, debit, pompe, filtration, fertigation, condition) |
 | `plant` | Culture en place | crop_type, variety, planting_date, expected_harvest_date, row_spacing_cm, plant_spacing_cm |
 | `animal` | Animal individuel | species, breed, sex, birth_date, tag_id |
 | `equipment` | Materiel agricole | equipment_type (tracteur/semoir/pulverisateur/...), brand, model, purchase_date, serial_number |
 | `structure` | Batiment / serre | structure_type, capacity |
-| `material` | Intrant stockable | **Voir Module 5 — Intrants** |
+| `material` | Intrant stockable | **Voir Module 5 — Intrants** + ddr_days, dose_min, dose_max, dose_unit, max_applications_per_cycle, target_organisms[], target_crops[] |
 | `sensor` | Capteur IoT | sensor_type, protocol |
 | `water` | Point d'eau | water_type, flow_rate |
 | `seed` | Semence | crop_type, variety, lot_number, germination_rate, origin |
@@ -89,7 +89,7 @@
 |------|-------------|-------------------|
 | `activity` | Activite generale | duration_hours, worker_ids |
 | `observation` | Observation terrain | observation_type (densite/stade/ravageur/agreage), **voir Module 6** |
-| `input` | Application intrant | input_type (phyto/ferti/semence), product_id, dose, unit, method |
+| `input` | Application intrant | input_type, **target_parcel_ids** (multi-parcelles), **products[]** (melange de cuve multi-produits), **target_part**, **water_volume_liters**, **spray_volume_per_ha/total**, **weather** (temperature, vent, humidite, pluie) |
 | `harvest` | Recolte | yield_kg, quality_grade, destination |
 | `seeding` | Semis | sowing_type (manual/machine), machine_id, seed_depth_cm, row_spacing_cm, plant_spacing_cm, seed_rate_kg_ha |
 | `transplanting` | Repiquage | source_nursery, plant_age_days |
@@ -223,6 +223,48 @@ Inspiree de la fiche SCL "Agreage qualite pre-recolte" :
   - % maturite = (total matures / echantillon) x 100
 - Commentaires (rendement previsionnel, date previsionnelle recolte)
 - Visa observateur + visa chef de ferme
+
+### F5.3 — Nouveaux champs intrant (enrichissement V3)
+- **DDR** (Delai De Reentree) — jours avant reentree dans la parcelle traitee
+- **Doses homologuees** — dose_min, dose_max, dose_unit
+- **Nombre max d'applications** par cycle cultural
+- **Organismes cibles** — pucerons, rouille, mildiou, chenilles... (array)
+- **Cultures homologuees** — cultures autorisees pour ce produit (array)
+- Bloc formulaire dedie dans AssetCreateForm pour type `material` (16 champs)
+
+---
+
+## Module 5b : Referentiel cultures, saisons & rotation (P0)
+
+### F5b.1 — Familles botaniques et cultures
+- Table `crop_families` : 8 familles (Cereales, Legumineuses, Maraichage, Fruits, Oleagineux, Tubercules, Fibres, Cucurbitacees)
+- Table `crops` : 12 cultures senegalaises avec noms trilingues (FR/EN/WO)
+  - Codes uniques : HVT, RIZ, ARA, TOM, OIG, MIL, SOR, NIE, PAT, MAN, COT, MAI
+  - Cycle court/long en jours
+  - Preference saisonniere (hivernage, contre-saison chaude/froide)
+- Table `crop_varieties` : varietes par culture avec rendement potentiel, cycle, origine
+
+### F5b.2 — Saisons / Campagnes agricoles
+- Table `seasons` : campagnes par ferme
+- 3 types de saison (enum `season_type`) : hivernage, contre_saison_chaude, contre_saison_froide
+- Statuts : planning → active → completed
+- Dates debut/fin, annee
+
+### F5b.3 — Rotation culturale
+- Table `crop_rotation_rules` : regles de succession culturale
+- 4 niveaux de compatibilite (enum `rotation_compatibility`) : recommended, neutral, avoid, forbidden
+- Regles globales (farm_id null) ou specifiques a une ferme
+- Delai minimum entre cultures (min_interval_days)
+- Seed : 9 regles de rotation senegalaises
+- Verification via `crop.checkRotation` (priorite ferme > global)
+
+### F5b.4 — Application intrant enrichie (V3)
+- **Multi-parcelles** : selection de plusieurs parcelles cibles (ComboboxAsyncMulti)
+- **Melange de cuve** : ajout dynamique de plusieurs produits (useFieldArray)
+- **Partie cible** : sol, feuillage, racines, fruits, tiges, semences, plante_entiere
+- **Volume de bouillie** : eau, volume/ha, volume total (calcul auto, visible si phyto)
+- **Conditions meteo** : temperature, vitesse/direction vent, humidite, pluie 24h passee/prevue
+- **Warnings automatiques** : vent >19km/h, humidite <40%, pluie prevue dans les 24h
 
 ---
 

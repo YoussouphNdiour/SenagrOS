@@ -75,6 +75,37 @@ Logiciel utilise par SCL pour generer les fiches d'instruction observation. Les 
 
 ---
 
+## Fichiers source V3 — Module cultures, rotation, assets enrichis, logs enrichis
+
+> Les fichiers ci-dessous correspondent aux ajouts V3 (referentiel cultures, rotation, enrichissements assets/logs).
+
+### Schema base de donnees
+| Fichier | Description |
+|---------|-------------|
+| `src/server/db/schema/crop-families.ts` | Table `crop_families` — familles botaniques |
+| `src/server/db/schema/crops.ts` | Table `crops` — 12 cultures referencees (noms FR/EN/WO, cycles, saisons) |
+| `src/server/db/schema/crop-varieties.ts` | Table `crop_varieties` — varietes par culture |
+| `src/server/db/schema/crop-rotation-rules.ts` | Table `crop_rotation_rules` — regles de rotation culturale |
+| `src/server/db/schema/seasons.ts` | Table `seasons` — campagnes agricoles par ferme |
+| `src/server/db/schema/enums.ts` | Enums `season_type`, `rotation_compatibility` (ajouts) |
+
+### Router et validateurs
+| Fichier | Description |
+|---------|-------------|
+| `src/server/routers/crop.ts` | Router tRPC `cropRouter` — 12 procedures (familles, cultures, varietes, saisons, rotation) |
+| `src/lib/validators/crop.validator.ts` | Schemas Zod pour le module cultures et rotation |
+
+### Enrichissements assets et logs
+| Fichier | Description |
+|---------|-------------|
+| `src/lib/validators/asset.validator.ts` | Enrichi : `irrigation_network` (parcelle), 7 nouveaux champs material (ddr_days, doses, organismes cibles...) |
+| `src/lib/validators/log.validator.ts` | Enrichi : `inputDataSchema` (multi-parcelles, multi-produits, bouillie, meteo), `inputProductSchema`, `weatherConditionsSchema` |
+| `src/server/db/schema/calendars.ts` | Enrichi : `expected_harvest_date`, `actual_harvest_date` sur `parcel_calendars` |
+| `src/components/forms/AssetCreateForm.tsx` | Enrichi : bloc formulaire material avec 16 champs |
+| `src/components/logs/LogCreateForm.tsx` | Enrichi : 4 cards application intrant (details, produits useFieldArray, bouillie, meteo avec warnings) |
+
+---
+
 ## Screenshots V2 (design de reference)
 
 > ⚠️ Les screenshots V2 originaux etaient dans un dossier local externe (dossier local source V2 — non versionne) qui n'est pas versionne dans le depot. Les captures disponibles dans le projet se trouvent dans `docs/guide/screenshots/`. Les fichiers sources V2 ci-dessous ne sont plus disponibles dans le repo.

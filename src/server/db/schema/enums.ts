@@ -42,3 +42,16 @@ export const userRoleEnum = pgEnum('user_role', [
   'worker',
   'viewer',
 ]);
+
+export const seasonTypeEnum = pgEnum('season_type', [
+  'hivernage',
+  'contre_saison_chaude',
+  'contre_saison_froide',
+]);
+
+export const rotationCompatibilityEnum = pgEnum('rotation_compatibility', [
+  'recommended',
+  'neutral',
+  'avoid',
+  'forbidden',
+]);

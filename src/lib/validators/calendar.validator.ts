@@ -79,6 +79,8 @@ export const assignToParcelSchema = z.object({
   assetId: z.string().uuid(),
   calendarId: z.string().uuid(),
   sowingDate: z.string().min(1),
+  expectedHarvestDate: z.string().optional(),
+  actualHarvestDate: z.string().optional(),
   notes: z.string().optional(),
 });
 

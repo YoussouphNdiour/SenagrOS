@@ -325,4 +325,33 @@ Chaque session ajoute ses decisions ici. Ne pas supprimer les entrees precedente
 
 ---
 
+## SESSION-010 — 2026-09-15 — Documentation : mise a jour post-enrichissements V3
+
+**Decisions prises :**
+1. Numerotation `cropRouter` comme router #10 dans 04_api_spec.md — Insere avant reportRouter, les routers suivants sont renumerotes (#11 report, #12 farmMember, #13 finance, #14 cooperative, #15 marketplace)
+2. Module cultures/rotation documente comme "Module 5b" dans 02_features.md — Rattache au module Intrants car les cultures et la rotation sont liees a la gestion des intrants et du calendrier cultural
+3. Tables referentiel cultures documentees entre les tables existantes (#25b-25f) et les tables V3 agronomes (#25-27) dans 03_data_model.md — Numerotation preservee pour les tables existantes
+4. Decisions DT-014 a DT-018 ajoutees dans 06_decision_token.md — Couvrent les 5 decisions architecturales majeures (referentiel cultures, rotation, saisons, multi-produits, irrigation_network)
+
+**Problemes rencontres :**
+- Aucun (session de documentation)
+
+**Livrables completes :**
+1. Mise a jour de 10 fichiers docs sur 16 pour refleter les changements V3 :
+   - 01_project_overview.md : mention ~30 tables, cultures trilingues, intrants enrichis
+   - 02_features.md : Module 5b (cultures/rotation/saisons), F5.3 (champs intrant), F5b.4 (application enrichie), types land et material enrichis
+   - 03_data_model.md : 5 nouvelles tables, 2 enums, enrichissements JSONB (land, material, input, parcel_calendars), relations mises a jour
+   - 04_api_spec.md : cropRouter (12 procedures), crop.validator.ts, renumerotation
+   - 05_ui_spec.md : formulaire material (16 champs), formulaire application intrant (4 cards), ComboboxAsyncMulti
+   - 06_decision_token.md : DT-014 a DT-018
+   - 10_current_issues.md : ISS-009 a ISS-014 (resolus)
+   - 12_appendix_sources_files.md : nouveaux fichiers source (schema, router, validators, composants)
+   - 13_gap_fill_and_verification.md : 10 nouvelles fonctionnalites ajoutees au gap
+   - 16_decisions.md : SESSION-010
+
+**Prochaines etapes :**
+1. Continuer Phase 9 : Offline / PWA ou Phase 10 : i18n & Polish
+
+---
+
 *Ajouter une entree ci-dessus a chaque session. Ne jamais supprimer.*

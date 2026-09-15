@@ -15,6 +15,13 @@
       "when": 1788480797745,
       "tag": "0001_jazzy_spiral",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1789514630093,
+      "tag": "0002_add_crops_seasons_rotation_enrichments",
+      "breakpoints": true
     }
   ]
 }

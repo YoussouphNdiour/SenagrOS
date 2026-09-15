@@ -58,6 +58,42 @@
 - **Solution** : Playwright suite recrite au fur et a mesure des phases
 - **Statut** : En cours
 
+### ISS-009 : Referentiel cultures manquant
+- **Priorite** : P0
+- **Description** : Pas de tables dediees pour les cultures, familles botaniques, varietes — tout etait en taxonomies generiques
+- **Solution** : 3 nouvelles tables (crop_families, crops, crop_varieties) + router tRPC cropRouter + seed 12 cultures senegalaises
+- **Statut** : Resolu (SESSION-010)
+
+### ISS-010 : Pas de gestion des saisons/campagnes
+- **Priorite** : P0
+- **Description** : Pas de table pour suivre les campagnes agricoles (hivernage, contre-saison) par ferme
+- **Solution** : Table `seasons` avec enum `season_type` et statuts planning/active/completed
+- **Statut** : Resolu (SESSION-010)
+
+### ISS-011 : Pas de regles de rotation culturale
+- **Priorite** : P0
+- **Description** : Aucune aide a la decision pour la succession des cultures sur une parcelle
+- **Solution** : Table `crop_rotation_rules` avec 4 niveaux de compatibilite + seed 9 regles senegalaises + procedure `checkRotation`
+- **Statut** : Resolu (SESSION-010)
+
+### ISS-012 : Application intrant mono-produit
+- **Priorite** : P0
+- **Description** : Le schema input ne gerait qu'un seul produit par application, pas de melange de cuve
+- **Solution** : Schema enrichi avec `products[]` (multi-produits), `weather` (conditions meteo), `target_parcel_ids` (multi-parcelles), 4 cards dans LogCreateForm
+- **Statut** : Resolu (SESSION-010)
+
+### ISS-013 : Parcelle sans details reseau d'irrigation
+- **Priorite** : P1
+- **Description** : Le champ `irrigation_type` sur les parcelles etait un simple texte sans details techniques
+- **Solution** : Sous-objet `irrigation_network` dans le JSONB data avec 11 champs (source, type, debit, pompe, filtration, fertigation, condition)
+- **Statut** : Resolu (SESSION-010)
+
+### ISS-014 : Intrants sans doses homologuees ni organismes cibles
+- **Priorite** : P1
+- **Description** : Les intrants n'avaient pas de champs pour les doses min/max, DDR, organismes cibles, cultures autorisees
+- **Solution** : 7 nouveaux champs sur le type material (ddr_days, dose_min, dose_max, dose_unit, max_applications_per_cycle, target_organisms[], target_crops[])
+- **Statut** : Resolu (SESSION-010)
+
 ---
 
 ## Template pour nouvelles issues

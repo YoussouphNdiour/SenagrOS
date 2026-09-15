@@ -23,6 +23,13 @@ Developpement de SenagrOS, systeme de gestion d'exploitation agricole (FMIS) en 
 15. Meteo (Open-Meteo / ANACIM) — Phase 7
 16. Export CSV/Excel/PDF — Phase 7
 17. Design TailAdmin (palette verte, KPI cards, sidebar, formulaires modaux) — Phase 0
+18. Referentiel cultures : 8 familles, 12 cultures trilingues (FR/EN/WO), varietes, router cropRouter (12 procedures) — Post-Phase 8
+19. Saisons/campagnes agricoles : table seasons, 3 types (hivernage, contre-saison chaude/froide), statuts — Post-Phase 8
+20. Rotation culturale : regles de compatibilite (4 niveaux), 9 regles senegalaises, verification automatique — Post-Phase 8
+21. Parcelles enrichies : reseau d'irrigation detaille (source, type, pompe, filtration, fertigation, condition) — Post-Phase 8
+22. Intrants enrichis : DDR, doses homologuees, max applications, organismes cibles, cultures autorisees — Post-Phase 8
+23. Application intrant enrichie : multi-parcelles, melange de cuve multi-produits, volume bouillie, conditions meteo avec warnings — Post-Phase 8
+24. Dates recolte (prevue/effective) sur calendrier parcellaire — Post-Phase 8
 
 ### Reste a faire (P0)
 18. Mode offline (PWA avec ServiceWorker, sync mutations) — Phase 9

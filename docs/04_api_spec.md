@@ -168,7 +168,38 @@ calendar.listParcels         GET   {} → { id, name }[]  -- Retourne un tableau
 ```
 Requires: owner, manager (lecture: owner, manager, worker)
 
-### 10. `reportRouter`
+### 10. `cropRouter` (cultures, varietes, saisons, rotation)
+
+> Voir `src/server/routers/crop.ts` et `src/lib/validators/crop.validator.ts`.
+
+```
+-- Familles botaniques --
+crop.listFamilies        GET   {} → CropFamily[]
+crop.createFamily        POST  { code, name, description? }
+
+-- Cultures --
+crop.list                GET   { familyId?, search?, page?, limit? } → { items: Crop[], total, page, pages }
+crop.create              POST  { code, nameFr, nameEn?, nameWo?, familyId?, cycleShortDays?, cycleLongDays?, seasonPreference? }
+
+-- Varietes --
+crop.listVarieties       GET   { cropId, search? } → CropVariety[]
+crop.createVariety       POST  { cropId, code, name, cycleDays?, yieldPotentialKgHa?, characteristics?, origin? }
+
+-- Saisons / Campagnes --
+crop.listSeasons         GET   { farmId?, type?, year?, status?, page?, limit? } → { items: Season[], total, page, pages }
+crop.createSeason        POST  { name, type: 'hivernage'|'contre_saison_chaude'|'contre_saison_froide', startDate, endDate, year, status?, notes? }
+crop.updateSeason        POST  { id, ...partialSeason }
+
+-- Rotation culturale --
+crop.checkRotation       GET   { previousCropId, nextCropId, farmId? } → { compatibility, reason, recommendation, minIntervalDays } | null
+crop.listRotationRules   GET   { farmId?, previousCropId?, compatibility?, page?, limit? } → { items: RotationRule[], total, page, pages }
+crop.createRotationRule  POST  { previousCropId, nextCropId, compatibility, reason?, minIntervalDays?, recommendation?, farmId? }
+```
+Requires: owner, manager (lecture: owner, manager, worker)
+
+> **Note** : `crop.checkRotation` retourne la regle de compatibilite entre deux cultures, en priorite les regles specifiques a la ferme (`farmId` non null), puis les regles globales. Retourne `null` si aucune regle n'existe.
+
+### 11. `reportRouter`
 ```
 report.dashboard     GET   { farmId } → DashboardData
 report.assets        GET   { farmId, type?, dateFrom?, dateTo? } → AssetsReport
@@ -178,7 +209,7 @@ report.financials    GET   { farmId, dateFrom?, dateTo? } → FinancialsReport
 ```
 Requires: owner, manager
 
-### 11. `farmMemberRouter`
+### 12. `farmMemberRouter`
 ```
 farmMember.list      GET   { search? } → { items: { id, name, email, role }[] }
 ```
@@ -188,7 +219,7 @@ Requires: owner, manager
 >
 > **Procedures prevues** : `invite`, `updateRole`, `remove` (non implementees).
 
-### 12. `financeRouter`
+### 13. `financeRouter`
 ```
 -- Transactions --
 finance.listTransactions     GET   { type?, category?, status?, search?, startDate?, endDate?, page?, limit? } → { items: Transaction[], total, page, pages }
@@ -213,7 +244,7 @@ finance.listJournal          GET   { category?, account?, search?, startDate?, e
 ```
 Requires: owner, manager
 
-### 13. `cooperativeRouter`
+### 14. `cooperativeRouter`
 ```
 cooperative.list               GET   { search?, page?, limit? } → { items: Cooperative[], total, page, pages }
 cooperative.create             POST  { name, description?, region?, type? }
@@ -227,7 +258,7 @@ cooperative.myCooperativeFarms GET   {} → { cooperativeId, cooperativeName, fa
 ```
 Requires: owner (cooperative admin pour invite, pendingInvitations, availableFarms ; membre pour list, members, dashboard, myCooperativeFarms)
 
-### 14. `marketplaceRouter`
+### 15. `marketplaceRouter`
 
 > ⚠️ Format de pagination divergent du standard : retourne `limit` au lieu de `pages`. Harmonisation prevue.
 
@@ -304,6 +335,7 @@ Chaque router a un fichier Zod correspondant dans `src/lib/validators/` :
 - `observation.validator.ts`
 - `calendar.validator.ts`
 - `input.validator.ts`
+- `crop.validator.ts`
 - `plan.validator.ts`
 - `finance.validator.ts`
 - `marketplace.validator.ts`

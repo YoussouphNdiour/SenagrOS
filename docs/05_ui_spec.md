@@ -32,6 +32,7 @@
 | `Input` | Input.tsx | Champ texte avec label et erreur |
 | `Select` | Select.tsx | Dropdown natif |
 | `ComboboxAsync` | ComboboxAsync.tsx | Dropdown recherchable avec chargement async |
+| `ComboboxAsyncMulti` | ComboboxAsync.tsx | Multi-selection recherchable async (parcelles, produits) |
 | `DatePicker` | DatePicker.tsx | Selecteur de date |
 | `Textarea` | Textarea.tsx | Zone de texte multiligne |
 | `FileUpload` | FileUpload.tsx | Upload de fichiers avec drag & drop |
@@ -318,6 +319,81 @@
 │                                              │
 │ Heure debut: [Input] Heure fin: [Input]      │
 │ Surface observee (ha): [Input]               │
+│                                              │
+│          [Enregistrer]                        │
+└──────────────────────────────────────────────┘
+```
+
+### Formulaire creation intrant — type `material` (NOUVEAU V3)
+```
+┌──────────────────────────────────────────────┐
+│ Nouvel intrant — Material                    │
+│                                              │
+│ [Categorie: phyto/ferti/semence]             │
+│ [Sous-categorie: Select]                     │
+│                                              │
+│ Nom commercial: [Input]    Matiere active: [Input]│
+│ Forme: [Select]            Toxicite: [Select]│
+│                                              │
+│ ┌── Doses homologuees ──────────────────────┐│
+│ │ Dose min: [Input]  Dose max: [Input]     ││
+│ │ Unite dose: [Select]                      ││
+│ │ Max applications/cycle: [Input]           ││
+│ └───────────────────────────────────────────┘│
+│                                              │
+│ DAR (jours): [Input]    DDR (jours): [Input] │
+│                                              │
+│ Organismes cibles: [MultiSelect]             │
+│ Cultures homologuees: [MultiSelect]          │
+│                                              │
+│ Stock initial: [Input]  Unite: [Select]      │
+│ Prix unitaire (FCFA): [Input]                │
+│ Seuil alerte: [Input]                        │
+│                                              │
+│          [Enregistrer]                        │
+└──────────────────────────────────────────────┘
+```
+
+### Formulaire application intrant enrichi — LogCreateForm input (NOUVEAU V3)
+```
+┌──────────────────────────────────────────────┐
+│ Application intrant                          │
+│                                              │
+│ ┌── Card 1 : Details application ───────────┐│
+│ │ Type: [Select phyto/ferti/semence]        ││
+│ │ Parcelles cibles: [ComboboxAsyncMulti]    ││
+│ │ Partie cible: [Select: sol|feuillage|...] ││
+│ │ Methode: [Select: pulverisation|epandage] ││
+│ │ Surface traitee (ha): [Input]             ││
+│ └───────────────────────────────────────────┘│
+│                                              │
+│ ┌── Card 2 : Produits utilises ─────────────┐│
+│ │ Produit 1: [ComboboxAsync intrants]       ││
+│ │   Dose: [Input]  Unite: [Select]          ││
+│ │   Quantite utilisee: [Input]              ││
+│ │ [+ Ajouter un produit]  ← useFieldArray   ││
+│ │ Produit 2: [ComboboxAsync]                ││
+│ │   ...                                     ││
+│ └───────────────────────────────────────────┘│
+│                                              │
+│ ┌── Card 3 : Volume de bouillie ────────────┐│
+│ │ (visible uniquement si type = phyto)      ││
+│ │ Volume eau (L): [Input]                   ││
+│ │ Volume bouillie/ha (L/ha): [Input]        ││
+│ │ Volume total (L): [auto-calcule]          ││
+│ └───────────────────────────────────────────┘│
+│                                              │
+│ ┌── Card 4 : Conditions meteo ──────────────┐│
+│ │ Temperature (°C): [Input]                 ││
+│ │ Vent (km/h): [Input]  Direction: [Select] ││
+│ │ Humidite (%): [Input]                     ││
+│ │ Pluie derniere 24h: [Checkbox]            ││
+│ │ Pluie prevue 24h: [Checkbox]              ││
+│ │                                           ││
+│ │ ⚠️ Vent >19 km/h : traitement deconseille ││
+│ │ ⚠️ Humidite <40% : risque derive          ││
+│ │ ⚠️ Pluie prevue : risque lessivage        ││
+│ └───────────────────────────────────────────┘│
 │                                              │
 │          [Enregistrer]                        │
 └──────────────────────────────────────────────┘

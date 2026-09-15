@@ -1,11 +1,11 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, AlertTriangle } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { createLogSchema } from '@/lib/validators/log.validator';
 import type { logTypeValues } from '@/lib/validators/log.validator';
@@ -86,6 +86,7 @@ export function LogCreateForm({ defaultType }: LogCreateFormProps) {
   const farmId = (session?.user as { farmId?: string } | undefined)?.farmId ?? '';
   const [equipmentIds, setEquipmentIds] = useState<string[]>([]);
   const [workerIds, setWorkerIds] = useState<string[]>([]);
+  const [targetParcelIds, setTargetParcelIds] = useState<string[]>([]);
 
   const createMutation = trpc.log.create.useMutation({
     onSuccess: (data) => {
@@ -118,9 +119,20 @@ export function LogCreateForm({ defaultType }: LogCreateFormProps) {
     name: 'quantities',
   });
 
+  const { fields: productFields, append: appendProduct, remove: removeProduct } = useFieldArray({
+    control,
+    name: 'data.products' as any,
+  });
+
   const selectedType = watch('type');
   const sowingType = watch('data.sowing_type' as any);
   const inputType = (watch('data.input_type' as any) as string | undefined) ?? 'phyto';
+
+  const treatedSurfaceHa = watch('data.treated_surface_ha' as any) as number | undefined;
+  const sprayVolumePerHa = watch('data.spray_volume_per_ha' as any) as number | undefined;
+  const weatherWindSpeed = watch('data.weather.wind_speed_kmh' as any) as number | undefined;
+  const weatherHumidity = watch('data.weather.humidity_percent' as any) as number | undefined;
+  const weatherRainForecast = watch('data.weather.rain_forecast_24h' as any) as boolean | undefined;
 
   const inputSubcatOptions =
     inputType === 'ferti'
@@ -168,9 +180,32 @@ export function LogCreateForm({ defaultType }: LogCreateFormProps) {
     }));
   };
 
+  const searchMaterial = async (query: string): Promise<AssetItem[]> => {
+    if (!farmId) return [];
+    const res = await fetch(`/api/trpc/asset.list?input=${encodeURIComponent(JSON.stringify({ json: { farmId, type: 'material', search: query || undefined, page: 1, limit: 20 } }))}`);
+    const json = await res.json();
+    return json?.result?.data?.json?.items ?? [];
+  };
+
+  // Auto-calculate spray_volume_total = spray_volume_per_ha * treated_surface_ha
+  useEffect(() => {
+    if (selectedType !== 'input') return;
+    if (sprayVolumePerHa && treatedSurfaceHa && sprayVolumePerHa > 0 && treatedSurfaceHa > 0) {
+      const total = Math.round(sprayVolumePerHa * treatedSurfaceHa * 100) / 100;
+      const currentTotal = watch('data.spray_volume_total' as any);
+      if (currentTotal !== total) {
+        control._formValues.data = { ...control._formValues.data, spray_volume_total: total };
+      }
+    }
+  }, [sprayVolumePerHa, treatedSurfaceHa, selectedType]);
+
   const onSubmit = (values: CreateLogInput) => {
+    const enrichedData = selectedType === 'input'
+      ? { ...values.data, target_parcel_ids: targetParcelIds }
+      : values.data;
     createMutation.mutate({
       ...values,
+      data: enrichedData,
       equipmentIds,
       workerIds,
     });
@@ -411,47 +446,301 @@ export function LogCreateForm({ defaultType }: LogCreateFormProps) {
 
       {/* Input (intrant) fields */}
       {selectedType === 'input' && (
-        <Card>
-          <h3 className="mb-4 text-lg font-semibold text-gray-800">Détails application intrant</h3>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Select
-              label="Type d'intrant"
-              options={[
-                { value: 'phyto', label: 'Phytosanitaire' },
-                { value: 'ferti', label: 'Fertilisant' },
-                { value: 'semence', label: 'Semence' },
-              ]}
-              {...register('data.input_type' as any)}
-            />
-            <Select
-              label="Sous-catégorie"
-              options={inputSubcatOptions}
-              {...register('data.input_subcategory' as any)}
-            />
-            <Input
-              label="Dose"
-              type="number"
-              step="0.01"
-              {...register('data.dose' as any, { valueAsNumber: true })}
-            />
-            <Input
-              label="Unité dose"
-              placeholder="Ex: L/ha"
-              {...register('data.dose_unit' as any)}
-            />
-            <Input
-              label="Méthode"
-              placeholder="Ex: pulvérisation"
-              {...register('data.method' as any)}
-            />
-            <Input
-              label="Surface traitée (ha)"
-              type="number"
-              step="0.01"
-              {...register('data.treated_surface_ha' as any, { valueAsNumber: true })}
-            />
-          </div>
-        </Card>
+        <>
+          {/* Card 1: Détails application intrant */}
+          <Card>
+            <h3 className="mb-4 text-lg font-semibold text-gray-800">Détails application intrant</h3>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Select
+                label="Type d'intrant"
+                options={[
+                  { value: 'phyto', label: 'Phytosanitaire' },
+                  { value: 'ferti', label: 'Fertilisant' },
+                  { value: 'semence', label: 'Semence' },
+                ]}
+                {...register('data.input_type' as any)}
+              />
+              <Select
+                label="Sous-catégorie"
+                options={inputSubcatOptions}
+                {...register('data.input_subcategory' as any)}
+              />
+              <div className="sm:col-span-2">
+                <ComboboxAsyncMulti<AssetItem>
+                  label="Parcelles à traiter"
+                  placeholder="Rechercher une parcelle..."
+                  value={targetParcelIds}
+                  onChange={setTargetParcelIds}
+                  searchFn={searchLand}
+                  getLabel={(item) => `${item.name} — ${(item.data as any)?.code_parcelle ?? ''}`}
+                  getValue={(item) => item.id}
+                />
+              </div>
+              <Input
+                label="Surface traitée (ha)"
+                type="number"
+                step="0.01"
+                min="0"
+                {...register('data.treated_surface_ha' as any, { valueAsNumber: true })}
+              />
+              <Input
+                label="Méthode"
+                placeholder="Ex: pulvérisation"
+                {...register('data.method' as any)}
+              />
+              <Select
+                label="Partie ciblée"
+                options={[
+                  { value: '', label: '— Sélectionner —' },
+                  { value: 'sol', label: 'Sol' },
+                  { value: 'feuillage', label: 'Feuillage' },
+                  { value: 'racines', label: 'Racines' },
+                  { value: 'fruits', label: 'Fruits' },
+                  { value: 'tiges', label: 'Tiges' },
+                  { value: 'semences', label: 'Semences' },
+                  { value: 'plante_entiere', label: 'Plante entière' },
+                ]}
+                {...register('data.target_part' as any)}
+              />
+              {/* Rétro-compatibilité single product */}
+              <Input
+                label="Dose"
+                type="number"
+                step="0.01"
+                {...register('data.dose' as any, { valueAsNumber: true })}
+              />
+              <Input
+                label="Unité dose"
+                placeholder="Ex: L/ha"
+                {...register('data.dose_unit' as any)}
+              />
+            </div>
+          </Card>
+
+          {/* Card 2: Produits utilisés (mélange de cuve) */}
+          <Card>
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="text-lg font-semibold text-gray-800">Produits utilisés</h3>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  appendProduct({
+                    product_name: '',
+                    subcategory: '',
+                    dose_per_ha: 0,
+                    dose_unit: 'L/ha',
+                    quantity_total: undefined,
+                    quantity_unit: '',
+                  })
+                }
+              >
+                <Plus className="h-4 w-4" />
+                Ajouter un produit
+              </Button>
+            </div>
+
+            {productFields.length === 0 && (
+              <p className="text-sm text-gray-400">Aucun produit ajouté. Utilisez le bouton ci-dessus pour ajouter des produits au mélange.</p>
+            )}
+
+            {productFields.map((field, index) => (
+              <div key={field.id} className="mb-3 rounded-lg border border-gray-100 bg-gray-50 p-3">
+                <div className="mb-2 flex items-center justify-between">
+                  <span className="text-sm font-medium text-gray-600">Produit {index + 1}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeProduct(index)}
+                    className="rounded p-2 text-gray-400 hover:bg-red-50 hover:text-red-500"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <Controller
+                    control={control}
+                    name={`data.products.${index}.product_id` as any}
+                    render={({ field: f }) => (
+                      <ComboboxAsync<AssetItem>
+                        label="Produit (intrant)"
+                        placeholder="Rechercher un intrant..."
+                        value={f.value as string}
+                        onChange={(val) => {
+                          f.onChange(val);
+                        }}
+                        searchFn={searchMaterial}
+                        getLabel={(item) => item.name}
+                        getValue={(item) => item.id}
+                      />
+                    )}
+                  />
+                  <Input
+                    label="Nom du produit"
+                    placeholder="Ex: Glyphosate 360"
+                    {...register(`data.products.${index}.product_name` as any)}
+                  />
+                  <Select
+                    label="Sous-catégorie"
+                    options={[
+                      { value: '', label: '— Sélectionner —' },
+                      { value: 'herbicide', label: 'Herbicide' },
+                      { value: 'insecticide', label: 'Insecticide' },
+                      { value: 'fongicide', label: 'Fongicide' },
+                      { value: 'acaricide', label: 'Acaricide' },
+                      { value: 'nematicide', label: 'Nematicide' },
+                      { value: 'regulateur_croissance', label: 'Régulateur de croissance' },
+                      { value: 'adjuvant', label: 'Adjuvant' },
+                      { value: 'engrais_mineral', label: 'Engrais minéral' },
+                      { value: 'engrais_organique', label: 'Engrais organique' },
+                      { value: 'biostimulant', label: 'Biostimulant' },
+                    ]}
+                    {...register(`data.products.${index}.subcategory` as any)}
+                  />
+                  <Input
+                    label="Dose par ha"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    placeholder="Ex: 2.5"
+                    {...register(`data.products.${index}.dose_per_ha` as any, { valueAsNumber: true })}
+                  />
+                  <Select
+                    label="Unité dose"
+                    options={[
+                      { value: 'L/ha', label: 'L/ha' },
+                      { value: 'kg/ha', label: 'kg/ha' },
+                      { value: 'g/ha', label: 'g/ha' },
+                      { value: 'mL/ha', label: 'mL/ha' },
+                    ]}
+                    {...register(`data.products.${index}.dose_unit` as any)}
+                  />
+                  <Input
+                    label="Quantité totale"
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    placeholder="Calculé auto si surface renseignée"
+                    {...register(`data.products.${index}.quantity_total` as any, { valueAsNumber: true })}
+                  />
+                </div>
+              </div>
+            ))}
+          </Card>
+
+          {/* Card 3: Volume de bouillie — seulement si phyto */}
+          {inputType === 'phyto' && (
+            <Card>
+              <h3 className="mb-4 text-lg font-semibold text-gray-800">Volume de bouillie</h3>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Input
+                  label="Volume d'eau (litres)"
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  placeholder="Ex: 200"
+                  {...register('data.water_volume_liters' as any, { valueAsNumber: true })}
+                />
+                <Input
+                  label="Volume bouillie par ha (L/ha)"
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  placeholder="Ex: 150"
+                  {...register('data.spray_volume_per_ha' as any, { valueAsNumber: true })}
+                />
+                <Input
+                  label="Volume bouillie total (L)"
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  placeholder="Calculé automatiquement"
+                  {...register('data.spray_volume_total' as any, { valueAsNumber: true })}
+                />
+              </div>
+              <p className="mt-2 text-xs text-gray-500">Le volume total est calculé automatiquement si le volume/ha et la surface sont renseignés.</p>
+            </Card>
+          )}
+
+          {/* Card 4: Conditions météo */}
+          <Card>
+            <h3 className="mb-4 text-lg font-semibold text-gray-800">Conditions météo</h3>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Input
+                label="Température (°C)"
+                type="number"
+                step="0.1"
+                placeholder="Ex: 28"
+                {...register('data.weather.temperature_c' as any, { valueAsNumber: true })}
+              />
+              <div>
+                <Input
+                  label="Vitesse du vent (km/h)"
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  placeholder="Ex: 12"
+                  {...register('data.weather.wind_speed_kmh' as any, { valueAsNumber: true })}
+                />
+                {typeof weatherWindSpeed === 'number' && weatherWindSpeed > 19 && (
+                  <p className="text-sm text-orange-600 mt-1">Traitement déconseillé au-delà de 19 km/h</p>
+                )}
+              </div>
+              <Select
+                label="Direction du vent"
+                options={[
+                  { value: '', label: '— Sélectionner —' },
+                  { value: 'N', label: 'N' },
+                  { value: 'NE', label: 'NE' },
+                  { value: 'E', label: 'E' },
+                  { value: 'SE', label: 'SE' },
+                  { value: 'S', label: 'S' },
+                  { value: 'SO', label: 'SO' },
+                  { value: 'O', label: 'O' },
+                  { value: 'NO', label: 'NO' },
+                ]}
+                {...register('data.weather.wind_direction' as any)}
+              />
+              <div>
+                <Input
+                  label="Humidité (%)"
+                  type="number"
+                  step="1"
+                  min="0"
+                  max="100"
+                  placeholder="Ex: 65"
+                  {...register('data.weather.humidity_percent' as any, { valueAsNumber: true })}
+                />
+                {typeof weatherHumidity === 'number' && weatherHumidity > 0 && weatherHumidity < 40 && (
+                  <p className="text-sm text-orange-600 mt-1">Risque d'évaporation élevé</p>
+                )}
+              </div>
+              <div className="flex items-center gap-3">
+                <input
+                  type="checkbox"
+                  id="rain_last_24h"
+                  className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                  {...register('data.weather.rain_last_24h' as any)}
+                />
+                <label htmlFor="rain_last_24h" className="text-sm text-gray-700">Pluie dans les dernières 24h</label>
+              </div>
+              <div>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="checkbox"
+                    id="rain_forecast_24h"
+                    className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
+                    {...register('data.weather.rain_forecast_24h' as any)}
+                  />
+                  <label htmlFor="rain_forecast_24h" className="text-sm text-gray-700">Pluie prévue dans les 24h</label>
+                </div>
+                {weatherRainForecast && (
+                  <p className="text-sm text-orange-600 mt-1">Risque de lessivage du traitement</p>
+                )}
+              </div>
+            </div>
+          </Card>
+        </>
       )}
 
       {/* Maintenance fields */}

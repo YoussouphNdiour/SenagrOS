@@ -16,3 +16,8 @@ export * from './calendars';
 export * from './observation-forms';
 export * from './finance';
 export * from './marketplace';
+export * from './crop-families';
+export * from './crops';
+export * from './crop-varieties';
+export * from './seasons';
+export * from './crop-rotation-rules';

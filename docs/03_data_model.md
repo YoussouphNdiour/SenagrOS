@@ -82,9 +82,38 @@ assets
   "soil_type": "argileux",
   "irrigation_type": "goutte_a_goutte",
   "code_parcelle": "2P5D2-5374",
-  "ilot": "DIAMA"
+  "ilot": "DIAMA",
+  "irrigation_network": {
+    "source": "forage",
+    "network_type": "goutte_a_goutte",
+    "pipe_diameter_mm": 16,
+    "dripper_spacing_cm": 30,
+    "flow_rate_m3_h": 5.0,
+    "pump_type": "centrifuge",
+    "pump_power_cv": 7.5,
+    "filtration": "disque",
+    "fertigation_equipped": true,
+    "installation_date": "2021-06-15",
+    "network_condition": "bon"
+  }
 }
 ```
+
+**Champs `irrigation_network`** (sous-objet JSONB pour parcelle) :
+
+| Champ | Type | Valeurs possibles |
+|-------|------|-------------------|
+| `source` | string | forage, fleuve, lac, bassin, pluie, autre |
+| `network_type` | string | goutte_a_goutte, aspersion, micro_aspersion, pivot, californien, gravitaire, submersion |
+| `pipe_diameter_mm` | number | Diametre tuyaux (mm) |
+| `dripper_spacing_cm` | number | Ecartement goutteurs (cm) |
+| `flow_rate_m3_h` | number | Debit (m3/h) |
+| `pump_type` | string | Type de pompe |
+| `pump_power_cv` | number | Puissance pompe (CV) |
+| `filtration` | string | disque, sable, tamis, aucun |
+| `fertigation_equipped` | boolean | Fertigation installee |
+| `installation_date` | string (date) | Date d'installation |
+| `network_condition` | string | bon, moyen, degrade, hors_service |
 
 **plant** :
 ```json
@@ -123,9 +152,28 @@ assets
   "recommended_dose": "0.5 L/ha",
   "dar_days": 3,
   "toxicity_class": "II",
-  "form": "liquide"
+  "form": "liquide",
+  "ddr_days": 1,
+  "dose_min": 0.3,
+  "dose_max": 0.6,
+  "dose_unit": "L/ha",
+  "max_applications_per_cycle": 3,
+  "target_organisms": ["pucerons", "chenilles", "mouche_blanche"],
+  "target_crops": ["haricot_vert", "tomate", "oignon"]
 }
 ```
+
+**Nouveaux champs `material`** (ajouts V3 — feedback agronomes) :
+
+| Champ | Type | Description |
+|-------|------|-------------|
+| `ddr_days` | number | Delai De Reentree (jours) — delai avant reentree dans la parcelle traitee |
+| `dose_min` | number | Dose homologuee minimum |
+| `dose_max` | number | Dose homologuee maximum |
+| `dose_unit` | string | Unite de dose (L/ha, kg/ha, g/ha, mL/ha) |
+| `max_applications_per_cycle` | number | Nombre max d'applications par cycle cultural |
+| `target_organisms` | string[] | Organismes cibles (pucerons, rouille, mildiou, chenilles...) |
+| `target_crops` | string[] | Cultures homologuees pour ce produit |
 
 **material (ferti)** :
 ```json
@@ -203,9 +251,45 @@ logs
   "dose_unit": "L/ha",
   "method": "pulverisation",
   "machine_id": "uuid-du-pulverisateur",
-  "treated_surface_ha": 2.30
+  "treated_surface_ha": 2.30,
+  "target_parcel_ids": ["uuid-parcelle-1", "uuid-parcelle-2"],
+  "products": [
+    {
+      "product_id": "uuid-produit-1",
+      "dose": 0.5,
+      "dose_unit": "L/ha",
+      "quantity_used": 1.15
+    },
+    {
+      "product_id": "uuid-produit-2",
+      "dose": 200,
+      "dose_unit": "g/ha",
+      "quantity_used": 460
+    }
+  ],
+  "target_part": "feuillage",
+  "water_volume_liters": 200,
+  "spray_volume_per_ha": 300,
+  "spray_volume_total": 690,
+  "weather": {
+    "temperature_c": 28,
+    "wind_speed_kmh": 12,
+    "wind_direction": "NE",
+    "humidity_percent": 65,
+    "rain_last_24h": false,
+    "rain_forecast_24h": false
+  }
 }
 ```
+
+**Enrichissement `input` V3** — Le schema `inputDataSchema` a ete enrichi pour supporter :
+- **Multi-parcelles** : `target_parcel_ids` (application sur plusieurs parcelles)
+- **Melange de cuve** : `products` (array — multi-produits avec dose et quantite par produit)
+- **Partie cible** : `target_part` (sol, feuillage, racines, fruits, tiges, semences, plante_entiere)
+- **Volume de bouillie** : `water_volume_liters`, `spray_volume_per_ha`, `spray_volume_total`
+- **Conditions meteo** : `weather` (temperature, vent, humidite, pluie) — avec warnings automatiques (vent >19km/h, humidite <40%, pluie prevue)
+
+Schemas Zod associes : `inputProductSchema`, `weatherConditionsSchema` (dans `log.validator.ts`)
 
 **observation** :
 ```json
@@ -588,6 +672,120 @@ marketplace_orders
 
 ---
 
+## Tables referentiel cultures (V3 — module cultures & rotation)
+
+> Les tables ci-dessous sont implementees dans `src/server/db/schema/crop-families.ts`, `crops.ts`, `crop-varieties.ts`, `crop-rotation-rules.ts` et `seasons.ts`.
+
+### 25b. `crop_families` (familles botaniques)
+
+```
+crop_families
+├── id              UUID PK
+├── code            VARCHAR(10) UNIQUE NOT NULL  -- ex: CER, LEG, MAR, FRU
+├── name            VARCHAR(100) NOT NULL
+├── description     TEXT
+├── created_at      TIMESTAMPTZ DEFAULT NOW()
+└── updated_at      TIMESTAMPTZ DEFAULT NOW()
+```
+
+**Seed** : 8 familles (Cereales, Legumineuses, Maraichage, Fruits, Oleagineux, Tubercules, Fibres, Cucurbitacees)
+
+### 25c. `crops` (cultures referentielles)
+
+```
+crops
+├── id                  UUID PK
+├── code                VARCHAR(20) UNIQUE NOT NULL  -- ex: HVT, RIZ, ARA, TOM, OIG, MIL, SOR, NIE, PAT, MAN, COT, MAI
+├── name_fr             VARCHAR(100) NOT NULL
+├── name_en             VARCHAR(100)
+├── name_wo             VARCHAR(100)          -- nom en Wolof (ex: dugub, bassi, gerté, tamaat)
+├── family_id           UUID FK → crop_families.id
+├── cycle_short_days    INTEGER               -- duree cycle court (jours)
+├── cycle_long_days     INTEGER               -- duree cycle long (jours)
+├── season_preference   JSONB DEFAULT []      -- ex: ['hivernage', 'contre_saison_froide']
+├── data                JSONB DEFAULT {}
+├── created_at          TIMESTAMPTZ DEFAULT NOW()
+└── updated_at          TIMESTAMPTZ DEFAULT NOW()
+```
+
+**Seed** : 12 cultures senegalaises avec noms trilingues (FR/EN/WO) :
+
+| Code | FR | WO | Famille |
+|------|-----|-----|---------|
+| MIL | Mil | Dugub | Cereales |
+| SOR | Sorgho | Bassi | Cereales |
+| RIZ | Riz | Malo | Cereales |
+| MAI | Mais | Mbay | Cereales |
+| ARA | Arachide | Gerté | Oleagineux |
+| NIE | Niebe | Niebe | Legumineuses |
+| HVT | Haricot vert | Haricot | Legumineuses |
+| TOM | Tomate | Tamaat | Maraichage |
+| OIG | Oignon | Soble | Maraichage |
+| PAT | Patate douce | Pataas | Tubercules |
+| MAN | Mangue | Mango | Fruits |
+| COT | Coton | Coton | Fibres |
+
+### 25d. `crop_varieties` (varietes par culture)
+
+```
+crop_varieties
+├── id                      UUID PK
+├── crop_id                 UUID FK → crops.id NOT NULL
+├── code                    VARCHAR(30) UNIQUE NOT NULL
+├── name                    VARCHAR(100) NOT NULL
+├── cycle_days              INTEGER               -- duree cycle varietal (jours)
+├── yield_potential_kg_ha   INTEGER               -- rendement potentiel (kg/ha)
+├── characteristics         JSONB DEFAULT {}       -- ex: resistance, port, couleur
+├── origin                  VARCHAR(100)
+├── created_at              TIMESTAMPTZ DEFAULT NOW()
+└── updated_at              TIMESTAMPTZ DEFAULT NOW()
+```
+
+### 25e. `seasons` (saisons/campagnes agricoles)
+
+```
+seasons
+├── id              UUID PK
+├── farm_id         UUID FK → farms.id NOT NULL
+├── name            VARCHAR(100) NOT NULL     -- ex: 'Hivernage 2026'
+├── type            ENUM season_type NOT NULL  -- hivernage|contre_saison_chaude|contre_saison_froide
+├── start_date      DATE NOT NULL
+├── end_date        DATE NOT NULL
+├── year            INTEGER NOT NULL
+├── status          VARCHAR(20) DEFAULT 'planning'  -- planning|active|completed
+├── notes           TEXT
+├── created_at      TIMESTAMPTZ DEFAULT NOW()
+└── updated_at      TIMESTAMPTZ DEFAULT NOW()
+```
+
+### 25f. `crop_rotation_rules` (regles de rotation culturale)
+
+```
+crop_rotation_rules
+├── id                  UUID PK
+├── farm_id             UUID FK → farms.id     -- NULL = regle globale
+├── previous_crop_id    UUID FK → crops.id NOT NULL
+├── next_crop_id        UUID FK → crops.id NOT NULL
+├── compatibility       ENUM rotation_compatibility NOT NULL  -- recommended|neutral|avoid|forbidden
+├── reason              TEXT
+├── min_interval_days   INTEGER               -- delai minimum entre 2 cultures
+├── recommendation      TEXT
+├── data                JSONB DEFAULT {}
+├── created_at          TIMESTAMPTZ DEFAULT NOW()
+└── updated_at          TIMESTAMPTZ DEFAULT NOW()
+```
+
+**Seed** : 9 regles de rotation senegalaises (ex: arachide → mil = recommended, mil → mil = avoid)
+
+### Nouveaux enums (fichier `src/server/db/schema/enums.ts`)
+
+| Enum | Valeurs |
+|------|---------|
+| `season_type` | `hivernage`, `contre_saison_chaude`, `contre_saison_froide` |
+| `rotation_compatibility` | `recommended`, `neutral`, `avoid`, `forbidden` |
+
+---
+
 ## NOUVELLES TABLES (V3 — feedback agronomes)
 
 > Les tables `cultural_calendars` et `parcel_calendars` sont implementees dans `src/server/db/schema/calendars.ts`.
@@ -625,16 +823,18 @@ cultural_calendars
 
 ```
 parcel_calendars
-├── id              UUID PK
-├── farm_id         UUID FK → farms.id NOT NULL
-├── asset_id        UUID FK → assets.id NOT NULL  -- la parcelle (type land)
-├── calendar_id     UUID FK → cultural_calendars.id NOT NULL
-├── sowing_date     DATE NOT NULL                 -- date de semis effective
-├── stage_statuses  JSONB DEFAULT []              -- voir structure ci-dessous
-├── status          VARCHAR(20) DEFAULT 'active'  -- active|completed|cancelled
-├── notes           TEXT
-├── created_at      TIMESTAMP DEFAULT NOW()
-└── updated_at      TIMESTAMP DEFAULT NOW()
+├── id                      UUID PK
+├── farm_id                 UUID FK → farms.id NOT NULL
+├── asset_id                UUID FK → assets.id NOT NULL  -- la parcelle (type land)
+├── calendar_id             UUID FK → cultural_calendars.id NOT NULL
+├── sowing_date             DATE NOT NULL                 -- date de semis effective
+├── expected_harvest_date   DATE                          -- date de recolte prevue (NOUVEAU)
+├── actual_harvest_date     DATE                          -- date de recolte effective (NOUVEAU)
+├── stage_statuses          JSONB DEFAULT []              -- voir structure ci-dessous
+├── status                  VARCHAR(20) DEFAULT 'active'  -- active|completed|cancelled
+├── notes                   TEXT
+├── created_at              TIMESTAMP DEFAULT NOW()
+└── updated_at              TIMESTAMP DEFAULT NOW()
 ```
 
 **Structure JSONB `stage_statuses`** :
@@ -771,6 +971,8 @@ farms ──1:N── inventory
 farms ──1:N── taxonomies
 farms ──1:N── cultural_calendars
 farms ──1:N── parcel_calendars
+farms ──1:N── seasons
+farms ──1:N── crop_rotation_rules (farm_id nullable — NULL = regle globale)
 farms ──1:N── transactions
 farms ──1:N── invoices
 farms ──1:N── journal_entries
@@ -786,6 +988,11 @@ logs ──1:N── observation_forms
 
 cultural_calendars ──1:N── parcel_calendars
 assets (land) ──1:N── parcel_calendars
+
+crop_families ──1:N── crops
+crops ──1:N── crop_varieties
+crops ──1:N── crop_rotation_rules (previous_crop_id)
+crops ──1:N── crop_rotation_rules (next_crop_id)
 
 users ──1:N── observation_forms (observer_id)
 users ──1:N── revisions

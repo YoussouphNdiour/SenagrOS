@@ -44,6 +44,16 @@
 | Vue timeline Gantt | Agronomes | P0 |
 | Alertes retard stade | Agronomes | P0 |
 | Assignation machine→employe→activite | Agronomes | P0 |
+| Referentiel cultures trilingues (FR/EN/WO) | Agronomes | P0 |
+| Familles botaniques | Agronomes | P0 |
+| Varietes par culture | Agronomes | P0 |
+| Saisons/campagnes par ferme | Agronomes | P0 |
+| Regles de rotation culturale | Agronomes | P0 |
+| Reseau d'irrigation detaille (parcelle) | Agronomes | P1 |
+| Intrants : doses homologuees, DDR, organismes cibles | Agronomes | P1 |
+| Application intrant multi-produits (melange de cuve) | Agronomes | P0 |
+| Conditions meteo lors d'application intrant | Agronomes | P0 |
+| Dates recolte prevue/effective sur parcel_calendars | Agronomes | P0 |
 | Sync offline queue (IndexedDB) | Technique | P1 |
 
 ## Verification checklist par phase

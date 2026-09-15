@@ -32,7 +32,7 @@ Ces fiches sont ensuite ressaisies manuellement. SenagrOS les remplace par des f
 - **Langues** : Francais (defaut), English, Wolof
 - **Fuseau** : Africa/Dakar (UTC+0)
 - **Saisons** : Hivernage (juin-octobre), Contre-saison chaude (mars-juin), Contre-saison froide (novembre-fevrier)
-- **Cultures typiques** : mil, sorgho, arachide, niebe, riz, mais doux, haricot vert, oignon, tomate, gombo
+- **Cultures typiques** : mil, sorgho, arachide, niebe, riz, mais doux, haricot vert, oignon, tomate, gombo (12 cultures referencees avec noms trilingues FR/EN/WO dans la table `crops`)
 
 ## Origine
 Fork conceptuel de farmOS (Drupal) et Ekylibre (Rails). V2 recodee en Next.js 15 full-stack TypeScript. Le rebuild actuel (V3) repart du code V2 en integrant le feedback terrain des agronomes de SCL (Societe de Cultures Legumieres) et d'entrepreneurs agronomes.
@@ -43,7 +43,7 @@ Fork conceptuel de farmOS (Drupal) et Ekylibre (Rails). V2 recodee en Next.js 15
 2. **Mobile-first** : Concu pour smartphones sur le terrain (BottomNav, formulaires tactiles)
 3. **Generaliste** : Pas specifique a un type de culture — adaptable via taxonomies configurables
 4. **Fiches d'observation standardisees** : Densite de levee, suivi stade cultural, maladies-ravageurs, agreage pre-recolte
-5. **Intrants separes** : Phytosanitaire / Fertilisation / Semences — chacun avec sous-categories et gestion de stock
+5. **Intrants separes** : Phytosanitaire / Fertilisation / Semences — chacun avec sous-categories, gestion de stock, doses homologuees, organismes cibles, et application multi-produits (melange de cuve) avec conditions meteo
 6. **Parc materiel** : Tracteurs, semoirs, pulverisateurs... assignes par activite a un employe
 7. **Design TailAdmin** : Palette verte, KPI cards colorees, sidebar gauche, formulaires modaux
 
@@ -68,7 +68,7 @@ Fork conceptuel de farmOS (Drupal) et Ekylibre (Rails). V2 recodee en Next.js 15
 
 ## Metriques de la V2 (reference)
 - 100+ pages/routes
-- ~25 tables de base de donnees (incluant calendars, finance, marketplace, observation_forms, notifications)
+- ~30 tables de base de donnees (incluant calendars, finance, marketplace, observation_forms, crop_families, crops, crop_varieties, seasons, crop_rotation_rules, notifications)
 - 12 types d'assets, 12 types de logs
 - Support cooperatives multi-fermes
 - Mode offline avec OfflineBanner + ServiceWorker
