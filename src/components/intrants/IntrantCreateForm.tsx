@@ -83,8 +83,15 @@ export function IntrantCreateForm() {
         activeIngredient: formState.activeIngredient || undefined,
         recommendedDose: formState.recommendedDose || undefined,
         darDays: formState.darDays ? Number(formState.darDays) : undefined,
+        ddrDays: formState.ddrDays ? Number(formState.ddrDays) : undefined,
         toxicityClass: formState.toxicityClass || undefined,
         form: (formState.form as 'liquide' | 'granule' | 'poudre' | 'suspension') || undefined,
+        doseMin: formState.doseMin ? Number(formState.doseMin) : undefined,
+        doseMax: formState.doseMax ? Number(formState.doseMax) : undefined,
+        doseUnit: formState.doseUnit || undefined,
+        maxApplicationsPerCycle: formState.maxApplicationsPerCycle ? Number(formState.maxApplicationsPerCycle) : undefined,
+        targetOrganisms: formState.targetOrganisms || undefined,
+        targetCrops: formState.targetCrops || undefined,
       };
     } else if (category === 'ferti') {
       payload = {
@@ -186,6 +193,13 @@ export function IntrantCreateForm() {
                     value={formState.darDays ?? ''}
                     onChange={(e) => set('darDays', e.target.value)}
                   />
+                  <Input
+                    label="DDR - Delai de reentree (jours)"
+                    type="number"
+                    min="0"
+                    value={formState.ddrDays ?? ''}
+                    onChange={(e) => set('ddrDays', e.target.value)}
+                  />
                   <Select
                     label="Classe toxicite"
                     options={[
@@ -204,6 +218,49 @@ export function IntrantCreateForm() {
                     value={formState.form ?? ''}
                     placeholder="Choisir"
                     onChange={(e) => set('form', e.target.value)}
+                  />
+                  <div className="grid gap-4 sm:grid-cols-3">
+                    <Input
+                      label="Dose minimale"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={formState.doseMin ?? ''}
+                      onChange={(e) => set('doseMin', e.target.value)}
+                    />
+                    <Input
+                      label="Dose maximale"
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value={formState.doseMax ?? ''}
+                      onChange={(e) => set('doseMax', e.target.value)}
+                    />
+                    <Input
+                      label="Unite dose"
+                      value={formState.doseUnit ?? ''}
+                      onChange={(e) => set('doseUnit', e.target.value)}
+                      helperText="Ex: L/ha, kg/ha"
+                    />
+                  </div>
+                  <Input
+                    label="Nb max applications par cycle"
+                    type="number"
+                    min="1"
+                    value={formState.maxApplicationsPerCycle ?? ''}
+                    onChange={(e) => set('maxApplicationsPerCycle', e.target.value)}
+                  />
+                  <Input
+                    label="Organismes cibles"
+                    value={formState.targetOrganisms ?? ''}
+                    onChange={(e) => set('targetOrganisms', e.target.value)}
+                    helperText="Ex: pucerons, mildiou, rouille (separes par virgules)"
+                  />
+                  <Input
+                    label="Cultures homologuees"
+                    value={formState.targetCrops ?? ''}
+                    onChange={(e) => set('targetCrops', e.target.value)}
+                    helperText="Ex: tomate, oignon, riz (separes par virgules)"
                   />
                 </>
               )}
