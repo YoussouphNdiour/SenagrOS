@@ -1,5 +1,7 @@
 # 07 - Business Model
 
+> **Derniere mise a jour** : 2026-09-11
+
 ## Proposition de valeur
 SenagrOS remplace les fiches papier et les tableurs Excel par une plateforme digitale complete pour la gestion d'exploitation agricole en Afrique de l'Ouest.
 
@@ -44,9 +46,9 @@ SenagrOS remplace les fiches papier et les tableurs Excel par une plateforme dig
 
 ## Avantage concurrentiel
 - Open-source (pas de vendor lock-in)
-- Adapte au contexte Afrique de l'Ouest (XOF, wolof, cultures locales, offline)
+- Adapte au contexte Afrique de l'Ouest (XOF, wolof, cultures locales, offline) (Phase 9 — en cours d'implementation)
 - Fiches d'observation standardisees (inspirees SCL/E@syFerme)
-- PWA offline-first (pas besoin de Play Store ni connexion permanente)
+- PWA offline-first (pas besoin de Play Store ni connexion permanente) (Phase 9 — en cours d'implementation)
 
 ---
 

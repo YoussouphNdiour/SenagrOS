@@ -109,7 +109,7 @@ All specifications are in `/docs/` (16 .md files). Read `01_project_overview.md`
 - Country: Senegal | Currency: XOF (FCFA) | Timezone: Africa/Dakar (UTC+0)
 - Languages: French (default), English, Wolof
 - Seasons: Hivernage (Jun-Oct), Contre-saison chaude (Mar-Jun), Contre-saison froide (Nov-Feb)
-- Target users: farm owners, managers, agronomist technicians, workers
+- Target users: farm owners, managers, agronomist technicians, workers, viewers (read-only auditors/donors)
 
 <!-- BEGIN:nextjs-agent-rules -->
 

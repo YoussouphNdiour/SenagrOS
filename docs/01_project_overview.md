@@ -17,13 +17,14 @@ Ces fiches sont ensuite ressaisies manuellement. SenagrOS les remplace par des f
 
 ## Cibles utilisateurs
 
-| Role | Description |
-|------|-------------|
-| **Proprietaire** | Gere la ferme, les finances, les parametres |
-| **Chef de ferme / Manager** | Planifie les cultures, assigne les taches, valide les observations |
-| **Technicien agronome** | Remplit les fiches d'observation terrain (densite, ravageurs, stades) |
-| **Ouvrier agricole** | Execute les taches assignees, enregistre les activites |
-| **Acheteur** | Consulte les produits disponibles, passe des commandes |
+| Role | Cle | Description |
+|------|-----|-------------|
+| **Proprietaire** | `owner` | Gere la ferme, les finances, les parametres |
+| **Chef de ferme / Manager** | `manager` | Planifie les cultures, assigne les taches, valide les observations |
+| **Ouvrier agricole** | `worker` | Execute les taches assignees, enregistre les activites |
+| **Lecteur** | `viewer` | Consulte les donnees en lecture seule (bailleurs, auditeurs) |
+
+> ⚠️ Role `technician` prevu dans une migration future. Actuellement, les fonctions de technicien agronome (fiches d'observation terrain, densite, ravageurs, stades) sont assure par les roles `manager` ou `worker`.
 
 ## Contexte geographique
 - **Pays principal** : Senegal (extensible Afrique de l'Ouest)
@@ -67,8 +68,8 @@ Fork conceptuel de farmOS (Drupal) et Ekylibre (Rails). V2 recodee en Next.js 15
 
 ## Metriques de la V2 (reference)
 - 100+ pages/routes
-- 16 tables de base de donnees
-- 12 types d'assets, 11 types de logs
+- ~25 tables de base de donnees (incluant calendars, finance, marketplace, observation_forms, notifications)
+- 12 types d'assets, 12 types de logs
 - Support cooperatives multi-fermes
 - Mode offline avec OfflineBanner + ServiceWorker
 - Quick actions (saisie rapide terrain)

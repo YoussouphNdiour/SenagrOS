@@ -46,7 +46,7 @@ Copier-coller ce prompt au debut de chaque session Claude Code :
 ```
 Je travaille sur le projet SenagrOS, un FMIS agricole.
 
-Lis les fichiers suivants dans /Users/yusper/Downloads/SenagrOS/docs/ :
+Lis les fichiers suivants dans ./docs/ :
 - 01_project_overview.md (contexte projet)
 - 11_rebuild_plan.md (plan et phase en cours)  
 - 16_decisions.md (decisions des sessions precedentes)
@@ -55,7 +55,7 @@ Lis les fichiers suivants dans /Users/yusper/Downloads/SenagrOS/docs/ :
 Puis identifie la phase en cours dans 11_rebuild_plan.md et lis les fichiers 
 de spec correspondants (02, 03, 04, 05) pour cette phase.
 
-Le code source est dans /Users/yusper/Downloads/SenagrOS/
+Le code source est dans $PROJECT_ROOT/
 Continue le travail la ou la session precedente s'est arretee.
 ```
 
@@ -68,7 +68,7 @@ Continue le travail la ou la session precedente s'est arretee.
 ```
 Je travaille sur le projet SenagrOS, un FMIS agricole pour l'Afrique de l'Ouest.
 
-Lis ces fichiers de spec dans /Users/yusper/Downloads/SenagrOS/docs/ :
+Lis ces fichiers de spec dans ./docs/ :
 - 01_project_overview.md (contexte, stack, principes)
 - 03_data_model.md (21 tables Drizzle completes)
 - 09_code_conventions.md (standards de code)
@@ -77,7 +77,7 @@ Lis ces fichiers de spec dans /Users/yusper/Downloads/SenagrOS/docs/ :
 Phase 0 : Scaffolding — creer le projet from scratch.
 
 Actions :
-1. Creer le projet Next.js 15 dans /Users/yusper/Downloads/SenagrOS/ avec : npx create-next-app@latest . --typescript --tailwind --app --src-dir --use-pnpm
+1. Creer le projet Next.js 15 dans $PROJECT_ROOT/ avec : npx create-next-app@latest . --typescript --tailwind --app --src-dir --use-pnpm
 2. Installer les dependances : @trpc/server @trpc/client @trpc/react-query @tanstack/react-query drizzle-orm drizzle-kit postgres next-auth@5 @auth/core @auth/drizzle-adapter maplibre-gl react-map-gl recharts next-intl zod react-hook-form @hookform/resolvers bcryptjs
 3. Installer les devDeps : vitest @testing-library/react @testing-library/jest-dom playwright @playwright/test @types/bcryptjs biome
 4. Creer docker-compose.yml avec PostgreSQL 16 + PostGIS 3.4
@@ -95,7 +95,7 @@ Actions :
 16. Ecrire des tests de base : au moins 5 tests unitaires composants UI + 1 test schema
 17. Verifier : pnpm dev (port 3000), pnpm typecheck, pnpm lint, pnpm test
 
-Respecte le design TailAdmin de la V2 visible dans les screenshots /Users/yusper/Downloads/SENAGROS FARMOS/*.png — sidebar blanche a gauche, topbar avec FarmSwitcher, KPI cards colorees (vert/orange/bleu), fond gris clair.
+Respecte le design TailAdmin de la V2 visible dans les screenshots $PROJECT_ROOT/../SENAGROS FARMOS/*.png — sidebar blanche a gauche, topbar avec FarmSwitcher, KPI cards colorees (vert/orange/bleu), fond gris clair.
 
 A la fin, mets a jour 11_rebuild_plan.md (cocher les livrables) et 16_decisions.md (noter les decisions).
 ```
@@ -105,9 +105,9 @@ A la fin, mets a jour 11_rebuild_plan.md (cocher les livrables) et 16_decisions.
 ### Phase 1 — Assets & Parcelles
 
 ```
-Je travaille sur le projet SenagrOS dans /Users/yusper/Downloads/SenagrOS/.
+Je travaille sur le projet SenagrOS dans $PROJECT_ROOT/.
 
-Lis ces fichiers de spec dans /Users/yusper/Downloads/SenagrOS/docs/ :
+Lis ces fichiers de spec dans ./docs/ :
 - 11_rebuild_plan.md (phase en cours)
 - 16_decisions.md (decisions passees)
 - 02_features.md (Module 3 : Assets)
@@ -146,9 +146,9 @@ A la fin, mets a jour 11_rebuild_plan.md et 16_decisions.md.
 ### Phase 2 — Logs & Semis enrichi
 
 ```
-Je travaille sur le projet SenagrOS dans /Users/yusper/Downloads/SenagrOS/.
+Je travaille sur le projet SenagrOS dans $PROJECT_ROOT/.
 
-Lis ces fichiers de spec dans /Users/yusper/Downloads/SenagrOS/docs/ :
+Lis ces fichiers de spec dans ./docs/ :
 - 11_rebuild_plan.md, 16_decisions.md
 - 02_features.md (Module 4 : Logs, section F4.1 a F4.4)
 - 03_data_model.md (table logs, log_assets, quantities, JSONB data par type de log)
@@ -194,9 +194,9 @@ A la fin, mets a jour 11_rebuild_plan.md et 16_decisions.md.
 ### Phase 3 — Intrants separes + Stock
 
 ```
-Je travaille sur le projet SenagrOS dans /Users/yusper/Downloads/SenagrOS/.
+Je travaille sur le projet SenagrOS dans $PROJECT_ROOT/.
 
-Lis ces fichiers de spec dans /Users/yusper/Downloads/SenagrOS/docs/ :
+Lis ces fichiers de spec dans ./docs/ :
 - 11_rebuild_plan.md, 16_decisions.md
 - 02_features.md (Module 5 : Intrants — Phyto/Ferti/Semences, section F5.1 et F5.2)
 - 03_data_model.md (assets type material/seed, JSONB data pour phyto/ferti/semence, table inventory, quantities avec inventory_adjustment)
@@ -235,9 +235,9 @@ A la fin, mets a jour 11_rebuild_plan.md et 16_decisions.md.
 ### Phase 4 — Fiches d'observation terrain
 
 ```
-Je travaille sur le projet SenagrOS dans /Users/yusper/Downloads/SenagrOS/.
+Je travaille sur le projet SenagrOS dans $PROJECT_ROOT/.
 
-Lis ces fichiers de spec dans /Users/yusper/Downloads/SenagrOS/docs/ :
+Lis ces fichiers de spec dans ./docs/ :
 - 11_rebuild_plan.md, 16_decisions.md
 - 02_features.md (Module 6 : Fiches d'observation — F6.1 a F6.4, TRES DETAILLE)
 - 03_data_model.md (table observation_forms, structure JSONB form_data et calculated pour chaque type)
@@ -308,9 +308,9 @@ A la fin, mets a jour 11_rebuild_plan.md et 16_decisions.md.
 ### Phase 5 — Calendrier cultural
 
 ```
-Je travaille sur le projet SenagrOS dans /Users/yusper/Downloads/SenagrOS/.
+Je travaille sur le projet SenagrOS dans $PROJECT_ROOT/.
 
-Lis ces fichiers de spec dans /Users/yusper/Downloads/SenagrOS/docs/ :
+Lis ces fichiers de spec dans ./docs/ :
 - 11_rebuild_plan.md, 16_decisions.md
 - 02_features.md (Module 7 : Calendrier cultural — F7.1 a F7.3)
 - 03_data_model.md (tables cultural_calendars et parcel_calendars, structure JSONB stages et stage_statuses)
@@ -346,9 +346,9 @@ A la fin, mets a jour 11_rebuild_plan.md et 16_decisions.md.
 ### Phase 6 — Plans & Campagnes
 
 ```
-Je travaille sur le projet SenagrOS dans /Users/yusper/Downloads/SenagrOS/.
+Je travaille sur le projet SenagrOS dans $PROJECT_ROOT/.
 
-Lis ces fichiers de spec dans /Users/yusper/Downloads/SenagrOS/docs/ :
+Lis ces fichiers de spec dans ./docs/ :
 - 11_rebuild_plan.md, 16_decisions.md
 - 02_features.md (Module 9 : Plans)
 - 03_data_model.md (tables plans, plan_logs)
@@ -373,9 +373,9 @@ A la fin, mets a jour 11_rebuild_plan.md et 16_decisions.md.
 ### Phase 7 — Rapports & Dashboard
 
 ```
-Je travaille sur le projet SenagrOS dans /Users/yusper/Downloads/SenagrOS/.
+Je travaille sur le projet SenagrOS dans $PROJECT_ROOT/.
 
-Lis ces fichiers de spec dans /Users/yusper/Downloads/SenagrOS/docs/ :
+Lis ces fichiers de spec dans ./docs/ :
 - 11_rebuild_plan.md, 16_decisions.md
 - 02_features.md (Module 12 : Rapports)
 - 04_api_spec.md (reportRouter)
@@ -403,9 +403,9 @@ A la fin, mets a jour 11_rebuild_plan.md et 16_decisions.md.
 ### Phase 8 — Finances
 
 ```
-Je travaille sur le projet SenagrOS dans /Users/yusper/Downloads/SenagrOS/.
+Je travaille sur le projet SenagrOS dans $PROJECT_ROOT/.
 
-Lis ces fichiers de spec dans /Users/yusper/Downloads/SenagrOS/docs/ :
+Lis ces fichiers de spec dans ./docs/ :
 - 11_rebuild_plan.md, 16_decisions.md
 - 02_features.md (Module 13 : Finances)
 - 05_ui_spec.md (pages finances, ventes, facturation, comptabilite)
@@ -430,9 +430,9 @@ A la fin, mets a jour 11_rebuild_plan.md et 16_decisions.md.
 ### Phase 9 — Offline / PWA
 
 ```
-Je travaille sur le projet SenagrOS dans /Users/yusper/Downloads/SenagrOS/.
+Je travaille sur le projet SenagrOS dans $PROJECT_ROOT/.
 
-Lis ces fichiers de spec dans /Users/yusper/Downloads/SenagrOS/docs/ :
+Lis ces fichiers de spec dans ./docs/ :
 - 11_rebuild_plan.md, 16_decisions.md
 - 02_features.md (F15.1 : Offline/PWA)
 - 06_decision_token.md (DT-013 et DT-OPEN-001)
@@ -458,9 +458,9 @@ A la fin, mets a jour 11_rebuild_plan.md et 16_decisions.md.
 ### Phase 10 — i18n & Polish
 
 ```
-Je travaille sur le projet SenagrOS dans /Users/yusper/Downloads/SenagrOS/.
+Je travaille sur le projet SenagrOS dans $PROJECT_ROOT/.
 
-Lis ces fichiers de spec dans /Users/yusper/Downloads/SenagrOS/docs/ :
+Lis ces fichiers de spec dans ./docs/ :
 - 11_rebuild_plan.md, 16_decisions.md
 - 02_features.md (F15.2 a F15.6)
 - 05_ui_spec.md (responsive, quick actions)
@@ -484,9 +484,9 @@ A la fin, mets a jour 11_rebuild_plan.md et 16_decisions.md.
 ### Phase 11 — Cooperatives & Multi-fermes
 
 ```
-Je travaille sur le projet SenagrOS dans /Users/yusper/Downloads/SenagrOS/.
+Je travaille sur le projet SenagrOS dans $PROJECT_ROOT/.
 
-Lis ces fichiers de spec dans /Users/yusper/Downloads/SenagrOS/docs/ :
+Lis ces fichiers de spec dans ./docs/ :
 - 11_rebuild_plan.md, 16_decisions.md
 - 02_features.md (F2.2 : Cooperatives)
 - 03_data_model.md (cooperatives, cooperative_members, cooperative_invitations)
@@ -511,9 +511,9 @@ A la fin, mets a jour 11_rebuild_plan.md et 16_decisions.md.
 ### Phase 12 — Marketplace
 
 ```
-Je travaille sur le projet SenagrOS dans /Users/yusper/Downloads/SenagrOS/.
+Je travaille sur le projet SenagrOS dans $PROJECT_ROOT/.
 
-Lis ces fichiers de spec dans /Users/yusper/Downloads/SenagrOS/docs/ :
+Lis ces fichiers de spec dans ./docs/ :
 - 11_rebuild_plan.md, 16_decisions.md
 - 02_features.md (Module 14 : Marketplace)
 - 05_ui_spec.md (pages marketplace, produits)

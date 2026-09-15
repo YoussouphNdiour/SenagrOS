@@ -5,20 +5,20 @@ Recoder depuis zero en utilisant les prompts .md comme guide. Chaque phase produ
 
 ---
 
-## Phase 0 : Scaffolding (1 session)
+## Phase 0 : Scaffolding (2-3 sessions)
 
 ### Livrables
-- [ ] `npx create-next-app@latest senagros --typescript --tailwind --app --src-dir`
-- [ ] Installer toutes les dependances (voir 01_project_overview.md)
-- [ ] Configurer Biome, Vitest, Playwright
-- [ ] Docker Compose (PostgreSQL 16 + PostGIS 3.4)
-- [ ] Schema Drizzle complet (toutes les tables de 03_data_model.md)
-- [ ] Migration initiale
-- [ ] Seed de base (taxonomies, cultures senegalaises, ravageurs, stades)
-- [ ] Auth.js v5 (login/register/logout)
-- [ ] Layout principal (DashboardShell, Sidebar, Topbar, BottomNav)
-- [ ] CLAUDE.md avec instructions projet
-- [ ] Composants UI de base (Button, Card, Input, Select, Modal, DataTable, KpiCard)
+- [x] `npx create-next-app@latest senagros --typescript --tailwind --app --src-dir`
+- [x] Installer toutes les dependances (voir 01_project_overview.md)
+- [x] Configurer Biome, Vitest, Playwright
+- [x] Docker Compose (PostgreSQL 16 + PostGIS 3.4)
+- [x] Schema Drizzle complet (toutes les tables de 03_data_model.md)
+- [x] Migration initiale
+- [x] Seed de base (taxonomies, cultures senegalaises, ravageurs, stades)
+- [x] Auth.js v5 (login/register/logout)
+- [x] Layout principal (DashboardShell, Sidebar, Topbar, BottomNav)
+- [x] CLAUDE.md avec instructions projet
+- [x] Composants UI de base (Button, Card, Input, Select, Modal, DataTable, KpiCard)
 
 ### Validation
 ```bash
@@ -32,15 +32,15 @@ pnpm test         # Tests de base passent
 ## Phase 1 : Assets & Parcelles (1-2 sessions)
 
 ### Livrables
-- [ ] CRUD Assets complet (list, detail, create, edit, archive)
-- [ ] Page parcelles avec KPI cards
-- [ ] Page animaux avec KPI cards
-- [ ] Page equipements (parc materiel)
-- [ ] Formulaire creation parcelle (modal, avec tous les champs dont ecartements)
-- [ ] Carte MapLibre avec parcelles (polygones)
-- [ ] Filtres, recherche, pagination
-- [ ] Tests unitaires composants
-- [ ] Tests E2E : creation/edition/archivage d'un asset
+- [x] CRUD Assets complet (list, detail, create, edit, archive)
+- [x] Page parcelles avec KPI cards
+- [x] Page animaux avec KPI cards
+- [x] Page equipements (parc materiel)
+- [x] Formulaire creation parcelle (modal, avec tous les champs dont ecartements)
+- [x] Carte MapLibre avec parcelles (polygones)
+- [x] Filtres, recherche, pagination
+- [x] Tests unitaires composants
+- [x] Tests E2E : creation/edition/archivage d'un asset
 
 ### Validation agronomes
 Montrer : creation d'une parcelle P-06 avec surface, culture, dates, ecartements
@@ -199,7 +199,13 @@ Montrer : creer un calendrier haricot vert, l'assigner a P-06, voir la timeline
 | 3 | 02 (Module 5), 03 (material), 04 (inputRouter), 05 (pages intrants) |
 | 4 | 02 (Module 6), 03 (observation_forms), 04 (observationRouter), 05 (formulaires observation) |
 | 5 | 02 (Module 7), 03 (calendars), 04 (calendarRouter), 05 (timeline) |
-| 6-12 | Sections correspondantes |
+| 6 | 02 (Module 9), 03 (plans, plan_logs), 04 (planRouter), 05 (pages plans) |
+| 7 | 02 (Module 12), 04 (reportRouter), 05 (dashboard, pages rapports), 12 (screenshot farmos-dashboard.png) |
+| 8 | 02 (Module 13), 05 (pages finances, ventes, facturation, comptabilite), 12 (screenshots farmos-ventes.png, farmos-finances.png) |
+| 9 | 02 (F15.1), 06 (DT-013, DT-OPEN-001) |
+| 10 | 02 (F15.2 a F15.6), 05 (responsive, quick actions) |
+| 11 | 02 (F2.2), 03 (cooperatives, cooperative_members, cooperative_invitations), 04 (cooperativeRouter) |
+| 12 | 02 (Module 14), 05 (pages marketplace, produits), 12 (screenshots farmos-marketplace.png) |
 
 ---
 

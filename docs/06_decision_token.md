@@ -62,6 +62,7 @@
 - **Raison** : Differentes fermes/organisations (SCL, GIE, entreprises) utilisent des fiches differentes. Structure JSONB `form_data` configurable
 - **Alternative rejetee** : Tables relationnelles distinctes par type de fiche
 - **Impact** : Table `observation_forms` avec `form_type` + `form_data JSONB`
+- **Clarification** : Les observations utilisent une table `observation_forms` avec un champ `form_type` discriminant et un champ `data JSONB` pour les donnees specifiques. Les procedures tRPC sont typees par form_type (density, stage, pest, quality) mais le stockage reste JSONB. Le typage Zod cote application garantit la validation des donnees specifiques a chaque form_type
 
 ### DT-011 : Calendrier cultural par culture ET par parcelle
 - **Date** : 2026-09-01
@@ -86,18 +87,24 @@
 ## Decisions a prendre (ouvertes)
 
 ### DT-OPEN-001 : Strategie de sync offline
+> ⚠️ Bloquant pour Phase 9 (Offline/PWA) — impacte `fileRouter` et le mode PWA
+
 Options :
 - a) Queue simple (store mutations, replay au retour reseau)
 - b) CRDT (Conflict-free Replicated Data Types)
 - c) IndexedDB + sync periodique
 
 ### DT-OPEN-002 : Storage fichiers
+> ⚠️ Bloquant pour Phase 9 (Offline/PWA) — impacte `fileRouter` et le mode PWA
+
 Options :
 - a) S3/MinIO (scalable)
 - b) Local filesystem + Docker volume
 - c) Supabase Storage
 
 ### DT-OPEN-003 : Notifications push
+> ⚠️ Bloquant pour Phase 9 (Offline/PWA) — impacte le mode push et le ServiceWorker
+
 Options :
 - a) Web Push API (PWA native)
 - b) SMS via API locale (Orange/Free Senegal)

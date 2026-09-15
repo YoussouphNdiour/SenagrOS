@@ -22,7 +22,7 @@ farms
 ├── description     TEXT
 ├── latitude        VARCHAR(20)
 ├── longitude       VARCHAR(20)
-├── boundary        GEOMETRY (PostGIS polygon)
+├── boundary        GEOMETRY (PostGIS polygon)  ⚠️ Migration prevue : colonne PostGIS a ajouter quand l'extension sera configuree
 ├── timezone        VARCHAR(50) DEFAULT 'Africa/Dakar'
 ├── currency        VARCHAR(3) DEFAULT 'XOF'
 ├── locale          VARCHAR(5) DEFAULT 'fr'
@@ -39,14 +39,16 @@ users
 ├── email           VARCHAR(255) NOT NULL UNIQUE
 ├── name            VARCHAR(255) NOT NULL
 ├── password_hash   VARCHAR(255)
-├── role            VARCHAR(20) DEFAULT 'worker'  -- owner|manager|worker|viewer
+├── role            ENUM user_role DEFAULT 'worker'  -- owner|manager|worker|viewer
 ├── farm_id         UUID FK → farms.id
 ├── locale          VARCHAR(5) DEFAULT 'fr'
 ├── avatar_url      TEXT
 ├── is_active       BOOLEAN DEFAULT true
 ├── created_at      TIMESTAMP DEFAULT NOW()
-└── updated_at      TIMESTAMP
+└── updated_at      TIMESTAMP DEFAULT NOW()
 ```
+
+> ⚠️ Migration prevue : `role` et `farm_id` seront retires au profit de `farm_members` pour le support multi-ferme (voir 16_decisions.md).
 
 ### 3. `assets`
 
@@ -57,7 +59,7 @@ assets
 │                   (land|plant|animal|equipment|structure|material|sensor|water|seed|product|compost|group)
 ├── name            VARCHAR(255) NOT NULL
 ├── status          VARCHAR(20) DEFAULT 'active'  -- active|inactive|archived
-├── geometry        GEOMETRY (PostGIS)
+├── geometry        GEOMETRY (PostGIS)  ⚠️ Migration prevue : colonne PostGIS a ajouter quand l'extension sera configuree
 ├── parent_id       UUID (self-ref, hierarchie)
 ├── farm_id         UUID FK → farms.id NOT NULL
 ├── notes           TEXT
@@ -160,7 +162,6 @@ logs
 ├── name            VARCHAR(255) NOT NULL
 ├── status          VARCHAR(20) DEFAULT 'pending'  -- pending|done|cancelled
 ├── timestamp       TIMESTAMP NOT NULL
-├── geometry        GEOMETRY (PostGIS)
 ├── farm_id         UUID FK → farms.id NOT NULL
 ├── notes           TEXT
 ├── data            JSONB DEFAULT {}
@@ -168,10 +169,12 @@ logs
 ├── is_movement     BOOLEAN DEFAULT false
 ├── equipment_ids   JSONB DEFAULT []   -- UUIDs des machines utilisees
 ├── location_ids    JSONB DEFAULT []
-├── worker_ids      JSONB DEFAULT []   -- NOUVEAU : UUIDs des employes assignes
+├── worker_ids      JSONB DEFAULT []   -- UUIDs des employes assignes
 ├── created_at      TIMESTAMP DEFAULT NOW()
 └── updated_at      TIMESTAMP DEFAULT NOW()
 ```
+
+> ⚠️ Migration prevue : `archived_at` sera ajoute pour le soft-delete. `geometry` PostGIS sera ajoute pour la geolocalisation.
 
 **INDEX** : `idx_logs_type_timestamp` sur (type, timestamp)
 
@@ -248,6 +251,8 @@ quantities
 └── inventory_asset_id      UUID FK → assets.id
 ```
 
+> ⚠️ Migration prevue : `numerator` — passage de BIGINT a NUMERIC(15,4) pour supporter les decimales. `created_at` et `updated_at` seront ajoutes pour la tracabilite.
+
 ### 7. `plans`
 
 ```
@@ -285,7 +290,8 @@ inventory
 ├── unit            VARCHAR(20) NOT NULL
 ├── log_id          UUID FK → logs.id
 ├── farm_id         UUID FK → farms.id NOT NULL
-└── created_at      TIMESTAMP DEFAULT NOW()
+├── created_at      TIMESTAMP DEFAULT NOW()
+└── updated_at      TIMESTAMP DEFAULT NOW()  ⚠️ Migration prevue : colonne absente du code actuel
 ```
 
 ### 10. `taxonomies`
@@ -299,6 +305,7 @@ taxonomies
 ├── parent_id       UUID (hierarchie)
 ├── farm_id         UUID FK → farms.id (NULL = global)
 ├── data            JSONB DEFAULT {}
+├── created_at      TIMESTAMP DEFAULT NOW()  ⚠️ Migration prevue : colonne absente du code actuel
 └── updated_at      TIMESTAMP
 ```
 
@@ -355,6 +362,8 @@ farm_members
 ├── joined_at       TIMESTAMP DEFAULT NOW()
 └── UNIQUE (farm_id, user_id)
 ```
+
+> ⚠️ Role `technician` a ajouter dans une migration future.
 
 ### 14. `farm_invitations`
 
@@ -428,11 +437,162 @@ cooperative_invitations
 └── created_at      TIMESTAMP DEFAULT NOW() NOT NULL
 ```
 
+### 19. `notifications`
+
+> 📋 A implementer — cette table n'existe pas encore dans le code.
+
+```
+notifications (prevue)
+├── id              UUID PK
+├── user_id         UUID FK → users.id NOT NULL
+├── farm_id         UUID FK → farms.id NOT NULL
+├── type            VARCHAR(50) NOT NULL  -- stock_alert|calendar_alert|task_overdue|system
+├── title           TEXT NOT NULL
+├── message         TEXT NOT NULL
+├── read_at         TIMESTAMPTZ
+└── created_at      TIMESTAMPTZ DEFAULT NOW()
+```
+
+### 20. `transactions` (finance)
+
+> Voir `src/server/db/schema/finance.ts`.
+
+```
+transactions
+├── id              UUID PK
+├── farm_id         UUID FK → farms.id NOT NULL
+├── type            VARCHAR(20) NOT NULL  -- sale|purchase|expense|income
+├── category        VARCHAR(50)
+├── description     VARCHAR(500) NOT NULL
+├── amount          DECIMAL(15,2) NOT NULL
+├── date            TIMESTAMP NOT NULL
+├── client_name     VARCHAR(255)
+├── product_name    VARCHAR(255)
+├── quantity        DECIMAL(15,4)
+├── unit_price      DECIMAL(15,2)
+├── unit            VARCHAR(20)
+├── payment_method  VARCHAR(30)  -- cash|bank|mobile_money
+├── status          VARCHAR(20) DEFAULT 'completed'  -- pending|completed|cancelled
+├── notes           TEXT
+├── data            JSONB DEFAULT {}
+├── created_at      TIMESTAMP DEFAULT NOW()
+└── updated_at      TIMESTAMP DEFAULT NOW()
+```
+
+**INDEX** : `transactions_farm_id_idx`, `transactions_type_idx`, `transactions_date_idx`
+
+### 21. `invoices` (finance)
+
+> Voir `src/server/db/schema/finance.ts`.
+
+```
+invoices
+├── id              UUID PK
+├── farm_id         UUID FK → farms.id NOT NULL
+├── invoice_number  VARCHAR(50) NOT NULL
+├── type            VARCHAR(20) NOT NULL  -- devis|proforma|facture
+├── client_name     VARCHAR(255) NOT NULL
+├── client_email    VARCHAR(255)
+├── client_phone    VARCHAR(30)
+├── client_address  TEXT
+├── items           JSONB DEFAULT []  -- [{productName, quantity, unitPrice, total}]
+├── total_amount    DECIMAL(15,2) NOT NULL
+├── tax_amount      DECIMAL(15,2) DEFAULT '0'
+├── status          VARCHAR(20) DEFAULT 'draft'  -- draft|sent|paid|overdue|cancelled
+├── issue_date      TIMESTAMP NOT NULL
+├── due_date        TIMESTAMP
+├── paid_at         TIMESTAMP
+├── notes           TEXT
+├── data            JSONB DEFAULT {}
+├── created_at      TIMESTAMP DEFAULT NOW()
+└── updated_at      TIMESTAMP DEFAULT NOW()
+```
+
+**INDEX** : `invoices_farm_id_idx`, `invoices_type_idx`, `invoices_status_idx`
+
+### 22. `journal_entries` (finance)
+
+> Voir `src/server/db/schema/finance.ts`.
+
+```
+journal_entries
+├── id              UUID PK
+├── farm_id         UUID FK → farms.id NOT NULL
+├── date            TIMESTAMP NOT NULL
+├── label           VARCHAR(500) NOT NULL
+├── debit           DECIMAL(15,2) DEFAULT '0'
+├── credit          DECIMAL(15,2) DEFAULT '0'
+├── category        VARCHAR(50)
+├── account         VARCHAR(100)  -- ex: Caisse, Banque, Ventes, Achats
+├── transaction_id  UUID FK → transactions.id
+├── invoice_id      UUID FK → invoices.id
+├── reference       VARCHAR(100)
+├── notes           TEXT
+└── created_at      TIMESTAMP DEFAULT NOW()
+```
+
+**INDEX** : `journal_entries_farm_id_idx`, `journal_entries_date_idx`
+
+### 23. `marketplace_products` (marketplace)
+
+> Voir `src/server/db/schema/marketplace.ts`.
+
+```
+marketplace_products
+├── id                  UUID PK
+├── farm_id             UUID FK → farms.id NOT NULL
+├── seller_id           UUID FK → users.id NOT NULL
+├── asset_id            UUID  -- lien optionnel vers un asset de type "product"
+├── name                VARCHAR(255) NOT NULL
+├── description         TEXT
+├── category            VARCHAR(50) NOT NULL  -- cereales|legumes|fruits|tubercules|oleagineux|autres
+├── photo_url           VARCHAR(500)
+├── price_per_kg        DECIMAL(15,2) NOT NULL
+├── quantity_available  DECIMAL(15,2) NOT NULL
+├── unit                VARCHAR(20) DEFAULT 'kg'
+├── location            VARCHAR(255)  -- ex: "Dakar, SN"
+├── is_bio              BOOLEAN DEFAULT false
+├── is_published        BOOLEAN DEFAULT true
+├── data                JSONB DEFAULT {}
+├── created_at          TIMESTAMP DEFAULT NOW()
+├── updated_at          TIMESTAMP DEFAULT NOW()
+└── archived_at         TIMESTAMP  -- soft delete
+```
+
+**INDEX** : `marketplace_products_farm_id_idx`, `marketplace_products_category_idx`, `marketplace_products_is_published_idx`
+
+### 24. `marketplace_orders` (marketplace)
+
+> Voir `src/server/db/schema/marketplace.ts`.
+
+```
+marketplace_orders
+├── id              UUID PK
+├── product_id      UUID FK → marketplace_products.id NOT NULL
+├── buyer_id        UUID FK → users.id NOT NULL
+├── buyer_farm_id   UUID FK → farms.id NOT NULL
+├── seller_farm_id  UUID FK → farms.id NOT NULL
+├── quantity        DECIMAL(15,2) NOT NULL
+├── unit_price      DECIMAL(15,2) NOT NULL
+├── total_amount    DECIMAL(15,2) NOT NULL
+├── status          VARCHAR(20) DEFAULT 'pending' NOT NULL  -- pending|confirmed|shipped|delivered|cancelled
+├── delivery_address TEXT
+├── delivery_method VARCHAR(30)  -- pickup|delivery
+├── notes           TEXT
+├── data            JSONB DEFAULT {}
+├── created_at      TIMESTAMP DEFAULT NOW()
+└── updated_at      TIMESTAMP DEFAULT NOW()
+```
+
+**INDEX** : `marketplace_orders_product_id_idx`, `marketplace_orders_buyer_id_idx`, `marketplace_orders_seller_farm_id_idx`, `marketplace_orders_status_idx`
+
 ---
 
 ## NOUVELLES TABLES (V3 — feedback agronomes)
 
-### 19. `cultural_calendars`
+> Les tables `cultural_calendars` et `parcel_calendars` sont implementees dans `src/server/db/schema/calendars.ts`.
+
+### 25. `cultural_calendars`
 
 ```
 cultural_calendars
@@ -461,7 +621,7 @@ cultural_calendars
 ]
 ```
 
-### 20. `parcel_calendars` (calendrier par parcelle)
+### 26. `parcel_calendars` (calendrier par parcelle)
 
 ```
 parcel_calendars
@@ -486,7 +646,7 @@ parcel_calendars
 ]
 ```
 
-### 21. `observation_forms` (fiches d'observation generiques)
+### 27. `observation_forms` (fiches d'observation generiques)
 
 ```
 observation_forms
@@ -603,7 +763,7 @@ observation_forms
 ## Diagramme des relations
 
 ```
-farms ──1:N── users
+farms ──N:M── users (via farm_members)
 farms ──1:N── assets
 farms ──1:N── logs
 farms ──1:N── plans
@@ -611,6 +771,10 @@ farms ──1:N── inventory
 farms ──1:N── taxonomies
 farms ──1:N── cultural_calendars
 farms ──1:N── parcel_calendars
+farms ──1:N── transactions
+farms ──1:N── invoices
+farms ──1:N── journal_entries
+farms ──1:N── marketplace_products
 farms ──N:M── cooperatives (via cooperative_members)
 
 assets ──N:M── logs (via log_assets)
@@ -625,8 +789,17 @@ assets (land) ──1:N── parcel_calendars
 
 users ──1:N── observation_forms (observer_id)
 users ──1:N── revisions
+users ──1:N── marketplace_products (seller_id)
+users ──1:N── marketplace_orders (buyer_id)
+
+marketplace_products ──1:N── marketplace_orders
+transactions ──1:N── journal_entries
+invoices ──1:N── journal_entries
+
+farms ──1:N── notifications (📋 a implementer)
+users ──1:N── notifications (📋 a implementer)
 ```
 
 ---
 
-*Ce fichier definit la source de verite pour le schema de base de donnees. Toute modification doit d'abord etre faite ici avant d'etre traduite en schema Drizzle.*
+*La source de verite est le code Drizzle dans `src/server/db/schema/`. Ce fichier documente le schema et signale les migrations prevues. En cas de divergence, le code fait foi.*

@@ -5,32 +5,34 @@ Developpement de SenagrOS, systeme de gestion d'exploitation agricole (FMIS) en 
 
 ## Perimetre fonctionnel
 
-### Inclus dans le MVP (P0)
-1. Authentification et gestion des utilisateurs (4 roles)
-2. Gestion multi-fermes avec FarmSwitcher
-3. CRUD Assets — 12 types (parcelle, culture, animal, equipement, materiel, capteur, eau, semence, produit, compost, groupe, structure)
-4. CRUD Logs — 12 types (activite, observation, input, recolte, semis, repiquage, naissance, maintenance, medical, labo, mouvement, irrigation)
-5. Semis enrichi : type (manuel/machine), selection machine, profondeur, ecartements
-6. Intrants separes en 3 categories (phyto/ferti/semence) avec sous-categories et gestion de stock
-7. Fiches d'observation terrain : densite de levee, suivi stade cultural, maladies-ravageurs, agreage pre-recolte
-8. Calendrier cultural : templates par culture/variete + instances par parcelle
-9. Parc materiel : catalogue machines + assignation activite→machine→employe
-10. Carte interactive MapLibre avec parcelles PostGIS
-11. Plans / campagnes avec suivi
-12. Stocks et inventaire par categorie
-13. Mode offline (PWA avec ServiceWorker, sync mutations)
-14. i18n : Francais, English, Wolof
-15. Design TailAdmin (palette verte, KPI cards, sidebar, formulaires modaux)
+### Implemente (Done)
+1. Authentification et gestion des utilisateurs (4 roles) — Phase 0
+2. Gestion multi-fermes avec FarmSwitcher — Phase 0
+3. CRUD Assets — 12 types (parcelle, culture, animal, equipement, materiel, capteur, eau, semence, produit, compost, groupe, structure) — Phase 1
+4. CRUD Logs — 12 types (activite, observation, input, recolte, semis, repiquage, naissance, maintenance, medical, labo, mouvement, irrigation) — Phase 2
+5. Semis enrichi : type (manuel/machine), selection machine, profondeur, ecartements — Phase 2
+6. Intrants separes en 3 categories (phyto/ferti/semence) avec sous-categories et gestion de stock — Phase 3
+7. Fiches d'observation terrain : densite de levee, suivi stade cultural, maladies-ravageurs, agreage pre-recolte — Phase 4
+8. Calendrier cultural : templates par culture/variete + instances par parcelle — Phase 5
+9. Parc materiel : catalogue machines + assignation activite→machine→employe — Phase 2
+10. Carte interactive MapLibre avec parcelles PostGIS — Phase 1
+11. Plans / campagnes avec suivi — Phase 6
+12. Stocks et inventaire par categorie — Phase 3
+13. Rapports et tableaux de bord avec graphiques — Phase 7
+14. Finances (ventes, achats, facturation, comptabilite simplifiee) — Phase 8
+15. Meteo (Open-Meteo / ANACIM) — Phase 7
+16. Export CSV/Excel/PDF — Phase 7
+17. Design TailAdmin (palette verte, KPI cards, sidebar, formulaires modaux) — Phase 0
+
+### Reste a faire (P0)
+18. Mode offline (PWA avec ServiceWorker, sync mutations) — Phase 9
+19. i18n : Francais, English, Wolof — Phase 10
 
 ### Inclus post-MVP (P1)
-16. Rapports et tableaux de bord avec graphiques
-17. Finances (ventes, achats, facturation, comptabilite simplifiee)
-18. Cooperatives multi-fermes
-19. Meteo (Open-Meteo / ANACIM)
-20. Export CSV/Excel/PDF
+20. Cooperatives multi-fermes — Phase 11
 
 ### Hors scope initial (P2)
-21. Marketplace
+21. Marketplace — Phase 12
 22. API publique REST
 23. Capteurs IoT
 24. Integration ERP Odoo

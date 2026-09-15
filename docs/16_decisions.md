@@ -47,6 +47,10 @@ Chaque session ajoute ses decisions ici. Ne pas supprimer les entrees precedente
 
 ---
 
+## SESSION-002 — (non documentee — Phase 0/1 scaffold initial)
+
+---
+
 ## SESSION-003 — 2026-09-02 — Phase 2 : Logs & Semis enrichi
 
 **Decisions prises :**

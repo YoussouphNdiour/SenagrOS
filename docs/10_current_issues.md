@@ -1,5 +1,7 @@
 # 10 - Current Issues
 
+> **Derniere mise a jour** : 2026-09-11
+
 ## Issues identifiees lors du feedback agronomes (2026-09-01)
 
 ### ISS-001 : Semis — champs manquants
@@ -47,7 +49,7 @@
 ### ISS-007 : Pas de validation JSONB cote DB
 - **Priorite** : P2
 - **Description** : Les champs JSONB `data` n'ont pas de contraintes SQL — seule la validation Zod protege
-- **Solution** : Acceptable si Zod est systematique. Ajouter des CHECK constraints PostgreSQL si critique
+- **Solution** : Acceptable si Zod est systematique. Ajouter des CHECK constraints PostgreSQL si critique (voir `06_decision_token.md` (Decision Tokens = registre des decisions d'architecture) et `16_decisions.md`)
 - **Statut** : Accepte comme pattern
 
 ### ISS-008 : Tests E2E a re-ecrire

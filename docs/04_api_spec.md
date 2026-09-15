@@ -3,7 +3,8 @@
 ## Architecture API
 
 - **tRPC v11** pour toutes les operations CRUD et queries
-- **Server Actions** (Next.js) pour les mutations de formulaires
+- **Server Actions** (Next.js) pour les mutations de formulaires et l'authentification (Auth.js v5)
+- **Route API Next.js** pour l'upload de fichiers (`POST /api/upload`, multipart/form-data)
 - **Type-safe end-to-end** : schemas Zod partages client/serveur
 
 ---
@@ -12,143 +13,162 @@
 
 - Router : `{module}Router` (ex: `assetRouter`, `logRouter`)
 - Procedure query : `{entity}.list`, `{entity}.getById`, `{entity}.search`
-- Procedure mutation : `{entity}.create`, `{entity}.update`, `{entity}.delete`, `{entity}.archive`
+- Procedure mutation : `{entity}.create`, `{entity}.update`, `{entity}.archive`
 - Input : schema Zod (`z.object({...})`)
 - Output : type infere Drizzle
+- **Soft-delete** : les entites principales (assets, logs, plans) utilisent `archived_at` au lieu d'un DELETE physique
+
+---
+
+## Permissions / Roles
+
+Trois roles principaux : **owner** (proprietaire), **manager** (gestionnaire), **worker** (travailleur).
+
+| Niveau d'acces | Roles autorises |
+|---|---|
+| Lecture seule (list, getById, search) | owner, manager, worker |
+| Ecriture (create, update) | owner, manager |
+| Archive / Restore | owner, manager |
+| Gestion membres (invite, updateRole, remove) | owner |
+| Administration ferme (create, update ferme) | owner |
+
+> Chaque router herite de `protectedProcedure` qui exige une session authentifiee. Les restrictions par role sont precisees dans chaque section ci-dessous.
+
+---
+
+## Pagination
+
+Pattern standard pour toutes les procedures `.list` :
+```typescript
+Input:  { page?: number, limit?: number }  // default page=1, limit=25
+Output: { items: T[], total: number, page: number, pages: number }
+```
+
+> **Note** : dans le code actuel, les routers pagines (`input`, `cooperative`, `finance`, `calendar`) retournent `pages` (nombre total de pages = `Math.ceil(total / limit)`). Le `marketplaceRouter` fait exception : il retourne `limit` au lieu de `pages` (voir section 14). Certains routers ne paginent pas du tout (ex: `farmMember.list`, `cooperative.members`, `quantity.listByLog`).
 
 ---
 
 ## Routers tRPC
 
-### 1. `authRouter`
+### 0. `health` (inline dans `_app.ts`)
 ```
-auth.register       POST  { email, name, password, locale? }
-auth.login           POST  { email, password }
-auth.logout          POST  {}
-auth.resetPassword   POST  { email }
-auth.changePassword  POST  { currentPassword, newPassword }
-auth.me              GET   {} → User
+health               GET   {} → { status: 'ok' }
 ```
+Procedure publique (`publicProcedure`) — pas d'authentification requise. Utilisee pour verifier que le serveur tRPC est operationnel.
 
-### 2. `farmRouter`
+### 1. `farmRouter`
+
+> **Note** : La gestion des fermes est actuellement geree via Server Actions Auth.js et le `farmMemberRouter`. Les operations `farm.create`, `farm.update`, `farm.switch` sont des Server Actions, pas des procedures tRPC.
+
 ```
-farm.list            GET   {} → Farm[]
-farm.getById         GET   { id } → Farm
+-- Server Actions (src/app/ actions) --
 farm.create          POST  { name, description?, latitude?, longitude?, boundary?, timezone?, currency?, locale?, seasonType? }
 farm.update          POST  { id, ...partialFarm }
-farm.delete          POST  { id }
 farm.switch          POST  { farmId }  -- change la ferme active en session
 ```
+Requires: owner
 
-### 3. `assetRouter`
+### 2. `assetRouter`
 ```
 asset.list           GET   { farmId, type?, status?, search?, page?, limit? } → { items: Asset[], total, page, pages }
 asset.getById        GET   { id } → Asset & { logs: Log[], children: Asset[], files: FileRecord[] }
 asset.create         POST  { type, name, farmId, geometry?, parentId?, notes?, data?, flags?, isLocation?, isFixed?, idTags? }
 asset.update         POST  { id, ...partialAsset }
-asset.archive        POST  { id }  -- set archived_at
-asset.restore        POST  { id }  -- unset archived_at
+asset.archive        POST  { id }  -- Soft-delete : met a jour archived_at
+asset.restore        POST  { id }  -- Annule le soft-delete : remet archived_at a null
 asset.search         GET   { farmId, query, type? } → Asset[]
 ```
+Requires: owner, manager (lecture: owner, manager, worker)
 
-### 4. `logRouter`
+### 3. `logRouter`
 ```
 log.list             GET   { farmId, type?, status?, dateFrom?, dateTo?, assetId?, search?, page?, limit? } → { items: Log[], total, page, pages }
 log.getById          GET   { id } → Log & { assets: Asset[], quantities: Quantity[], observationForm?: ObservationForm }
 log.create           POST  { type, name, farmId, timestamp, status?, geometry?, notes?, data?, flags?, equipmentIds?, workerIds?, assetIds?: { assetId, role }[], quantities?: NewQuantity[] }
 log.update           POST  { id, ...partialLog }
-log.delete           POST  { id }
+log.archive          POST  { id }  -- Soft-delete : met a jour archived_at
 log.complete         POST  { id }  -- status = 'done'
 ```
+Requires: owner, manager (lecture: owner, manager, worker)
 
-### 5. `quantityRouter`
+### 4. `quantityRouter`
 ```
 quantity.listByLog   GET   { logId } → Quantity[]
 quantity.create      POST  { logId, measure, numerator, denominator?, unit, label?, inventoryAdjustment?, inventoryAssetId? }
 quantity.update      POST  { id, ...partialQuantity }
-quantity.delete      POST  { id }
+quantity.delete      POST  { id }  -- Suppression physique — les quantites sont des sous-entites de logs, pas des entites autonomes
 ```
+Requires: owner, manager
 
-### 6. `planRouter`
+### 5. `planRouter`
 ```
-plan.list            GET   { farmId, type?, status?, page?, limit? } → { items: Plan[], total }
+plan.list            GET   { farmId, type?, status?, search?, page?, limit? } → { items: Plan[], total, page, pages }
 plan.getById         GET   { id } → Plan & { logs: Log[] }
+plan.kpis            GET   {} → { total, active, completed, cancelled }
 plan.create          POST  { name, type, farmId, season?, startDate?, endDate?, notes? }
 plan.update          POST  { id, ...partialPlan }
-plan.delete          POST  { id }
+plan.archive         POST  { id }  -- Soft-delete : met a jour archived_at
 plan.addLog          POST  { planId, logId }
 plan.removeLog       POST  { planId, logId }
 ```
+Requires: owner, manager (lecture: owner, manager, worker)
 
-### 7. `inventoryRouter`
+### 6. `inventoryRouter`
 ```
-inventory.list       GET   { farmId, category?, search?, page?, limit? } → { items: InventoryItem[], total }
+inventory.list       GET   { farmId, category?, search?, page?, limit? } → { items: InventoryItem[], total, page, pages }
 inventory.getByAsset GET   { assetId } → InventoryDetail & { movements: Movement[] }
 inventory.adjust     POST  { assetId, quantity, unit, logId?, type: 'increment'|'decrement'|'reset' }
 inventory.alerts     GET   { farmId } → { asset: Asset, current: number, threshold: number }[]
 ```
+Requires: owner, manager (lecture: owner, manager, worker)
 
-### 8. `inputRouter` (NOUVEAU — intrants separes)
+### 7. `inputRouter` (intrants separes)
 ```
-input.listPhyto      GET   { farmId, subcategory?, search? } → Asset[] (type=material, input_category=phyto)
-input.listFerti      GET   { farmId, subcategory?, search? } → Asset[]
-input.listSemence    GET   { farmId, subcategory?, search? } → Asset[]
+input.listPhyto      GET   { subcategory?, search?, page?, limit? } → { items: Asset[], total, page, pages } (type='material', input_category='phyto')
+input.listFerti      GET   { subcategory?, search?, page?, limit? } → { items: Asset[], total, page, pages } (type='material', input_category='ferti')
+input.listSemence    GET   { subcategory?, search?, page?, limit? } → { items: Asset[], total, page, pages } (type='seed')
 input.create         POST  { name, farmId, inputCategory: 'phyto'|'ferti'|'semence', inputSubcategory, ...specificFields }
 input.update         POST  { id, ...partialInput }
 input.getStock       GET   { assetId } → { current: number, unit: string, movements: Movement[] }
 input.applyToLog     POST  { logId, assetId, dose, doseUnit, method?, machineId?, treatedSurfaceHa? }
 ```
+Requires: owner, manager
 
-### 9. `observationRouter` (NOUVEAU — fiches terrain)
+### 8. `observationRouter` (fiches terrain)
 ```
-observation.list             GET   { farmId, formType?, assetId?, dateFrom?, dateTo?, page?, limit? } → { items: ObservationForm[], total }
+observation.list             GET   { farmId, formType?, assetId?, dateFrom?, dateTo?, page?, limit? } → { items: ObservationForm[], total, page, pages }
 observation.getById          GET   { id } → ObservationForm
 observation.createDensity    POST  { logId, assetId, cropType, variety, repetitions: { rep, plantCount }[], theoreticalDensity, sampleAreaM2, observerId, observationDate, startTime?, endTime?, observedSurfaceHa?, observerRemarks?, supervisorRemarks? }
 observation.createStage      POST  { logId, assetId, cropType, variety, stageReached, dateReached, observerId, observationDate, ... }
 observation.createPestDisease POST { logId, assetId, cropType, variety, numTargets, treatmentThreshold, observations: { pestOrDisease, category, targets: number[] }[], observerId, ... }
 observation.createGrading    POST  { logId, assetId, cropType, variety, sampleSize, totalLengths, marketableLengths, majorDefects: { type, count }[], maturityIndex, estimatedYieldPerHa?, estimatedHarvestDate?, observerId, ... }
 observation.update           POST  { id, ...partialObservation }
-observation.delete           POST  { id }
+observation.archive          POST  { id }  -- Soft-delete : met a jour archived_at
 ```
+Requires: owner, manager (lecture: owner, manager, worker)
 
-### 10. `calendarRouter` (NOUVEAU — calendrier cultural)
+### 9. `calendarRouter` (calendrier cultural)
 ```
-calendar.listTemplates       GET   { farmId } → CulturalCalendar[]
+-- Templates --
+calendar.listTemplates       GET   { farmId, cropType?, search?, page?, limit? } → { items: CulturalCalendar[], total, page, pages }
+calendar.getTemplate         GET   { id } → CulturalCalendar
 calendar.createTemplate      POST  { farmId, name, cropType, variety?, stages: Stage[], totalDays?, notes? }
 calendar.updateTemplate      POST  { id, ...partialCalendar }
-calendar.deleteTemplate      POST  { id }
+calendar.deleteTemplate      POST  { id }  -- Suppression physique — les templates sont des modeles de reference, pas des entites metier avec historique. Aucune protection si des parcelCalendars y font reference.
 
-calendar.listParcelCalendars GET   { farmId, assetId?, status?, page?, limit? } → ParcelCalendar[]
+-- Parcelles assignees --
+calendar.listParcelCalendars GET   { farmId, assetId?, status?, dateFrom?, dateTo?, page?, limit? } → { items: ParcelCalendar[], total, page, pages }
 calendar.assignToParcel      POST  { farmId, assetId, calendarId, sowingDate, notes? }
 calendar.updateStageStatus   POST  { parcelCalendarId, stageName, actualDate, status: 'completed'|'skipped' }
-calendar.getTimeline         GET   { farmId, dateFrom?, dateTo? } → TimelineEntry[]
-```
+calendar.getTimeline         GET   { farmId, status?, dateFrom?, dateTo?, cropType? } → TimelineEntry[]
 
-### 11. `machineRouter` (NOUVEAU — parc materiel)
+-- Utilitaires --
+calendar.kpis                GET   {} → { totalTemplates, totalAssigned, active, completed }
+calendar.listParcels         GET   {} → { id, name }[]  -- Retourne un tableau brut (pas de pagination, pas d'enveloppe { items }). Liste des parcelles (type='land', non archivees) pour le formulaire d'assignation
 ```
-machine.list                 GET   { farmId, type?, status? } → Asset[] (type=equipment)
-machine.getUsageHistory      GET   { assetId, dateFrom?, dateTo? } → Log[]
-machine.getAvailability      GET   { farmId, date } → Asset[]  -- machines disponibles a une date
-```
+Requires: owner, manager (lecture: owner, manager, worker)
 
-### 12. `taxonomyRouter`
-```
-taxonomy.list        GET   { farmId?, type? } → Taxonomy[]
-taxonomy.create      POST  { type, name, description?, parentId?, farmId?, data? }
-taxonomy.update      POST  { id, ...partialTaxonomy }
-taxonomy.delete      POST  { id }
-taxonomy.getTree     GET   { type, farmId? } → TaxonomyTree[]
-```
-
-### 13. `fileRouter`
-```
-file.list            GET   { entityType, entityId } → FileRecord[]
-file.upload          POST  { entityType, entityId, file: File }
-file.delete          POST  { id }
-file.getUrl          GET   { id } → { url: string }
-```
-
-### 14. `reportRouter`
+### 10. `reportRouter`
 ```
 report.dashboard     GET   { farmId } → DashboardData
 report.assets        GET   { farmId, type?, dateFrom?, dateTo? } → AssetsReport
@@ -156,31 +176,123 @@ report.logs          GET   { farmId, type?, dateFrom?, dateTo? } → LogsReport
 report.harvests      GET   { farmId, season?, dateFrom?, dateTo? } → HarvestReport
 report.financials    GET   { farmId, dateFrom?, dateTo? } → FinancialsReport
 ```
+Requires: owner, manager
 
-### 15. `userRouter`
+### 11. `farmMemberRouter`
 ```
-user.list            GET   { farmId } → User[]
-user.invite          POST  { farmId, email, role }
-user.updateRole      POST  { userId, farmId, role }
-user.remove          POST  { userId, farmId }
+farmMember.list      GET   { search? } → { items: { id, name, email, role }[] }
+```
+Requires: owner, manager
+
+> Ce router ne contient actuellement qu'une seule procedure (`list`). Il n'y a pas de pagination — tous les membres de la ferme sont retournes.
+>
+> **Procedures prevues** : `invite`, `updateRole`, `remove` (non implementees).
+
+### 12. `financeRouter`
+```
+-- Transactions --
+finance.listTransactions     GET   { type?, category?, status?, search?, startDate?, endDate?, page?, limit? } → { items: Transaction[], total, page, pages }
+finance.listSales            GET   { type?, category?, status?, search?, startDate?, endDate?, page?, limit? } → { items: Transaction[], total, page, pages }
+> Note : `listSales` utilise le meme schema d'input que `listTransactions` (listTransactionsSchema). Le code force `type='sale'` cote serveur.
+finance.createTransaction    POST  { type, category, description, amount, date, clientName?, productName?, quantity?, unitPrice?, unit?, paymentMethod?, status?, notes? }
+finance.createSale           POST  { productName, quantity, unitPrice, unit, date, clientName?, paymentMethod?, notes? }
+finance.updateTransaction    POST  { id, ...partialTransaction }
+finance.deleteTransaction    POST  { id }  -- Suppression physique (transaction + ecritures journal liees). Aucune protection cote serveur sur le statut : toute transaction peut etre supprimee.
+finance.salesKpis            GET   {} → { caTotal, caMois, nbClients, nbProduits, nbVentesMois }
+finance.financeKpis          GET   {} → { soldeNet, revenus, depenses, pertes, nbOperations }
+
+-- Factures --
+finance.listInvoices         GET   { type?, status?, search?, page?, limit? } → { items: Invoice[], total, page, pages }
+finance.createInvoice        POST  { type: 'devis'|'proforma'|'facture', clientName, clientPhone, clientAddress, items: InvoiceItem[], taxAmount?, issueDate, dueDate?, notes?, clientEmail? }
+finance.updateInvoice        POST  { id, status?, paidAt? }
+finance.deleteInvoice        POST  { id }  -- Suppression physique (facture + ecritures journal liees). Aucune protection cote serveur sur le statut : toute facture peut etre supprimee, y compris les factures payees.
+finance.invoiceKpis          GET   {} → { devis, proforma, factures, totalMontant }
+
+-- Journal comptable --
+finance.listJournal          GET   { category?, account?, search?, startDate?, endDate?, page?, limit? } → { items: JournalEntry[], total, page, pages, totalDebit, totalCredit, solde }
+```
+Requires: owner, manager
+
+### 13. `cooperativeRouter`
+```
+cooperative.list               GET   { search?, page?, limit? } → { items: Cooperative[], total, page, pages }
+cooperative.create             POST  { name, description?, region?, type? }
+cooperative.invite             POST  { cooperativeId, farmId }  -- Cree une invitation avec token (expire 7 jours)
+cooperative.accept             POST  { token }  -- Accepte une invitation par token
+cooperative.members            GET   { cooperativeId } → CooperativeMember[]  -- Pas de pagination
+cooperative.pendingInvitations GET   { cooperativeId } → CooperativeInvitation[]  -- Admin uniquement
+cooperative.dashboard          GET   { cooperativeId } → { totalFarms, totalSurfaceHa, totalProductionKg, totalRevenueXof, farmDetails: { farmId, farmName, surfaceHa, productionKg, revenueXof }[] }
+cooperative.availableFarms     GET   { cooperativeId } → Farm[]  -- Fermes non encore membres, admin uniquement
+cooperative.myCooperativeFarms GET   {} → { cooperativeId, cooperativeName, farmId, farmName }[]  -- Pour le FarmSwitcher
+```
+Requires: owner (cooperative admin pour invite, pendingInvitations, availableFarms ; membre pour list, members, dashboard, myCooperativeFarms)
+
+### 14. `marketplaceRouter`
+
+> ⚠️ Format de pagination divergent du standard : retourne `limit` au lieu de `pages`. Harmonisation prevue.
+
+```
+-- Vue acheteur (tous les produits publies) --
+marketplace.listAll          GET   { search?, category?, minPrice?, maxPrice?, bioOnly?, inStockOnly?, page?, limit? } → { items: Product[], total, page, limit }
+marketplace.getProduct       GET   { productId } → Product & { farmName, sellerName }
+marketplace.createOrder      POST  { productId, quantity, deliveryMethod, deliveryAddress?, notes? }
+marketplace.listPlacedOrders GET   { status?, page?, limit? } → { items: Order[], total, page, limit }
+marketplace.marketplaceKpis  GET   {} → { totalProducts, totalFarms, bioProducts }
+
+-- Vue vendeur (mes produits) --
+marketplace.listMyProducts   GET   { search?, category?, page?, limit? } → { items: Product[], total, page, limit }
+marketplace.createProduct    POST  { name, category, pricePerKg, quantityAvailable, unit, description?, photoUrl?, location?, isBio?, assetId? }
+marketplace.updateProduct    POST  { id, ...partialProduct }
+marketplace.deleteProduct    POST  { productId }  -- Soft-delete : met a jour archived_at, depublie le produit
+marketplace.sellerKpis       GET   {} → { totalProducts, publishedProducts, totalOrders, pendingOrders, totalRevenue }
+
+-- Commandes recues (vendeur) --
+marketplace.listReceivedOrders GET  { status?, page?, limit? } → { items: Order[], total, page, limit }
+marketplace.updateOrderStatus  POST { orderId, status: 'confirmed'|'shipped'|'delivered'|'cancelled' }
+```
+Requires: owner, manager (lecture marketplace: tous les utilisateurs authentifies)
+
+---
+
+## Routers deprecies / retires
+
+### ~~`authRouter`~~ — DEPRECATED
+> **Remplace par Server Actions Auth.js v5.** L'authentification (register, login, logout, resetPassword, changePassword) est geree via les Server Actions de Next.js et le provider Credentials d'Auth.js. Il n'y a pas de router tRPC `auth` dans le code.
+
+### ~~`machineRouter`~~ — DEPRECATED
+> **Absorbe par `assetRouter`.** Les machines/equipements sont des assets de type `equipment`. Les requetes d'usage et de disponibilite se font via `asset.list` avec filtre `type=equipment` et `log.list` filtre par `equipmentIds`.
+
+### ~~`taxonomyRouter`~~ — DEPRECATED
+> **Retire.** La gestion des taxonomies (types de cultures, categories) est integree directement dans les schemas Zod et les enums de la base de donnees. Pas de router tRPC dedie.
+
+### ~~`fileRouter`~~ — DEPRECATED
+> **Remplace par une route API Next.js.** L'upload de fichiers se fait via `POST /api/upload` (multipart/form-data). Les metadonnees des fichiers sont liees aux entites via les champs JSONB des assets/logs. Il n'y a pas de router tRPC `file` dans le code.
+
+### ~~`userRouter`~~ — DEPRECATED
+> **Remplace par `farmMemberRouter` et Server Actions Auth.js.** La gestion des utilisateurs au sein d'une ferme est geree par `farmMemberRouter`. Les operations de profil utilisateur (changement mot de passe, etc.) sont des Server Actions.
+
+### ~~`notificationRouter`~~ — DEPRECATED
+> **Non implemente.** Le systeme de notifications est prevu pour une version future. Il n'y a pas de router tRPC `notification` dans le code actuellement.
+
+---
+
+## Upload de fichiers
+
+L'upload de fichiers ne passe **pas** par tRPC (qui ne supporte pas nativement le multipart/form-data).
+
+```
+POST /api/upload
+Content-Type: multipart/form-data
+
+Body:
+  file:        File          (obligatoire)
+  entityType:  string        (ex: 'asset', 'log', 'observation')
+  entityId:    string (UUID)
+
+Response: { url: string, fileId: string, entityType: string, entityId: string }
 ```
 
-### 16. `notificationRouter`
-```
-notification.list    GET   { userId, read? } → Notification[]
-notification.markRead POST { id }
-notification.markAllRead POST { userId }
-```
-
-### 17. `cooperativeRouter`
-```
-cooperative.list     GET   {} → Cooperative[]
-cooperative.create   POST  { name, description?, region?, type? }
-cooperative.invite   POST  { cooperativeId, farmId }
-cooperative.accept   POST  { token }
-cooperative.members  GET   { cooperativeId } → CooperativeMember[]
-cooperative.dashboard GET  { cooperativeId } → CooperativeDashboard
-```
+Les metadonnees du fichier sont ensuite accessibles via les champs JSONB des entites associees.
 
 ---
 
@@ -192,19 +304,12 @@ Chaque router a un fichier Zod correspondant dans `src/lib/validators/` :
 - `observation.validator.ts`
 - `calendar.validator.ts`
 - `input.validator.ts`
+- `plan.validator.ts`
+- `finance.validator.ts`
+- `marketplace.validator.ts`
 - etc.
 
 Les schemas sont reutilises cote client (React Hook Form) et cote serveur (tRPC input validation).
-
----
-
-## Pagination
-
-Pattern standard pour toutes les listes :
-```typescript
-Input:  { page?: number, limit?: number }  // default page=1, limit=25
-Output: { items: T[], total: number, page: number, pages: number }
-```
 
 ---
 

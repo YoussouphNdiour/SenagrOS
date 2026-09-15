@@ -27,6 +27,7 @@ Logiciel utilise par SCL pour generer les fiches d'instruction observation. Les 
 - **Total** : 789 plants
 - **Densite calculee** : 200 400 plts/ha
 - **Densite Semis theorique** : 50 plants/ha (indique comme 227 622 dans le systeme)
+- ⚠️ Donnees source a reconcilier — les valeurs de densite varient selon la methode de calcul (200 400 plts/ha vs 50 plants/ha vs 227 622 dans le systeme). Verifier les unites et la surface d'echantillonnage utilisees.
 
 ### Fiche 2 : Agreage qualite pre-recolte MAIS DOUX
 - **Type** : Observations previsions de recolte — Agreage qualite pre-recolte
@@ -76,7 +77,9 @@ Logiciel utilise par SCL pour generer les fiches d'instruction observation. Les 
 
 ## Screenshots V2 (design de reference)
 
-Les screenshots de la V2 Next.js sont dans `/Users/yusper/Downloads/SENAGROS FARMOS/` :
+> ⚠️ Les screenshots V2 originaux etaient dans un dossier local externe (dossier local source V2 — non versionne) qui n'est pas versionne dans le depot. Les captures disponibles dans le projet se trouvent dans `docs/guide/screenshots/`. Les fichiers sources V2 ci-dessous ne sont plus disponibles dans le repo.
+
+Les screenshots de la V2 Next.js etaient dans le dossier local source V2 (dossier local source V2 — non versionne) :
 
 | Fichier | Description |
 |---------|-------------|

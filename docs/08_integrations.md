@@ -7,7 +7,7 @@
 - **Alternative Senegal** : ANACIM (Agence Nationale de l'Aviation Civile et de la Meteorologie)
 - **Donnees** : Temperature, humidite, precipitations, vent, ETP
 - **Utilisation** : Widget dashboard, alertes meteo, historique parcelle
-- **Implementation** : Route API proxy cote serveur, cache 30 min, TanStack Query cote client
+- **Implementation** : Route API proxy cote serveur, cache 30 min. tRPC utilise TanStack Query en interne cote client (`@trpc/react-query`). Pas d'utilisation directe de TanStack Query.
 
 ### 2. Cartographie — OpenStreetMap / Stadia (P0)
 - **Tiles** : OpenStreetMap (gratuit) ou Stadia Maps (gratuit jusqu'a 200k tiles/mois)
@@ -36,9 +36,13 @@
 - **Statut** : Projet separe, pas dans le rebuild initial
 
 ### 7. API publique (P2)
-- **tRPC-openapi** : Generer une API REST OpenAPI depuis les routers tRPC
+- **OpenAPI** : Generer une API REST OpenAPI depuis les routers tRPC
 - **Auth** : API keys (table `api_keys` deja prevue)
 - **Use case** : Integration bailleurs, dashboards externes, apps tierces
+
+> ⚠️ `trpc-openapi` n'est pas maintenu pour tRPC v11. Alternative a evaluer : `trpc-to-openapi` ou generation OpenAPI custom.
+>
+> Decision a prendre avant Phase 11 (voir DT-OPEN dans `06_decision_token.md`).
 
 ---
 
@@ -47,6 +51,16 @@
 - Mobile money direct (necessite partenariat operateur)
 - ERP SAP/Oracle (hors cible)
 - Drones / imagerie satellite (P3+)
+
+---
+
+## Legende des priorites
+
+| Priorite | Signification |
+|----------|---------------|
+| **P0** | Indispensable — inclus dans le MVP |
+| **P1** | Important — prevu pour la V1 post-MVP |
+| **P2** | Souhaitable — backlog, a evaluer selon les besoins |
 
 ---
 

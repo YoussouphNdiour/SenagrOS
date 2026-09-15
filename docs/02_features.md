@@ -16,11 +16,14 @@
 - Deconnexion
 
 ### F1.2 — Gestion des roles
-- Roles : `owner`, `manager`, `worker`, `viewer`
-- Owner : CRUD complet + parametres ferme
-- Manager : CRUD sauf suppression ferme
-- Worker : creation logs/observations, pas de suppression
-- Viewer : lecture seule
+- Roles attribues **par ferme** (via `farm_members`) — un meme utilisateur peut avoir des roles differents sur differentes fermes
+- 4 roles implementes : `owner`, `manager`, `worker`, `viewer`
+- Proprietaire (owner) : CRUD complet + parametres ferme
+- Gestionnaire (manager) : CRUD sauf suppression ferme
+- Travailleur (worker) : creation logs/observations, pas de suppression
+- Observateur (viewer) : lecture seule
+
+> ⚠️ Role `technician` prevu dans une migration future. Actuellement, les fonctions de technicien agronome (creation/edition logs, observations, fiches terrain, calendrier cultural) sont couvertes par les roles `manager` ou `worker`.
 
 ### F1.3 — Profil utilisateur
 - Nom, email, avatar, langue preferee (FR/EN/WO)

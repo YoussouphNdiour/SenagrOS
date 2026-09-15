@@ -65,11 +65,11 @@
 │ PRINCIPAL│   ┌──────┐┌──────┐┌──────┐┌──────┐   │
 │ Tableau  │   │ KPI  ││ KPI  ││ KPI  ││ KPI  │   │
 │ de bord  │   │Card 1││Card 2││Card 3││Card 4│   │
-│ Assistant│   └──────┘└──────┘└──────┘└──────┘   │
-│ Diagnost.│                                        │
-│ Messagerie│  ┌────────────────────────────────┐   │
-│ Communaute│  │        DataTable / Content     │   │
-│ Favoris   │  │                                │   │
+│ Assistant*│  └──────┘└──────┘└──────┘└──────┘   │
+│ Diagnost.*│                                       │
+│ Messagerie*│ ┌────────────────────────────────┐   │
+│ Communaute*│ │        DataTable / Content     │   │
+│ Favoris*  │  │                                │   │
 │           │  └────────────────────────────────┘   │
 │EXPLOITATION                                       │
 │  > Cultures│                                      │
@@ -93,6 +93,8 @@
 │  BottomNav (mobile) : Accueil | Cultures | + | Carte | Plus │
 └──────────────────────────────────────────────────┘
 ```
+
+> \* **A implementer** : les entrees sidebar marquees d'un asterisque (Assistant, Diagnostics, Messagerie, Communaute, Favoris) n'ont pas encore de route ni de router API correspondant.
 
 ---
 
@@ -196,25 +198,26 @@
 | Route | Page | Description |
 |-------|------|-------------|
 | `/finances` | FinancesOverview | Vue d'ensemble financiere |
-| `/ventes` | VentesList | Ventes |
-| `/facturation` | FacturationList | Factures |
-| `/comptabilite` | ComptaList | Journal comptable |
+| `/ventes` | VentesList | Ventes (API: voir routers finance, marketplace) |
+| `/facturation` | FacturationList | Factures (API: voir routers finance) |
+| `/comptabilite` | ComptaList | Journal comptable (API: voir routers finance) |
 
 ### Autres
 | Route | Page | Description |
 |-------|------|-------------|
-| `/productions` | Productions | Productions animales |
-| `/taches` | Taches | Taches assignees |
-| `/marketplace` | Marketplace | Vitrine produits |
-| `/documents` | Documents | Gestion documentaire |
-| `/notifications` | Notifications | Centre de notifications |
-| `/journal` | Journal | Journal d'activite |
-| `/support` | Support | Aide et support |
-| `/profil` | Profil | Profil utilisateur |
-| `/parametres` | Parametres | Parametres ferme |
-| `/offline` | Offline | Page fallback hors ligne |
+| `/productions` | Productions | Productions animales (API: a implementer) |
+| `/taches` | Taches | Taches assignees (API: a implementer) |
+| `/marketplace` | Marketplace | Vitrine produits (API: voir routers finance, marketplace) |
+| `/documents` | Documents | Gestion documentaire (API: a implementer) |
+| `/notifications` | Notifications | Centre de notifications (API: a implementer) |
+| `/journal` | Journal | Journal d'activite (API: a implementer) |
+| `/support` | Support | Aide et support (API: a implementer) |
+| `/parametres` | Parametres | Parametres ferme (redirige vers `/settings`) |
+| `/offline` | Offline | Page fallback hors ligne (statique, pas d'API) |
 
 ### Quick Actions
+> (API: utilise les routers log, observation, input via Server Actions)
+
 | Route | Page | Description |
 |-------|------|-------------|
 | `/quick` | QuickMenu | Menu saisie rapide |
@@ -227,7 +230,8 @@
 ### Settings
 | Route | Page | Description |
 |-------|------|-------------|
-| `/settings` | SettingsOverview | Profil |
+| `/settings` | SettingsOverview | Vue d'ensemble parametres |
+| `/settings/profile` | ProfileSettings | Profil utilisateur |
 | `/settings/farm` | FarmSettings | Parametres ferme |
 | `/settings/users` | UsersSettings | Gestion utilisateurs |
 | `/settings/taxonomies` | TaxonomiesSettings | Taxonomies configurables |

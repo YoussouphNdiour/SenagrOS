@@ -4,26 +4,26 @@
 
 | Fonctionnalite | V2 Status | Rebuild Status |
 |---------------|-----------|----------------|
-| Auth (login/register/logout) | OK | A faire |
-| Multi-ferme + FarmSwitcher | OK | A faire |
-| CRUD Assets (12 types) | OK | A faire |
-| CRUD Logs (11 types) | OK | A faire |
-| Carte MapLibre | OK | A faire |
-| Plans/Campagnes | OK | A faire |
-| Inventaire/Stock | OK | A faire |
-| Rapports (4 types) | OK | A faire |
-| DataTable avec tri/recherche/pagination | OK | A faire |
-| KPI cards colorees | OK | A faire |
-| Sidebar navigation | OK | A faire |
-| BottomNav mobile | OK | A faire |
-| Quick actions (5 types) | OK | A faire |
-| Cooperatives | OK | A faire (P1) |
+| Auth (login/register/logout) | OK | Done (Phase 0) |
+| Multi-ferme + FarmSwitcher | OK | Done (Phase 0) |
+| CRUD Assets (12 types) | OK | Done (Phase 1) |
+| CRUD Logs (12 types) | OK | Done (Phase 2) |
+| Carte MapLibre | OK | Done (Phase 1) |
+| Plans/Campagnes | OK | Done (Phase 6) |
+| Inventaire/Stock | OK | Done (Phase 3) |
+| Rapports (4 types) | OK | Done (Phase 7) |
+| DataTable avec tri/recherche/pagination | OK | Done (Phase 0) |
+| KPI cards colorees | OK | Done (Phase 0) |
+| Sidebar navigation | OK | Done (Phase 0) |
+| BottomNav mobile | OK | Done (Phase 0) |
+| Quick actions (5 types) | OK | A faire (Phase 10) |
+| Cooperatives | OK | A faire (P1 — Phase 11) |
 | API Keys | OK | A faire (P2) |
 | Revisions history | OK | A faire |
 | File uploads | OK | A faire |
-| PWA/ServiceWorker | Partiel | A ameliorer |
-| i18n FR/EN/WO | OK | A faire |
-| Notifications page | OK | A faire |
+| PWA/ServiceWorker | Partiel | A faire (Phase 9) |
+| i18n FR/EN/WO | OK | A faire (Phase 10) |
+| Notifications page | OK | A faire (Phase 10) |
 
 ## Ce qui MANQUE dans la V2 et doit etre AJOUTE
 
@@ -94,11 +94,24 @@
 - [ ] Vue timeline avec stades passes (vert), actuel (surbrillance), futurs (gris)
 - [ ] Alerte si stade en retard
 
-### Phases 6-10
-- [ ] Plans : CRUD + association logs
-- [ ] Dashboard : KPI, graphiques, meteo
-- [ ] Finances : ventes, achats, comptabilite
+### Phase 6 : Plans & Campagnes — Done
+- [x] Plans : CRUD + association logs
+- [x] Suivi progression (barre done/total)
+
+### Phase 7 : Rapports & Dashboard — Done
+- [x] Dashboard : KPI, graphiques, meteo
+- [x] Pages rapports (assets, logs, harvests)
+- [x] Export Excel + PDF
+
+### Phase 8 : Finances — Done
+- [x] Finances : ventes, achats, comptabilite
+- [x] Facturation (devis, pro forma, factures)
+- [x] Tresorerie et journal comptable
+
+### Phase 9 : Offline / PWA — A faire
 - [ ] Offline : mutations queuees, sync au retour reseau
+
+### Phase 10 : i18n & Polish — A faire
 - [ ] i18n : toutes les pages en FR/EN/WO
 
 ---

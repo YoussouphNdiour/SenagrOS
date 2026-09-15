@@ -80,10 +80,13 @@ src/
 │   └── api/                # tRPC + Auth handlers
 ├── components/
 │   ├── ui/                 # Design system TailAdmin
+│   ├── layout/             # DashboardShell, Sidebar, Topbar, BottomNav
 │   ├── maps/               # Composants MapLibre
 │   ├── charts/             # Composants Recharts
 │   ├── forms/              # Formulaires partages (observations, etc.)
-│   └── {module}/           # Composants specifiques au module
+│   └── {module}/           # Composants specifiques au module (ex: finance/, observations/)
+│                           # Organises par module en plus de ui/, layout/, maps/, charts/, forms/
+│                           # (non documente dans CLAUDE.md qui ne liste que les dossiers partages)
 ├── server/
 │   ├── db/
 │   │   ├── schema/         # Schema Drizzle (1 fichier par table)
@@ -96,15 +99,15 @@ src/
 │   ├── validators/         # Schemas Zod
 │   ├── i18n/               # Traductions
 │   └── utils/              # Utilitaires
-├── hooks/                  # Custom React hooks
+├── hooks/                  # Custom React hooks (dossier cree a la demande — les hooks custom sont places ici au besoin)
 └── types/                  # Types TypeScript partages
 ```
 
 ## Variables d'environnement
 ```bash
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/senagros
-NEXTAUTH_SECRET=...
-NEXTAUTH_URL=http://localhost:3000
+AUTH_SECRET=...
+AUTH_URL=http://localhost:3000
 ```
 
 ---
