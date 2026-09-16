@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Archive } from 'lucide-react';
+import { ArrowLeft, Archive, Pencil } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -108,6 +108,13 @@ export function AssetDetailClient({ assetId }: AssetDetailClientProps) {
           </div>
         </div>
         <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => router.push(`/assets/${asset.id}/edit`)}
+          >
+            <Pencil className="h-4 w-4" />
+            Modifier
+          </Button>
           <Button
             variant="outline"
             onClick={() => {
