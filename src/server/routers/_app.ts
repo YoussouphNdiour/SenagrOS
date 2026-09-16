@@ -13,10 +13,12 @@ import { farmMemberRouter } from './farm-member';
 import { cooperativeRouter } from './cooperative';
 import { marketplaceRouter } from './marketplace';
 import { cropRouter } from './crop';
+import { searchRouter } from './search';
 
 export const appRouter = router({
   health: publicProcedure.query(() => ({ status: 'ok' })),
   asset: assetRouter,
+  search: searchRouter,
   log: logRouter,
   quantity: quantityRouter,
   input: inputRouter,

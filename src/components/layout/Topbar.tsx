@@ -2,6 +2,8 @@
 
 import { Bell, LogOut, Menu, User } from 'lucide-react';
 import { signOut } from 'next-auth/react';
+import { GlobalSearch } from './GlobalSearch';
+import { FarmSwitcher } from './FarmSwitcher';
 
 interface TopbarProps {
   user: {
@@ -14,19 +16,23 @@ interface TopbarProps {
 
 export function Topbar({ user, onMenuClick }: TopbarProps) {
   return (
-    <header className="flex h-16 items-center justify-between border-b border-gray-200 bg-white px-4 md:px-6">
+    <header className="flex h-16 items-center justify-between gap-4 border-b border-gray-200 bg-white px-4 md:px-6">
       <button
         onClick={onMenuClick}
-        className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 md:hidden"
+        className="shrink-0 rounded-lg p-2 text-gray-500 hover:bg-gray-100 md:hidden"
       >
         <Menu className="h-5 w-5" />
       </button>
 
-      <div className="hidden md:block">
-        <h2 className="text-sm text-gray-500">Bienvenue,</h2>
+      {/* Global Search - center/left area */}
+      <div className="hidden flex-1 md:block">
+        <GlobalSearch />
       </div>
 
       <div className="flex items-center gap-3">
+        {/* Farm Switcher */}
+        <FarmSwitcher />
+
         <button className="relative rounded-lg p-2 text-gray-500 hover:bg-gray-100">
           <Bell className="h-5 w-5" />
         </button>
