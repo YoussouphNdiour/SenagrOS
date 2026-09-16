@@ -350,6 +350,9 @@
       <a href="#parametres"><span class="num">25</span> Parametres</a>
       <a href="#quick"><span class="num">26</span> Actions rapides</a>
       <a href="#workflow"><span class="num">27</span> Workflow complet</a>
+      <a href="#carte-ndvi"><span class="num">28</span> Carte NDVI</a>
+      <a href="#recherche-globale"><span class="num">29</span> Recherche globale</a>
+      <a href="#mot-de-passe-oublie"><span class="num">30</span> Mot de passe oublie</a>
     </div>
   </div>
 </nav>
@@ -1340,8 +1343,8 @@
   <div class="section-body">
     <p>Le module Stocks centralise la gestion des inventaires d'intrants. Il affiche les niveaux de stock en temps reel et declenche des alertes quand le stock descend sous le seuil defini.</p>
     <div class="screenshot">
-      <img src="screenshots/52-stocks.png" alt="Page stocks">
-      <div class="screenshot-caption">Stocks — Vue d'ensemble des niveaux de stock avec KPIs et alertes</div>
+      <img src="screenshots/66-stocks-list.png" alt="Page stocks">
+      <div class="screenshot-caption">Stocks — KPIs, alertes de seuil et tableau des articles avec valorisation</div>
     </div>
 
     <h3>Fonctionnalites</h3>
@@ -1402,11 +1405,36 @@
     <p>Configuration de l'exploitation</p>
   </div>
   <div class="section-body">
-    <p>Configurez les parametres de votre exploitation : informations de la ferme, gestion des utilisateurs, codes d'invitation.</p>
+    <p>Configurez les parametres de votre exploitation : profil utilisateur, informations de la ferme, gestion des membres.</p>
+
+    <h3>Profil</h3>
+    <p>Modifiez votre nom, email et mot de passe.</p>
     <div class="screenshot">
-      <img src="screenshots/54-parametres.png" alt="Page parametres">
-      <div class="screenshot-caption">Parametres — Configuration de la ferme et gestion des utilisateurs</div>
+      <img src="screenshots/61-settings-profile.png" alt="Profil utilisateur">
+      <div class="screenshot-caption">Parametres > Profil — Informations personnelles et changement de mot de passe</div>
     </div>
+
+    <h3>Exploitation</h3>
+    <p>Configurez le nom, la description et les coordonnees GPS de votre exploitation.</p>
+    <div class="screenshot">
+      <img src="screenshots/62-settings-farm.png" alt="Parametres exploitation">
+      <div class="screenshot-caption">Parametres > Exploitation — Nom, description, latitude et longitude</div>
+    </div>
+
+    <h3>Membres</h3>
+    <p>Gerez les membres de votre exploitation : invitez de nouveaux utilisateurs, modifiez les roles.</p>
+    <div class="screenshot">
+      <img src="screenshots/63-settings-users.png" alt="Gestion des membres">
+      <div class="screenshot-caption">Parametres > Membres — Invitations et gestion des roles</div>
+    </div>
+
+    <table class="data-table">
+      <tr><th>Role</th><th>Description</th></tr>
+      <tr><td>Proprietaire</td><td>Acces complet, gestion des membres</td></tr>
+      <tr><td>Manager</td><td>Gestion quotidienne, pas de suppression</td></tr>
+      <tr><td>Ouvrier</td><td>Saisie d'activites et observations</td></tr>
+      <tr><td>Lecteur</td><td>Consultation uniquement (auditeurs, bailleurs)</td></tr>
+    </table>
   </div>
 </div>
 
@@ -1555,12 +1583,115 @@
   </div>
 </div>
 
+<!-- ==================== 28. CARTE NDVI ==================== -->
+<div class="section" id="carte-ndvi">
+  <div class="section-header">
+    <span class="section-num">28</span>
+    <h2>Carte NDVI — Agriculture de precision</h2>
+    <p>Visualisez vos parcelles et l'indice de vegetation par satellite</p>
+  </div>
+  <div class="section-body">
+    <p>La carte interactive permet de visualiser toutes les parcelles de l'exploitation sur un fond cartographique avec deux couches : <strong>OpenStreetMap</strong> et <strong>Satellite (Esri)</strong>.</p>
+
+    <div class="screenshot">
+      <img src="screenshots/60-map-page.png" alt="Carte des parcelles">
+      <div class="screenshot-caption">Carte MapLibre avec les parcelles et le switcher de couches OSM/Satellite</div>
+    </div>
+
+    <h3>Fonctionnalites de la carte</h3>
+    <ul>
+      <li><strong>Parcelles en polygones</strong> : chaque parcelle est affichee comme un polygone vert avec ses limites</li>
+      <li><strong>Popup au clic</strong> : nom, surface, type de sol, type d'irrigation</li>
+      <li><strong>Couches</strong> : basculer entre OSM (plan) et Satellite (Esri World Imagery)</li>
+      <li><strong>Navigation</strong> : zoom, rotation, deplacement</li>
+      <li><strong>PostGIS</strong> : geometries natives stockees en base avec index spatial GiST</li>
+    </ul>
+
+    <h3>Panneau NDVI</h3>
+    <p>Quand vous cliquez sur une parcelle, un panneau lateral s'ouvre avec l'indice NDVI (Normalized Difference Vegetation Index) :</p>
+    <ul>
+      <li><strong>Score NDVI actuel</strong> avec indicateur colore (rouge &lt; 0.2, orange 0.2-0.4, jaune 0.4-0.6, vert &gt; 0.6)</li>
+      <li><strong>Graphique d'evolution</strong> sur 12 mois (Recharts)</li>
+      <li><strong>Echelle de sante</strong> : sol nu, vegetation clairsemee, moderee, dense</li>
+    </ul>
+
+    <table class="data-table">
+      <tr><th>NDVI</th><th>Couleur</th><th>Interpretation</th></tr>
+      <tr><td>0.0 — 0.2</td><td style="color: #ef4444">Rouge</td><td>Sol nu ou stress severe</td></tr>
+      <tr><td>0.2 — 0.4</td><td style="color: #f97316">Orange</td><td>Vegetation clairsemee</td></tr>
+      <tr><td>0.4 — 0.6</td><td style="color: #eab308">Jaune</td><td>Vegetation moderee</td></tr>
+      <tr><td>0.6 — 1.0</td><td style="color: #22c55e">Vert</td><td>Vegetation dense et saine</td></tr>
+    </table>
+
+    <div class="info-box tip">
+      <strong>Donnees satellite Sentinel-2</strong><br>
+      Les donnees NDVI proviennent de l'API Copernicus Data Space (Sentinel-2 L2A). Pour activer les donnees reelles :<br>
+      1. Creez un compte gratuit sur <code>dataspace.copernicus.eu</code><br>
+      2. Ajoutez <code>SENTINEL_HUB_CLIENT_ID</code> et <code>SENTINEL_HUB_CLIENT_SECRET</code> dans <code>.env</code><br>
+      Sans credentials, des donnees simulees sont affichees.
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 29. RECHERCHE GLOBALE ==================== -->
+<div class="section" id="recherche-globale">
+  <div class="section-header">
+    <span class="section-num">29</span>
+    <h2>Recherche globale</h2>
+    <p>Trouvez rapidement n'importe quel element dans votre exploitation</p>
+  </div>
+  <div class="section-body">
+    <p>La barre de recherche dans la topbar permet de chercher dans tous les modules en meme temps. Activez-la avec le raccourci <strong>Ctrl+K</strong> (ou Cmd+K sur Mac).</p>
+
+    <div class="screenshot">
+      <img src="screenshots/65-global-search.png" alt="Recherche globale">
+      <div class="screenshot-caption">Recherche globale — Resultats groupes par Assets et Journal</div>
+    </div>
+
+    <h3>Fonctionnalites</h3>
+    <ul>
+      <li><strong>Raccourci clavier</strong> : <code>Ctrl+K</code> / <code>Cmd+K</code> pour focus</li>
+      <li><strong>Debounce 300ms</strong> : la recherche attend que vous arretiez de taper</li>
+      <li><strong>Resultats groupes</strong> : Assets, Journal, Plans avec badges de type</li>
+      <li><strong>Navigation directe</strong> : cliquez sur un resultat pour acceder a sa page</li>
+    </ul>
+
+    <h3>Farm Switcher</h3>
+    <p>A cote de la barre de recherche, le <strong>selecteur d'exploitation</strong> permet de basculer entre vos differentes fermes. Le nom de l'exploitation active est affiche avec un badge vert.</p>
+  </div>
+</div>
+
+<!-- ==================== 30. MOT DE PASSE OUBLIE ==================== -->
+<div class="section" id="mot-de-passe-oublie">
+  <div class="section-header">
+    <span class="section-num">30</span>
+    <h2>Mot de passe oublie</h2>
+    <p>Reinitialiser votre mot de passe</p>
+  </div>
+  <div class="section-body">
+    <p>Si vous avez oublie votre mot de passe, cliquez sur le lien <strong>"Mot de passe oublie ?"</strong> sur la page de connexion.</p>
+
+    <div class="screenshot">
+      <img src="screenshots/64-forgot-password.png" alt="Mot de passe oublie">
+      <div class="screenshot-caption">Page de reinitialisation de mot de passe</div>
+    </div>
+
+    <ol class="steps">
+      <li>Allez sur la page de connexion</li>
+      <li>Cliquez sur <strong>"Mot de passe oublie ?"</strong></li>
+      <li>Entrez votre adresse email</li>
+      <li>Cliquez sur <strong>"Envoyer le lien de reinitialisation"</strong></li>
+      <li>Consultez votre boite mail et suivez le lien</li>
+    </ol>
+  </div>
+</div>
+
 </div><!-- /content -->
 
 <!-- ==================== FOOTER ==================== -->
 <div class="footer">
   <p><strong>SenagrOS</strong> — Systeme de Gestion Agricole pour l'Afrique de l'Ouest</p>
-  <p style="margin-top: 8px;">Version 1.0 | Septembre 2026 | Licence Open Source</p>
+  <p style="margin-top: 8px;">Version 1.2 | Septembre 2026 | Licence Open Source</p>
   <p style="margin-top: 8px; font-size: 0.8rem; color: var(--gray-500);">Guide genere automatiquement avec captures d'ecran en conditions reelles</p>
 </div>
 
