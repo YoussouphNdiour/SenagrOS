@@ -311,7 +311,7 @@
 <div class="hero">
   <h1>SenagrOS</h1>
   <p class="subtitle">Guide Utilisateur Complet<br>Systeme de Gestion Agricole pour l'Afrique de l'Ouest</p>
-  <span class="badge">Version 1.0 — Septembre 2026</span>
+  <span class="badge">Version 1.1 — Septembre 2026</span>
 </div>
 
 <!-- ==================== TABLE OF CONTENTS ==================== -->
@@ -344,10 +344,12 @@
       <a href="#marketplace"><span class="num">19</span> Marketplace</a>
       <a href="#produits"><span class="num">20</span> Mes produits</a>
       <a href="#commandes"><span class="num">21</span> Commandes</a>
-      <a href="#cooperatives"><span class="num">22</span> Cooperatives</a>
-      <a href="#notifications"><span class="num">23</span> Notifications</a>
-      <a href="#quick"><span class="num">24</span> Actions rapides</a>
-      <a href="#workflow"><span class="num">25</span> Workflow complet</a>
+      <a href="#stocks"><span class="num">22</span> Stocks</a>
+      <a href="#employes"><span class="num">23</span> Employes</a>
+      <a href="#cooperatives"><span class="num">24</span> Cooperatives</a>
+      <a href="#parametres"><span class="num">25</span> Parametres</a>
+      <a href="#quick"><span class="num">26</span> Actions rapides</a>
+      <a href="#workflow"><span class="num">27</span> Workflow complet</a>
     </div>
   </div>
 </nav>
@@ -433,20 +435,38 @@
 
     <h3>Creer une parcelle</h3>
     <ol class="steps">
-      <li>Cliquez sur <strong>Nouveau</strong> puis selectionnez le type <strong>land</strong></li>
+      <li>Cliquez sur <strong>Nouveau</strong> puis selectionnez le type <strong>Parcelle</strong></li>
       <li>Saisissez le nom (ex: "Parcelle Arachide Nord"), la superficie en hectares</li>
-      <li>Ajoutez les coordonnees GPS (latitude, longitude) pour la cartographie</li>
+      <li>Selectionnez le <strong>type de sol</strong> (Argileux, Sableux, Limoneux, Argilo-sableux, etc.) et le <strong>type d'irrigation</strong> (Goutte a goutte, Aspersion, Pivot, etc.)</li>
+      <li>Renseignez le code parcelle et l'ilot</li>
       <li>Ajoutez une description et des notes si necessaire</li>
-      <li>Cliquez sur <strong>Creer</strong></li>
+      <li>Cliquez sur <strong>Creer l'asset</strong></li>
     </ol>
     <div class="screenshot">
       <img src="screenshots/03-parcelles.png" alt="Parcelles">
       <div class="screenshot-caption">Liste des parcelles avec la Parcelle Arachide Nord (3.5 ha)</div>
     </div>
 
+    <h3>Reseau d'irrigation</h3>
+    <p>Chaque parcelle peut etre enrichie avec les details de son reseau d'irrigation :</p>
+    <ul>
+      <li><strong>Source d'eau</strong> : Forage, Fleuve, Lac/Mare, Bassin de retention, Pluie</li>
+      <li><strong>Type de reseau</strong> : Goutte a goutte, Aspersion, Micro-aspersion, Pivot, Californien, Gravitaire, Submersion</li>
+      <li><strong>Caracteristiques</strong> : Diametre tuyau (mm), Espacement goutteurs (cm), Debit (m3/h)</li>
+      <li><strong>Pompe</strong> : Type de pompe, Puissance (CV)</li>
+      <li><strong>Filtration</strong> : Disque, Sable, Tamis ou Aucun</li>
+      <li><strong>Etat</strong> : Bon, Moyen, Degrade, Hors service</li>
+      <li><strong>Fertigation equipee</strong> : Oui/Non</li>
+      <li><strong>Date d'installation</strong></li>
+    </ul>
+    <div class="screenshot">
+      <img src="screenshots/03-asset-create-form.png" alt="Formulaire parcelle avec reseau irrigation">
+      <div class="screenshot-caption">Formulaire Parcelle — Donnees parcelle et reseau d'irrigation (source, type reseau, filtration, etat)</div>
+    </div>
+
     <div class="info-box tip">
       <strong>Conseil</strong>
-      Ajoutez toujours les coordonnees GPS de vos parcelles pour beneficier de la vue cartographique avec MapLibre.
+      Renseignez le reseau d'irrigation de vos parcelles pour un suivi precis de la consommation d'eau et la planification de la maintenance du reseau.
     </div>
   </div>
 </div>
@@ -565,7 +585,7 @@
       <tr>
         <td><strong>Phytosanitaires</strong></td>
         <td>Herbicide, Fongicide, Insecticide, Acaricide, Nematicide, Molluscicide, Regulateur, Adjuvant</td>
-        <td>Matiere active, DAR (jours), Classe toxicite, Dose recommandee</td>
+        <td>Matiere active, DAR (jours), DDR - Delai de reentree (jours), Classe toxicite, Dose recommandee, Dose min/max, Unite dose, Nb max applications par cycle, Organismes cibles, Cultures homologuees</td>
       </tr>
       <tr>
         <td><strong>Engrais</strong></td>
@@ -589,8 +609,13 @@
       <li>Cliquez sur <strong>+ Nouveau</strong></li>
       <li>Selectionnez la categorie <strong>Phytosanitaire</strong></li>
       <li>Choisissez la sous-categorie (ex: Herbicide)</li>
-      <li>Remplissez : nom, nom commercial, matiere active, dose, DAR, classe toxicite</li>
-      <li>Renseignez le stock initial, l'unite (L, kg), le prix et le seuil d'alerte</li>
+      <li>Remplissez : nom, nom commercial, matiere active, dose recommandee</li>
+      <li>Indiquez le <strong>DAR</strong> (Delai Avant Recolte) et le <strong>DDR</strong> (Delai De Reentree dans la parcelle) en jours</li>
+      <li>Selectionnez la classe de toxicite (I a IV) et la forme (Liquide, Granule, Poudre, Suspension)</li>
+      <li>Renseignez les <strong>doses minimale et maximale</strong> avec l'unite (L/ha, kg/ha)</li>
+      <li>Indiquez le <strong>nombre maximum d'applications par cycle</strong></li>
+      <li>Listez les <strong>organismes cibles</strong> (pucerons, mildiou, rouille...) et les <strong>cultures homologuees</strong> (tomate, oignon, riz...)</li>
+      <li>Renseignez le stock initial, l'unite, le prix et le seuil d'alerte</li>
       <li>Validez avec <strong>Creer l'intrant</strong></li>
     </ol>
     <div class="screenshot">
@@ -677,7 +702,7 @@
       <tr><td>Semis</td><td>Mise en terre</td><td>Methode, profondeur, ecartements, densite</td></tr>
       <tr><td>Irrigation</td><td>Arrosage</td><td>Methode, duree (min), volume (L)</td></tr>
       <tr><td>Recolte</td><td>Collecte</td><td>Quantite, qualite, parcelle</td></tr>
-      <tr><td>Application intrant</td><td>Traitement</td><td>Produit, dose, surface</td></tr>
+      <tr><td>Application intrant</td><td>Traitement</td><td>Multi-produits, parcelles cibles, volume bouillie, conditions meteo</td></tr>
       <tr><td>Observation</td><td>Suivi terrain</td><td>Type d'observation, resultats</td></tr>
       <tr><td>Maintenance</td><td>Entretien materiel</td><td>Equipement, intervention</td></tr>
       <tr><td>Soin medical</td><td>Sante animale</td><td>Animal, traitement</td></tr>
@@ -747,30 +772,65 @@
   <div class="section-header">
     <span class="section-num">9b</span>
     <h2>Application d'intrant</h2>
-    <p>Enregistrer les traitements phytosanitaires et fertilisations</p>
+    <p>Enregistrer les traitements phytosanitaires et fertilisations avec melange de produits et conditions meteo</p>
   </div>
   <div class="section-body">
+    <p>Le formulaire d'application intrant a ete enrichi pour capturer tous les details d'un traitement phytosanitaire professionnel.</p>
+
     <h3>Creer un log d'application intrant</h3>
     <ol class="steps">
       <li>Allez dans <strong>Journal > Nouveau</strong> et selectionnez <strong>Application intrant</strong></li>
-      <li>Choisissez le type d'intrant : Phytosanitaire, Fertilisant ou Semence</li>
-      <li>Indiquez la sous-categorie (Herbicide, Fongicide, etc.)</li>
-      <li>Renseignez la dose, l'unite (L/ha, kg/ha), la methode d'application</li>
-      <li>Indiquez la surface traitee en hectares</li>
+      <li>Dans la section <strong>Details application</strong> :
+        <ul>
+          <li>Choisissez le type d'intrant et la sous-categorie</li>
+          <li>Selectionnez les <strong>parcelles a traiter</strong> (multi-selection)</li>
+          <li>Indiquez la <strong>surface traitee</strong> (ha), la <strong>methode</strong> d'application et la <strong>partie cible</strong> (feuilles, sol, racines, fruits, tiges, plante entiere)</li>
+        </ul>
+      </li>
+      <li>Dans la section <strong>Produits</strong> :
+        <ul>
+          <li>Ajoutez un ou plusieurs produits au melange (bouillie)</li>
+          <li>Pour chaque produit : recherchez-le par nom, indiquez la dose/ha, l'unite et la quantite totale</li>
+          <li>Cliquez sur <strong>+ Ajouter un produit</strong> pour les melanges multi-produits</li>
+        </ul>
+      </li>
+      <li>Dans la section <strong>Volume de bouillie</strong> :
+        <ul>
+          <li>Indiquez le <strong>volume d'eau</strong> (L)</li>
+          <li>Renseignez le <strong>volume de bouillie par hectare</strong> (L/ha)</li>
+          <li>Le <strong>volume total</strong> se calcule automatiquement (volume/ha x surface traitee)</li>
+        </ul>
+      </li>
+      <li>Dans la section <strong>Conditions meteo</strong> :
+        <ul>
+          <li>Temperature (C), Vitesse du vent (km/h), Humidite (%)</li>
+          <li>Pluie dans les dernieres 24h et prevision de pluie</li>
+          <li>Des alertes automatiques s'affichent si les conditions ne sont pas favorables</li>
+        </ul>
+      </li>
       <li>Cliquez sur <strong>Creer le log</strong></li>
     </ol>
     <div class="screenshot">
-      <img src="screenshots/55-log-intrant-form-top.png" alt="Formulaire application intrant partie haute">
-      <div class="screenshot-caption">Formulaire Application intrant — Insecticide Parcelle Arachide Nord, sous-categorie Insecticide, dose 2.5 L/ha</div>
+      <img src="screenshots/30-application-intrant-form.png" alt="Formulaire application intrant enrichi">
+      <div class="screenshot-caption">Formulaire Application intrant enrichi — Multi-parcelles, multi-produits, volume bouillie, conditions meteo</div>
     </div>
-    <div class="screenshot">
-      <img src="screenshots/55b-log-intrant-form-bottom.png" alt="Formulaire application intrant partie basse">
-      <div class="screenshot-caption">Details — Methode pulverisation foliaire, surface traitee 3.5 ha, assignation materiel et personnel</div>
-    </div>
+
+    <h3>Alertes automatiques</h3>
+    <table class="data-table">
+      <tr><th>Condition</th><th>Seuil</th><th>Alerte</th></tr>
+      <tr><td>Vent</td><td>&gt; 19 km/h</td><td>Vent trop fort — risque de derive du produit</td></tr>
+      <tr><td>Humidite</td><td>&lt; 40%</td><td>Humidite basse — risque d'evaporation rapide</td></tr>
+      <tr><td>Pluie prevue</td><td>Cochee</td><td>Risque de lessivage du produit par la pluie</td></tr>
+    </table>
 
     <div class="info-box warning">
       <strong>Securite phytosanitaire</strong>
-      Notez toujours les conditions meteo (vent, temperature), le port d'EPI et le DAR (Delai Avant Recolte) dans les notes du log.
+      Le formulaire vous aide a respecter les bonnes pratiques : verifiez les conditions meteo avant traitement, respectez le DAR (Delai Avant Recolte) et le DDR (Delai De Reentree) de chaque produit utilise. Portez toujours les EPI (Equipements de Protection Individuelle).
+    </div>
+
+    <div class="info-box tip">
+      <strong>Melange de produits</strong>
+      Vous pouvez combiner plusieurs produits phytosanitaires dans le meme traitement (ex: insecticide + fongicide). Le formulaire calcule automatiquement le volume total de bouillie a preparer.
     </div>
   </div>
 </div>
@@ -1270,10 +1330,58 @@
   </div>
 </div>
 
-<!-- ==================== 22. COOPERATIVES ==================== -->
-<div class="section" id="cooperatives">
+<!-- ==================== 22. STOCKS ==================== -->
+<div class="section" id="stocks">
   <div class="section-header">
     <span class="section-num">22</span>
+    <h2>Stocks</h2>
+    <p>Suivi des stocks d'intrants et alertes de seuil</p>
+  </div>
+  <div class="section-body">
+    <p>Le module Stocks centralise la gestion des inventaires d'intrants. Il affiche les niveaux de stock en temps reel et declenche des alertes quand le stock descend sous le seuil defini.</p>
+    <div class="screenshot">
+      <img src="screenshots/52-stocks.png" alt="Page stocks">
+      <div class="screenshot-caption">Stocks — Vue d'ensemble des niveaux de stock avec KPIs et alertes</div>
+    </div>
+
+    <h3>Fonctionnalites</h3>
+    <ul>
+      <li><strong>KPIs</strong> : Nombre total de produits, valeur totale du stock, produits en alerte</li>
+      <li><strong>Filtrage</strong> : Par categorie (Phyto, Engrais, Semences) et par recherche</li>
+      <li><strong>Alertes</strong> : Indicateur visuel rouge quand le stock est inferieur au seuil d'alerte</li>
+      <li><strong>Ajustement</strong> : Incrementer, decrementer ou reinitialiser le stock</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== 23. EMPLOYES ==================== -->
+<div class="section" id="employes">
+  <div class="section-header">
+    <span class="section-num">23</span>
+    <h2>Employes</h2>
+    <p>Gestion du personnel de l'exploitation</p>
+  </div>
+  <div class="section-body">
+    <p>Gerez les employes de votre exploitation : invitations, roles, suivi des interventions.</p>
+    <div class="screenshot">
+      <img src="screenshots/53-employes.png" alt="Page employes">
+      <div class="screenshot-caption">Employes — Liste du personnel avec roles et statuts</div>
+    </div>
+
+    <h3>Inviter un employe</h3>
+    <ol class="steps">
+      <li>Allez dans <strong>Employes</strong></li>
+      <li>Cliquez sur <strong>Inviter</strong></li>
+      <li>Un code d'invitation est genere — partagez-le avec l'employe</li>
+      <li>L'employe cree son compte en choisissant "J'ai un code d'invitation"</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ==================== 24. COOPERATIVES ==================== -->
+<div class="section" id="cooperatives">
+  <div class="section-header">
+    <span class="section-num">24</span>
     <h2>Cooperatives</h2>
     <p>Gestion des cooperatives agricoles</p>
   </div>
@@ -1286,27 +1394,26 @@
   </div>
 </div>
 
-<!-- ==================== 23. NOTIFICATIONS ==================== -->
-<div class="section" id="notifications">
+<!-- ==================== 25. PARAMETRES ==================== -->
+<div class="section" id="parametres">
   <div class="section-header">
-    <span class="section-num">23</span>
-    <h2>Notifications</h2>
-    <p>Alertes et messages systeme</p>
+    <span class="section-num">25</span>
+    <h2>Parametres</h2>
+    <p>Configuration de l'exploitation</p>
   </div>
   <div class="section-body">
-    <p>Les notifications vous informent des evenements importants : alertes de stock, taches planifiees, mises a jour du systeme.</p>
+    <p>Configurez les parametres de votre exploitation : informations de la ferme, gestion des utilisateurs, codes d'invitation.</p>
     <div class="screenshot">
-      <img src="screenshots/24-notifications.png" alt="Notifications">
-      <div class="screenshot-caption">Centre de notifications</div>
+      <img src="screenshots/54-parametres.png" alt="Page parametres">
+      <div class="screenshot-caption">Parametres — Configuration de la ferme et gestion des utilisateurs</div>
     </div>
-    <p>Le badge rouge dans la barre de navigation indique le nombre de notifications non lues.</p>
   </div>
 </div>
 
-<!-- ==================== 24. QUICK ACTIONS ==================== -->
+<!-- ==================== 26. QUICK ACTIONS ==================== -->
 <div class="section" id="quick">
   <div class="section-header">
-    <span class="section-num">24</span>
+    <span class="section-num">26</span>
     <h2>Actions rapides</h2>
     <p>Saisie simplifiee pour les operations courantes</p>
   </div>
@@ -1329,10 +1436,10 @@
   </div>
 </div>
 
-<!-- ==================== 25. WORKFLOW ==================== -->
+<!-- ==================== 27. WORKFLOW ==================== -->
 <div class="section" id="workflow">
   <div class="section-header">
-    <span class="section-num">25</span>
+    <span class="section-num">27</span>
     <h2>Workflow agricole complet</h2>
     <p>Le parcours logique de la preparation a la commercialisation</p>
   </div>
@@ -1366,55 +1473,61 @@
         <td>NPK 15-15-15, 500 kg</td>
       </tr>
       <tr>
-        <td><strong>5. Planification</strong></td>
+        <td><strong>5. Rotation</strong></td>
+        <td>Cultures / Rotation</td>
+        <td>Verifier la compatibilite de succession des cultures</td>
+        <td>Arachide apres Mil : recommande</td>
+      </tr>
+      <tr>
+        <td><strong>6. Planification</strong></td>
         <td>Plans</td>
         <td>Planifier la campagne</td>
         <td>Plan hivernage 2026</td>
       </tr>
       <tr>
-        <td><strong>6. Semis</strong></td>
+        <td><strong>7. Semis</strong></td>
         <td>Journal > Semis</td>
         <td>Enregistrer le semis</td>
         <td>Machine, 120 kg/ha, ecart 50x15cm</td>
       </tr>
       <tr>
-        <td><strong>7. Irrigation</strong></td>
+        <td><strong>8. Irrigation</strong></td>
         <td>Journal > Irrigation</td>
         <td>Suivre les arrosages</td>
         <td>Goutte-a-goutte, 14 000 L, 4h</td>
       </tr>
       <tr>
-        <td><strong>8. Maintenance</strong></td>
+        <td><strong>9. Traitement</strong></td>
+        <td>Journal > Application intrant</td>
+        <td>Traitement phytosanitaire avec conditions meteo</td>
+        <td>Insecticide + Fongicide, 200 L/ha bouillie</td>
+      </tr>
+      <tr>
+        <td><strong>10. Maintenance</strong></td>
         <td>Journal > Maintenance</td>
         <td>Entretenir le materiel</td>
         <td>Revision semoir JD-1750, 175 000 FCFA</td>
       </tr>
       <tr>
-        <td><strong>9. Soin medical</strong></td>
-        <td>Journal > Soin medical</td>
-        <td>Suivi sanitaire du cheptel</td>
-        <td>Vaccination fievre aphteuse, 12 tetes</td>
-      </tr>
-      <tr>
-        <td><strong>10. Observation</strong></td>
+        <td><strong>11. Observation</strong></td>
         <td>Observations</td>
         <td>Evaluer les cultures</td>
         <td>Densite levee : 99.17%</td>
       </tr>
       <tr>
-        <td><strong>11. Recolte</strong></td>
+        <td><strong>12. Recolte</strong></td>
         <td>Quick > Recolte</td>
         <td>Enregistrer les recoltes</td>
         <td>2 800 kg arachide Grade A</td>
       </tr>
       <tr>
-        <td><strong>12. Vente</strong></td>
+        <td><strong>13. Vente</strong></td>
         <td>Ventes</td>
         <td>Vendre la production</td>
         <td>SUNEOR SA, 350 FCFA/kg</td>
       </tr>
       <tr>
-        <td><strong>13. Facturation</strong></td>
+        <td><strong>14. Facturation</strong></td>
         <td>Facturation</td>
         <td>Emettre les factures</td>
         <td>FAC-2026-0001, 700 000 FCFA</td>
