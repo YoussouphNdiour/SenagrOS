@@ -5,16 +5,6 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { trpc } from '@/lib/trpc';
 import { createAssetSchema } from '@/lib/validators/asset.validator';
-import {
-  phytoSubcategoryValues,
-  fertiSubcategoryValues,
-  semenceSubcategoryValues,
-  phytoSubcategoryLabels,
-  fertiSubcategoryLabels,
-  semenceSubcategoryLabels,
-  inputCategoryLabels,
-  formLabels,
-} from '@/lib/validators/input.validator';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
 import { Button } from '@/components/ui/Button';
@@ -79,47 +69,12 @@ const networkConditionOptions = [
   { value: 'hors_service', label: 'Hors service' },
 ];
 
-const inputCategoryOptions = [
-  { value: 'phyto', label: inputCategoryLabels.phyto },
-  { value: 'ferti', label: inputCategoryLabels.ferti },
-  { value: 'semence', label: inputCategoryLabels.semence },
-];
-
-const toxicityClassOptions = [
-  { value: 'I', label: 'Classe I' },
-  { value: 'II', label: 'Classe II' },
-  { value: 'III', label: 'Classe III' },
-  { value: 'IV', label: 'Classe IV' },
-  { value: 'U', label: 'Classe U' },
-];
-
-const formOptions = [
-  { value: 'liquide', label: formLabels.liquide },
-  { value: 'granule', label: formLabels.granule },
-  { value: 'poudre', label: formLabels.poudre },
-  { value: 'suspension', label: formLabels.suspension },
-];
-
-function getSubcategoryOptions(category: string) {
-  switch (category) {
-    case 'phyto':
-      return phytoSubcategoryValues.map((v) => ({ value: v, label: phytoSubcategoryLabels[v] }));
-    case 'ferti':
-      return fertiSubcategoryValues.map((v) => ({ value: v, label: fertiSubcategoryLabels[v] }));
-    case 'semence':
-      return semenceSubcategoryValues.map((v) => ({ value: v, label: semenceSubcategoryLabels[v] }));
-    default:
-      return [];
-  }
-}
-
 const typeOptions = [
   { value: 'land', label: 'Parcelle' },
   { value: 'plant', label: 'Culture' },
   { value: 'animal', label: 'Animal' },
   { value: 'equipment', label: 'Equipement' },
   { value: 'structure', label: 'Structure' },
-  { value: 'material', label: 'Intrant' },
   { value: 'sensor', label: 'Capteur' },
   { value: 'water', label: "Point d'eau" },
   { value: 'seed', label: 'Semence' },
@@ -157,7 +112,6 @@ export function AssetCreateForm({ farmId }: AssetCreateFormProps) {
   });
 
   const selectedType = watch('type');
-  const selectedCategory = watch('data.input_category' as any) as string | undefined;
 
   const onSubmit = (values: CreateAssetInput) => {
     createMutation.mutate(values);
@@ -390,105 +344,6 @@ export function AssetCreateForm({ farmId }: AssetCreateFormProps) {
               label="Prix d'achat (FCFA)"
               type="number"
               {...register('data.purchase_price_xof' as any)}
-            />
-          </div>
-        </Card>
-      )}
-
-      {selectedType === 'material' && (
-        <Card>
-          <h3 className="mb-4 text-lg font-semibold text-gray-800">Donnees intrant</h3>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <Select
-              label="Categorie d'intrant"
-              placeholder="Selectionner une categorie"
-              options={inputCategoryOptions}
-              {...register('data.input_category' as any)}
-            />
-            <Select
-              label="Sous-categorie"
-              placeholder="Selectionner une sous-categorie"
-              options={selectedCategory ? getSubcategoryOptions(selectedCategory) : []}
-              {...register('data.input_subcategory' as any)}
-            />
-            <Input
-              label="Nom commercial"
-              placeholder="Ex: Roundup, NPK 15-15-15"
-              {...register('data.commercial_name' as any)}
-            />
-            <Input
-              label="Matiere active"
-              placeholder="Ex: Glyphosate (pour phyto)"
-              {...register('data.active_ingredient' as any)}
-            />
-            <Input
-              label="Composition NPK"
-              placeholder="Ex: 15-15-15 (pour ferti)"
-              {...register('data.composition_npk' as any)}
-            />
-            <Input
-              label="Dose recommandee"
-              placeholder="Ex: 2 L/ha"
-              {...register('data.recommended_dose' as any)}
-            />
-            <Input
-              label="DAR - Delai Avant Recolte (jours)"
-              type="number"
-              placeholder="Ex: 14"
-              {...register('data.dar_days' as any)}
-            />
-            <Input
-              label="DDR - Delai De Reentree (jours)"
-              type="number"
-              placeholder="Ex: 2"
-              {...register('data.ddr_days' as any)}
-            />
-            <Select
-              label="Classe de toxicite"
-              placeholder="Selectionner une classe"
-              options={toxicityClassOptions}
-              {...register('data.toxicity_class' as any)}
-            />
-            <Select
-              label="Forme"
-              placeholder="Selectionner une forme"
-              options={formOptions}
-              {...register('data.form' as any)}
-            />
-            <Input
-              label="Dose minimale"
-              type="number"
-              step="0.01"
-              placeholder="Ex: 1.5"
-              {...register('data.dose_min' as any)}
-            />
-            <Input
-              label="Dose maximale"
-              type="number"
-              step="0.01"
-              placeholder="Ex: 3.0"
-              {...register('data.dose_max' as any)}
-            />
-            <Input
-              label="Unite de dose"
-              placeholder="Ex: L/ha, kg/ha, g/ha"
-              {...register('data.dose_unit' as any)}
-            />
-            <Input
-              label="Nb max applications par cycle"
-              type="number"
-              placeholder="Ex: 3"
-              {...register('data.max_applications_per_cycle' as any)}
-            />
-            <Input
-              label="Organismes cibles"
-              placeholder="Ex: pucerons, mildiou, rouille (separes par virgules)"
-              {...register('data.target_organisms' as any)}
-            />
-            <Input
-              label="Cultures homologuees"
-              placeholder="Ex: tomate, oignon, riz (separes par virgules)"
-              {...register('data.target_crops' as any)}
             />
           </div>
         </Card>
