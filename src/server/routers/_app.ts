@@ -14,6 +14,7 @@ import { cooperativeRouter } from './cooperative';
 import { marketplaceRouter } from './marketplace';
 import { cropRouter } from './crop';
 import { searchRouter } from './search';
+import { mapRouter } from './map';
 
 export const appRouter = router({
   health: publicProcedure.query(() => ({ status: 'ok' })),
@@ -32,6 +33,7 @@ export const appRouter = router({
   cooperative: cooperativeRouter,
   marketplace: marketplaceRouter,
   crop: cropRouter,
+  map: mapRouter,
 });
 
 export type AppRouter = typeof appRouter;

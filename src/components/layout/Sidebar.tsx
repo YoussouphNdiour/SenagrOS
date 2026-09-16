@@ -8,6 +8,7 @@ import {
   Home,
   Leaf,
   Map,
+  MapPin,
   Package,
   Settings,
   Sprout,
@@ -57,6 +58,7 @@ const navItems: NavItem[] = [
       { label: 'Cultures', href: '/assets/plant', icon: Sprout },
       { label: 'Animaux', href: '/assets/animal', icon: Leaf },
       { label: 'Equipements', href: '/assets/equipment', icon: Tractor },
+      { label: 'Carte NDVI', href: '/map', icon: MapPin },
     ],
   },
   {
