@@ -10,6 +10,7 @@ import {
   primaryKey,
   index,
 } from 'drizzle-orm/pg-core';
+import { postgisGeometry } from './postgis';
 import { logTypeEnum } from './enums';
 import { farms } from './farms';
 import { assets } from './assets';
@@ -34,6 +35,7 @@ export const logs = pgTable(
     equipmentIds: jsonb('equipment_ids').default([]),
     locationIds: jsonb('location_ids').default([]),
     workerIds: jsonb('worker_ids').default([]),
+    geometry: postgisGeometry('geometry'),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
   },

@@ -6,6 +6,7 @@ import {
   text,
   timestamp,
 } from 'drizzle-orm/pg-core';
+import { postgisGeometry } from './postgis';
 import { users } from './users';
 import { assets } from './assets';
 import { logs } from './logs';
@@ -25,6 +26,7 @@ export const farms = pgTable('farms', {
   currency: varchar('currency', { length: 3 }).default('XOF'),
   locale: varchar('locale', { length: 5 }).default('fr'),
   seasonType: varchar('season_type', { length: 20 }).default('hivernage'),
+  boundary: postgisGeometry('boundary'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
 });

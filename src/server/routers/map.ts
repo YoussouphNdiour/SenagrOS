@@ -1,5 +1,5 @@
 import { TRPCError } from '@trpc/server';
-import { and, eq, isNull } from 'drizzle-orm';
+import { and, eq, isNull, sql } from 'drizzle-orm';
 import { protectedProcedure, router } from '../trpc';
 import { assets } from '../db/schema';
 
@@ -18,6 +18,7 @@ export const mapRouter = router({
         name: assets.name,
         status: assets.status,
         data: assets.data,
+        geojson: sql<string | null>`ST_AsGeoJSON(${assets.geometry})`.as('geojson'),
       })
       .from(assets)
       .where(

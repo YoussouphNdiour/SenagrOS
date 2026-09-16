@@ -1,0 +1,9 @@
+{
+  "id": "0003_add_postgis_geometry_columns",
+  "prevId": "d02ad5df-c2e5-453e-b2ed-9692fa9ede07",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {},
+  "enums": {},
+  "schemas": {}
+}

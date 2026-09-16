@@ -8,6 +8,7 @@ import {
   boolean,
   timestamp,
 } from 'drizzle-orm/pg-core';
+import { postgisGeometry } from './postgis';
 import { assetTypeEnum } from './enums';
 import { farms } from './farms';
 import { logAssets } from './logs';
@@ -29,6 +30,7 @@ export const assets = pgTable('assets', {
   isLocation: boolean('is_location').default(false),
   isFixed: boolean('is_fixed').default(false),
   idTags: jsonb('id_tags').default([]),
+  geometry: postgisGeometry('geometry'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
   archivedAt: timestamp('archived_at', { withTimezone: true }),

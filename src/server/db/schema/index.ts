@@ -1,3 +1,4 @@
+export * from './postgis';
 export * from './enums';
 export * from './farms';
 export * from './users';

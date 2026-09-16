@@ -22,6 +22,13 @@
       "when": 1789514630093,
       "tag": "0002_add_crops_seasons_rotation_enrichments",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1726531200000,
+      "tag": "0003_add_postgis_geometry_columns",
+      "breakpoints": true
     }
   ]
 }

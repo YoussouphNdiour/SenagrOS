@@ -15,6 +15,7 @@ import { marketplaceRouter } from './marketplace';
 import { cropRouter } from './crop';
 import { searchRouter } from './search';
 import { mapRouter } from './map';
+import { ndviRouter } from './ndvi';
 
 export const appRouter = router({
   health: publicProcedure.query(() => ({ status: 'ok' })),
@@ -34,6 +35,7 @@ export const appRouter = router({
   marketplace: marketplaceRouter,
   crop: cropRouter,
   map: mapRouter,
+  ndvi: ndviRouter,
 });
 
 export type AppRouter = typeof appRouter;

@@ -119,22 +119,30 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
 
       for (const parcel of parcels) {
         const data = parcel.data as Record<string, unknown> | null;
-        const coordinates = data?.coordinates as number[][][] | undefined;
+
+        // Prefer PostGIS geometry over JSONB coordinates
+        let geojsonGeometry: { type: string; coordinates: number[][][] } | null = null;
+        if ('geojson' in parcel && parcel.geojson) {
+          try {
+            geojsonGeometry = JSON.parse(parcel.geojson as string);
+          } catch { /* ignore parse errors */ }
+        }
+
+        const coordinates = geojsonGeometry?.coordinates ?? (data?.coordinates as number[][][] | undefined);
         if (!coordinates || !Array.isArray(coordinates) || coordinates.length === 0) continue;
 
         const sourceId = `parcel-${parcel.id}`;
 
         const geojson = {
-          type: 'Feature',
+          type: 'Feature' as const,
           properties: {
             id: parcel.id,
             name: parcel.name,
             status: parcel.status,
           },
-          geometry: {
-            type: 'Polygon',
-            coordinates,
-          },
+          geometry: geojsonGeometry
+            ? { type: geojsonGeometry.type as 'Polygon', coordinates: geojsonGeometry.coordinates }
+            : { type: 'Polygon' as const, coordinates },
         };
 
         map.addSource(sourceId, {
