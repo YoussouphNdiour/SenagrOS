@@ -86,6 +86,7 @@ export function LogCreateForm({ defaultType }: LogCreateFormProps) {
   const farmId = (session?.user as { farmId?: string } | undefined)?.farmId ?? '';
   const [equipmentIds, setEquipmentIds] = useState<string[]>([]);
   const [workerIds, setWorkerIds] = useState<string[]>([]);
+  const [assigneeId, setAssigneeId] = useState<string | null>(null);
   const [targetParcelIds, setTargetParcelIds] = useState<string[]>([]);
 
   const createMutation = trpc.log.create.useMutation({
@@ -208,6 +209,7 @@ export function LogCreateForm({ defaultType }: LogCreateFormProps) {
       data: enrichedData,
       equipmentIds,
       workerIds,
+      assigneeId,
     });
   };
 
@@ -901,6 +903,15 @@ export function LogCreateForm({ defaultType }: LogCreateFormProps) {
       <Card>
         <h3 className="mb-4 text-lg font-semibold text-gray-800">Assignation matériel & personnel</h3>
         <div className="grid gap-4 sm:grid-cols-2">
+          <ComboboxAsync<UserItem>
+            label="Responsable"
+            placeholder="Choisir un responsable..."
+            value={assigneeId ?? undefined}
+            onChange={(val) => setAssigneeId(val || null)}
+            searchFn={searchWorkers}
+            getLabel={(item) => item.name}
+            getValue={(item) => item.id}
+          />
           <ComboboxAsyncMulti<AssetItem>
             label="Équipements utilisés"
             placeholder="Rechercher un équipement..."

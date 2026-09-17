@@ -1,5 +1,6 @@
 import { TRPCError } from '@trpc/server';
-import { and, eq, ilike, isNull, sql, desc } from 'drizzle-orm';
+import { and, eq, ilike, isNull, sql, desc, count } from 'drizzle-orm';
+import { z } from 'zod';
 import { protectedProcedure, router } from '../trpc';
 import { assets } from '../db/schema';
 import {
@@ -184,5 +185,83 @@ export const assetRouter = router({
       }
 
       return restored;
+    }),
+
+  /** Return all active plant assets linked to a given parcel */
+  getParcelCrops: protectedProcedure
+    .input(z.object({ parcelId: z.string().uuid() }))
+    .query(async ({ ctx, input }) => {
+      if (!ctx.session.user.farmId) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'No farm associated with this account' });
+      }
+
+      const crops = await ctx.db
+        .select()
+        .from(assets)
+        .where(
+          and(
+            eq(assets.parentId, input.parcelId),
+            eq(assets.type, 'plant'),
+            eq(assets.farmId, ctx.session.user.farmId),
+            isNull(assets.archivedAt),
+          ),
+        )
+        .orderBy(desc(assets.createdAt));
+
+      return crops;
+    }),
+
+  /** Return all active land assets for dropdown selection */
+  listLandParcels: protectedProcedure
+    .query(async ({ ctx }) => {
+      if (!ctx.session.user.farmId) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'No farm associated with this account' });
+      }
+
+      const parcels = await ctx.db
+        .select({ id: assets.id, name: assets.name })
+        .from(assets)
+        .where(
+          and(
+            eq(assets.type, 'land'),
+            eq(assets.farmId, ctx.session.user.farmId),
+            isNull(assets.archivedAt),
+          ),
+        )
+        .orderBy(assets.name);
+
+      return parcels;
+    }),
+
+  /** Return crop count per parcel for the current farm */
+  cropCountByParcel: protectedProcedure
+    .query(async ({ ctx }) => {
+      if (!ctx.session.user.farmId) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'No farm associated with this account' });
+      }
+
+      const rows = await ctx.db
+        .select({
+          parcelId: assets.parentId,
+          count: count(assets.id),
+        })
+        .from(assets)
+        .where(
+          and(
+            eq(assets.type, 'plant'),
+            eq(assets.farmId, ctx.session.user.farmId),
+            isNull(assets.archivedAt),
+          ),
+        )
+        .groupBy(assets.parentId);
+
+      // Return as a Record<parcelId, count> for easy lookup
+      const result: Record<string, number> = {};
+      for (const row of rows) {
+        if (row.parcelId) {
+          result[row.parcelId] = row.count;
+        }
+      }
+      return result;
     }),
 });

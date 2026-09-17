@@ -13,6 +13,7 @@ import {
 import { postgisGeometry } from './postgis';
 import { logTypeEnum } from './enums';
 import { farms } from './farms';
+import { users } from './users';
 import { assets } from './assets';
 import { quantities } from './quantities';
 import { planLogs } from './plans';
@@ -35,6 +36,7 @@ export const logs = pgTable(
     equipmentIds: jsonb('equipment_ids').default([]),
     locationIds: jsonb('location_ids').default([]),
     workerIds: jsonb('worker_ids').default([]),
+    assigneeId: uuid('assignee_id').references(() => users.id),
     geometry: postgisGeometry('geometry'),
     createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true }).defaultNow(),
@@ -48,6 +50,10 @@ export const logsRelations = relations(logs, ({ one, many }) => ({
   farm: one(farms, {
     fields: [logs.farmId],
     references: [farms.id],
+  }),
+  assignee: one(users, {
+    fields: [logs.assigneeId],
+    references: [users.id],
   }),
   logAssets: many(logAssets),
   quantities: many(quantities),

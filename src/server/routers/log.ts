@@ -1,7 +1,7 @@
 import { TRPCError } from '@trpc/server';
 import { and, eq, ilike, sql, desc, gte, lte, inArray } from 'drizzle-orm';
 import { protectedProcedure, router } from '../trpc';
-import { logs, logAssets, assets, quantities } from '../db/schema';
+import { logs, logAssets, assets, quantities, users } from '../db/schema';
 import {
   createLogSchema,
   updateLogSchema,
@@ -15,7 +15,7 @@ export const logRouter = router({
   list: protectedProcedure
     .input(listLogsSchema)
     .query(async ({ ctx, input }) => {
-      const { type, status, search, dateFrom, dateTo, assetId, page, limit } = input;
+      const { type, status, search, dateFrom, dateTo, assetId, assigneeId, page, limit } = input;
 
       if (!ctx.session.user.farmId) {
         throw new TRPCError({ code: 'FORBIDDEN', message: 'No farm associated with this account' });
@@ -44,6 +44,10 @@ export const logRouter = router({
 
       if (dateTo) {
         conditions.push(lte(logs.timestamp, new Date(dateTo)));
+      }
+
+      if (assigneeId) {
+        conditions.push(eq(logs.assigneeId, assigneeId));
       }
 
       if (assetId) {
@@ -126,7 +130,17 @@ export const logRouter = router({
         .from(quantities)
         .where(eq(quantities.logId, input.id));
 
-      return { ...log, assets: linkedAssets, quantities: logQuantities };
+      let assigneeName: string | null = null;
+      if (log.assigneeId) {
+        const [assignee] = await ctx.db
+          .select({ name: users.name })
+          .from(users)
+          .where(eq(users.id, log.assigneeId))
+          .limit(1);
+        assigneeName = assignee?.name ?? null;
+      }
+
+      return { ...log, assets: linkedAssets, quantities: logQuantities, assigneeName };
     }),
 
   create: protectedProcedure
@@ -152,6 +166,7 @@ export const logRouter = router({
           isMovement: input.isMovement ?? false,
           equipmentIds: input.equipmentIds ?? [],
           workerIds: input.workerIds ?? [],
+          assigneeId: input.assigneeId ?? null,
         })
         .returning();
 

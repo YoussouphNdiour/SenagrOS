@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Plus, Search, Archive } from 'lucide-react';
+import { Plus, Search, Archive, Sprout } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { DataTable } from '@/components/ui/DataTable';
 import { Badge } from '@/components/ui/Badge';
@@ -84,6 +84,10 @@ export function AssetListClient({ farmId, filterType }: AssetListClientProps) {
     limit: 25,
   });
 
+  const { data: cropCounts } = trpc.asset.cropCountByParcel.useQuery(undefined, {
+    enabled: !selectedType || selectedType === 'land',
+  });
+
   const utils = trpc.useUtils();
   const archiveMutation = trpc.asset.archive.useMutation({
     onSuccess: () => utils.asset.list.invalidate(),
@@ -112,6 +116,20 @@ export function AssetListClient({ farmId, filterType }: AssetListClientProps) {
           {row.status ?? '—'}
         </Badge>
       ),
+    },
+    {
+      key: 'crops',
+      header: 'Cultures',
+      render: (row: Asset) => {
+        if (row.type !== 'land') return null;
+        const cropCount = cropCounts?.[row.id] ?? 0;
+        return (
+          <span className="inline-flex items-center gap-1 text-sm text-gray-600">
+            <Sprout className="h-3.5 w-3.5 text-green-600" />
+            {cropCount}
+          </span>
+        );
+      },
     },
     {
       key: 'createdAt',

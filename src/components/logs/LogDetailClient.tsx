@@ -194,6 +194,12 @@ export function LogDetailClient({ logId }: LogDetailClientProps) {
                 <dd className="font-medium max-w-xs text-right">{log.notes}</dd>
               </div>
             )}
+            {log.assigneeName && (
+              <div className="flex justify-between">
+                <dt className="text-gray-500">Responsable</dt>
+                <dd className="font-medium">{log.assigneeName}</dd>
+              </div>
+            )}
           </dl>
         </Card>
 

@@ -83,6 +83,35 @@ const typeOptions = [
   { value: 'group', label: 'Groupe' },
 ];
 
+/** Dropdown to select a parent parcel when creating a plant asset */
+function ParcelSelect({ register }: { register: ReturnType<typeof useForm<CreateAssetInput>>['register'] }) {
+  const { data: parcels, isLoading } = trpc.asset.listLandParcels.useQuery();
+
+  const options = [
+    { value: '', label: 'Aucune parcelle' },
+    ...(parcels ?? []).map((p) => ({ value: p.id, label: p.name })),
+  ];
+
+  if (isLoading) {
+    return (
+      <Select
+        label="Parcelle"
+        options={[{ value: '', label: 'Chargement...' }]}
+        disabled
+      />
+    );
+  }
+
+  return (
+    <Select
+      label="Parcelle"
+      placeholder="Selectionner une parcelle"
+      options={options}
+      {...register('parentId')}
+    />
+  );
+}
+
 interface AssetCreateFormProps {
   farmId: string;
 }
@@ -273,6 +302,7 @@ export function AssetCreateForm({ farmId }: AssetCreateFormProps) {
         <Card>
           <h3 className="mb-4 text-lg font-semibold text-gray-800">Donnees culture</h3>
           <div className="grid gap-4 sm:grid-cols-2">
+            <ParcelSelect register={register} />
             <Input
               label="Type de culture"
               placeholder="Ex: haricot_vert"
@@ -307,6 +337,111 @@ export function AssetCreateForm({ farmId }: AssetCreateFormProps) {
               label="Densite (plants/ha)"
               type="number"
               {...register('data.density_plants_ha' as any)}
+            />
+          </div>
+        </Card>
+      )}
+
+      {selectedType === 'animal' && (
+        <Card>
+          <h3 className="mb-4 text-lg font-semibold text-gray-800">Fiche animal</h3>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Input
+              label="ID individuel (boucle/tatouage)"
+              placeholder="Ex: SN-B-0042"
+              {...register('data.individual_id' as any)}
+            />
+            <Input
+              label="Espece"
+              placeholder="Ex: Bovin, Ovin, Caprin"
+              {...register('data.species' as any)}
+            />
+            <Input
+              label="Race"
+              placeholder="Ex: Gobra, Ndama"
+              {...register('data.breed' as any)}
+            />
+            <Input
+              label="Robe / Couleur"
+              placeholder="Ex: Blanche, Tachetee"
+              {...register('data.color' as any)}
+            />
+            <Select
+              label="Sexe"
+              options={[
+                { value: '', label: 'Selectionner' },
+                { value: 'male', label: 'Male' },
+                { value: 'female', label: 'Femelle' },
+              ]}
+              {...register('data.sex' as any)}
+            />
+            <Input
+              label="Date de naissance"
+              type="date"
+              {...register('data.birth_date' as any)}
+            />
+            <Select
+              label="Type d'elevage"
+              options={[
+                { value: '', label: 'Selectionner' },
+                { value: 'embouche', label: 'Embouche' },
+                { value: 'naisseur', label: 'Naisseur' },
+                { value: 'laitier', label: 'Laitier' },
+                { value: 'mixte', label: 'Mixte' },
+              ]}
+              {...register('data.livestock_type' as any)}
+            />
+            <Input
+              label="Poids actuel (kg)"
+              type="number"
+              step="0.1"
+              placeholder="Ex: 125.5"
+              {...register('data.current_weight_kg' as any)}
+            />
+            <Select
+              label="Statut sanitaire"
+              options={[
+                { value: '', label: 'Selectionner' },
+                { value: 'bon', label: 'Bon' },
+                { value: 'surveille', label: 'Surveille' },
+                { value: 'malade', label: 'Malade' },
+                { value: 'traitement', label: 'En traitement' },
+              ]}
+              {...register('data.health_status' as any)}
+            />
+          </div>
+
+          <div className="mt-6 border-t border-gray-200 pt-4">
+            <h4 className="mb-4 text-md font-semibold text-gray-700">Vaccination</h4>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Input
+                label="Derniere vaccination — date"
+                type="date"
+                {...register('data.last_vaccination.date' as any)}
+              />
+              <Input
+                label="Derniere vaccination — type"
+                placeholder="Ex: PPCB, Pasteurellose"
+                {...register('data.last_vaccination.type' as any)}
+              />
+              <Input
+                label="Prochaine vaccination — date"
+                type="date"
+                {...register('data.next_vaccination.date' as any)}
+              />
+              <Input
+                label="Prochaine vaccination — type"
+                placeholder="Ex: Charbon"
+                {...register('data.next_vaccination.type' as any)}
+              />
+            </div>
+          </div>
+
+          <div className="mt-6 border-t border-gray-200 pt-4">
+            <Input
+              label="Particularites"
+              placeholder="Notes specifiques sur cet animal..."
+              {...register('data.particularities' as any)}
             />
           </div>
         </Card>

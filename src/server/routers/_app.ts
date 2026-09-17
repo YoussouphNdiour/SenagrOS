@@ -16,6 +16,7 @@ import { cropRouter } from './crop';
 import { searchRouter } from './search';
 import { mapRouter } from './map';
 import { ndviRouter } from './ndvi';
+import { plannedTaskRouter } from './planned-task';
 
 export const appRouter = router({
   health: publicProcedure.query(() => ({ status: 'ok' })),
@@ -36,6 +37,7 @@ export const appRouter = router({
   crop: cropRouter,
   map: mapRouter,
   ndvi: ndviRouter,
+  plannedTask: plannedTaskRouter,
 });
 
 export type AppRouter = typeof appRouter;

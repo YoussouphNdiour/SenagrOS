@@ -1,6 +1,6 @@
 import { auth } from '@/server/auth';
 import { redirect } from 'next/navigation';
-import { AssetListClient } from '@/components/assets/AssetListClient';
+import { AnimalListClient } from '@/components/assets/AnimalListClient';
 
 export default async function AnimalPage() {
   const session = await auth();
@@ -14,7 +14,7 @@ export default async function AnimalPage() {
         <h1 className="text-2xl font-bold text-gray-800">Animaux</h1>
         <p className="text-sm text-gray-500">Gerez votre cheptel et elevage</p>
       </div>
-      <AssetListClient farmId={session.user.farmId} filterType="animal" />
+      <AnimalListClient farmId={session.user.farmId} />
     </div>
   );
 }

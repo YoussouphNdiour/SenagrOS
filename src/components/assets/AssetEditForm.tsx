@@ -353,6 +353,125 @@ export function AssetEditForm({ assetId, farmId }: AssetEditFormProps) {
         </Card>
       )}
 
+      {asset.type === 'animal' && (
+        <Card>
+          <h3 className="mb-4 text-lg font-semibold text-gray-800">Fiche animal</h3>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Input
+              label="ID individuel (boucle/tatouage)"
+              placeholder="Ex: SN-B-0042"
+              defaultValue={assetData?.individual_id as string | undefined}
+              {...register('data.individual_id' as keyof UpdateAssetInput)}
+            />
+            <Input
+              label="Espece"
+              placeholder="Ex: Bovin, Ovin, Caprin"
+              defaultValue={assetData?.species as string | undefined}
+              {...register('data.species' as keyof UpdateAssetInput)}
+            />
+            <Input
+              label="Race"
+              placeholder="Ex: Gobra, Ndama"
+              defaultValue={assetData?.breed as string | undefined}
+              {...register('data.breed' as keyof UpdateAssetInput)}
+            />
+            <Input
+              label="Robe / Couleur"
+              placeholder="Ex: Blanche, Tachetee"
+              defaultValue={assetData?.color as string | undefined}
+              {...register('data.color' as keyof UpdateAssetInput)}
+            />
+            <Select
+              label="Sexe"
+              options={[
+                { value: '', label: 'Selectionner' },
+                { value: 'male', label: 'Male' },
+                { value: 'female', label: 'Femelle' },
+              ]}
+              defaultValue={assetData?.sex as string | undefined}
+              {...register('data.sex' as keyof UpdateAssetInput)}
+            />
+            <Input
+              label="Date de naissance"
+              type="date"
+              defaultValue={assetData?.birth_date as string | undefined}
+              {...register('data.birth_date' as keyof UpdateAssetInput)}
+            />
+            <Select
+              label="Type d'elevage"
+              options={[
+                { value: '', label: 'Selectionner' },
+                { value: 'embouche', label: 'Embouche' },
+                { value: 'naisseur', label: 'Naisseur' },
+                { value: 'laitier', label: 'Laitier' },
+                { value: 'mixte', label: 'Mixte' },
+              ]}
+              defaultValue={assetData?.livestock_type as string | undefined}
+              {...register('data.livestock_type' as keyof UpdateAssetInput)}
+            />
+            <Input
+              label="Poids actuel (kg)"
+              type="number"
+              step="0.1"
+              placeholder="Ex: 125.5"
+              defaultValue={assetData?.current_weight_kg as string | undefined}
+              {...register('data.current_weight_kg' as keyof UpdateAssetInput)}
+            />
+            <Select
+              label="Statut sanitaire"
+              options={[
+                { value: '', label: 'Selectionner' },
+                { value: 'bon', label: 'Bon' },
+                { value: 'surveille', label: 'Surveille' },
+                { value: 'malade', label: 'Malade' },
+                { value: 'traitement', label: 'En traitement' },
+              ]}
+              defaultValue={assetData?.health_status as string | undefined}
+              {...register('data.health_status' as keyof UpdateAssetInput)}
+            />
+          </div>
+
+          <div className="mt-6 border-t border-gray-200 pt-4">
+            <h4 className="mb-4 text-md font-semibold text-gray-700">Vaccination</h4>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Input
+                label="Derniere vaccination — date"
+                type="date"
+                defaultValue={(assetData?.last_vaccination as Record<string, unknown> | undefined)?.date as string | undefined}
+                {...register('data.last_vaccination.date' as keyof UpdateAssetInput)}
+              />
+              <Input
+                label="Derniere vaccination — type"
+                placeholder="Ex: PPCB, Pasteurellose"
+                defaultValue={(assetData?.last_vaccination as Record<string, unknown> | undefined)?.type as string | undefined}
+                {...register('data.last_vaccination.type' as keyof UpdateAssetInput)}
+              />
+              <Input
+                label="Prochaine vaccination — date"
+                type="date"
+                defaultValue={(assetData?.next_vaccination as Record<string, unknown> | undefined)?.date as string | undefined}
+                {...register('data.next_vaccination.date' as keyof UpdateAssetInput)}
+              />
+              <Input
+                label="Prochaine vaccination — type"
+                placeholder="Ex: Charbon"
+                defaultValue={(assetData?.next_vaccination as Record<string, unknown> | undefined)?.type as string | undefined}
+                {...register('data.next_vaccination.type' as keyof UpdateAssetInput)}
+              />
+            </div>
+          </div>
+
+          <div className="mt-6 border-t border-gray-200 pt-4">
+            <Input
+              label="Particularites"
+              placeholder="Notes specifiques sur cet animal..."
+              defaultValue={assetData?.particularities as string | undefined}
+              {...register('data.particularities' as keyof UpdateAssetInput)}
+            />
+          </div>
+        </Card>
+      )}
+
       {asset.type === 'equipment' && (
         <Card>
           <h3 className="mb-4 text-lg font-semibold text-gray-800">Donnees equipement</h3>

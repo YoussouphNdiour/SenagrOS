@@ -175,6 +175,7 @@ export const createLogSchema = z.object({
   isMovement: z.boolean().optional(),
   equipmentIds: z.array(z.string().uuid()).optional(),
   workerIds: z.array(z.string().uuid()).optional(),
+  assigneeId: z.string().uuid().optional().nullable(),
   assetIds: z.array(logAssetInputSchema).optional(),
   quantities: z.array(quantityInputSchema).optional(),
 });
@@ -193,6 +194,7 @@ export const updateLogSchema = z.object({
   isMovement: z.boolean().optional(),
   equipmentIds: z.array(z.string().uuid()).optional(),
   workerIds: z.array(z.string().uuid()).optional(),
+  assigneeId: z.string().uuid().optional().nullable(),
   assetIds: z.array(logAssetInputSchema).optional(),
   quantities: z.array(quantityInputSchema).optional(),
 });
@@ -205,6 +207,7 @@ export const listLogsSchema = z.object({
   dateFrom: z.string().optional(),
   dateTo: z.string().optional(),
   assetId: z.string().uuid().optional(),
+  assigneeId: z.string().uuid().optional().nullable(),
   search: z.string().optional(),
   page: z.number().int().positive().default(1),
   limit: z.number().int().positive().max(100).default(25),

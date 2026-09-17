@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Archive, Pencil } from 'lucide-react';
+import { ArrowLeft, Archive, Pencil, Sprout } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
@@ -45,6 +45,10 @@ interface AssetDetailClientProps {
 export function AssetDetailClient({ assetId }: AssetDetailClientProps) {
   const router = useRouter();
   const { data: asset, isLoading } = trpc.asset.getById.useQuery({ id: assetId });
+  const { data: parcelCrops } = trpc.asset.getParcelCrops.useQuery(
+    { parcelId: assetId },
+    { enabled: asset?.type === 'land' },
+  );
 
   const archiveMutation = trpc.asset.archive.useMutation({
     onSuccess: () => router.push('/assets'),
@@ -214,6 +218,68 @@ export function AssetDetailClient({ assetId }: AssetDetailClientProps) {
               </li>
             ))}
           </ul>
+        </Card>
+      )}
+
+      {/* Current crops — only shown for land assets */}
+      {asset.type === 'land' && (
+        <Card>
+          <div className="mb-3 flex items-center gap-2">
+            <Sprout className="h-5 w-5 text-green-600" />
+            <h3 className="text-lg font-semibold text-gray-800">
+              Speculations en cours
+              {parcelCrops && parcelCrops.length > 0 && (
+                <span className="ml-1 text-sm font-normal text-gray-500">
+                  ({parcelCrops.length})
+                </span>
+              )}
+            </h3>
+          </div>
+          {!parcelCrops || parcelCrops.length === 0 ? (
+            <p className="text-sm text-gray-500">
+              Aucune culture associee a cette parcelle.
+            </p>
+          ) : (
+            <ul className="divide-y divide-gray-100">
+              {parcelCrops.map((crop) => {
+                const cropData = crop.data as Record<string, unknown> | null;
+                const cropType = cropData?.crop_type as string | undefined;
+                const variety = cropData?.variety as string | undefined;
+                const plantingDate = cropData?.planting_date as string | undefined;
+
+                return (
+                  <li
+                    key={crop.id}
+                    className="flex cursor-pointer items-center justify-between py-3 hover:bg-gray-50"
+                    onClick={() => router.push(`/assets/${crop.id}`)}
+                  >
+                    <div>
+                      <span className="font-medium text-gray-800">
+                        {crop.name}
+                      </span>
+                      <div className="mt-0.5 flex flex-wrap gap-3 text-xs text-gray-500">
+                        {cropType && (
+                          <span>Culture : {cropType}</span>
+                        )}
+                        {variety && (
+                          <span>Variete : {variety}</span>
+                        )}
+                        {plantingDate && (
+                          <span>
+                            Date de semis :{' '}
+                            {new Date(plantingDate).toLocaleDateString('fr-FR')}
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                    <Badge variant={getStatusVariant(crop.status)}>
+                      {crop.status ?? '—'}
+                    </Badge>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </Card>
       )}
     </div>

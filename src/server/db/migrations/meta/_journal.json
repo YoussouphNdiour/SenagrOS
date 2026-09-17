@@ -29,6 +29,20 @@
       "when": 1726531200000,
       "tag": "0003_add_postgis_geometry_columns",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1726617600000,
+      "tag": "0004_add_assignee_to_logs",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1726704000000,
+      "tag": "0005_add_planned_tasks",
+      "breakpoints": true
     }
   ]
 }

@@ -1,12 +1,15 @@
 'use client';
 
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
+import { useSession } from 'next-auth/react';
 import { trpc } from '@/lib/trpc';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { ComboboxAsync } from '@/components/ui/ComboboxAsync';
 import { updateLogSchema, logTypeValues, logStatusValues } from '@/lib/validators/log.validator';
 import type { z } from 'zod';
 
@@ -40,9 +43,17 @@ interface LogEditClientProps {
   logId: string;
 }
 
+interface UserItem {
+  id: string;
+  name: string;
+}
+
 export function LogEditClient({ logId }: LogEditClientProps) {
   const router = useRouter();
+  const { data: session } = useSession();
+  const farmId = (session?.user as { farmId?: string } | undefined)?.farmId ?? '';
   const { data: log, isLoading } = trpc.log.getById.useQuery({ id: logId });
+  const [assigneeId, setAssigneeId] = useState<string | null>(null);
 
   const updateMutation = trpc.log.update.useMutation({
     onSuccess: () => router.push(`/logs/${logId}`),
@@ -74,8 +85,18 @@ export function LogEditClient({ logId }: LogEditClientProps) {
         notes: log.notes ?? '',
         data: (log.data as Record<string, unknown>) ?? {},
       });
+      setAssigneeId(log.assigneeId ?? null);
     }
   }, [log, logId, reset]);
+
+  const searchWorkers = async (query: string): Promise<UserItem[]> => {
+    const res = await fetch(`/api/trpc/farmMember.list?input=${encodeURIComponent(JSON.stringify({ json: { search: query || undefined } }))}`);
+    const json = await res.json();
+    return (json?.result?.data?.json?.items ?? []).map((m: { id: string; name: string | null }) => ({
+      id: m.id,
+      name: m.name ?? 'Sans nom',
+    }));
+  };
 
   const dataEntries =
     log?.data !== null &&
@@ -88,7 +109,7 @@ export function LogEditClient({ logId }: LogEditClientProps) {
       : [];
 
   const onSubmit = (values: UpdateLogInput) => {
-    updateMutation.mutate(values);
+    updateMutation.mutate({ ...values, assigneeId });
   };
 
   if (isLoading) {
@@ -226,6 +247,22 @@ export function LogEditClient({ logId }: LogEditClientProps) {
           </div>
         </Card>
       )}
+
+      {/* Responsable */}
+      <Card>
+        <h3 className="mb-4 text-lg font-semibold text-gray-800">Responsable</h3>
+        <div className="grid gap-4 sm:grid-cols-2">
+          <ComboboxAsync<UserItem>
+            label="Responsable"
+            placeholder="Choisir un responsable..."
+            value={assigneeId ?? undefined}
+            onChange={(val) => setAssigneeId(val || null)}
+            searchFn={searchWorkers}
+            getLabel={(item) => item.name}
+            getValue={(item) => item.id}
+          />
+        </div>
+      </Card>
 
       {/* Actions */}
       <div className="flex justify-end gap-3">
