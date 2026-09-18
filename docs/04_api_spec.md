@@ -22,11 +22,11 @@
 
 ## Permissions / Roles
 
-Trois roles principaux : **owner** (proprietaire), **manager** (gestionnaire), **worker** (travailleur).
+Quatre roles implementes : **owner** (proprietaire), **manager** (gestionnaire), **worker** (travailleur), **viewer** (observateur lecture seule).
 
 | Niveau d'acces | Roles autorises |
 |---|---|
-| Lecture seule (list, getById, search) | owner, manager, worker |
+| Lecture seule (list, getById, search) | owner, manager, worker, viewer |
 | Ecriture (create, update) | owner, manager |
 | Archive / Restore | owner, manager |
 | Gestion membres (invite, updateRole, remove) | owner |
@@ -282,6 +282,60 @@ marketplace.listReceivedOrders GET  { status?, page?, limit? } → { items: Orde
 marketplace.updateOrderStatus  POST { orderId, status: 'confirmed'|'shipped'|'delivered'|'cancelled' }
 ```
 Requires: owner, manager (lecture marketplace: tous les utilisateurs authentifies)
+
+### 16. `searchRouter`
+```
+search.currentFarm  GET   {} → { id, name } | null  -- Ferme courante de l'utilisateur
+search.global       GET   { query: string, limit?: number (max 20, default 5) } → { assets: { id, name, type }[], logs: { id, name, type }[], plans: { id, name, type }[] }
+```
+Requires: tout utilisateur authentifie (protectedProcedure). Recherche par ILIKE sur les noms dans la ferme courante.
+
+### 17. `mapRouter`
+```
+map.getParcels      GET   {} → { id, name, status, data, geojson: string | null }[]  -- Retourne les parcelles (type='land') avec geometrie GeoJSON
+```
+Requires: tout utilisateur authentifie. Retourne un tableau brut (pas de pagination). La geometrie PostGIS est convertie en GeoJSON via `ST_AsGeoJSON()`.
+
+### 18. `ndviRouter`
+```
+ndvi.getTimeSeries  GET   { assetId: UUID, months?: number (1-24, default 12) } → { data: NdviDataPoint[], hasGeometry: boolean }
+```
+Requires: tout utilisateur authentifie. Interroge l'API Sentinel Hub pour les donnees NDVI satellitaires. Fonctionne uniquement sur les assets de type `land` avec des coordonnees dans `data.coordinates`.
+
+### 19. `plannedTaskRouter`
+```
+plannedTask.list    GET   { planId: UUID } → PlannedTask[]  -- Liste triee par sortOrder puis dayOffset, pas de pagination
+plannedTask.create  POST  { planId, name, description?, type?, dayOffset?, plannedDate?, duration?, status?, inputs?, notes?, sortOrder? } → PlannedTask
+plannedTask.update  POST  { id, name?, description?, type?, dayOffset?, plannedDate?, duration?, status?, inputs?, notes?, sortOrder? } → PlannedTask
+plannedTask.delete  POST  { id } → { success: true }  -- Suppression physique — les taches planifiees sont des sous-entites de plans
+```
+Requires: owner, manager (verifie que le plan appartient a la ferme de l'utilisateur)
+
+### 20. `cropRouter`
+```
+-- Familles de cultures --
+crop.listFamilies    GET   {} → CropFamily[]  -- Pas de pagination
+crop.createFamily    POST  { code, name, description? } → CropFamily
+
+-- Cultures --
+crop.list            GET   { search?, familyId?, page?, limit? } → { items: Crop[], total, page, pages }
+crop.create          POST  { code, nameFr, nameEn?, nameWo?, familyId, cycleShortDays?, cycleLongDays?, seasonPreference?, data? } → Crop
+
+-- Varietes --
+crop.listVarieties   GET   { cropId } → CropVariety[]  -- Pas de pagination
+crop.createVariety   POST  { cropId, code, name, cycleDays?, yieldPotentialKgHa?, characteristics?, origin? } → CropVariety
+
+-- Saisons --
+crop.listSeasons     GET   { year?, page?, limit? } → { items: Season[], total, page, pages }
+crop.createSeason    POST  { name, type, startDate, endDate, year, status?, notes? } → Season
+crop.updateSeason    POST  { id, name?, type?, startDate?, endDate?, year?, status?, notes? } → Season
+
+-- Regles de rotation --
+crop.checkRotation      GET   { previousCropId, nextCropId } → { compatibility, reason, recommendation, source }
+crop.listRotationRules  GET   { farmId?, cropId?, page?, limit? } → { items: RotationRule[], total, page, pages }
+crop.createRotationRule POST  { farmId?, previousCropId, nextCropId, compatibility, reason?, minIntervalDays?, recommendation?, data? } → RotationRule
+```
+Requires: tout utilisateur authentifie (familles/cultures/varietes sont globales ; saisons et regles de rotation sont liees a une ferme)
 
 ---
 

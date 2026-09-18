@@ -218,11 +218,13 @@ logs
 ├── equipment_ids   JSONB DEFAULT []   -- UUIDs des machines utilisees
 ├── location_ids    JSONB DEFAULT []
 ├── worker_ids      JSONB DEFAULT []   -- UUIDs des employes assignes
-├── created_at      TIMESTAMP DEFAULT NOW()
-└── updated_at      TIMESTAMP DEFAULT NOW()
+├── assignee_id     UUID FK → users.id  -- technicien/agronome assigne a cette tache
+├── geometry        GEOMETRY (PostGIS)  -- geolocalisation du log
+├── created_at      TIMESTAMPTZ DEFAULT NOW()
+└── updated_at      TIMESTAMPTZ DEFAULT NOW()
 ```
 
-> ⚠️ Migration prevue : `archived_at` sera ajoute pour le soft-delete. `geometry` PostGIS sera ajoute pour la geolocalisation.
+> ⚠️ Migration prevue : `archived_at TIMESTAMPTZ` sera ajoute pour le soft-delete (convention assets/logs).
 
 **INDEX** : `idx_logs_type_timestamp` sur (type, timestamp)
 
