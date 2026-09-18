@@ -464,6 +464,16 @@
       <div class="screenshot-caption">Formulaire Parcelle — Donnees parcelle et reseau d'irrigation (source, type reseau, filtration, etat)</div>
     </div>
 
+    <h3>Speculations en cours</h3>
+    <p>Sur la page de detail d'une parcelle, la section <strong>Speculations en cours</strong> liste automatiquement toutes les cultures actives liees a cette parcelle. Pour chaque culture, vous voyez :</p>
+    <ul>
+      <li>Le <strong>nom</strong> de la culture</li>
+      <li>Le <strong>type de culture</strong> (arachide, oignon, mil, etc.)</li>
+      <li>La <strong>variete</strong></li>
+      <li>La <strong>date de semis</strong></li>
+    </ul>
+    <p>Cliquez sur une culture pour acceder a sa fiche detaillee. La liste des parcelles affiche egalement un compteur de cultures dans la colonne <strong>Cultures</strong>.</p>
+
     <div class="info-box tip">
       <strong>Conseil</strong>
       Renseignez le reseau d'irrigation de vos parcelles pour un suivi precis de la consommation d'eau et la planification de la maintenance du reseau.
@@ -490,6 +500,7 @@
       <li>Depuis la page <strong>Cultures</strong>, cliquez sur <strong>Nouveau</strong></li>
       <li>Selectionnez le type <strong>Culture</strong></li>
       <li>Renseignez : nom, type de culture, variete</li>
+      <li><strong>Selectionnez la parcelle</strong> : un menu deroulant liste toutes vos parcelles actives pour lier la culture a son emplacement</li>
       <li>Indiquez les dates de plantation et de recolte prevue</li>
       <li>Renseignez l'ecartement entre rangs, entre plants et la densite</li>
       <li>Validez avec <strong>Creer l'asset</strong></li>
@@ -510,26 +521,63 @@
   <div class="section-header">
     <span class="section-num">5</span>
     <h2>Animaux</h2>
-    <p>Gestion du cheptel et de l'elevage</p>
+    <p>Gestion du cheptel et de l'elevage — Fiches individuelles</p>
   </div>
   <div class="section-body">
-    <p>Suivez votre cheptel : bovins, ovins, caprins, volailles, etc.</p>
+    <p>Suivez votre cheptel avec des <strong>fiches individuelles detaillees</strong> : bovins, ovins, caprins, volailles, etc. La liste des animaux affiche des colonnes specifiques : ID individuel, Race, Poids, Type d'elevage et Statut sanitaire avec alertes vaccination.</p>
     <div class="screenshot">
       <img src="screenshots/28-animaux.png" alt="Page animaux">
-      <div class="screenshot-caption">Liste des animaux — Troupeau bovins N'Dama, 12 tetes</div>
+      <div class="screenshot-caption">Liste des animaux — Colonnes ID individuel, Race, Poids, Type elevage, Sante</div>
     </div>
 
     <h3>Ajouter un animal</h3>
+    <p>Le formulaire de creation d'un animal comprend une <strong>fiche structuree</strong> avec tous les champs necessaires :</p>
     <ol class="steps">
-      <li>Cliquez sur <strong>Nouveau</strong></li>
-      <li>Selectionnez le type <strong>Animal</strong></li>
-      <li>Renseignez le nom (ex: Troupeau Bovins N'Dama)</li>
-      <li>Ajoutez des notes detaillees (race, nombre de tetes, type d'elevage, zone)</li>
+      <li>Cliquez sur <strong>Nouveau</strong> et selectionnez le type <strong>Animal</strong></li>
+      <li>Renseignez le nom de l'animal</li>
+      <li>Dans la section <strong>Fiche animal</strong>, remplissez :
+        <ul>
+          <li><strong>ID individuel</strong> (boucle/tatouage) — ex: SN-B-0042</li>
+          <li><strong>Espece</strong> : Bovin, Ovin, Caprin, etc.</li>
+          <li><strong>Race</strong> : Ndama, Gobra, etc.</li>
+          <li><strong>Robe / Couleur</strong></li>
+          <li><strong>Sexe</strong> : Male ou Femelle</li>
+          <li><strong>Date de naissance</strong></li>
+          <li><strong>Type d'elevage</strong> : Embouche, Naisseur, Laitier, Mixte</li>
+          <li><strong>Poids actuel</strong> (kg)</li>
+          <li><strong>Statut sanitaire</strong> : Bon, Surveille, Malade, En traitement</li>
+        </ul>
+      </li>
+      <li>Section <strong>Vaccination</strong> : derniere vaccination (date + type) et prochaine vaccination planifiee</li>
+      <li>Ajoutez des <strong>particularites</strong> (signes distinctifs, comportement)</li>
       <li>Cliquez sur <strong>Creer l'asset</strong></li>
     </ol>
     <div class="screenshot">
       <img src="screenshots/42-animaux-form.png" alt="Formulaire animaux rempli">
-      <div class="screenshot-caption">Formulaire Animal — Troupeau Bovins N'Dama, race trypanotolerant, 12 tetes, zone Kolda</div>
+      <div class="screenshot-caption">Formulaire Animal — Fiche structuree avec ID, espece, race, sexe, poids, vaccination</div>
+    </div>
+
+    <h3>Fiche individuelle</h3>
+    <p>La page de detail d'un animal affiche une <strong>fiche individuelle complete</strong> avec 4 sections :</p>
+    <ul>
+      <li><strong>Identification</strong> : ID individuel, nom, espece, race, robe, sexe, date de naissance avec age calcule automatiquement (ex: "2 ans 6 mois")</li>
+      <li><strong>Type d'elevage</strong> : categorie (embouche, naisseur, laitier), particularites, notes</li>
+      <li><strong>Suivi ponderal</strong> : poids actuel, nombre de pesees, <strong>GMQ</strong> (Gain Moyen Quotidien en g/jour) calcule automatiquement, et un <strong>graphique d'evolution du poids</strong> (courbe Recharts) visible a partir de 2 pesees</li>
+      <li><strong>Sante & Vaccination</strong> : statut sanitaire avec badge couleur, derniere et prochaine vaccination avec <strong>alertes automatiques</strong> (en retard ou imminente sous 7 jours), lien vers les journaux medicaux</li>
+    </ul>
+
+    <h3>Peser un animal</h3>
+    <p>Utilisez le bouton <strong>Peser</strong> en haut de la fiche pour enregistrer une pesee rapide :</p>
+    <ol class="steps">
+      <li>Cliquez sur <strong>Peser</strong></li>
+      <li>Saisissez la date et le poids en kg</li>
+      <li>Cliquez sur <strong>Enregistrer</strong></li>
+    </ol>
+    <p>Le poids actuel, le compteur de pesees et le GMQ sont mis a jour automatiquement. Le graphique d'evolution s'affiche des la 2eme pesee.</p>
+
+    <div class="info-box tip">
+      <strong>Conseil</strong>
+      Pesez vos animaux regulierement (toutes les 2 semaines) pour un suivi precis du GMQ. Les alertes de vaccination vous previennent 7 jours avant la date prevue.
     </div>
   </div>
 </div>
@@ -714,9 +762,16 @@
       <li>Le type <strong>Activite</strong> est selectionne par defaut</li>
       <li>Remplissez le nom, la date, le statut et les notes</li>
       <li>Dans <strong>Details activite</strong> : duree (heures) et description</li>
-      <li>Assignez le materiel et le personnel si necessaire</li>
+      <li>Dans <strong>Assignation materiel & personnel</strong> :
+        <ul>
+          <li><strong>Responsable</strong> : choisissez la personne en charge de cette tache (recherche par nom)</li>
+          <li><strong>Equipements utilises</strong> : selectionnez le materiel necessaire</li>
+          <li><strong>Employes assignes</strong> : assignez les travailleurs a la tache</li>
+        </ul>
+      </li>
       <li>Cliquez sur <strong>Creer le log</strong></li>
     </ol>
+    <p>Le nom du <strong>Responsable</strong> s'affiche dans la page de detail du log et peut etre modifie via la page d'edition.</p>
 
     <div class="screenshot">
       <img src="screenshots/54-log-activity-form.png" alt="Formulaire creation activite">
@@ -1106,7 +1161,7 @@
   <div class="section-header">
     <span class="section-num">13</span>
     <h2>Plans de culture</h2>
-    <p>Planifiez vos campagnes agricoles</p>
+    <p>Planifiez vos campagnes agricoles et itineraires techniques</p>
   </div>
   <div class="section-body">
     <p>Creez des plans de culture pour organiser vos campagnes par saison.</p>
@@ -1124,6 +1179,38 @@
     <div class="screenshot">
       <img src="screenshots/50-plan-form.png" alt="Formulaire plan de culture rempli">
       <div class="screenshot-caption">Formulaire plan — Campagne Oignon Contre-saison 2026-2027, objectif 30T, budget 1 200 000 FCFA</div>
+    </div>
+
+    <h3>Itineraire technique</h3>
+    <p>Chaque plan dispose d'une section <strong>Itineraire technique</strong> qui permet de planifier les operations culturales etape par etape :</p>
+    <ol class="steps">
+      <li>Ouvrez un plan existant</li>
+      <li>Dans la section <strong>Itineraire technique</strong>, cliquez sur <strong>Ajouter une etape</strong></li>
+      <li>Remplissez le formulaire :
+        <ul>
+          <li><strong>Nom de l'etape</strong> : ex: "Semis arachide 55-437"</li>
+          <li><strong>Type d'operation</strong> : Preparation du sol, Semis, Desherbage, Fertilisation, Traitement phytosanitaire, Irrigation, Recolte, Autre</li>
+          <li><strong>Jour offset (J+)</strong> : nombre de jours apres le debut du plan (ex: J+0 pour la preparation, J+15 pour le semis)</li>
+          <li><strong>Duree</strong> : nombre de jours estimes pour l'operation</li>
+          <li><strong>Description</strong> et <strong>Notes</strong></li>
+        </ul>
+      </li>
+      <li>Cliquez sur <strong>Ajouter</strong></li>
+    </ol>
+    <p>Les etapes s'affichent sous forme de <strong>timeline numerotee</strong> avec des badges de type et de statut. Chaque etape peut etre :</p>
+    <ul>
+      <li><strong>Planifie</strong> → cliquez <strong>Demarrer</strong> pour passer a "En cours"</li>
+      <li><strong>En cours</strong> → cliquez <strong>Terminer</strong> pour marquer comme "Termine"</li>
+      <li>Supprimee via le bouton corbeille</li>
+    </ul>
+
+    <div class="info-box tip">
+      <strong>Exemple d'itineraire arachide</strong>
+      1. Preparation du sol (J+0, 5j) — Labour croise a la charrue<br>
+      2. Semis (J+15, 3j) — Semis en ligne, 3 graines par poquet<br>
+      3. Desherbage (J+30, 4j) — Sarclage mecanique<br>
+      4. Fertilisation (J+45, 2j) — NPK 6-20-10 a 150 kg/ha<br>
+      5. Recolte (J+120, 7j) — Arrachage et sechage
     </div>
   </div>
 </div>
