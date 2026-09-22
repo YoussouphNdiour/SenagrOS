@@ -29,6 +29,7 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -50,57 +51,61 @@ interface NavSection {
 
 type NavItem = NavLink | NavSection;
 
-const navItems: NavItem[] = [
-  { label: 'Tableau de bord', href: '/dashboard', icon: Home },
-  { label: 'Actions rapides', href: '/quick', icon: Zap },
-  { label: 'Notifications', href: '/notifications', icon: Bell },
-  {
-    section: 'Exploitation',
-    items: [
-      { label: 'Assets', href: '/assets', icon: Package },
-      { label: 'Parcelles', href: '/assets/land', icon: Map },
-      { label: 'Cultures', href: '/assets/plant', icon: Sprout },
-      { label: 'Animaux', href: '/assets/animal', icon: Leaf },
-      { label: 'Equipements', href: '/assets/equipment', icon: Tractor },
-      { label: 'Carte NDVI', href: '/map', icon: MapPin },
-    ],
-  },
-  {
-    section: 'Production',
-    items: [
-      { label: 'Journal', href: '/logs', icon: FileText },
-      { label: 'Activités', href: '/logs/activity', icon: ClipboardList },
-      { label: 'Semis', href: '/logs/seeding', icon: Wheat },
-      { label: 'Observations', href: '/observations', icon: Eye },
-      { label: 'Récoltes', href: '/logs/harvest', icon: Scissors },
-      { label: 'Intrants', href: '/intrants', icon: Package },
-      { label: 'Irrigation', href: '/logs/irrigation', icon: Droplets },
-      { label: 'Calendrier', href: '/calendrier', icon: Calendar },
-      { label: 'Plans', href: '/plans', icon: ClipboardList },
-    ],
-  },
-  {
-    section: 'Ventes & Finances',
-    items: [
-      { label: 'Ventes', href: '/ventes', icon: ShoppingCart },
-      { label: 'Finances', href: '/finances', icon: Wallet },
-      { label: 'Facturation', href: '/facturation', icon: Receipt },
-      { label: 'Comptabilité', href: '/comptabilite', icon: BookOpen },
-    ],
-  },
-  {
-    section: 'Gestion',
-    items: [
-      { label: 'Stocks', href: '/stocks', icon: Warehouse },
-      { label: 'Rapports', href: '/reports', icon: BarChart3 },
-      { label: 'Employés', href: '/employes', icon: Users },
-      { label: 'Paramètres', href: '/parametres', icon: Settings },
-    ],
-  },
-];
+function useNavItems(): NavItem[] {
+  const t = useTranslations('nav');
+  return [
+    { label: t('dashboard'), href: '/dashboard', icon: Home },
+    { label: t('quick'), href: '/quick', icon: Zap },
+    { label: t('notifications'), href: '/notifications', icon: Bell },
+    {
+      section: 'Exploitation',
+      items: [
+        { label: t('assets'), href: '/assets', icon: Package },
+        { label: t('parcelles'), href: '/assets/land', icon: Map },
+        { label: 'Cultures', href: '/assets/plant', icon: Sprout },
+        { label: t('animaux'), href: '/assets/animal', icon: Leaf },
+        { label: t('equipements'), href: '/assets/equipment', icon: Tractor },
+        { label: 'Carte NDVI', href: '/map', icon: MapPin },
+      ],
+    },
+    {
+      section: 'Production',
+      items: [
+        { label: t('logs'), href: '/logs', icon: FileText },
+        { label: 'Activités', href: '/logs/activity', icon: ClipboardList },
+        { label: 'Semis', href: '/logs/seeding', icon: Wheat },
+        { label: t('observations'), href: '/observations', icon: Eye },
+        { label: 'Récoltes', href: '/logs/harvest', icon: Scissors },
+        { label: t('intrants'), href: '/intrants', icon: Package },
+        { label: 'Irrigation', href: '/logs/irrigation', icon: Droplets },
+        { label: t('calendar'), href: '/calendrier', icon: Calendar },
+        { label: t('plans'), href: '/plans', icon: ClipboardList },
+      ],
+    },
+    {
+      section: 'Ventes & Finances',
+      items: [
+        { label: 'Ventes', href: '/ventes', icon: ShoppingCart },
+        { label: 'Finances', href: '/finances', icon: Wallet },
+        { label: 'Facturation', href: '/facturation', icon: Receipt },
+        { label: 'Comptabilité', href: '/comptabilite', icon: BookOpen },
+      ],
+    },
+    {
+      section: 'Gestion',
+      items: [
+        { label: t('stocks'), href: '/stocks', icon: Warehouse },
+        { label: t('reports'), href: '/reports', icon: BarChart3 },
+        { label: t('employes'), href: '/employes', icon: Users },
+        { label: t('parametres'), href: '/parametres', icon: Settings },
+      ],
+    },
+  ];
+}
 
 export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
+  const navItems = useNavItems();
 
   return (
     <>

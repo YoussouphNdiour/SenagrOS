@@ -4,19 +4,21 @@ import { Home, Sprout, Plus, Map, MoreHorizontal, FileText, Eye, Package, Calend
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
-
-const moreLinks = [
-  { label: 'Journal', href: '/logs', icon: FileText },
-  { label: 'Observations', href: '/observations', icon: Eye },
-  { label: 'Intrants', href: '/intrants', icon: Package },
-  { label: 'Calendrier', href: '/calendrier', icon: Calendar },
-  { label: 'Plans', href: '/plans', icon: ClipboardList },
-  { label: 'Rapports', href: '/reports', icon: BarChart3 },
-] as const;
+import { useTranslations } from 'next-intl';
 
 export function BottomNav() {
   const pathname = usePathname();
   const [moreOpen, setMoreOpen] = useState(false);
+  const t = useTranslations('nav');
+
+  const moreLinks = [
+    { label: t('logs'), href: '/logs', icon: FileText },
+    { label: t('observations'), href: '/observations', icon: Eye },
+    { label: t('intrants'), href: '/intrants', icon: Package },
+    { label: t('calendar'), href: '/calendrier', icon: Calendar },
+    { label: t('plans'), href: '/plans', icon: ClipboardList },
+    { label: t('reports'), href: '/reports', icon: BarChart3 },
+  ];
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 z-30 border-t border-gray-200 bg-white md:hidden">
@@ -62,7 +64,7 @@ export function BottomNav() {
           }`}
         >
           <Home className="h-5 w-5" />
-          Accueil
+          {t('home')}
         </Link>
 
         {/* Cultures */}
@@ -73,7 +75,7 @@ export function BottomNav() {
           }`}
         >
           <Sprout className="h-5 w-5" />
-          Cultures
+          {t('cultures')}
         </Link>
 
         {/* Quick + (elevated) */}
@@ -96,7 +98,7 @@ export function BottomNav() {
           }`}
         >
           <Map className="h-5 w-5" />
-          Carte
+          {t('map')}
         </Link>
 
         {/* Plus */}
@@ -108,7 +110,7 @@ export function BottomNav() {
           }`}
         >
           <MoreHorizontal className="h-5 w-5" />
-          Plus
+          {t('more')}
         </button>
       </div>
     </nav>

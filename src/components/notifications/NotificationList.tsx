@@ -3,6 +3,7 @@
 import { Bell, Package, Calendar, CheckSquare, CheckCheck } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/Button';
+import { useTranslations } from 'next-intl';
 
 const typeIcon: Record<string, React.ElementType> = {
   stock_low: Package,
@@ -10,15 +11,16 @@ const typeIcon: Record<string, React.ElementType> = {
   task_assigned: CheckSquare,
 };
 
-const typeLabel: Record<string, string> = {
-  stock_low: 'Stock bas',
-  stage_delayed: 'Stade en retard',
-  task_assigned: 'Tâche assignée',
-};
-
 export function NotificationList() {
+  const t = useTranslations('notifications');
   const utils = trpc.useUtils();
   const { data, isLoading } = trpc.notification.list.useQuery({ limit: 50, offset: 0 });
+
+  const typeLabel: Record<string, string> = {
+    stock_low: t('stockLow'),
+    stage_delayed: t('stageDelayed'),
+    task_assigned: t('taskAssigned'),
+  };
 
   const markRead = trpc.notification.markRead.useMutation({
     onSuccess: () => {
@@ -54,7 +56,7 @@ export function NotificationList() {
             disabled={markAllRead.isPending}
           >
             <CheckCheck className="h-4 w-4" />
-            Tout marquer comme lu
+            {t('markAllRead')}
           </Button>
         </div>
       )}
@@ -62,7 +64,7 @@ export function NotificationList() {
       {items.length === 0 ? (
         <div className="flex flex-col items-center gap-3 py-16 text-gray-400">
           <Bell className="h-12 w-12 opacity-30" />
-          <p className="text-sm">Aucune notification</p>
+          <p className="text-sm">{t('noNotifications')}</p>
         </div>
       ) : (
         <ul className="divide-y divide-gray-100 rounded-xl border border-gray-200 bg-white">
