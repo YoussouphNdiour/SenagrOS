@@ -45,7 +45,13 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
         if (e.target === overlayRef.current) onClose();
       }}
     >
-      <div className={`w-full ${sizeClasses[size]} rounded-xl bg-white shadow-xl`}>
+      <div
+        className={`
+          w-full bg-white shadow-xl overflow-y-auto
+          fixed inset-0 max-h-screen rounded-none
+          md:relative md:inset-auto md:max-h-[90vh] md:rounded-xl md:${sizeClasses[size]}
+        `}
+      >
         <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
           <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
           <button
