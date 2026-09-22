@@ -25,6 +25,7 @@ import {
   Wallet,
   Receipt,
   BookOpen,
+  Zap,
 } from 'lucide-react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -51,6 +52,7 @@ type NavItem = NavLink | NavSection;
 
 const navItems: NavItem[] = [
   { label: 'Tableau de bord', href: '/dashboard', icon: Home },
+  { label: 'Actions rapides', href: '/quick', icon: Zap },
   { label: 'Notifications', href: '/notifications', icon: Bell },
   {
     section: 'Exploitation',
