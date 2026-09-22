@@ -5,6 +5,7 @@ import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import { GlobalSearch } from './GlobalSearch';
 import { FarmSwitcher } from './FarmSwitcher';
+import { LocaleSwitcher } from './LocaleSwitcher';
 import { trpc } from '@/lib/trpc';
 
 interface TopbarProps {
@@ -38,6 +39,8 @@ export function Topbar({ user, onMenuClick }: TopbarProps) {
       <div className="flex items-center gap-3">
         {/* Farm Switcher */}
         <FarmSwitcher />
+
+        <LocaleSwitcher />
 
         <Link
           href="/notifications"
