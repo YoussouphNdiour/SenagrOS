@@ -311,7 +311,7 @@
 <div class="hero">
   <h1>SenagrOS</h1>
   <p class="subtitle">Guide Utilisateur Complet<br>Systeme de Gestion Agricole pour l'Afrique de l'Ouest</p>
-  <span class="badge">Version 1.1 — Septembre 2026</span>
+  <span class="badge">Version 1.1 — Septembre 2026 | FR / EN / WO</span>
 </div>
 
 <!-- ==================== TABLE OF CONTENTS ==================== -->
@@ -336,6 +336,7 @@
       <a href="#calendrier"><span class="num">12</span> Calendrier</a>
       <a href="#plans"><span class="num">13</span> Plans de culture</a>
       <a href="#recoltes"><span class="num">13b</span> Recoltes</a>
+      <a href="#carte-ndvi"><span class="num">13c</span> Carte NDVI</a>
       <a href="#ventes"><span class="num">14</span> Ventes</a>
       <a href="#facturation"><span class="num">15</span> Facturation</a>
       <a href="#finances"><span class="num">16</span> Finances</a>
@@ -349,6 +350,8 @@
       <a href="#cooperatives"><span class="num">24</span> Cooperatives</a>
       <a href="#parametres"><span class="num">25</span> Parametres</a>
       <a href="#quick"><span class="num">26</span> Actions rapides</a>
+      <a href="#notifications"><span class="num">26b</span> Notifications</a>
+      <a href="#mobile-nav"><span class="num">26c</span> Navigation mobile</a>
       <a href="#workflow"><span class="num">27</span> Workflow complet</a>
     </div>
   </div>
@@ -1242,6 +1245,64 @@
   </div>
 </div>
 
+<!-- ==================== 13c. CARTE NDVI ==================== -->
+<div class="section" id="carte-ndvi">
+  <div class="section-header">
+    <span class="section-num">13c</span>
+    <h2>Carte NDVI</h2>
+    <p>Visualisation satellite de la sante de la vegetation par parcelle</p>
+  </div>
+  <div class="section-body">
+    <p>La <strong>Carte NDVI</strong> affiche vos parcelles sur une carte interactive (MapLibre GL) et permet de consulter l'indice de vegetation normalise (NDVI) issu des images satellites Sentinel-2.</p>
+    <div class="screenshot">
+      <img src="screenshots/31-carte-ndvi-carte.png" alt="Carte NDVI SenagrOS">
+      <div class="screenshot-caption">Carte interactive — Parcelles georeferencees et couches cartographiques</div>
+    </div>
+
+    <h3>Acceder a la carte</h3>
+    <p>Cliquez sur <strong>Carte NDVI</strong> dans le menu lateral (section Exploitation) ou sur l'icone carte dans la navigation mobile.</p>
+
+    <h3>Lire l'indice NDVI</h3>
+    <p>Le NDVI (Normalized Difference Vegetation Index) mesure la densite et la sante du couvert vegetal a partir d'images satellites :</p>
+    <table class="data-table">
+      <tr><th>Valeur NDVI</th><th>Couleur</th><th>Interpretation</th></tr>
+      <tr><td>0,0 — 0,2</td><td style="color:#ef4444">■ Rouge</td><td>Sol nu / Stress vegetal severe</td></tr>
+      <tr><td>0,2 — 0,4</td><td style="color:#f97316">■ Orange</td><td>Vegetation clairsemee</td></tr>
+      <tr><td>0,4 — 0,6</td><td style="color:#eab308">■ Jaune</td><td>Vegetation moderee</td></tr>
+      <tr><td>0,6 — 1,0</td><td style="color:#22c55e">■ Vert</td><td>Vegetation dense et saine</td></tr>
+    </table>
+
+    <h3>Panneau NDVI par parcelle</h3>
+    <p>Cliquez sur une parcelle pour ouvrir le panneau lateral NDVI :</p>
+    <div class="screenshot">
+      <img src="screenshots/31b-carte-ndvi-panel.png" alt="Panneau NDVI par parcelle">
+      <div class="screenshot-caption">Panneau NDVI — Score actuel, graphique d'evolution et selecteur de periode</div>
+    </div>
+    <ul>
+      <li><strong>Score NDVI actuel</strong> : cercle colore avec la valeur et le label (ex: "Vegetation moderee")</li>
+      <li><strong>Graphique d'evolution</strong> : courbe NDVI sur 3, 6, 12 ou 24 mois</li>
+      <li><strong>Selector de periode</strong> : boutons 3M / 6M / 12M / 24M en haut du panneau</li>
+      <li><strong>Source de donnees</strong> : "Donnees Sentinel-2 (Copernicus)" si la parcelle a une geometrie GPS enregistree, sinon "Donnees simulees"</li>
+    </ul>
+
+    <div class="info-box tip">
+      <strong>Donnees satellite reelles</strong>
+      Pour obtenir les donnees Sentinel-2 reelles, la parcelle doit avoir une geometrie PostGIS renseignee (polygone GPS). Configurez la variable d'environnement <code>SENTINEL_HUB_CLIENT_SECRET</code> pour activer l'integration Copernicus.
+    </div>
+
+    <h3>Couches cartographiques</h3>
+    <p>Utilisez les boutons en haut de la carte pour basculer entre :</p>
+    <ul>
+      <li><strong>OSM</strong> : vue topographique (OpenStreetMap)</li>
+      <li><strong>Satellite</strong> : imagerie aerienne haute resolution</li>
+    </ul>
+    <div class="screenshot">
+      <img src="screenshots/31f-carte-ndvi-satellite.png" alt="Couche satellite">
+      <div class="screenshot-caption">Vue satellite — Parcelles superposees sur l'imagerie aerienne</div>
+    </div>
+  </div>
+</div>
+
 <!-- ==================== 14. VENTES ==================== -->
 <div class="section" id="ventes">
   <div class="section-header">
@@ -1481,6 +1542,15 @@
       <img src="screenshots/54-parametres.png" alt="Page parametres">
       <div class="screenshot-caption">Parametres — Configuration de la ferme et gestion des utilisateurs</div>
     </div>
+
+    <h3>Changer de langue</h3>
+    <p>Cliquez sur le selecteur <strong>FR / EN / WO</strong> dans la barre superieure (Topbar) pour changer la langue de l'interface. Trois langues sont disponibles :</p>
+    <ul>
+      <li><strong>FR</strong> — Francais (langue par defaut)</li>
+      <li><strong>EN</strong> — English</li>
+      <li><strong>WO</strong> — Wolof</li>
+    </ul>
+    <p>Le choix est memorise automatiquement via un cookie <code>NEXT_LOCALE</code> et persiste entre les sessions.</p>
   </div>
 </div>
 
@@ -1492,21 +1562,98 @@
     <p>Saisie simplifiee pour les operations courantes</p>
   </div>
   <div class="section-body">
-    <p>Les actions rapides permettent de saisir rapidement les operations les plus frequentes sans passer par le formulaire complet du journal.</p>
+    <p>Les actions rapides permettent de saisir les operations les plus frequentes en quelques secondes, directement depuis le menu <strong>⚡ Actions rapides</strong> (accessible via la barre laterale ou le bouton central de la navigation mobile).</p>
     <div class="screenshot">
-      <img src="screenshots/01-dashboard.png" alt="Actions rapides via le tableau de bord">
-      <div class="screenshot-caption">5 actions rapides disponibles</div>
+      <img src="screenshots/56-actions-rapides.png" alt="Page Actions rapides">
+      <div class="screenshot-caption">Page Actions rapides — 5 formulaires simplifes accessible en un clic</div>
+    </div>
+    <div class="screenshot">
+      <img src="screenshots/56b-quick-harvest.png" alt="Formulaire recolte rapide">
+      <div class="screenshot-caption">Formulaire Recolte rapide — saisie en 4 champs (parcelle, culture, rendement, date)</div>
     </div>
 
     <h3>Actions disponibles</h3>
     <table class="data-table">
-      <tr><th>Action</th><th>Description</th><th>Route</th></tr>
-      <tr><td>Recolte rapide</td><td>Enregistrer une recolte en 4 champs</td><td><code>/quick/harvest</code></td></tr>
-      <tr><td>Vente rapide</td><td>Saisir une vente directe</td><td><code>/quick/sale</code></td></tr>
-      <tr><td>Depense rapide</td><td>Enregistrer une depense</td><td><code>/quick/expense</code></td></tr>
-      <tr><td>Observation rapide</td><td>Noter une observation terrain</td><td><code>/quick/observation</code></td></tr>
-      <tr><td>Tache rapide</td><td>Creer une tache a realiser</td><td><code>/quick/task</code></td></tr>
+      <tr><th>Icone</th><th>Action</th><th>Champs cles</th></tr>
+      <tr><td>✂️</td><td><strong>Recolte rapide</strong></td><td>Parcelle, culture, rendement (kg), date</td></tr>
+      <tr><td>👁️</td><td><strong>Observation rapide</strong></td><td>Parcelle, type d'observation, severite, description</td></tr>
+      <tr><td>📦</td><td><strong>Intrant rapide</strong></td><td>Intrant, parcelle, quantite appliquee, unite</td></tr>
+      <tr><td>💧</td><td><strong>Irrigation rapide</strong></td><td>Parcelle, volume (L), duree (min), methode</td></tr>
+      <tr><td>🐄</td><td><strong>Naissance rapide</strong></td><td>Animal parent, espece, sexe, poids naissance</td></tr>
     </table>
+
+    <div class="info-box tip">
+      <strong>Acces rapide depuis mobile</strong>
+      Sur smartphone, le bouton central vert <strong>⚡</strong> de la barre de navigation inferieure ouvre directement la page des actions rapides.
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 26b. NOTIFICATIONS ==================== -->
+<div class="section" id="notifications">
+  <div class="section-header">
+    <span class="section-num">26b</span>
+    <h2>Notifications</h2>
+    <p>Centre de notifications de votre exploitation</p>
+  </div>
+  <div class="section-body">
+    <p>Le centre de <strong>Notifications</strong> centralise toutes les alertes et evenements importants de votre exploitation. Un badge rouge sur la cloche indique le nombre de notifications non lues.</p>
+    <div class="screenshot">
+      <img src="screenshots/55-notifications.png" alt="Centre de notifications">
+      <div class="screenshot-caption">Centre de notifications — Historique des alertes avec statut lu/non-lu</div>
+    </div>
+
+    <h3>Badge de notification</h3>
+    <p>La cloche <strong>🔔</strong> dans la barre superieure affiche un badge rouge lorsque vous avez des notifications non lues. Le compteur se met a jour automatiquement toutes les 30 secondes.</p>
+
+    <h3>Types de notifications</h3>
+    <table class="data-table">
+      <tr><th>Type</th><th>Declencheur</th></tr>
+      <tr><td>Recolte</td><td>Nouveau log de recolte enregistre</td></tr>
+      <tr><td>Observation</td><td>Observation de stress ou maladie detectee</td></tr>
+      <tr><td>Intrant</td><td>Stock intrant faible ou application enregistree</td></tr>
+      <tr><td>Irrigation</td><td>Rappel irrigation planifie</td></tr>
+      <tr><td>Tache</td><td>Tache assignee ou echeance proche</td></tr>
+      <tr><td>Systeme</td><td>Invitations, changements de ferme</td></tr>
+    </table>
+
+    <h3>Gerer les notifications</h3>
+    <ul>
+      <li>Cliquez sur une notification pour la marquer comme lue et acceder a l'element concerne</li>
+      <li>Utilisez <strong>Tout marquer comme lu</strong> pour effacer toutes les notifications en une seule action</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ==================== 26c. NAVIGATION MOBILE ==================== -->
+<div class="section" id="mobile-nav">
+  <div class="section-header">
+    <span class="section-num">26c</span>
+    <h2>Navigation mobile</h2>
+    <p>Interface optimisee pour smartphones et tablettes</p>
+  </div>
+  <div class="section-body">
+    <p>SenagrOS est entierement responsive. Sur mobile, la navigation principale est remplacee par une <strong>barre de navigation inferieure</strong> avec 5 boutons permanents.</p>
+    <div class="screenshot">
+      <img src="screenshots/58-bottomnav-mobile.png" alt="Navigation mobile SenagrOS">
+      <div class="screenshot-caption">Navigation mobile — Barre inferieure avec bouton central Actions rapides</div>
+    </div>
+
+    <h3>Boutons de la barre inferieure</h3>
+    <table class="data-table">
+      <tr><th>Icone</th><th>Destination</th></tr>
+      <tr><td>🏠 Accueil</td><td>Tableau de bord</td></tr>
+      <tr><td>🌱 Cultures</td><td>Liste des cultures (/assets/plant)</td></tr>
+      <tr><td><strong>⚡ (central, vert)</strong></td><td>Actions rapides (/quick)</td></tr>
+      <tr><td>🗺️ Carte</td><td>Carte NDVI (/map)</td></tr>
+      <tr><td>⋯ Plus</td><td>Menu complet (tous les modules)</td></tr>
+    </table>
+
+    <h3>Menu "Plus"</h3>
+    <p>Le bouton <strong>Plus (⋯)</strong> ouvre un panneau avec l'ensemble des modules organises en 3 colonnes : Exploitation, Production, Ventes & Finances, Gestion.</p>
+
+    <h3>Changement de langue</h3>
+    <p>Le selecteur de langue (FR / EN / WO) est disponible dans la barre superieure sur desktop. Il permet de basculer entre le <strong>Francais</strong>, l'<strong>English</strong> et le <strong>Wolof</strong> en un clic. Le choix est memorise dans un cookie.</p>
   </div>
 </div>
 
@@ -1634,7 +1781,7 @@
 <!-- ==================== FOOTER ==================== -->
 <div class="footer">
   <p><strong>SenagrOS</strong> — Systeme de Gestion Agricole pour l'Afrique de l'Ouest</p>
-  <p style="margin-top: 8px;">Version 1.0 | Septembre 2026 | Licence Open Source</p>
+  <p style="margin-top: 8px;">Version 1.1 | Septembre 2026 | Licence Open Source</p>
   <p style="margin-top: 8px; font-size: 0.8rem; color: var(--gray-500);">Guide genere automatiquement avec captures d'ecran en conditions reelles</p>
 </div>
 
