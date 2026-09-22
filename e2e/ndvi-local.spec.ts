@@ -101,7 +101,7 @@ async function openNdviPanel(
     const fiberKey = Object.keys(container).find((k) => k.startsWith('__reactFiber'));
     if (!fiberKey) throw new Error('React fiber not found');
 
-    let fiber = (container as Record<string, unknown>)[fiberKey] as {
+    let fiber = (container as unknown as Record<string, unknown>)[fiberKey] as {
       memoizedState?: { memoizedState?: unknown; queue?: { dispatch?: (v: unknown) => void }; next?: unknown } | null;
       return?: unknown;
     } | null;
@@ -249,7 +249,7 @@ test.describe(`NDVI GPS — ${BASE_URL}`, () => {
       if (!container) return [];
       const fiberKey = Object.keys(container).find((k) => k.startsWith('__reactFiber'));
       if (!fiberKey) return [];
-      let fiber = (container as Record<string, unknown>)[fiberKey] as {
+      let fiber = (container as unknown as Record<string, unknown>)[fiberKey] as {
         memoizedState?: { memoizedState?: { current?: unknown }; next?: unknown } | null;
         return?: unknown;
       } | null;
@@ -350,5 +350,77 @@ test.describe(`NDVI GPS — ${BASE_URL}`, () => {
     if (await closeBtn.isVisible()) {
       await closeBtn.click();
     }
+  });
+
+  // ── 6. Dessin de polygone GPS ──────────────────────────────────────────
+  test('6 — dessiner un polygone GPS et l\'assigner à une parcelle', async ({ page }) => {
+    await login(page);
+    await page.goto(`${BASE_URL}/map`);
+
+    const canvas = page.locator('canvas.maplibregl-canvas');
+    await expect(canvas).toBeVisible({ timeout: 15_000 });
+    await page.waitForTimeout(2_000); // let parcels + land parcels load
+
+    // Idle state: "Dessiner parcelle" button visible
+    await expect(page.getByRole('button', { name: 'Dessiner parcelle' })).toBeVisible();
+
+    // Enter draw mode
+    await page.getByRole('button', { name: 'Dessiner parcelle' }).click();
+    await expect(page.getByText('Mode dessin')).toBeVisible({ timeout: 3_000 });
+
+    await page.screenshot({ path: 'docs/guide/screenshots/pw-draw-01-drawing.png' });
+
+    // Draw 4 points on the canvas
+    const bbox = await canvas.boundingBox();
+    expect(bbox).not.toBeNull();
+    const cx = bbox!.x + bbox!.width / 2;
+    const cy = bbox!.y + bbox!.height / 2;
+
+    await page.mouse.click(cx - 60, cy - 40);
+    await page.waitForTimeout(200);
+    await page.mouse.click(cx + 60, cy - 40);
+    await page.waitForTimeout(200);
+    await page.mouse.click(cx + 60, cy + 40);
+    await page.waitForTimeout(200);
+    await page.mouse.click(cx - 60, cy + 40);
+    await page.waitForTimeout(200);
+
+    // Verify vertex count shown
+    await expect(page.getByText('4 points')).toBeVisible();
+
+    // Finish the polygon
+    await page.getByRole('button', { name: 'Terminer' }).click();
+    await page.waitForTimeout(500);
+
+    // Assignment modal appears
+    await expect(page.getByText('Assigner la parcelle')).toBeVisible({ timeout: 3_000 });
+    await page.screenshot({ path: 'docs/guide/screenshots/pw-draw-02-assign.png' });
+
+    // Select a parcel from the dropdown
+    const select = page.locator('select');
+    const options = await select.locator('option').all();
+    const validOpts: string[] = [];
+    for (const opt of options) {
+      const v = await opt.getAttribute('value');
+      if (v && v !== '') validOpts.push(v);
+    }
+    expect(validOpts.length).toBeGreaterThan(0);
+
+    await select.selectOption(validOpts[0]);
+    await page.waitForTimeout(300);
+    await page.screenshot({ path: 'docs/guide/screenshots/pw-draw-03-selected.png' });
+
+    // Save the geometry
+    await page.getByRole('button', { name: 'Enregistrer' }).click();
+    await page.waitForTimeout(2_000);
+
+    // After save: back to idle state
+    await expect(page.getByRole('button', { name: 'Dessiner parcelle' })).toBeVisible({ timeout: 5_000 });
+    await page.screenshot({ path: 'docs/guide/screenshots/pw-draw-04-saved.png' });
+
+    test.info().annotations.push({
+      type: 'draw',
+      description: `Polygon saved to parcel ${validOpts[0]}`,
+    });
   });
 });

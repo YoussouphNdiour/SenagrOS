@@ -147,6 +147,64 @@ export const assetRouter = router({
       return updated;
     }),
 
+  updateGeometry: protectedProcedure
+    .input(
+      z.object({
+        id: z.string().uuid(),
+        coordinates: z
+          .array(z.array(z.array(z.number()).length(2)))
+          .min(1, 'At least one ring required'),
+      }),
+    )
+    .mutation(async ({ ctx, input }) => {
+      if (!ctx.session.user.farmId) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'No farm associated with this account' });
+      }
+
+      // Verify the asset belongs to this farm and is a land parcel
+      const [existing] = await ctx.db
+        .select({ id: assets.id, data: assets.data })
+        .from(assets)
+        .where(
+          and(
+            eq(assets.id, input.id),
+            eq(assets.farmId, ctx.session.user.farmId),
+            isNull(assets.archivedAt),
+          ),
+        )
+        .limit(1);
+
+      if (!existing) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Asset not found' });
+      }
+
+      const geojsonStr = JSON.stringify({
+        type: 'Polygon',
+        coordinates: input.coordinates,
+      });
+
+      const mergedData = {
+        ...((existing.data as Record<string, unknown>) ?? {}),
+        coordinates: input.coordinates,
+      };
+
+      const [updated] = await ctx.db
+        .update(assets)
+        .set({
+          data: mergedData,
+          geometry: sql`ST_SetSRID(ST_GeomFromGeoJSON(${geojsonStr}), 4326)`,
+          updatedAt: new Date(),
+        })
+        .where(and(eq(assets.id, input.id), eq(assets.farmId, ctx.session.user.farmId)))
+        .returning({ id: assets.id, name: assets.name });
+
+      if (!updated) {
+        throw new TRPCError({ code: 'NOT_FOUND', message: 'Asset not found after update' });
+      }
+
+      return updated;
+    }),
+
   archive: protectedProcedure
     .input(archiveAssetSchema)
     .mutation(async ({ ctx, input }) => {

@@ -5,6 +5,8 @@ import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { trpc } from '@/lib/trpc';
 import { NdviPanel } from './NdviPanel';
+import { DrawPolygonPanel } from './DrawPolygonPanel';
+import type { DrawnPolygon } from './DrawPolygonPanel';
 
 const SENEGAL_CENTER: [number, number] = [-17.4467, 14.6928]; // [lng, lat]
 
@@ -25,6 +27,13 @@ const TILE_SOURCES = {
 
 type TileKey = keyof typeof TILE_SOURCES;
 
+/** Source/layer IDs used for the in-progress draw polygon */
+const DRAW_SOURCE = 'draw-polygon-preview';
+const DRAW_FILL_LAYER = 'draw-polygon-fill';
+const DRAW_LINE_LAYER = 'draw-polygon-line';
+const DRAW_POINTS_SOURCE = 'draw-points-preview';
+const DRAW_POINTS_LAYER = 'draw-points-circles';
+
 interface MapViewProps {
   farmLat?: number;
   farmLng?: number;
@@ -34,19 +43,31 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const [activeLayer, setActiveLayer] = useState<TileKey>('osm');
+
+  // ── Parcel selection (NDVI panel) ──────────────────────────────────────
   const [selectedParcel, setSelectedParcel] = useState<{
     id: string;
     name: string;
     data: Record<string, unknown>;
   } | null>(null);
 
-  const { data: parcels } = trpc.map.getParcels.useQuery();
+  // ── Draw mode state ───────────────────────────────────────────────────
+  const [isDrawing, setIsDrawing] = useState(false);
+  const [drawVertices, setDrawVertices] = useState<[number, number][]>([]);
+  const [drawnPolygon, setDrawnPolygon] = useState<DrawnPolygon | null>(null);
+  const isDrawingRef = useRef(false); // kept in sync for map event listeners
+
+  const { data: parcels, refetch: refetchParcels } = trpc.map.getParcels.useQuery();
+
+  // Parcels available for assignment in draw mode (only land type with no geometry yet,
+  // but we allow reassigning so we show all land parcels via a separate query)
+  const { data: landParcels } = trpc.asset.listLandParcels.useQuery();
 
   const center: [number, number] = farmLng && farmLat
     ? [farmLng, farmLat]
     : SENEGAL_CENTER;
 
-  // Initialize map
+  // ── Initialize map ─────────────────────────────────────────────────────
   useEffect(() => {
     if (!mapContainer.current) return;
 
@@ -87,20 +108,19 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Switch tile layer
+  // ── Switch tile layer ──────────────────────────────────────────────────
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
 
     const source = map.getSource('raster-tiles') as maplibregl.RasterTileSource | undefined;
     if (source) {
-      const tileConfig = TILE_SOURCES[activeLayer];
-      source.setTiles([tileConfig.url]);
+      source.setTiles([TILE_SOURCES[activeLayer].url]);
       map.triggerRepaint();
     }
   }, [activeLayer]);
 
-  // Add parcel layers
+  // ── Add parcel layers ──────────────────────────────────────────────────
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !parcels) return;
@@ -120,12 +140,11 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
       for (const parcel of parcels) {
         const data = parcel.data as Record<string, unknown> | null;
 
-        // Prefer PostGIS geometry over JSONB coordinates
         let geojsonGeometry: { type: string; coordinates: number[][][] } | null = null;
         if ('geojson' in parcel && parcel.geojson) {
           try {
             geojsonGeometry = JSON.parse(parcel.geojson as string);
-          } catch { /* ignore parse errors */ }
+          } catch { /* ignore */ }
         }
 
         const coordinates = geojsonGeometry?.coordinates ?? (data?.coordinates as number[][][] | undefined);
@@ -135,42 +154,28 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
 
         const geojson = {
           type: 'Feature' as const,
-          properties: {
-            id: parcel.id,
-            name: parcel.name,
-            status: parcel.status,
-          },
+          properties: { id: parcel.id, name: parcel.name, status: parcel.status },
           geometry: geojsonGeometry
             ? { type: geojsonGeometry.type as 'Polygon', coordinates: geojsonGeometry.coordinates }
             : { type: 'Polygon' as const, coordinates },
         };
 
-        map.addSource(sourceId, {
-          type: 'geojson',
-          data: geojson,
-        });
+        map.addSource(sourceId, { type: 'geojson', data: geojson });
 
         map.addLayer({
           id: `${sourceId}-fill`,
           type: 'fill',
           source: sourceId,
-          paint: {
-            'fill-color': '#22c55e',
-            'fill-opacity': 0.3,
-          },
+          paint: { 'fill-color': '#22c55e', 'fill-opacity': 0.3 },
         });
 
         map.addLayer({
           id: `${sourceId}-stroke`,
           type: 'line',
           source: sourceId,
-          paint: {
-            'line-color': '#16a34a',
-            'line-width': 2,
-          },
+          paint: { 'line-color': '#16a34a', 'line-width': 2 },
         });
 
-        // Extend bounds
         for (const ring of coordinates) {
           for (const coord of ring) {
             if (Array.isArray(coord) && coord.length >= 2) {
@@ -180,8 +185,8 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
           }
         }
 
-        // Click popup
         map.on('click', `${sourceId}-fill`, (e: maplibregl.MapMouseEvent) => {
+          if (isDrawingRef.current) return; // ignore parcel clicks in draw mode
           const surfaceHa = (data?.surface_ha as number) ?? '-';
           const soilType = (data?.soil_type as string) ?? '-';
           const irrigationType = (data?.irrigation_type as string) ?? '-';
@@ -207,16 +212,14 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
           });
         });
 
-        // Cursor pointer on hover
         map.on('mouseenter', `${sourceId}-fill`, () => {
-          map.getCanvas().style.cursor = 'pointer';
+          if (!isDrawingRef.current) map.getCanvas().style.cursor = 'pointer';
         });
         map.on('mouseleave', `${sourceId}-fill`, () => {
-          map.getCanvas().style.cursor = '';
+          if (!isDrawingRef.current) map.getCanvas().style.cursor = '';
         });
       }
 
-      // Fit map to parcel bounds if we have any
       if (hasBounds) {
         map.fitBounds(bounds, { padding: 60, maxZoom: 16 });
       }
@@ -228,6 +231,166 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
       map.on('load', addParcels);
     }
   }, [parcels]);
+
+  // ── Draw mode — map click handler ──────────────────────────────────────
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    const handleDrawClick = (e: maplibregl.MapMouseEvent) => {
+      if (!isDrawingRef.current) return;
+      const { lng, lat } = e.lngLat;
+      setDrawVertices((prev) => [...prev, [lng, lat]]);
+    };
+
+    const handleDrawDblClick = (e: maplibregl.MapMouseEvent) => {
+      if (!isDrawingRef.current) return;
+      e.preventDefault();
+      setDrawVertices((prev) => {
+        if (prev.length >= 3) {
+          finishDrawFromVertices(prev);
+        }
+        return prev;
+      });
+    };
+
+    map.on('click', handleDrawClick);
+    map.on('dblclick', handleDrawDblClick);
+
+    return () => {
+      map.off('click', handleDrawClick);
+      map.off('dblclick', handleDrawDblClick);
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // ── Update draw preview layer on vertex change ─────────────────────────
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    const updatePreview = () => {
+      if (drawVertices.length === 0) {
+        // Clear preview
+        if (map.getLayer(DRAW_FILL_LAYER)) map.removeLayer(DRAW_FILL_LAYER);
+        if (map.getLayer(DRAW_LINE_LAYER)) map.removeLayer(DRAW_LINE_LAYER);
+        if (map.getSource(DRAW_SOURCE)) map.removeSource(DRAW_SOURCE);
+        if (map.getLayer(DRAW_POINTS_LAYER)) map.removeLayer(DRAW_POINTS_LAYER);
+        if (map.getSource(DRAW_POINTS_SOURCE)) map.removeSource(DRAW_POINTS_SOURCE);
+        return;
+      }
+
+      // Line/polygon preview
+      const ring = [...drawVertices, drawVertices[0]]; // close ring for preview
+      const lineData: GeoJSON.Feature<GeoJSON.LineString> = {
+        type: 'Feature',
+        properties: {},
+        geometry: { type: 'LineString', coordinates: ring },
+      };
+
+      if (map.getSource(DRAW_SOURCE)) {
+        (map.getSource(DRAW_SOURCE) as maplibregl.GeoJSONSource).setData(lineData);
+      } else {
+        map.addSource(DRAW_SOURCE, { type: 'geojson', data: lineData });
+        map.addLayer({
+          id: DRAW_LINE_LAYER,
+          type: 'line',
+          source: DRAW_SOURCE,
+          paint: { 'line-color': '#f97316', 'line-width': 2, 'line-dasharray': [2, 1] },
+        });
+        if (drawVertices.length >= 3) {
+          map.addLayer({
+            id: DRAW_FILL_LAYER,
+            type: 'fill',
+            source: DRAW_SOURCE,
+            paint: { 'fill-color': '#f97316', 'fill-opacity': 0.15 },
+          });
+        }
+      }
+
+      // Vertex points
+      const pointsData: GeoJSON.FeatureCollection<GeoJSON.Point> = {
+        type: 'FeatureCollection',
+        features: drawVertices.map((v) => ({
+          type: 'Feature',
+          properties: {},
+          geometry: { type: 'Point', coordinates: v },
+        })),
+      };
+
+      if (map.getSource(DRAW_POINTS_SOURCE)) {
+        (map.getSource(DRAW_POINTS_SOURCE) as maplibregl.GeoJSONSource).setData(pointsData);
+      } else {
+        map.addSource(DRAW_POINTS_SOURCE, { type: 'geojson', data: pointsData });
+        map.addLayer({
+          id: DRAW_POINTS_LAYER,
+          type: 'circle',
+          source: DRAW_POINTS_SOURCE,
+          paint: { 'circle-radius': 5, 'circle-color': '#f97316', 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5 },
+        });
+      }
+    };
+
+    if (map.isStyleLoaded()) {
+      updatePreview();
+    } else {
+      map.once('load', updatePreview);
+    }
+  }, [drawVertices]);
+
+  // ── Draw helpers ───────────────────────────────────────────────────────
+  const finishDrawFromVertices = useCallback((vertices: [number, number][]) => {
+    if (vertices.length < 3) return;
+    const closed: [number, number][] = [...vertices, vertices[0]];
+    setDrawnPolygon({ coordinates: [closed] });
+    setIsDrawing(false);
+    isDrawingRef.current = false;
+
+    const map = mapRef.current;
+    if (map) map.getCanvas().style.cursor = '';
+  }, []);
+
+  const handleStartDraw = useCallback(() => {
+    setIsDrawing(true);
+    isDrawingRef.current = true;
+    setDrawVertices([]);
+    setDrawnPolygon(null);
+    setSelectedParcel(null);
+
+    const map = mapRef.current;
+    if (map) map.getCanvas().style.cursor = 'crosshair';
+  }, []);
+
+  const handleCancelDraw = useCallback(() => {
+    setIsDrawing(false);
+    isDrawingRef.current = false;
+    setDrawVertices([]);
+    setDrawnPolygon(null);
+
+    // Clear preview layers
+    const map = mapRef.current;
+    if (map) {
+      if (map.getLayer(DRAW_FILL_LAYER)) map.removeLayer(DRAW_FILL_LAYER);
+      if (map.getLayer(DRAW_LINE_LAYER)) map.removeLayer(DRAW_LINE_LAYER);
+      if (map.getSource(DRAW_SOURCE)) map.removeSource(DRAW_SOURCE);
+      if (map.getLayer(DRAW_POINTS_LAYER)) map.removeLayer(DRAW_POINTS_LAYER);
+      if (map.getSource(DRAW_POINTS_SOURCE)) map.removeSource(DRAW_POINTS_SOURCE);
+      map.getCanvas().style.cursor = '';
+    }
+  }, []);
+
+  const handleFinishDraw = useCallback(() => {
+    finishDrawFromVertices(drawVertices);
+  }, [drawVertices, finishDrawFromVertices]);
+
+  const handleUndoVertex = useCallback(() => {
+    setDrawVertices((prev) => prev.slice(0, -1));
+  }, []);
+
+  const handleSaved = useCallback(() => {
+    handleCancelDraw();
+    refetchParcels();
+  }, [handleCancelDraw, refetchParcels]);
 
   const handleClosePanel = useCallback(() => {
     setSelectedParcel(null);
@@ -253,6 +416,21 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
             {TILE_SOURCES[key].label}
           </button>
         ))}
+      </div>
+
+      {/* Draw polygon control — bottom-left of map area */}
+      <div className="absolute bottom-8 left-3 z-10">
+        <DrawPolygonPanel
+          isDrawing={isDrawing}
+          vertices={drawVertices}
+          drawnPolygon={drawnPolygon}
+          parcels={(landParcels ?? []).map((p) => ({ id: p.id, name: p.name }))}
+          onStartDraw={handleStartDraw}
+          onCancelDraw={handleCancelDraw}
+          onFinishDraw={handleFinishDraw}
+          onUndoVertex={handleUndoVertex}
+          onSaved={handleSaved}
+        />
       </div>
 
       {/* NDVI Panel */}
