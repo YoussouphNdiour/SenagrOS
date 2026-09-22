@@ -1,4 +1,6 @@
 import { redirect } from 'next/navigation';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 import { auth } from '@/server/auth';
 import { DashboardShell } from '@/components/layout/DashboardShell';
 import { OfflineBanner } from '@/components/layout/OfflineBanner';
@@ -10,11 +12,13 @@ export default async function DashboardLayout({ children }: { children: React.Re
     redirect('/login');
   }
 
+  const messages = await getMessages();
+
   return (
-    <>
+    <NextIntlClientProvider messages={messages}>
       <OfflineBanner />
       <ServiceWorkerRegistrar />
       <DashboardShell user={session.user}>{children}</DashboardShell>
-    </>
+    </NextIntlClientProvider>
   );
 }
