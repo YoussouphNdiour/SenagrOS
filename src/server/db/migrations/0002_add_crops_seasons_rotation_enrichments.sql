@@ -68,7 +68,6 @@ CREATE TABLE "crop_rotation_rules" (
 	"updated_at" timestamp with time zone DEFAULT now()
 );
 --> statement-breakpoint
-DROP TABLE "notifications" CASCADE;--> statement-breakpoint
 ALTER TABLE "parcel_calendars" ADD COLUMN "expected_harvest_date" date;--> statement-breakpoint
 ALTER TABLE "parcel_calendars" ADD COLUMN "actual_harvest_date" date;--> statement-breakpoint
 ALTER TABLE "crops" ADD CONSTRAINT "crops_family_id_crop_families_id_fk" FOREIGN KEY ("family_id") REFERENCES "public"."crop_families"("id") ON DELETE no action ON UPDATE no action;--> statement-breakpoint
