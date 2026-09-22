@@ -2,6 +2,7 @@
 
 import {
   BarChart3,
+  Bell,
   Calendar,
   ClipboardList,
   Droplets,
@@ -50,6 +51,7 @@ type NavItem = NavLink | NavSection;
 
 const navItems: NavItem[] = [
   { label: 'Tableau de bord', href: '/dashboard', icon: Home },
+  { label: 'Notifications', href: '/notifications', icon: Bell },
   {
     section: 'Exploitation',
     items: [

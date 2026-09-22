@@ -17,6 +17,7 @@ import { searchRouter } from './search';
 import { mapRouter } from './map';
 import { ndviRouter } from './ndvi';
 import { plannedTaskRouter } from './planned-task';
+import { notificationRouter } from './notification';
 
 export const appRouter = router({
   health: publicProcedure.query(() => ({ status: 'ok' })),
@@ -38,6 +39,7 @@ export const appRouter = router({
   map: mapRouter,
   ndvi: ndviRouter,
   plannedTask: plannedTaskRouter,
+  notification: notificationRouter,
 });
 
 export type AppRouter = typeof appRouter;
