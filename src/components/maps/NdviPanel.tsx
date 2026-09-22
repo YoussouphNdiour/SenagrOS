@@ -93,10 +93,11 @@ function formatDateToMonth(dateStr: string): string {
 
 export function NdviPanel({ selectedParcel, onClose }: NdviPanelProps) {
   const [isOpen, setIsOpen] = useState(true);
+  const [months, setMonths] = useState<3 | 6 | 12 | 24>(12);
 
   // Fetch real NDVI data from Sentinel Hub via tRPC
   const ndviQuery = trpc.ndvi.getTimeSeries.useQuery(
-    { assetId: selectedParcel?.id ?? '', months: 12 },
+    { assetId: selectedParcel?.id ?? '', months },
     { enabled: !!selectedParcel?.id },
   );
 
@@ -159,9 +160,27 @@ export function NdviPanel({ selectedParcel, onClose }: NdviPanelProps) {
               Fermer
             </button>
           </div>
-          <p className="mt-1 text-sm font-medium text-green-700">
-            {selectedParcel.name}
-          </p>
+          <div className="mt-2 flex items-center justify-between">
+            <p className="text-sm font-medium text-green-700">
+              {selectedParcel.name}
+            </p>
+            <div className="flex gap-1 text-xs">
+              {([3, 6, 12, 24] as const).map((m) => (
+                <button
+                  key={m}
+                  type="button"
+                  onClick={() => setMonths(m)}
+                  className={`rounded px-2 py-0.5 font-medium transition ${
+                    months === m
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                  }`}
+                >
+                  {m}M
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
         {/* Parcel metadata */}
@@ -211,7 +230,7 @@ export function NdviPanel({ selectedParcel, onClose }: NdviPanelProps) {
                   </p>
                   <div className="mt-1 flex items-center gap-1 text-xs text-gray-500">
                     <TrendingUp className="h-3.5 w-3.5" />
-                    <span>Tendance sur 12 mois</span>
+                    <span>Tendance sur {months} mois</span>
                   </div>
                 </div>
               </div>
@@ -220,7 +239,7 @@ export function NdviPanel({ selectedParcel, onClose }: NdviPanelProps) {
             {/* NDVI Chart */}
             <div className="p-4">
               <h4 className="mb-3 text-sm font-medium text-gray-700">
-                Evolution NDVI (12 mois)
+                Evolution NDVI ({months} mois)
               </h4>
               <div className="h-48">
                 <ResponsiveContainer width="100%" height="100%">
