@@ -11,6 +11,8 @@ services:
       NEXTAUTH_URL: http://2.59.156.226:3400
       AUTH_TRUST_HOST: "true"
       NODE_ENV: production
+      SENTINEL_HUB_CLIENT_ID: ${SENTINEL_HUB_CLIENT_ID}
+      SENTINEL_HUB_CLIENT_SECRET: ${SENTINEL_HUB_CLIENT_SECRET}
     depends_on:
       db:
         condition: service_healthy
