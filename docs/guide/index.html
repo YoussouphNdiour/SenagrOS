@@ -1253,10 +1253,11 @@
     <p>Visualisation satellite de la sante de la vegetation par parcelle</p>
   </div>
   <div class="section-body">
-    <p>La <strong>Carte NDVI</strong> affiche vos parcelles sur une carte interactive (MapLibre GL) et permet de consulter l'indice de vegetation normalise (NDVI) issu des images satellites Sentinel-2.</p>
+    <p>La <strong>Carte NDVI</strong> affiche vos parcelles sur une carte interactive (MapLibre GL) et permet de consulter l'indice de vegetation normalise (NDVI) issu des images satellites Sentinel-2 (Copernicus Data Space). Les limites de la ferme sont materialisees par un trace bleu pointille.</p>
+
     <div class="screenshot">
-      <img src="screenshots/31-carte-ndvi-carte.png" alt="Carte NDVI SenagrOS">
-      <div class="screenshot-caption">Carte interactive — Parcelles georeferencees et couches cartographiques</div>
+      <img src="screenshots/map-parcelles-overview.png" alt="Carte avec parcelles et limites de ferme">
+      <div class="screenshot-caption">Carte — 4 parcelles georeferencees (remplissage vert), limites de la ferme SCL Diama (pointille bleu), boutons OSM / Satellite</div>
     </div>
 
     <h3>Acceder a la carte</h3>
@@ -1275,23 +1276,53 @@
     <h3>Panneau NDVI par parcelle</h3>
     <p>Cliquez sur une parcelle pour ouvrir le panneau lateral NDVI :</p>
     <ul>
-      <li><strong>Score NDVI actuel</strong> : cercle colore avec la valeur et le label (ex: "Vegetation moderee")</li>
-      <li><strong>Graphique d'evolution</strong> : courbe NDVI sur 3, 6, 12 ou 24 mois</li>
+      <li><strong>Score NDVI actuel</strong> : cercle colore avec la valeur et le label (ex: "Sol nu / Stress severe")</li>
+      <li><strong>Graphique d'evolution</strong> : courbe NDVI sur 3, 6, 12 ou 24 mois (donnees Sentinel-2 reelles)</li>
       <li><strong>Selector de periode</strong> : boutons 3M / 6M / 12M / 24M en haut du panneau</li>
-      <li><strong>Source de donnees</strong> : "Donnees Sentinel-2 (Copernicus)" si la parcelle a une geometrie GPS enregistree, sinon "Donnees simulees"</li>
+      <li><strong>Source de donnees</strong> : Copernicus Data Space (Sentinel-2 L2A, resolution 10 m)</li>
     </ul>
 
+    <div class="screenshot">
+      <img src="screenshots/map-ndvi-panel-open.png" alt="Panneau NDVI ouvert — Parcelle Arachide Nord">
+      <div class="screenshot-caption">Panneau NDVI — Parcelle Arachide Nord, indice 0.19 (Sol nu / Stress severe en saison seche), graphique 12 mois Sentinel-2</div>
+    </div>
+
+    <div class="screenshot">
+      <img src="screenshots/map-ndvi-3m.png" alt="NDVI periode 3 mois">
+      <div class="screenshot-caption">Evolution NDVI sur 3 mois — donnees satellites reelles Copernicus, valeur 0.17</div>
+    </div>
+
     <div class="info-box tip">
-      <strong>Donnees satellite reelles</strong>
-      Pour obtenir les donnees Sentinel-2 reelles, la parcelle doit avoir une geometrie PostGIS renseignee (polygone GPS). Configurez la variable d'environnement <code>SENTINEL_HUB_CLIENT_SECRET</code> pour activer l'integration Copernicus.
+      <strong>Donnees satellite reelles Copernicus</strong>
+      SenagrOS interroge l'API Statistics de Sentinel Hub (Copernicus Data Space Ecosystem) toutes les 2 semaines pour calculer le NDVI moyen de chaque parcelle. Les pixels nuageux (SCL masque) sont automatiquement exclus du calcul. Integration active via le client OAuth SENAGROS.
+    </div>
+
+    <h3>Dessiner le contour GPS d'une parcelle</h3>
+    <p>Pour georeferencer une parcelle directement sur la carte :</p>
+    <ol class="steps">
+      <li>Cliquez sur <strong>Dessiner parcelle</strong> (bouton en bas a gauche de la carte)</li>
+      <li>Cliquez sur la carte pour placer autant de points que necessaire (minimum 3, illimite)</li>
+      <li>Le contour orange s'affiche en temps reel avec un remplissage semi-transparent</li>
+      <li>Double-cliquez ou cliquez <strong>Terminer</strong> pour fermer le polygone</li>
+      <li>Selectionnez la parcelle a mettre a jour dans le menu deroulant</li>
+      <li>Cliquez <strong>Enregistrer</strong> — la geometrie PostGIS est mise a jour, la parcelle apparait immediatement sur la carte</li>
+    </ol>
+
+    <div class="screenshot">
+      <img src="screenshots/map-draw-mode-active.png" alt="Mode dessin GPS actif">
+      <div class="screenshot-caption">Mode dessin — 6 points places, preview orange en temps reel, boutons "Annuler point" et "Terminer"</div>
+    </div>
+
+    <div class="screenshot">
+      <img src="screenshots/map-draw-assign.png" alt="Modal assignation parcelle">
+      <div class="screenshot-caption">Assignation — selection de la parcelle a georeferencer, puis "Enregistrer" pour sauvegarder la geometrie</div>
     </div>
 
     <h3>Couches cartographiques</h3>
-    <p>Utilisez les boutons en haut de la carte pour basculer entre :</p>
+    <p>Utilisez les boutons en haut a droite de la carte pour basculer entre :</p>
     <ul>
-      <li><strong>Carte</strong> : vue topographique (OpenStreetMap)</li>
-      <li><strong>Satellite</strong> : imagerie aerienne</li>
-      <li><strong>NDVI</strong> : couche colorimetrique de l'indice de vegetation</li>
+      <li><strong>OSM</strong> : vue topographique OpenStreetMap</li>
+      <li><strong>Satellite</strong> : imagerie aerienne Esri World Imagery</li>
     </ul>
   </div>
 </div>
