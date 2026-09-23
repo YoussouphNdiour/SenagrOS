@@ -836,6 +836,11 @@
     </ol>
     <p>Cette liaison permet a la page de detail de la parcelle de retrouver automatiquement tous les semis et la culture associee.</p>
 
+    <div class="screenshot">
+      <img src="screenshots/semis-form-plant-link.png" alt="Formulaire semis avec liaison culture plant">
+      <div class="screenshot-caption">Formulaire Semis — champs "Parcelle cible" et "Culture (asset plant)" pour lier le semis a un asset plant</div>
+    </div>
+
     <div class="info-box tip">
       <strong>Exemple realiste</strong>
       Semis arachide 55-437 : semoir mecanique, profondeur 4 cm, ecartement lignes 50 cm, ecartement plants 15 cm, densite 120 kg/ha. Asset Plant "Arachide GH 119-20" lie avec role <code>crop</code>.
@@ -881,6 +886,11 @@
       <li>Dans la section Produits, saisissez le <strong>Delai de carence (jours)</strong> du produit utilise</li>
       <li>Enregistrez le log — l'alerte apparaitra automatiquement sur la page parcelle</li>
     </ol>
+
+    <div class="screenshot">
+      <img src="screenshots/intrant-form-withdrawal.png" alt="Champ Delai de carence dans le formulaire intrant">
+      <div class="screenshot-caption">Formulaire Application intrant — champ "Delai de carence (jours)" avec placeholder "Ex: 21", champ "Nom commercial du produit"</div>
+    </div>
   </div>
 </div>
 
@@ -1388,6 +1398,11 @@
     <h3>Parcelles sans geometrie</h3>
     <p>Les parcelles enregistrees <strong>sans trace GPS</strong> sont tout de meme visibles sur la carte via un <strong>marqueur vert</strong> positionne au centre de votre exploitation. Cliquez sur le marqueur pour voir le nom de la parcelle et acceder a sa page de detail.</p>
 
+    <div class="screenshot">
+      <img src="screenshots/map-parcelles-overview.png" alt="Carte des parcelles avec marqueurs et limite ferme">
+      <div class="screenshot-caption">Carte NDVI — parcelles georeferenciees (polygones verts), limite de la ferme (trace bleu), bouton "Dessiner parcelle" et "Limite ferme"</div>
+    </div>
+
     <div class="info-box tip">
       <strong>Toutes vos parcelles sont visibles</strong>
       Meme sans geometrie definie, chaque parcelle apparait sur la carte avec un marqueur. Dessinez le contour GPS pour obtenir le polygone colore et le calcul NDVI satellite.
@@ -1412,6 +1427,11 @@
   <div class="section-body">
     <p>Chaque parcelle dispose d'une page de detail accessible depuis la <strong>liste des assets</strong> (cliquez sur une ligne de type "Parcelle") ou depuis un <strong>marqueur sur la carte</strong> (lien "Voir la parcelle →" dans le popup). La page est organisee en 5 onglets.</p>
 
+    <div class="screenshot">
+      <img src="screenshots/parcelle-detail-info.png" alt="Page de detail parcelle - onglet Informations">
+      <div class="screenshot-caption">Detail parcelle "Arachide Nord" — onglet Infos avec caracteristiques (3.5 ha, sol sableux, irrigation pluvial) et culture en cours</div>
+    </div>
+
     <h3>Onglet Informations</h3>
     <p>Recapitulatif de la parcelle avec deux cartes :</p>
     <ul>
@@ -1426,6 +1446,11 @@
       <li>Courbe de surface Recharts avec valeurs Sentinel-2 reelles</li>
       <li>Si la parcelle n'a pas de geometrie : banniere informative avec lien vers la carte pour dessiner le contour</li>
     </ul>
+
+    <div class="screenshot">
+      <img src="screenshots/parcelle-detail-ndvi.png" alt="Onglet NDVI de la parcelle">
+      <div class="screenshot-caption">Onglet NDVI — Parcelle Arachide Nord, indice 0.36 "Vegetation clairsemee", courbe Sentinel-2 sur 12 mois avec selecteur de periode</div>
+    </div>
 
     <h3>Onglet Historique</h3>
     <p>Timeline verticale de tous les <strong>cycles culturaux</strong> de la parcelle, du plus recent au plus ancien :</p>
@@ -1450,6 +1475,11 @@
       <tr><td style="color:#c2410c">⚠ A eviter</td><td>Risque de fatigue du sol ou de maladie (ex: monoculture mil — risque Striga)</td></tr>
       <tr><td style="color:#dc2626">✖ Interdit</td><td>Rotation deconseille par les regles phytosanitaires (ex: tomate apres tomate)</td></tr>
     </table>
+
+    <div class="screenshot">
+      <img src="screenshots/parcelle-detail-rotation.png" alt="Onglet Rotation culturale">
+      <div class="screenshot-caption">Onglet Rotation — cultures disponibles dans le systeme avec durees de cycle (Arachide 90-120j, Mil 75-105j, Tomate 60-90j...)</div>
+    </div>
 
     <div class="info-box tip">
       <strong>Regles de rotation predefinie pour l'Afrique de l'Ouest</strong>
@@ -1605,6 +1635,11 @@
       <li>Parcelle specifique</li>
     </ul>
 
+    <div class="screenshot">
+      <img src="screenshots/tdb-vegetal.png" alt="Tableau de bord Technique Vegetal">
+      <div class="screenshot-caption">TDB Technique Vegetal — KPIs parcelles actives, recolte totale (kg), cout intrants (FCFA), calendriers suivis ; lien vers la page Calendriers pour enrichir les donnees</div>
+    </div>
+
     <div class="info-box tip">
       <strong>Identifier les meilleures parcelles</strong>
       Classez les parcelles par marge brute decroissante pour reperer celles qui ont le meilleur potentiel et celles qui necessitent des ajustements de pratiques.
@@ -1640,6 +1675,11 @@
       <li>Rappel de vaccination ou de traitement medical planifie</li>
     </ul>
 
+    <div class="screenshot">
+      <img src="screenshots/tdb-elevage.png" alt="Tableau de bord Technique Elevage">
+      <div class="screenshot-caption">TDB Technique Elevage — Effectif actif (2 tetes), taux de mortalite (0%), cout alimentaire/tete, taux mise bas ; detail par periode avec naissances et deces</div>
+    </div>
+
     <div class="info-box tip">
       <strong>Suivi sanitaire</strong>
       Les logs de soins medicaux et les naissances enregistrees dans le Journal alimentent automatiquement ce tableau de bord. Pensez a enregistrer chaque evenement sanitaire pour maintenir les KPIs a jour.
@@ -1668,6 +1708,11 @@
 
     <h3>Suivi d'execution</h3>
     <p>Chaque plan PV peut etre marque comme <strong>Realise</strong> lors de la creation du log d'intrant correspondant. Le taux d'execution du plan est visible sur le tableau de bord.</p>
+
+    <div class="screenshot">
+      <img src="screenshots/plans-pv.png" alt="Plans d'entretien PV">
+      <div class="screenshot-caption">Plans d'entretien PV — liste vide avec bouton "+ Nouveau plan PV" et filtre par statut ; cliquez "Creer un plan" pour planifier vos premieres interventions</div>
+    </div>
 
     <div class="info-box warning">
       <strong>Alertes de non-conformite</strong>
@@ -1842,6 +1887,11 @@
       <tr><td>Taux couverture vaccinale</td><td>Animaux vaccines / effectif total</td><td>Suivi sante du troupeau</td></tr>
       <tr><td>Delai rotation cultures</td><td>Jours entre deux cultures sur meme parcelle</td><td>Optimiser la fertilite du sol</td></tr>
     </table>
+
+    <div class="screenshot">
+      <img src="screenshots/parametres-kpis.png" alt="Indicateurs personnalises">
+      <div class="screenshot-caption">Indicateurs personnalises — filtre par categorie, bouton "+ Nouvel indicateur" ; cliquez "Creer un indicateur" pour definir vos premiers KPIs (ex: GMQ objectif, taux germination)</div>
+    </div>
 
     <div class="info-box tip">
       <strong>Tableau de bord personnalise</strong>
