@@ -73,7 +73,9 @@ jobs:
           ENV_VARS='[
             {"name": "POSTGRES_PASSWORD", "value": "${{ secrets.POSTGRES_PASSWORD }}"},
             {"name": "NEXTAUTH_SECRET", "value": "${{ secrets.NEXTAUTH_SECRET }}"},
-            {"name": "NEXTAUTH_URL", "value": "${{ secrets.NEXTAUTH_URL }}"}
+            {"name": "NEXTAUTH_URL", "value": "${{ secrets.NEXTAUTH_URL }}"},
+            {"name": "SENTINEL_HUB_CLIENT_ID", "value": "${{ secrets.SENTINEL_HUB_CLIENT_ID }}"},
+            {"name": "SENTINEL_HUB_CLIENT_SECRET", "value": "${{ secrets.SENTINEL_HUB_CLIENT_SECRET }}"}
           ]'
 
           if [ -z "$STACK_ID" ] || [ "$STACK_ID" = "null" ]; then
