@@ -1,6 +1,8 @@
 import 'dotenv/config';
 import bcrypt from 'bcryptjs';
 import { drizzle } from 'drizzle-orm/postgres-js';
+import { eq } from 'drizzle-orm';
+import { sql } from 'drizzle-orm';
 import postgres from 'postgres';
 import { v4 as uuidv4 } from 'uuid';
 import * as schema from './schema';
@@ -24,6 +26,13 @@ async function seed() {
     locale: 'fr',
     seasonType: 'hivernage',
   });
+
+  // Farm boundary polygon (zone encompassing all parcels near Thiès/Dakar region)
+  const boundaryGeoJSON = '{"type":"Polygon","coordinates":[[[-17.010,14.710],[-16.900,14.710],[-16.900,14.790],[-17.010,14.790],[-17.010,14.710]]]}';
+  await db
+    .update(schema.farms)
+    .set({ boundary: sql`ST_SetSRID(ST_GeomFromGeoJSON(${boundaryGeoJSON}), 4326)` })
+    .where(eq(schema.farms.id, farmId));
 
   // Admin user
   const passwordHash = await bcrypt.hash('admin123', 12);

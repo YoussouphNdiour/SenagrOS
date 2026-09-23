@@ -100,10 +100,10 @@ export function DrawPolygonPanel({
 
         <p className="text-xs text-gray-500 mb-3">
           {vertices.length === 0
-            ? 'Cliquez sur la carte pour placer le 1er point'
+            ? 'Cliquez sur la carte pour placer les points'
             : vertices.length < 3
-              ? `${vertices.length} point${vertices.length > 1 ? 's' : ''} — encore ${3 - vertices.length} minimum`
-              : `${vertices.length} points — double-clic ou "Terminer" pour fermer`}
+              ? `${vertices.length} point${vertices.length > 1 ? 's' : ''} — encore ${3 - vertices.length} nécessaire${3 - vertices.length > 1 ? 's' : ''}`
+              : `${vertices.length} points — continuez ou double-clic / "Terminer" pour clore`}
         </p>
 
         <div className="flex gap-2">

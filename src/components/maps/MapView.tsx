@@ -28,11 +28,16 @@ const TILE_SOURCES = {
 type TileKey = keyof typeof TILE_SOURCES;
 
 /** Source/layer IDs used for the in-progress draw polygon */
-const DRAW_SOURCE = 'draw-polygon-preview';
-const DRAW_FILL_LAYER = 'draw-polygon-fill';
-const DRAW_LINE_LAYER = 'draw-polygon-line';
-const DRAW_POINTS_SOURCE = 'draw-points-preview';
-const DRAW_POINTS_LAYER = 'draw-points-circles';
+// Separate sources: line outline, polygon fill, vertex circles
+const DRAW_LINE_SOURCE = 'draw-line-src';
+const DRAW_LINE_LAYER = 'draw-line-layer';
+const DRAW_FILL_SOURCE = 'draw-fill-src';
+const DRAW_FILL_LAYER = 'draw-fill-layer';
+const DRAW_POINTS_SOURCE = 'draw-points-src';
+const DRAW_POINTS_LAYER = 'draw-points-layer';
+// Farm boundary
+const FARM_BOUNDARY_SOURCE = 'farm-boundary-src';
+const FARM_BOUNDARY_LAYER = 'farm-boundary-layer';
 
 interface MapViewProps {
   farmLat?: number;
@@ -58,6 +63,7 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
   const isDrawingRef = useRef(false); // kept in sync for map event listeners
 
   const { data: parcels, refetch: refetchParcels } = trpc.map.getParcels.useQuery();
+  const { data: farmBoundary } = trpc.map.getFarmBoundary.useQuery();
 
   // Parcels available for assignment in draw mode (only land type with no geometry yet,
   // but we allow reassigning so we show all land parcels via a separate query)
@@ -232,6 +238,43 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
     }
   }, [parcels]);
 
+  // ── Farm boundary ──────────────────────────────────────────────────────
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !farmBoundary?.geojson) return;
+
+    const addBoundary = () => {
+      try {
+        const geom = JSON.parse(farmBoundary.geojson as string) as { type: string; coordinates: unknown };
+
+        const feature: GeoJSON.Feature = {
+          type: 'Feature',
+          properties: { name: farmBoundary.name },
+          geometry: geom as GeoJSON.Geometry,
+        };
+
+        if (map.getLayer(FARM_BOUNDARY_LAYER)) map.removeLayer(FARM_BOUNDARY_LAYER);
+        if (map.getSource(FARM_BOUNDARY_SOURCE)) map.removeSource(FARM_BOUNDARY_SOURCE);
+
+        map.addSource(FARM_BOUNDARY_SOURCE, { type: 'geojson', data: feature });
+        map.addLayer({
+          id: FARM_BOUNDARY_LAYER,
+          type: 'line',
+          source: FARM_BOUNDARY_SOURCE,
+          paint: {
+            'line-color': '#1e40af',
+            'line-width': 3,
+            'line-dasharray': [6, 3],
+            'line-opacity': 0.85,
+          },
+        });
+        map.triggerRepaint();
+      } catch { /* ignore parse errors */ }
+    };
+
+    addBoundary();
+  }, [farmBoundary]);
+
   // ── Draw mode — map click handler ──────────────────────────────────────
   useEffect(() => {
     const map = mapRef.current;
@@ -264,51 +307,81 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // ── Update draw preview layer on vertex change ─────────────────────────
+  // ── Update draw preview layers on vertex change ────────────────────────
+  // Uses THREE separate sources to avoid geometry-type conflicts and correctly
+  // add/remove the fill layer when crossing the 3-vertex threshold.
   useEffect(() => {
     const map = mapRef.current;
     if (!map) return;
 
+    const clearDrawLayers = () => {
+      if (map.getLayer(DRAW_FILL_LAYER)) map.removeLayer(DRAW_FILL_LAYER);
+      if (map.getLayer(DRAW_LINE_LAYER)) map.removeLayer(DRAW_LINE_LAYER);
+      if (map.getSource(DRAW_LINE_SOURCE)) map.removeSource(DRAW_LINE_SOURCE);
+      if (map.getSource(DRAW_FILL_SOURCE)) map.removeSource(DRAW_FILL_SOURCE);
+      if (map.getLayer(DRAW_POINTS_LAYER)) map.removeLayer(DRAW_POINTS_LAYER);
+      if (map.getSource(DRAW_POINTS_SOURCE)) map.removeSource(DRAW_POINTS_SOURCE);
+    };
+
     const updatePreview = () => {
       if (drawVertices.length === 0) {
-        // Clear preview
-        if (map.getLayer(DRAW_FILL_LAYER)) map.removeLayer(DRAW_FILL_LAYER);
-        if (map.getLayer(DRAW_LINE_LAYER)) map.removeLayer(DRAW_LINE_LAYER);
-        if (map.getSource(DRAW_SOURCE)) map.removeSource(DRAW_SOURCE);
-        if (map.getLayer(DRAW_POINTS_LAYER)) map.removeLayer(DRAW_POINTS_LAYER);
-        if (map.getSource(DRAW_POINTS_SOURCE)) map.removeSource(DRAW_POINTS_SOURCE);
+        clearDrawLayers();
         return;
       }
 
-      // Line/polygon preview
-      const ring = [...drawVertices, drawVertices[0]]; // close ring for preview
-      const lineData: GeoJSON.Feature<GeoJSON.LineString> = {
+      // ── 1. Line outline (LineString — always) ─────────────────────────
+      // With 1 vertex: short stub to a nearby point so the line renders
+      const lineCoords: number[][] =
+        drawVertices.length === 1
+          ? [drawVertices[0], [drawVertices[0][0] + 0.00001, drawVertices[0][1]]]
+          : [...drawVertices, drawVertices[0]]; // close ring visually
+
+      const lineFeature: GeoJSON.Feature<GeoJSON.LineString> = {
         type: 'Feature',
         properties: {},
-        geometry: { type: 'LineString', coordinates: ring },
+        geometry: { type: 'LineString', coordinates: lineCoords },
       };
 
-      if (map.getSource(DRAW_SOURCE)) {
-        (map.getSource(DRAW_SOURCE) as maplibregl.GeoJSONSource).setData(lineData);
+      if (map.getSource(DRAW_LINE_SOURCE)) {
+        (map.getSource(DRAW_LINE_SOURCE) as maplibregl.GeoJSONSource).setData(lineFeature);
       } else {
-        map.addSource(DRAW_SOURCE, { type: 'geojson', data: lineData });
+        map.addSource(DRAW_LINE_SOURCE, { type: 'geojson', data: lineFeature });
         map.addLayer({
           id: DRAW_LINE_LAYER,
           type: 'line',
-          source: DRAW_SOURCE,
-          paint: { 'line-color': '#f97316', 'line-width': 2, 'line-dasharray': [2, 1] },
+          source: DRAW_LINE_SOURCE,
+          paint: {
+            'line-color': '#f97316',
+            'line-width': 3,
+            'line-dasharray': [4, 2],
+            'line-opacity': 1,
+          },
         });
-        if (drawVertices.length >= 3) {
+      }
+
+      // ── 2. Polygon fill (Polygon — only when ≥ 3 vertices) ────────────
+      if (drawVertices.length >= 3) {
+        const ring = [...drawVertices, drawVertices[0]];
+        const fillFeature: GeoJSON.Feature<GeoJSON.Polygon> = {
+          type: 'Feature',
+          properties: {},
+          geometry: { type: 'Polygon', coordinates: [ring] },
+        };
+
+        if (map.getSource(DRAW_FILL_SOURCE)) {
+          (map.getSource(DRAW_FILL_SOURCE) as maplibregl.GeoJSONSource).setData(fillFeature);
+        } else {
+          map.addSource(DRAW_FILL_SOURCE, { type: 'geojson', data: fillFeature });
           map.addLayer({
             id: DRAW_FILL_LAYER,
             type: 'fill',
-            source: DRAW_SOURCE,
-            paint: { 'fill-color': '#f97316', 'fill-opacity': 0.15 },
+            source: DRAW_FILL_SOURCE,
+            paint: { 'fill-color': '#f97316', 'fill-opacity': 0.2 },
           });
         }
       }
 
-      // Vertex points
+      // ── 3. Vertex circles (Points — always) ───────────────────────────
       const pointsData: GeoJSON.FeatureCollection<GeoJSON.Point> = {
         type: 'FeatureCollection',
         features: drawVertices.map((v) => ({
@@ -326,16 +399,20 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
           id: DRAW_POINTS_LAYER,
           type: 'circle',
           source: DRAW_POINTS_SOURCE,
-          paint: { 'circle-radius': 5, 'circle-color': '#f97316', 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5 },
+          paint: {
+            'circle-radius': 6,
+            'circle-color': '#f97316',
+            'circle-stroke-color': '#ffffff',
+            'circle-stroke-width': 2,
+          },
         });
       }
     };
 
-    if (map.isStyleLoaded()) {
-      updatePreview();
-    } else {
-      map.once('load', updatePreview);
-    }
+    // addSource / addLayer work even when isStyleLoaded() is false (tile downloads pending).
+    // Calling map.once('load', ...) fails because 'load' already fired by draw time.
+    updatePreview();
+    map.triggerRepaint();
   }, [drawVertices]);
 
   // ── Draw helpers ───────────────────────────────────────────────────────
@@ -367,12 +444,13 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
     setDrawVertices([]);
     setDrawnPolygon(null);
 
-    // Clear preview layers
+    // Clear all draw preview layers
     const map = mapRef.current;
     if (map) {
       if (map.getLayer(DRAW_FILL_LAYER)) map.removeLayer(DRAW_FILL_LAYER);
       if (map.getLayer(DRAW_LINE_LAYER)) map.removeLayer(DRAW_LINE_LAYER);
-      if (map.getSource(DRAW_SOURCE)) map.removeSource(DRAW_SOURCE);
+      if (map.getSource(DRAW_LINE_SOURCE)) map.removeSource(DRAW_LINE_SOURCE);
+      if (map.getSource(DRAW_FILL_SOURCE)) map.removeSource(DRAW_FILL_SOURCE);
       if (map.getLayer(DRAW_POINTS_LAYER)) map.removeLayer(DRAW_POINTS_LAYER);
       if (map.getSource(DRAW_POINTS_SOURCE)) map.removeSource(DRAW_POINTS_SOURCE);
       map.getCanvas().style.cursor = '';
