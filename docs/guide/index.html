@@ -311,7 +311,7 @@
 <div class="hero">
   <h1>SenagrOS</h1>
   <p class="subtitle">Guide Utilisateur Complet<br>Systeme de Gestion Agricole pour l'Afrique de l'Ouest</p>
-  <span class="badge">Version 1.1 — Septembre 2026 | FR / EN / WO</span>
+  <span class="badge">Version 1.3 — Septembre 2026 | FR / EN / WO</span>
 </div>
 
 <!-- ==================== TABLE OF CONTENTS ==================== -->
@@ -329,6 +329,7 @@
       <a href="#journal"><span class="num">8</span> Journal d'activites</a>
       <a href="#semis"><span class="num">9</span> Semis</a>
       <a href="#application-intrant"><span class="num">9b</span> Application intrant</a>
+      <a href="#delai-carence"><span class="num">9c</span> Alertes delai de carence</a>
       <a href="#irrigation"><span class="num">10</span> Irrigation</a>
       <a href="#maintenance"><span class="num">10b</span> Maintenance</a>
       <a href="#soin-medical"><span class="num">10c</span> Soin medical</a>
@@ -337,11 +338,15 @@
       <a href="#plans"><span class="num">13</span> Plans de culture</a>
       <a href="#recoltes"><span class="num">13b</span> Recoltes</a>
       <a href="#carte-ndvi"><span class="num">13c</span> Carte NDVI</a>
+      <a href="#parcelle-detail"><span class="num">13d</span> Detail parcelle</a>
       <a href="#ventes"><span class="num">14</span> Ventes</a>
       <a href="#facturation"><span class="num">15</span> Facturation</a>
       <a href="#finances"><span class="num">16</span> Finances</a>
       <a href="#comptabilite"><span class="num">17</span> Comptabilite</a>
       <a href="#reports"><span class="num">18</span> Rapports</a>
+      <a href="#tdb-vegetal"><span class="num">18b</span> TDB Vegetal</a>
+      <a href="#tdb-elevage"><span class="num">18c</span> TDB Elevage</a>
+      <a href="#plans-pv"><span class="num">18d</span> Plans phytosanitaires</a>
       <a href="#marketplace"><span class="num">19</span> Marketplace</a>
       <a href="#produits"><span class="num">20</span> Mes produits</a>
       <a href="#commandes"><span class="num">21</span> Commandes</a>
@@ -349,6 +354,7 @@
       <a href="#employes"><span class="num">23</span> Employes</a>
       <a href="#cooperatives"><span class="num">24</span> Cooperatives</a>
       <a href="#parametres"><span class="num">25</span> Parametres</a>
+      <a href="#kpis"><span class="num">25b</span> KPIs personnalises</a>
       <a href="#quick"><span class="num">26</span> Actions rapides</a>
       <a href="#notifications"><span class="num">26b</span> Notifications</a>
       <a href="#mobile-nav"><span class="num">26c</span> Navigation mobile</a>
@@ -820,10 +826,61 @@
       <div class="screenshot-caption">Formulaire Semis — Type, methode, profondeur, ecartements, semence et responsable</div>
     </div>
 
+    <h3>Lier un semis a un asset Culture (plant)</h3>
+    <p>Pour relier un log de semis a un asset de type <strong>Culture (plant)</strong> existant :</p>
+    <ol class="steps">
+      <li>Assurez-vous d'avoir cree l'asset de type <strong>Plant</strong> au prealable (menu <strong>Assets &gt; Nouveau &gt; Culture</strong>)</li>
+      <li>Dans le formulaire Semis, le champ <strong>Culture (asset plant)</strong> propose une recherche par nom</li>
+      <li>Selectionnez la culture — le log sera lie a cet asset avec le role <code>crop</code></li>
+      <li>Selectionnez egalement la <strong>Parcelle cible</strong> dans le champ dedie (role <code>location</code>)</li>
+    </ol>
+    <p>Cette liaison permet a la page de detail de la parcelle de retrouver automatiquement tous les semis et la culture associee.</p>
+
     <div class="info-box tip">
       <strong>Exemple realiste</strong>
-      Semis arachide 55-437 : semoir mecanique, profondeur 4 cm, ecartement lignes 50 cm, ecartement plants 15 cm, densite 120 kg/ha.
+      Semis arachide 55-437 : semoir mecanique, profondeur 4 cm, ecartement lignes 50 cm, ecartement plants 15 cm, densite 120 kg/ha. Asset Plant "Arachide GH 119-20" lie avec role <code>crop</code>.
     </div>
+  </div>
+</div>
+
+<!-- ==================== 9c. ALERTES DELAI DE CARENCE ==================== -->
+<div class="section" id="delai-carence">
+  <div class="section-header">
+    <span class="section-num">9c</span>
+    <h2>Alertes delai de carence</h2>
+    <p>Verification automatique des periodes de carence apres application de phytosanitaires</p>
+  </div>
+  <div class="section-body">
+    <p>SenagrOS calcule automatiquement si un <strong>delai de carence</strong> est en cours sur une parcelle donnee apres l'application d'un intrant phytosanitaire. Ces alertes sont visibles dans la page de detail de chaque parcelle (onglet Informations).</p>
+
+    <h3>Comment ca fonctionne</h3>
+    <p>Lors de l'enregistrement d'un log d'intrant, le champ <strong>Delai de carence (jours)</strong> permet de saisir le nombre de jours de carence du produit. Le systeme calcule alors :</p>
+    <ul>
+      <li><strong>Date de fin de carence</strong> = date d'application + jours de carence</li>
+      <li><strong>Jours restants</strong> = date de fin - aujourd'hui</li>
+      <li>Si le delai n'est pas ecoule : alerte orange sur la page parcelle</li>
+    </ul>
+
+    <h3>Lire une alerte de carence</h3>
+    <p>Sur la page de detail d'une parcelle (onglet <strong>Informations</strong>), la section <strong>Alertes intrants actives</strong> liste :</p>
+    <table class="data-table">
+      <tr><th>Champ</th><th>Description</th></tr>
+      <tr><td>Produit</td><td>Nom du produit phytosanitaire</td></tr>
+      <tr><td>Jours restants</td><td>Nombre de jours avant la fin de carence</td></tr>
+      <tr><td>Fin de carence</td><td>Date a partir de laquelle la parcelle peut etre traitee</td></tr>
+    </table>
+
+    <div class="info-box warning">
+      <strong>Respectez les delais de carence</strong>
+      L'application d'un nouvel intrant avant la fin du delai de carence peut etre dangereuse pour les cultures et les consommateurs. Les alertes affichees en orange indiquent un delai encore actif.
+    </div>
+
+    <h3>Saisir le delai de carence lors d'un traitement</h3>
+    <ol class="steps">
+      <li>Creez un log d'<strong>Application intrant</strong></li>
+      <li>Dans la section Produits, saisissez le <strong>Delai de carence (jours)</strong> du produit utilise</li>
+      <li>Enregistrez le log — l'alerte apparaitra automatiquement sur la page parcelle</li>
+    </ol>
   </div>
 </div>
 
@@ -1318,12 +1375,86 @@
       <div class="screenshot-caption">Assignation — selection de la parcelle a georeferencer, puis "Enregistrer" pour sauvegarder la geometrie</div>
     </div>
 
+    <h3>Dessiner la limite de la ferme</h3>
+    <p>En plus des contours de parcelles, vous pouvez materialiser la <strong>limite de votre exploitation</strong> sur la carte :</p>
+    <ol class="steps">
+      <li>Cliquez sur le bouton bleu <strong>Limite ferme</strong> (sous le bouton "Dessiner parcelle")</li>
+      <li>Cliquez sur la carte pour tracer les points du perimetre de votre exploitation</li>
+      <li>Double-cliquez ou cliquez <strong>Terminer</strong> pour fermer le polygone</li>
+      <li>Cliquez <strong>Enregistrer la limite</strong> — le trace bleu pointille apparait sur la carte</li>
+    </ol>
+    <p>La limite est sauvegardee dans la geometrie PostGIS de votre ferme et persiste entre les sessions.</p>
+
+    <h3>Parcelles sans geometrie</h3>
+    <p>Les parcelles enregistrees <strong>sans trace GPS</strong> sont tout de meme visibles sur la carte via un <strong>marqueur vert</strong> positionne au centre de votre exploitation. Cliquez sur le marqueur pour voir le nom de la parcelle et acceder a sa page de detail.</p>
+
+    <div class="info-box tip">
+      <strong>Toutes vos parcelles sont visibles</strong>
+      Meme sans geometrie definie, chaque parcelle apparait sur la carte avec un marqueur. Dessinez le contour GPS pour obtenir le polygone colore et le calcul NDVI satellite.
+    </div>
+
     <h3>Couches cartographiques</h3>
     <p>Utilisez les boutons en haut a droite de la carte pour basculer entre :</p>
     <ul>
       <li><strong>OSM</strong> : vue topographique OpenStreetMap</li>
       <li><strong>Satellite</strong> : imagerie aerienne Esri World Imagery</li>
     </ul>
+  </div>
+</div>
+
+<!-- ==================== 13d. DETAIL PARCELLE ==================== -->
+<div class="section" id="parcelle-detail">
+  <div class="section-header">
+    <span class="section-num">13d</span>
+    <h2>Page de detail d'une parcelle</h2>
+    <p>Vue 360° d'une parcelle : informations, NDVI, historique cultures, journaux et rotation</p>
+  </div>
+  <div class="section-body">
+    <p>Chaque parcelle dispose d'une page de detail accessible depuis la <strong>liste des assets</strong> (cliquez sur une ligne de type "Parcelle") ou depuis un <strong>marqueur sur la carte</strong> (lien "Voir la parcelle →" dans le popup). La page est organisee en 5 onglets.</p>
+
+    <h3>Onglet Informations</h3>
+    <p>Recapitulatif de la parcelle avec deux cartes :</p>
+    <ul>
+      <li><strong>Caracteristiques</strong> : superficie (ha), statut, localisation, culture active actuelle, plan de culture en cours</li>
+      <li><strong>Alertes intrants actives</strong> : liste des produits phytosanitaires en periode de carence avec jours restants (icone orange)</li>
+    </ul>
+
+    <h3>Onglet NDVI</h3>
+    <p>Graphique d'evolution NDVI de la parcelle (identique au panneau de la carte, mais directement accessible depuis la page de la parcelle) :</p>
+    <ul>
+      <li>Selecteur de periode : 3M / 6M / 12M / 24M</li>
+      <li>Courbe de surface Recharts avec valeurs Sentinel-2 reelles</li>
+      <li>Si la parcelle n'a pas de geometrie : banniere informative avec lien vers la carte pour dessiner le contour</li>
+    </ul>
+
+    <h3>Onglet Historique</h3>
+    <p>Timeline verticale de tous les <strong>cycles culturaux</strong> de la parcelle, du plus recent au plus ancien :</p>
+    <ul>
+      <li>Point colore : vert = actif, bleu = termine, gris = autre</li>
+      <li>Pour chaque entree : culture, variete, dates de debut/fin, rendement attendu (kg/ha)</li>
+    </ul>
+
+    <h3>Onglet Journaux</h3>
+    <p>Liste de tous les logs (activites, semis, intrants, recoltes, observations...) associes a cette parcelle. Chaque ligne affiche le type de log, le nom, la date et le statut.</p>
+
+    <h3>Onglet Rotation culturale</h3>
+    <p>Analyse de la rotation des cultures sur la parcelle avec recommandations :</p>
+    <ul>
+      <li><strong>Derniere culture</strong> : carte recapitulative de la campagne precedente</li>
+      <li><strong>Recommandations</strong> : liste des cultures conseillees apres la derniere culture, classees par compatibilite :</li>
+    </ul>
+    <table class="data-table">
+      <tr><th>Niveau</th><th>Signification</th></tr>
+      <tr><td style="color:#15803d">✔ Recommande</td><td>Complementarite agronomique prouvee (ex: mil apres arachide — fixation azote)</td></tr>
+      <tr><td style="color:#4b5563">— Neutre</td><td>Pas de contrainte particuliere</td></tr>
+      <tr><td style="color:#c2410c">⚠ A eviter</td><td>Risque de fatigue du sol ou de maladie (ex: monoculture mil — risque Striga)</td></tr>
+      <tr><td style="color:#dc2626">✖ Interdit</td><td>Rotation deconseille par les regles phytosanitaires (ex: tomate apres tomate)</td></tr>
+    </table>
+
+    <div class="info-box tip">
+      <strong>Regles de rotation predefinie pour l'Afrique de l'Ouest</strong>
+      SenagrOS integre 17 regles de rotation culturale adaptees aux systemes de culture du Senegal et du Bassin Arachidier : mil, arachide, niebe, sorgho, manioc, tomate, oignon, etc. Ces regles peuvent etre enrichies par votre exploitation.
+    </div>
   </div>
 </div>
 
@@ -1429,13 +1560,118 @@
   <div class="section-header">
     <span class="section-num">18</span>
     <h2>Rapports</h2>
-    <p>Generation de rapports et analyses</p>
+    <p>Generation de rapports et analyses de performances</p>
   </div>
   <div class="section-body">
-    <p>Generez des rapports detailles sur vos activites, rendements, finances et performances.</p>
+    <p>Le module Rapports centralise toutes les syntheses de votre exploitation. Acces via le menu lateral <strong>Rapports</strong>. Plusieurs tableaux de bord specialises sont disponibles.</p>
     <div class="screenshot">
       <img src="screenshots/15-reports.png" alt="Page rapports">
       <div class="screenshot-caption">Rapports — Tableaux de synthese et export</div>
+    </div>
+
+    <h3>Rapports disponibles</h3>
+    <table class="data-table">
+      <tr><th>Rapport</th><th>URL</th><th>Description</th></tr>
+      <tr><td>Tableau de bord vegetal</td><td><code>/reports/vegetal</code></td><td>Rendements, couts intrants, marges par culture</td></tr>
+      <tr><td>Tableau de bord elevage</td><td><code>/reports/elevage</code></td><td>Effectifs, mortalite, couts alimentaires, taux de mise bas</td></tr>
+      <tr><td>Plans phytosanitaires (PV)</td><td><code>/plans/pv</code></td><td>Planification des traitements phytosanitaires</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ==================== 18b. TDB VEGETAL ==================== -->
+<div class="section" id="tdb-vegetal">
+  <div class="section-header">
+    <span class="section-num">18b</span>
+    <h2>Tableau de bord Technique Vegetal</h2>
+    <p>Analyse des rendements, couts et marges par culture — URL : /reports/vegetal</p>
+  </div>
+  <div class="section-body">
+    <p>Le <strong>Tableau de bord Technique Vegetal</strong> (<code>/reports/vegetal</code>) agrege les donnees de production vegetale de votre exploitation pour identifier les cultures les plus rentables et detecter les ecarts de rendement.</p>
+
+    <h3>KPIs affiches</h3>
+    <table class="data-table">
+      <tr><th>Indicateur</th><th>Description</th></tr>
+      <tr><td>Rendement moyen (kg/ha)</td><td>Moyenne des recoltes de la campagne en cours par culture</td></tr>
+      <tr><td>Cout intrants (FCFA/ha)</td><td>Somme des applications d'intrants rapportee a la surface</td></tr>
+      <tr><td>Marge brute (FCFA/ha)</td><td>CA – Couts intrants, par parcelle et par culture</td></tr>
+      <tr><td>Surface cultivee (ha)</td><td>Total des parcelles actives par type de culture</td></tr>
+    </table>
+
+    <h3>Filtres disponibles</h3>
+    <ul>
+      <li>Periode (saison Hivernage / Contre-saison chaude / Contre-saison froide, ou plage de dates)</li>
+      <li>Type de culture (arachide, mil, sorgho, maïs, tomate...)</li>
+      <li>Parcelle specifique</li>
+    </ul>
+
+    <div class="info-box tip">
+      <strong>Identifier les meilleures parcelles</strong>
+      Classez les parcelles par marge brute decroissante pour reperer celles qui ont le meilleur potentiel et celles qui necessitent des ajustements de pratiques.
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 18c. TDB ELEVAGE ==================== -->
+<div class="section" id="tdb-elevage">
+  <div class="section-header">
+    <span class="section-num">18c</span>
+    <h2>Tableau de bord Technique Elevage</h2>
+    <p>Suivi des effectifs, mortalite et performances du troupeau — URL : /reports/elevage</p>
+  </div>
+  <div class="section-body">
+    <p>Le <strong>Tableau de bord Technique Elevage</strong> (<code>/reports/elevage</code>) centralise les indicateurs zootechniques de votre cheptel pour un suivi sanitaire et economique precis.</p>
+
+    <h3>KPIs affiches</h3>
+    <table class="data-table">
+      <tr><th>Indicateur</th><th>Description</th></tr>
+      <tr><td>Effectif total</td><td>Nombre d'animaux actifs par espece (bovins, ovins, caprins, volailles)</td></tr>
+      <tr><td>Taux de mortalite (%)</td><td>Deces / effectif debut de periode, par espece</td></tr>
+      <tr><td>Cout alimentaire (FCFA/animal/mois)</td><td>Charges alimentaires totales rapportees a l'effectif</td></tr>
+      <tr><td>Taux de mise bas (%)</td><td>Naissances / femelles en age de reproduire</td></tr>
+      <tr><td>Gain moyen quotidien (GMQ)</td><td>Prise de poids moyenne journaliere (kg/jour)</td></tr>
+    </table>
+
+    <h3>Alertes elevage</h3>
+    <p>Le tableau de bord remonte automatiquement les alertes critiques :</p>
+    <ul>
+      <li>Taux de mortalite superieur au seuil de reference</li>
+      <li>Absence de mise bas depuis plus de 90 jours</li>
+      <li>Rappel de vaccination ou de traitement medical planifie</li>
+    </ul>
+
+    <div class="info-box tip">
+      <strong>Suivi sanitaire</strong>
+      Les logs de soins medicaux et les naissances enregistrees dans le Journal alimentent automatiquement ce tableau de bord. Pensez a enregistrer chaque evenement sanitaire pour maintenir les KPIs a jour.
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 18d. PLANS PV ==================== -->
+<div class="section" id="plans-pv">
+  <div class="section-header">
+    <span class="section-num">18d</span>
+    <h2>Plans phytosanitaires (PV)</h2>
+    <p>Planification des traitements phytosanitaires par parcelle et par culture — URL : /plans/pv</p>
+  </div>
+  <div class="section-body">
+    <p>La page <strong>Plans phytosanitaires</strong> (<code>/plans/pv</code>) permet de planifier les interventions phytosanitaires (traitements fongicides, insecticides, herbicides) sur vos parcelles en respectant les stades culturaux et les intervalles entre traitements.</p>
+
+    <h3>Creer un plan phytosanitaire</h3>
+    <ol class="steps">
+      <li>Allez sur <strong>/plans/pv</strong> et cliquez sur <strong>Nouveau plan PV</strong></li>
+      <li>Selectionnez la parcelle et la culture ciblee</li>
+      <li>Definissez le <strong>stade phenologique</strong> cible (semis, levee, tallage, floraison, grain...)</li>
+      <li>Ajoutez les produits prevus avec les doses et intervalles recommandes</li>
+      <li>Enregistrez le plan — il apparait dans le calendrier des interventions</li>
+    </ol>
+
+    <h3>Suivi d'execution</h3>
+    <p>Chaque plan PV peut etre marque comme <strong>Realise</strong> lors de la creation du log d'intrant correspondant. Le taux d'execution du plan est visible sur le tableau de bord.</p>
+
+    <div class="info-box warning">
+      <strong>Alertes de non-conformite</strong>
+      Si un traitement est enregistre sur une parcelle avant la fin du delai de carence du produit precedent, une alerte orange s'affiche sur le plan et sur la page de detail de la parcelle.
     </div>
   </div>
 </div>
@@ -1575,6 +1811,42 @@
       <li><strong>WO</strong> — Wolof</li>
     </ul>
     <p>Le choix est memorise automatiquement via un cookie <code>NEXT_LOCALE</code> et persiste entre les sessions.</p>
+  </div>
+</div>
+
+<!-- ==================== 25b. KPIs PERSONNALISES ==================== -->
+<div class="section" id="kpis">
+  <div class="section-header">
+    <span class="section-num">25b</span>
+    <h2>KPIs personnalises</h2>
+    <p>Creez vos propres indicateurs de performance a l'echelle de la ferme — URL : /parametres/kpis</p>
+  </div>
+  <div class="section-body">
+    <p>Le module <strong>KPIs personnalises</strong> (<code>/parametres/kpis</code>) permet de definir et de suivre des indicateurs de performance specifiques a votre exploitation, en complement des tableaux de bord predefinis.</p>
+
+    <h3>Creer un KPI</h3>
+    <ol class="steps">
+      <li>Allez dans <strong>Parametres &gt; KPIs personnalises</strong></li>
+      <li>Cliquez sur <strong>Nouveau KPI</strong></li>
+      <li>Donnez un nom et une description a l'indicateur</li>
+      <li>Choisissez la <strong>formule de calcul</strong> (somme, moyenne, ratio, seuil...)</li>
+      <li>Definissez la <strong>frequence de mise a jour</strong> (journaliere, hebdomadaire, mensuelle)</li>
+      <li>Enregistrez — le KPI apparait sur votre tableau de bord personnalise</li>
+    </ol>
+
+    <h3>Exemples de KPIs personnalises</h3>
+    <table class="data-table">
+      <tr><th>KPI</th><th>Formule</th><th>Utilite</th></tr>
+      <tr><td>Rendement arachide par parcelle</td><td>kg recoltes / surface (ha)</td><td>Comparer les performances entre parcelles</td></tr>
+      <tr><td>Cout intrant / kg produit</td><td>FCFA intrants / kg recoltes</td><td>Mesurer l'efficience des traitements</td></tr>
+      <tr><td>Taux couverture vaccinale</td><td>Animaux vaccines / effectif total</td><td>Suivi sante du troupeau</td></tr>
+      <tr><td>Delai rotation cultures</td><td>Jours entre deux cultures sur meme parcelle</td><td>Optimiser la fertilite du sol</td></tr>
+    </table>
+
+    <div class="info-box tip">
+      <strong>Tableau de bord personnalise</strong>
+      Les KPIs crees apparaissent sur votre page d'accueil dans la section "Mes indicateurs". Vous pouvez les reordonner et choisir ceux qui s'affichent en priorite.
+    </div>
   </div>
 </div>
 
