@@ -10,6 +10,12 @@ export const plannedTasks = pgTable(
     name: varchar('name', { length: 255 }).notNull(),
     description: text('description'),
     type: varchar('type', { length: 50 }),
+    /** Stade cultural cible (ex: "tallage", "floraison", "récolte") */
+    growthStage: varchar('growth_stage', { length: 100 }),
+    /** Récurrence: 'none' | 'weekly' | 'biweekly' | 'monthly' | 'custom' */
+    recurrenceType: varchar('recurrence_type', { length: 20 }).default('none'),
+    /** Intervalle en jours pour récurrence custom */
+    recurrenceIntervalDays: integer('recurrence_interval_days'),
     dayOffset: integer('day_offset').default(0),
     plannedDate: timestamp('planned_date', { withTimezone: true }),
     duration: integer('duration'),

@@ -144,6 +144,22 @@ export default function ReportsPage() {
           <p className="font-medium text-gray-700">Rapport Récoltes</p>
           <p className="text-xs text-gray-400">Rendements par culture</p>
         </Link>
+        <Link
+          href="/reports/elevage"
+          className="rounded-xl border border-gray-200 bg-white p-4 text-center transition-colors hover:border-orange-300 hover:bg-orange-50"
+        >
+          <Activity className="mx-auto mb-2 h-8 w-8 text-orange-600" />
+          <p className="font-medium text-gray-700">TDB Élevage</p>
+          <p className="text-xs text-gray-400">Mortalité, mise bas, coûts</p>
+        </Link>
+        <Link
+          href="/reports/vegetal"
+          className="rounded-xl border border-gray-200 bg-white p-4 text-center transition-colors hover:border-green-300 hover:bg-green-50"
+        >
+          <Sprout className="mx-auto mb-2 h-8 w-8 text-green-600" />
+          <p className="font-medium text-gray-700">TDB Végétal</p>
+          <p className="text-xs text-gray-400">Rendements et coûts/ha</p>
+        </Link>
       </div>
     </div>
   );

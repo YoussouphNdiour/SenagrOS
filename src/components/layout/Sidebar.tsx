@@ -80,6 +80,7 @@ function useNavItems(): NavItem[] {
         { label: 'Irrigation', href: '/logs/irrigation', icon: Droplets },
         { label: t('calendar'), href: '/calendrier', icon: Calendar },
         { label: t('plans'), href: '/plans', icon: ClipboardList },
+        { label: "Entretien PV", href: '/plans/pv', icon: Sprout },
       ],
     },
     {
@@ -96,8 +97,11 @@ function useNavItems(): NavItem[] {
       items: [
         { label: t('stocks'), href: '/stocks', icon: Warehouse },
         { label: t('reports'), href: '/reports', icon: BarChart3 },
+        { label: "TDB Élevage", href: '/reports/elevage', icon: Leaf },
+        { label: "TDB Végétal", href: '/reports/vegetal', icon: Sprout },
         { label: t('employes'), href: '/employes', icon: Users },
         { label: t('parametres'), href: '/parametres', icon: Settings },
+        { label: "KPIs personnalisés", href: '/parametres/kpis', icon: BarChart3 },
       ],
     },
   ];

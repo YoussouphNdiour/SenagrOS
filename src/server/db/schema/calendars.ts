@@ -53,6 +53,8 @@ export const parcelCalendars = pgTable('parcel_calendars', {
   stageStatuses: jsonb('stage_statuses').default([]),
   expectedHarvestDate: date('expected_harvest_date'),
   actualHarvestDate: date('actual_harvest_date'),
+  /** Rendement attendu en kg/ha — renseigné lors de l'assignation */
+  expectedYieldKgHa: integer('expected_yield_kg_ha'),
   status: varchar('status', { length: 20 }).default('active'),
   notes: text('notes'),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),

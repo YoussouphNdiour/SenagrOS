@@ -2,7 +2,7 @@ import { z } from 'zod';
 
 // --- Plan type & status enums ---
 
-export const planTypeEnum = z.enum(['crop', 'grazing', 'harvest']);
+export const planTypeEnum = z.enum(['crop', 'grazing', 'harvest', 'pv_maintenance']);
 export type PlanType = z.infer<typeof planTypeEnum>;
 
 export const planStatusEnum = z.enum(['active', 'completed', 'cancelled']);
@@ -14,6 +14,7 @@ export const planTypeLabels: Record<PlanType, string> = {
   crop: 'Culture',
   grazing: 'Pâturage',
   harvest: 'Récolte',
+  pv_maintenance: "Entretien PV",
 };
 
 export const planStatusLabels: Record<PlanStatus, string> = {

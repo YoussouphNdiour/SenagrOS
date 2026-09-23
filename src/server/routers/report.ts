@@ -1,5 +1,6 @@
 import { TRPCError } from '@trpc/server';
-import { and, eq, isNull, sql, gte, lte, desc, count } from 'drizzle-orm';
+import { and, eq, isNull, sql, gte, lte, desc, isNotNull } from 'drizzle-orm';
+import { z } from 'zod';
 import { protectedProcedure, router } from '../trpc';
 import { assets } from '../db/schema/assets';
 import { logs, logAssets } from '../db/schema/logs';
@@ -355,6 +356,258 @@ export const reportRouter = router({
         expenses: [],
         summary: { totalRevenue: 0, totalExpenses: 0, netProfit: 0 },
         message: 'Module Finances disponible en Phase 8',
+      };
+    }),
+
+  // --- TDB technique élevage ---
+  livestockKpis: protectedProcedure
+    .input(z.object({
+      dateFrom: z.string().optional(),
+      dateTo: z.string().optional(),
+    }))
+    .query(async ({ ctx, input }) => {
+      const farmId = getFarmId(ctx);
+
+      const now = new Date();
+      const from = input.dateFrom ? new Date(input.dateFrom) : new Date(now.getFullYear(), 0, 1);
+      const to = input.dateTo ? new Date(input.dateTo) : now;
+
+      const [
+        activeAnimals,
+        archivedAnimals,
+        birthLogs,
+        inputCostRows,
+        allAnimals,
+      ] = await Promise.all([
+        // Active animals
+        ctx.db
+          .select({ count: sql<number>`count(*)::int` })
+          .from(assets)
+          .where(and(
+            eq(assets.farmId, farmId),
+            sql`${assets.type} = 'animal'`,
+            isNull(assets.archivedAt),
+          )),
+
+        // Archived (died) animals in period
+        ctx.db
+          .select({ count: sql<number>`count(*)::int` })
+          .from(assets)
+          .where(and(
+            eq(assets.farmId, farmId),
+            sql`${assets.type} = 'animal'`,
+            isNotNull(assets.archivedAt),
+            gte(assets.archivedAt, from),
+            lte(assets.archivedAt, to),
+          )),
+
+        // Birth logs in period
+        ctx.db
+          .select({ count: sql<number>`count(*)::int` })
+          .from(logs)
+          .where(and(
+            eq(logs.farmId, farmId),
+            eq(logs.type, 'birth'),
+            gte(logs.timestamp, from),
+            lte(logs.timestamp, to),
+          )),
+
+        // Input costs linked to animal assets in period
+        ctx.db
+          .select({
+            totalXOF: sql<number>`coalesce(sum(${quantities.numerator}::numeric / coalesce(${quantities.denominator}::numeric, 1)), 0)::int`,
+          })
+          .from(logs)
+          .innerJoin(logAssets, eq(logAssets.logId, logs.id))
+          .innerJoin(assets, eq(logAssets.assetId, assets.id))
+          .innerJoin(quantities, eq(quantities.logId, logs.id))
+          .where(and(
+            eq(logs.farmId, farmId),
+            eq(logs.type, 'input'),
+            sql`${assets.type} = 'animal'`,
+            sql`${quantities.unit} = 'XOF'`,
+            gte(logs.timestamp, from),
+            lte(logs.timestamp, to),
+          )),
+
+        // All animals ever (for total herd base)
+        ctx.db
+          .select({ count: sql<number>`count(*)::int` })
+          .from(assets)
+          .where(and(
+            eq(assets.farmId, farmId),
+            sql`${assets.type} = 'animal'`,
+          )),
+      ]);
+
+      const active = activeAnimals[0]?.count ?? 0;
+      const archived = archivedAnimals[0]?.count ?? 0;
+      const births = birthLogs[0]?.count ?? 0;
+      const total = allAnimals[0]?.count ?? 0;
+      const inputCostTotal = inputCostRows[0]?.totalXOF ?? 0;
+
+      // Taux mortalité = archived / total * 100
+      const tauxMortalite = total > 0 ? Math.round((archived / total) * 1000) / 10 : 0;
+
+      // Coût alimentaire / tête
+      const coutAlimentaireParTete = active > 0 ? Math.round(inputCostTotal / active) : 0;
+
+      // Taux mise bas = births / active females (approximated as births / active * 100)
+      // We don't have sex data so we show raw birth count
+      const tauxMiseBas = active > 0 ? Math.round((births / active) * 1000) / 10 : 0;
+
+      return {
+        effectifActif: active,
+        effectifTotal: total,
+        naissancesPeriode: births,
+        decedésPeriode: archived,
+        tauxMortalite,
+        coutAlimentaireTotalXOF: inputCostTotal,
+        coutAlimentaireParTete,
+        tauxMiseBas,
+        periode: { from: from.toISOString().split('T')[0], to: to.toISOString().split('T')[0] },
+      };
+    }),
+
+  // --- TDB technique végétal ---
+  cropKpis: protectedProcedure
+    .input(z.object({
+      dateFrom: z.string().optional(),
+      dateTo: z.string().optional(),
+    }))
+    .query(async ({ ctx, input }) => {
+      const farmId = getFarmId(ctx);
+
+      const now = new Date();
+      const from = input.dateFrom ? new Date(input.dateFrom) : new Date(now.getFullYear(), 0, 1);
+      const to = input.dateTo ? new Date(input.dateTo) : now;
+
+      // Active parcel calendars with expected yield
+      const parcelData = await ctx.db
+        .select({
+          id: parcelCalendars.id,
+          assetId: parcelCalendars.assetId,
+          assetName: assets.name,
+          cropType: culturalCalendars.cropType,
+          variety: culturalCalendars.variety,
+          sowingDate: parcelCalendars.sowingDate,
+          expectedHarvestDate: parcelCalendars.expectedHarvestDate,
+          actualHarvestDate: parcelCalendars.actualHarvestDate,
+          expectedYieldKgHa: parcelCalendars.expectedYieldKgHa,
+          status: parcelCalendars.status,
+        })
+        .from(parcelCalendars)
+        .innerJoin(culturalCalendars, eq(parcelCalendars.calendarId, culturalCalendars.id))
+        .innerJoin(assets, eq(parcelCalendars.assetId, assets.id))
+        .where(eq(parcelCalendars.farmId, farmId))
+        .orderBy(desc(parcelCalendars.createdAt))
+        .limit(50);
+
+      // Harvest quantities for parcel assets in period
+      const harvestRows = await ctx.db
+        .select({
+          assetId: logAssets.assetId,
+          totalKg: sql<number>`coalesce(sum(${quantities.numerator}::numeric / coalesce(${quantities.denominator}::numeric, 1)), 0)::int`,
+        })
+        .from(logs)
+        .innerJoin(logAssets, eq(logAssets.logId, logs.id))
+        .innerJoin(quantities, eq(quantities.logId, logs.id))
+        .where(and(
+          eq(logs.farmId, farmId),
+          eq(logs.type, 'harvest'),
+          sql`${quantities.unit} = 'kg'`,
+          gte(logs.timestamp, from),
+          lte(logs.timestamp, to),
+        ))
+        .groupBy(logAssets.assetId);
+
+      // Input costs per parcel asset in period
+      const inputCostRows = await ctx.db
+        .select({
+          assetId: logAssets.assetId,
+          totalXOF: sql<number>`coalesce(sum(${quantities.numerator}::numeric / coalesce(${quantities.denominator}::numeric, 1)), 0)::int`,
+        })
+        .from(logs)
+        .innerJoin(logAssets, eq(logAssets.logId, logs.id))
+        .innerJoin(assets, eq(logAssets.assetId, assets.id))
+        .innerJoin(quantities, eq(quantities.logId, logs.id))
+        .where(and(
+          eq(logs.farmId, farmId),
+          eq(logs.type, 'input'),
+          sql`${assets.type} = 'land'`,
+          sql`${quantities.unit} = 'XOF'`,
+          gte(logs.timestamp, from),
+          lte(logs.timestamp, to),
+        ))
+        .groupBy(logAssets.assetId);
+
+      const harvestMap = new Map(harvestRows.map((r) => [r.assetId, r.totalKg]));
+      const inputMap = new Map(inputCostRows.map((r) => [r.assetId, r.totalXOF]));
+
+      // Get parcel area from asset data JSONB (field: area_ha)
+      const parcelAssets = await ctx.db
+        .select({
+          id: assets.id,
+          data: assets.data,
+        })
+        .from(assets)
+        .where(and(
+          eq(assets.farmId, farmId),
+          sql`${assets.type} = 'land'`,
+          isNull(assets.archivedAt),
+        ));
+
+      const areaMap = new Map(
+        parcelAssets.map((a) => {
+          const data = a.data as Record<string, unknown> | null;
+          const area = typeof data?.area_ha === 'number' ? data.area_ha : null;
+          return [a.id, area];
+        }),
+      );
+
+      const parcels = parcelData.map((p) => {
+        const realKg = harvestMap.get(p.assetId) ?? 0;
+        const inputXOF = inputMap.get(p.assetId) ?? 0;
+        const areaHa = areaMap.get(p.assetId) ?? null;
+        const rendementPrevu = p.expectedYieldKgHa;
+        const rendementReel = areaHa && areaHa > 0 ? Math.round(realKg / areaHa) : null;
+        const coutIntrantHa = areaHa && areaHa > 0 ? Math.round(inputXOF / areaHa) : null;
+        const revenuXOF = null; // revenue not tracked at parcel level yet
+        const margeBruteHa = null; // needs revenue data
+
+        return {
+          parcelId: p.assetId,
+          parcelName: p.assetName,
+          cropType: p.cropType,
+          variety: p.variety,
+          sowingDate: p.sowingDate,
+          expectedHarvestDate: p.expectedHarvestDate,
+          actualHarvestDate: p.actualHarvestDate,
+          areaHa,
+          rendementPrevuKgHa: rendementPrevu ?? null,
+          rendementReelKgHa: rendementReel,
+          rendementReelKgTotal: realKg,
+          coutIntrantXOF: inputXOF,
+          coutIntrantHa,
+          margeBruteHa,
+          calendarRevenu: revenuXOF,
+          status: p.status,
+        };
+      });
+
+      const totalHarvest = parcels.reduce((s, p) => s + p.rendementReelKgTotal, 0);
+      const totalInputCost = parcels.reduce((s, p) => s + p.coutIntrantXOF, 0);
+      const activeParcels = parcels.filter((p) => p.status === 'active').length;
+
+      return {
+        parcels,
+        summary: {
+          activeParcels,
+          totalParcels: parcels.length,
+          totalHarvestKg: totalHarvest,
+          totalInputCostXOF: totalInputCost,
+        },
+        periode: { from: from.toISOString().split('T')[0], to: to.toISOString().split('T')[0] },
       };
     }),
 });

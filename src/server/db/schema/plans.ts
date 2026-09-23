@@ -11,6 +11,7 @@ import {
 } from 'drizzle-orm/pg-core';
 import { farms } from './farms';
 import { logs } from './logs';
+import { assets } from './assets';
 
 export const plans = pgTable('plans', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -23,6 +24,10 @@ export const plans = pgTable('plans', {
   farmId: uuid('farm_id')
     .references(() => farms.id)
     .notNull(),
+  /** Optional: link plan to a specific parcel (land asset) */
+  parcelId: uuid('parcel_id').references(() => assets.id),
+  /** Optional: link plan to a specific crop asset */
+  cropAssetId: uuid('crop_asset_id').references(() => assets.id),
   notes: text('notes'),
   flags: jsonb('flags').default([]),
   createdAt: timestamp('created_at', { withTimezone: true }).defaultNow(),
