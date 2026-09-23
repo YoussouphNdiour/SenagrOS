@@ -12,18 +12,24 @@ const TOKEN_URL =
 const STATISTICS_URL =
   'https://sh.dataspace.copernicus.eu/api/v1/statistics';
 
-// Evalscript: compute NDVI while masking clouds & invalid pixels via SCL band
+// Evalscript: compute NDVI while masking clouds & invalid pixels via SCL band.
+// Statistics API v3 requires a dataMask output to know which pixels to exclude.
 const NDVI_EVALSCRIPT = `//VERSION=3
 function setup() {
   return {
     input: [{ bands: ["B04", "B08", "SCL"], units: "DN" }],
-    output: [{ id: "ndvi", bands: 1, sampleType: "FLOAT32" }]
+    output: [
+      { id: "ndvi", bands: 1, sampleType: "FLOAT32" },
+      { id: "dataMask", bands: 1, sampleType: "UINT8" }
+    ]
   };
 }
 function evaluatePixel(sample) {
-  if ([0, 1, 3, 8, 9, 10].includes(sample.SCL)) return { ndvi: [NaN] };
-  let ndvi = (sample.B08 - sample.B04) / (sample.B08 + sample.B04);
-  return { ndvi: [ndvi] };
+  // SCL classes to exclude: 0=no data, 1=saturated, 3=cloud shadow,
+  // 8=cloud medium, 9=cloud high, 10=cirrus
+  const isInvalid = [0, 1, 3, 8, 9, 10].includes(sample.SCL);
+  const ndvi = isInvalid ? 0 : (sample.B08 - sample.B04) / (sample.B08 + sample.B04);
+  return { ndvi: [ndvi], dataMask: [isInvalid ? 0 : 1] };
 }`;
 
 // ---------------------------------------------------------------------------
@@ -160,8 +166,12 @@ export async function fetchNdviTimeSeries(
 
     return json.data
       .map((interval) => {
-        const mean = interval.outputs?.ndvi?.bands?.B0?.stats?.mean;
-        // Filter out NaN / undefined values
+        const stats = interval.outputs?.ndvi?.bands?.B0?.stats;
+        if (!stats) return null;
+        const { mean, sampleCount, noDataCount } = stats;
+        // Skip intervals with no valid pixels (all masked by dataMask)
+        if (noDataCount === sampleCount) return null;
+        // Skip undefined / NaN means
         if (mean == null || Number.isNaN(mean)) return null;
         return {
           date: interval.interval.from.split('T')[0],
