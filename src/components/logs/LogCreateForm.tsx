@@ -88,6 +88,9 @@ export function LogCreateForm({ defaultType }: LogCreateFormProps) {
   const [workerIds, setWorkerIds] = useState<string[]>([]);
   const [assigneeId, setAssigneeId] = useState<string | null>(null);
   const [targetParcelIds, setTargetParcelIds] = useState<string[]>([]);
+  // Seeding: parcel + plant asset links
+  const [seedingParcelId, setSeedingParcelId] = useState<string>('');
+  const [seedingPlantId, setSeedingPlantId] = useState<string>('');
 
   const createMutation = trpc.log.create.useMutation({
     onSuccess: (data) => {
@@ -181,6 +184,13 @@ export function LogCreateForm({ defaultType }: LogCreateFormProps) {
     }));
   };
 
+  const searchPlant = async (query: string): Promise<AssetItem[]> => {
+    if (!farmId) return [];
+    const res = await fetch(`/api/trpc/asset.list?input=${encodeURIComponent(JSON.stringify({ json: { farmId, type: 'plant', search: query || undefined, page: 1, limit: 20 } }))}`);
+    const json = await res.json();
+    return json?.result?.data?.json?.items ?? [];
+  };
+
   const searchMaterial = async (query: string): Promise<AssetItem[]> => {
     if (!farmId) return [];
     const res = await fetch(`/api/trpc/asset.list?input=${encodeURIComponent(JSON.stringify({ json: { farmId, type: 'material', search: query || undefined, page: 1, limit: 20 } }))}`);
@@ -204,12 +214,23 @@ export function LogCreateForm({ defaultType }: LogCreateFormProps) {
     const enrichedData = selectedType === 'input'
       ? { ...values.data, target_parcel_ids: targetParcelIds }
       : values.data;
+
+    type AssetRole = 'subject' | 'location' | 'input' | 'crop';
+    const assetIds: { assetId: string; role: AssetRole }[] = [];
+    if (selectedType === 'seeding') {
+      if (seedingParcelId) assetIds.push({ assetId: seedingParcelId, role: 'location' });
+      if (seedingPlantId) assetIds.push({ assetId: seedingPlantId, role: 'crop' });
+    } else if (selectedType === 'input') {
+      for (const pid of targetParcelIds) assetIds.push({ assetId: pid, role: 'location' });
+    }
+
     createMutation.mutate({
       ...values,
       data: enrichedData,
       equipmentIds,
       workerIds,
       assigneeId,
+      ...(assetIds.length > 0 ? { assetIds } : {}),
     });
   };
 
@@ -321,21 +342,26 @@ export function LogCreateForm({ defaultType }: LogCreateFormProps) {
               )}
             />
 
-            {/* Target parcel */}
-            <Controller
-              control={control}
-              name={'data.target_parcel_id' as any}
-              render={({ field }) => (
-                <ComboboxAsync<AssetItem>
-                  label="Parcelle cible"
-                  placeholder="Rechercher une parcelle..."
-                  value={field.value as string}
-                  onChange={field.onChange}
-                  searchFn={searchLand}
-                  getLabel={(item) => `${item.name} — ${(item.data as any)?.code_parcelle ?? ''}`}
-                  getValue={(item) => item.id}
-                />
-              )}
+            {/* Target parcel — linked via logAssets (role=location) */}
+            <ComboboxAsync<AssetItem>
+              label="Parcelle cible"
+              placeholder="Rechercher une parcelle..."
+              value={seedingParcelId}
+              onChange={(val) => setSeedingParcelId(val ?? '')}
+              searchFn={searchLand}
+              getLabel={(item) => `${item.name}${(item.data as Record<string, unknown>)?.code_parcelle ? ` — ${(item.data as Record<string, unknown>).code_parcelle}` : ''}`}
+              getValue={(item) => item.id}
+            />
+
+            {/* Plant asset (culture) — linked via logAssets (role=crop) */}
+            <ComboboxAsync<AssetItem>
+              label="Culture (asset plant)"
+              placeholder="Rechercher une culture..."
+              value={seedingPlantId}
+              onChange={(val) => setSeedingPlantId(val ?? '')}
+              searchFn={searchPlant}
+              getLabel={(item) => item.name}
+              getValue={(item) => item.id}
             />
 
             <Input
@@ -515,6 +541,18 @@ export function LogCreateForm({ defaultType }: LogCreateFormProps) {
                 label="Unité dose"
                 placeholder="Ex: L/ha"
                 {...register('data.dose_unit' as any)}
+              />
+              <Input
+                label="Délai de carence (jours)"
+                type="number"
+                min="0"
+                placeholder="Ex: 21"
+                {...register('data.withdrawal_days' as any, { valueAsNumber: true })}
+              />
+              <Input
+                label="Nom commercial du produit"
+                placeholder="Ex: Roundup, Bayfolan..."
+                {...register('data.product_name' as any)}
               />
             </div>
           </Card>

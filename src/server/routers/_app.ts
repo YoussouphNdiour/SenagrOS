@@ -19,6 +19,7 @@ import { ndviRouter } from './ndvi';
 import { plannedTaskRouter } from './planned-task';
 import { notificationRouter } from './notification';
 import { farmKpiRouter } from './farm-kpi';
+import { parcelRouter } from './parcel';
 
 export const appRouter = router({
   health: publicProcedure.query(() => ({ status: 'ok' })),
@@ -42,6 +43,7 @@ export const appRouter = router({
   plannedTask: plannedTaskRouter,
   notification: notificationRouter,
   farmKpi: farmKpiRouter,
+  parcel: parcelRouter,
 });
 
 export type AppRouter = typeof appRouter;

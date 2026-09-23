@@ -147,7 +147,7 @@ export const irrigationDataSchema = z.object({
 
 export const logAssetInputSchema = z.object({
   assetId: z.string().uuid(),
-  role: z.enum(['subject', 'location', 'input']).default('subject'),
+  role: z.enum(['subject', 'location', 'input', 'crop']).default('subject'),
 });
 
 // --- Quantity input schema ---

@@ -216,7 +216,9 @@ export function AssetListClient({ farmId, filterType }: AssetListClientProps) {
           columns={columns}
           data={(data?.items ?? []) as Asset[]}
           emptyMessage="Aucun asset trouve"
-          onRowClick={(row) => router.push(`/assets/${row.id}`)}
+          onRowClick={(row) =>
+            router.push(row.type === 'land' ? `/assets/land/${row.id}` : `/assets/${row.id}`)
+          }
         />
       )}
 
