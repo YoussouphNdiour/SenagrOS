@@ -227,8 +227,13 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
           if (!isDrawingRef.current) map.getCanvas().style.cursor = '';
         });
       } else {
-        // Parcel has NO geometry — show a pin at farm center
-        const farmCenter = center;
+        // Parcel has NO geometry — show a pin at farm center (prefer farmBoundary query coords over prop)
+        const fbLat = farmBoundary?.latitude ? parseFloat(farmBoundary.latitude) : undefined;
+        const fbLng = farmBoundary?.longitude ? parseFloat(farmBoundary.longitude) : undefined;
+        const farmCenter: [number, number] =
+          fbLng && fbLat && !Number.isNaN(fbLng) && !Number.isNaN(fbLat)
+            ? [fbLng, fbLat]
+            : center;
         const el = document.createElement('div');
         el.style.cssText =
           'width:28px;height:28px;background:#16a34a;border:2px solid white;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 2px 4px rgba(0,0,0,.3);cursor:pointer';
@@ -280,36 +285,62 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
   // ── Farm boundary ─────────────────────────────────────────────────────────
   useEffect(() => {
     const map = mapRef.current;
-    if (!map || !mapReady || !farmBoundary?.geojson) return;
+    if (!map || !mapReady || !farmBoundary) return;
 
-    try {
-      const geom = JSON.parse(farmBoundary.geojson as string) as GeoJSON.Geometry;
-      const feature: GeoJSON.Feature = {
-        type: 'Feature',
-        properties: { name: farmBoundary.name },
-        geometry: geom,
-      };
+    // Remove old layers/sources
+    if (map.getLayer(`${FARM_BOUNDARY_LAYER}-fill`)) map.removeLayer(`${FARM_BOUNDARY_LAYER}-fill`);
+    if (map.getLayer(FARM_BOUNDARY_LAYER)) map.removeLayer(FARM_BOUNDARY_LAYER);
+    if (map.getSource(FARM_BOUNDARY_SOURCE)) map.removeSource(FARM_BOUNDARY_SOURCE);
 
-      if (map.getLayer(`${FARM_BOUNDARY_LAYER}-fill`)) map.removeLayer(`${FARM_BOUNDARY_LAYER}-fill`);
-      if (map.getLayer(FARM_BOUNDARY_LAYER)) map.removeLayer(FARM_BOUNDARY_LAYER);
-      if (map.getSource(FARM_BOUNDARY_SOURCE)) map.removeSource(FARM_BOUNDARY_SOURCE);
+    if (farmBoundary.geojson) {
+      // Farm has a drawn boundary polygon — show it as a blue filled polygon
+      try {
+        const geom = JSON.parse(farmBoundary.geojson as string) as GeoJSON.Geometry;
+        const feature: GeoJSON.Feature = {
+          type: 'Feature',
+          properties: { name: farmBoundary.name },
+          geometry: geom,
+        };
 
-      map.addSource(FARM_BOUNDARY_SOURCE, { type: 'geojson', data: feature });
-      // Semi-transparent blue fill so the farm area is immediately visible
-      map.addLayer({
-        id: `${FARM_BOUNDARY_LAYER}-fill`,
-        type: 'fill',
-        source: FARM_BOUNDARY_SOURCE,
-        paint: { 'fill-color': '#3b82f6', 'fill-opacity': 0.08 },
-      });
-      // Dashed blue outline
-      map.addLayer({
-        id: FARM_BOUNDARY_LAYER,
-        type: 'line',
-        source: FARM_BOUNDARY_SOURCE,
-        paint: { 'line-color': '#1e40af', 'line-width': 3, 'line-dasharray': [6, 3], 'line-opacity': 0.9 },
-      });
-    } catch { /* ignore */ }
+        map.addSource(FARM_BOUNDARY_SOURCE, { type: 'geojson', data: feature });
+        // Visible blue fill
+        map.addLayer({
+          id: `${FARM_BOUNDARY_LAYER}-fill`,
+          type: 'fill',
+          source: FARM_BOUNDARY_SOURCE,
+          paint: { 'fill-color': '#3b82f6', 'fill-opacity': 0.18 },
+        });
+        // Solid blue outline
+        map.addLayer({
+          id: FARM_BOUNDARY_LAYER,
+          type: 'line',
+          source: FARM_BOUNDARY_SOURCE,
+          paint: { 'line-color': '#1d4ed8', 'line-width': 3, 'line-dasharray': [6, 3], 'line-opacity': 1 },
+        });
+      } catch { /* ignore */ }
+    } else if (farmBoundary.latitude && farmBoundary.longitude) {
+      // No polygon but farm has lat/lng — place a house-shaped marker
+      const lat = parseFloat(farmBoundary.latitude);
+      const lng = parseFloat(farmBoundary.longitude);
+      if (!Number.isNaN(lat) && !Number.isNaN(lng)) {
+        const el = document.createElement('div');
+        el.title = farmBoundary.name ?? 'Ferme';
+        el.style.cssText =
+          'width:32px;height:32px;background:#1d4ed8;border:2px solid white;border-radius:4px;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.35);cursor:default';
+        el.innerHTML =
+          '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22" fill="none" stroke="white" stroke-width="2"/></svg>';
+
+        new maplibregl.Marker({ element: el })
+          .setLngLat([lng, lat])
+          .setPopup(
+            new maplibregl.Popup({ offset: 20 }).setHTML(
+              `<div style="font-family:system-ui;font-size:13px"><strong>${farmBoundary.name ?? 'Ferme'}</strong>
+              <div style="margin-top:4px;color:#6b7280;font-size:11px">Aucune limite tracée — cliquez "Limite ferme" pour dessiner</div></div>`,
+            ),
+          )
+          .addTo(map);
+      }
+    }
   }, [farmBoundary, mapReady]);
 
   // ── Draw mode — map click handler ─────────────────────────────────────────

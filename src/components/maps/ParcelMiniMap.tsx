@@ -69,14 +69,14 @@ export function ParcelMiniMap({ parcelId, parcelName, parcelGeojson }: ParcelMin
             id: 'farm-fill',
             type: 'fill',
             source: 'farm-boundary',
-            paint: { 'fill-color': '#3b82f6', 'fill-opacity': 0.08 },
+            paint: { 'fill-color': '#3b82f6', 'fill-opacity': 0.18 },
           });
           // Dashed blue outline
           map.addLayer({
             id: 'farm-line',
             type: 'line',
             source: 'farm-boundary',
-            paint: { 'line-color': '#1e40af', 'line-width': 2, 'line-dasharray': [5, 3], 'line-opacity': 0.8 },
+            paint: { 'line-color': '#1d4ed8', 'line-width': 2, 'line-dasharray': [5, 3], 'line-opacity': 1 },
           });
 
           if (geom.type === 'Polygon') {
