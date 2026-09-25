@@ -180,13 +180,13 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
           id: `${sourceId}-fill`,
           type: 'fill',
           source: sourceId,
-          paint: { 'fill-color': '#22c55e', 'fill-opacity': 0.3 },
+          paint: { 'fill-color': '#22c55e', 'fill-opacity': 0.4 },
         });
         map.addLayer({
           id: `${sourceId}-stroke`,
           type: 'line',
           source: sourceId,
-          paint: { 'line-color': '#16a34a', 'line-width': 2 },
+          paint: { 'line-color': '#15803d', 'line-width': 3 },
         });
 
         for (const ring of geojson.geometry.coordinates) {
@@ -259,8 +259,23 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
 
     if (hasBounds) {
       map.fitBounds(bounds, { padding: 60, maxZoom: 16 });
+    } else if (farmBoundary?.geojson) {
+      // No parcel geometry — center on farm boundary if available
+      try {
+        const geom = JSON.parse(farmBoundary.geojson) as GeoJSON.Geometry;
+        if (geom.type === 'Polygon') {
+          const fb = new maplibregl.LngLatBounds();
+          for (const ring of (geom as GeoJSON.Polygon).coordinates) {
+            for (const c of ring) fb.extend([c[0], c[1]]);
+          }
+          map.fitBounds(fb, { padding: 80, maxZoom: 15 });
+        }
+      } catch { /* ignore */ }
+    } else if (farmBoundary?.latitude && farmBoundary?.longitude) {
+      // Center on farm lat/lng
+      map.flyTo({ center: [parseFloat(farmBoundary.longitude), parseFloat(farmBoundary.latitude)], zoom: 14 });
     }
-  }, [parcels, mapReady, center]);
+  }, [parcels, mapReady, center, farmBoundary]);
 
   // ── Farm boundary ─────────────────────────────────────────────────────────
   useEffect(() => {
@@ -275,15 +290,24 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
         geometry: geom,
       };
 
+      if (map.getLayer(`${FARM_BOUNDARY_LAYER}-fill`)) map.removeLayer(`${FARM_BOUNDARY_LAYER}-fill`);
       if (map.getLayer(FARM_BOUNDARY_LAYER)) map.removeLayer(FARM_BOUNDARY_LAYER);
       if (map.getSource(FARM_BOUNDARY_SOURCE)) map.removeSource(FARM_BOUNDARY_SOURCE);
 
       map.addSource(FARM_BOUNDARY_SOURCE, { type: 'geojson', data: feature });
+      // Semi-transparent blue fill so the farm area is immediately visible
+      map.addLayer({
+        id: `${FARM_BOUNDARY_LAYER}-fill`,
+        type: 'fill',
+        source: FARM_BOUNDARY_SOURCE,
+        paint: { 'fill-color': '#3b82f6', 'fill-opacity': 0.08 },
+      });
+      // Dashed blue outline
       map.addLayer({
         id: FARM_BOUNDARY_LAYER,
         type: 'line',
         source: FARM_BOUNDARY_SOURCE,
-        paint: { 'line-color': '#1e40af', 'line-width': 3, 'line-dasharray': [6, 3], 'line-opacity': 0.85 },
+        paint: { 'line-color': '#1e40af', 'line-width': 3, 'line-dasharray': [6, 3], 'line-opacity': 0.9 },
       });
     } catch { /* ignore */ }
   }, [farmBoundary, mapReady]);

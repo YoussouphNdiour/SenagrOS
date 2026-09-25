@@ -77,6 +77,8 @@ export const mapRouter = router({
       .select({
         id: farms.id,
         name: farms.name,
+        latitude: farms.latitude,
+        longitude: farms.longitude,
         boundaryGeoJSON: sql<string | null>`ST_AsGeoJSON(${farms.boundary})`.as('boundary_geojson'),
       })
       .from(farms)
@@ -86,6 +88,8 @@ export const mapRouter = router({
     if (!farm) return null;
     return {
       name: farm.name,
+      latitude: farm.latitude,
+      longitude: farm.longitude,
       geojson: farm.boundaryGeoJSON,
     };
   }),

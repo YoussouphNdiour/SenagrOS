@@ -5,6 +5,12 @@ import { trpc } from '@/lib/trpc';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { NdviWidget } from '@/components/maps/NdviWidget';
+import dynamic from 'next/dynamic';
+
+const ParcelMiniMap = dynamic(
+  () => import('@/components/maps/ParcelMiniMap').then((m) => ({ default: m.ParcelMiniMap })),
+  { ssr: false, loading: () => <div className="h-70 animate-pulse rounded-xl bg-gray-100" /> },
+);
 import {
   MapPin, Leaf, BarChart3, ClipboardList, AlertTriangle, CheckCircle2,
   RefreshCw, XCircle, MinusCircle, Info, ChevronLeft,
@@ -175,19 +181,29 @@ export function ParcelDetailClient({ parcelId }: { parcelId: string }) {
 
       {/* ── NDVI ── */}
       {tab === 'ndvi' && (
-        <Card>
-          <NdviWidget assetId={parcelId} parcelName={parcel.name} />
-          {!parcel.geojson && (
-            <div className="mt-4 flex items-start gap-2 rounded-lg bg-blue-50 p-3 text-sm text-blue-700">
-              <Info className="mt-0.5 h-4 w-4 shrink-0" />
-              <p>
-                Cette parcelle n'a pas encore de géométrie dessinée. Les données NDVI réelles (Sentinel-2)
-                nécessitent un contour GPS.{' '}
-                <Link href="/map" className="underline font-medium">Dessiner sur la carte →</Link>
-              </p>
-            </div>
-          )}
-        </Card>
+        <div className="space-y-4">
+          {/* Mini-map: parcel polygon + farm boundary */}
+          <ParcelMiniMap
+            parcelId={parcelId}
+            parcelName={parcel.name}
+            parcelGeojson={parcel.geojson ?? null}
+          />
+
+          {/* NDVI chart */}
+          <Card>
+            <NdviWidget assetId={parcelId} parcelName={parcel.name} />
+            {!parcel.geojson && (
+              <div className="mt-4 flex items-start gap-2 rounded-lg bg-blue-50 p-3 text-sm text-blue-700">
+                <Info className="mt-0.5 h-4 w-4 shrink-0" />
+                <p>
+                  Cette parcelle n'a pas encore de géométrie dessinée. Les données NDVI réelles (Sentinel-2)
+                  nécessitent un contour GPS.{' '}
+                  <Link href="/map" className="underline font-medium">Dessiner sur la carte →</Link>
+                </p>
+              </div>
+            )}
+          </Card>
+        </div>
       )}
 
       {/* ── CROP HISTORY ── */}
@@ -211,7 +227,7 @@ export function ParcelDetailClient({ parcelId }: { parcelId: string }) {
               <div className="space-y-4 pl-10">
                 {cropHistory.map((c, i) => (
                   <div key={c.id} className="relative">
-                    <div className={`absolute -left-[26px] top-2 h-4 w-4 rounded-full border-2 border-white shadow ${
+                    <div className={`absolute -left-6.5 top-2 h-4 w-4 rounded-full border-2 border-white shadow ${
                       c.status === 'active' ? 'bg-green-500' : c.status === 'completed' ? 'bg-blue-400' : 'bg-gray-300'
                     }`} />
                     <Card>
