@@ -319,10 +319,32 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
         });
       } catch { /* ignore */ }
     } else if (farmBoundary.latitude && farmBoundary.longitude) {
-      // No polygon but farm has lat/lng — place a house-shaped marker
+      // No polygon — show a blue pulsing circle at farm center + house marker
       const lat = parseFloat(farmBoundary.latitude);
       const lng = parseFloat(farmBoundary.longitude);
       if (!Number.isNaN(lat) && !Number.isNaN(lng)) {
+        // Blue circle layer (visible without polygon)
+        const pointFeature: GeoJSON.Feature<GeoJSON.Point> = {
+          type: 'Feature',
+          properties: {},
+          geometry: { type: 'Point', coordinates: [lng, lat] },
+        };
+        map.addSource(FARM_BOUNDARY_SOURCE, { type: 'geojson', data: pointFeature });
+        map.addLayer({
+          id: `${FARM_BOUNDARY_LAYER}-fill`,
+          type: 'circle',
+          source: FARM_BOUNDARY_SOURCE,
+          paint: {
+            'circle-radius': 40,
+            'circle-color': '#3b82f6',
+            'circle-opacity': 0.18,
+            'circle-stroke-color': '#1d4ed8',
+            'circle-stroke-width': 3,
+            'circle-stroke-opacity': 0.9,
+          },
+        });
+
+        // House marker on top
         const el = document.createElement('div');
         el.title = farmBoundary.name ?? 'Ferme';
         el.style.cssText =
@@ -335,7 +357,7 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
           .setPopup(
             new maplibregl.Popup({ offset: 20 }).setHTML(
               `<div style="font-family:system-ui;font-size:13px"><strong>${farmBoundary.name ?? 'Ferme'}</strong>
-              <div style="margin-top:4px;color:#6b7280;font-size:11px">Aucune limite tracée — cliquez "Limite ferme" pour dessiner</div></div>`,
+              <div style="margin-top:4px;color:#6b7280;font-size:11px">Aucune limite tracée — utilisez le bouton "Limite ferme" pour dessiner</div></div>`,
             ),
           )
           .addTo(map);
