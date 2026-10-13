@@ -1,23 +1,8 @@
-import dynamic from 'next/dynamic';
 import { auth } from '@/server/auth';
 import { db } from '@/server/db';
 import { farms } from '@/server/db/schema';
 import { eq } from 'drizzle-orm';
-
-const MapView = dynamic(
-  () =>
-    import('@/components/maps/MapView').then((m) => ({
-      default: m.MapView,
-    })),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="flex h-[calc(100vh-8rem)] items-center justify-center text-gray-500">
-        Chargement de la carte...
-      </div>
-    ),
-  },
-);
+import { MapClient } from '@/components/maps/MapClient';
 
 export default async function MapPage() {
   const session = await auth();
@@ -41,7 +26,7 @@ export default async function MapPage() {
         Carte des parcelles
       </h1>
       <div className="h-[calc(100vh-12rem)] overflow-hidden rounded-xl border border-gray-200">
-        <MapView farmLat={farmLat} farmLng={farmLng} />
+        <MapClient farmLat={farmLat} farmLng={farmLng} />
       </div>
     </div>
   );
