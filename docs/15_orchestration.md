@@ -530,6 +530,183 @@ Actions :
 6. Tests
 7. Verifier : pnpm typecheck, pnpm lint, pnpm test, pnpm build
 
+A la fin, mets a jour 11_rebuild_plan.md et 16_decisions.md.
+```
+
+---
+
+### Phase 13 — Storefront public & Commandes B2B/B2C
+
+```
+Je travaille sur le projet SenagrOS dans $PROJECT_ROOT/.
+
+Lis ces fichiers de spec dans ./docs/ :
+- 11_rebuild_plan.md, 16_decisions.md
+- 02_features.md (Module 15 : Storefront public)
+- 03_data_model.md (tables Phase 13 : buyer_profiles, product_listings, price_tiers, delivery_zones, orders, order_items, reviews)
+- 04_api_spec.md (storefrontRouter, orderRouter, paymentRouter)
+- 05_ui_spec.md (pages storefront, catalogue, checkout, dashboard acheteur)
+- 09_code_conventions.md
+
+Phase 13 : Storefront public B2B/B2C — les clients finaux, superettes et grandes surfaces commandent depuis la page d'accueil.
+
+CONTEXTE : L'app a deja un dashboard fermier authentifie. On ajoute maintenant une vitrine publique accessible SANS login, avec un systeme de commande complet. Le layout est conditionnel : non connecte = vitrine, connecte en tant que producteur = dashboard fermier.
+
+SCHEMA DRIZZLE :
+1. Creer src/server/db/schema/storefront.ts avec les 7 tables de 03_data_model.md :
+   - buyer_profiles (profils acheteurs : particulier, superette, grande_surface)
+   - product_listings (catalogue avec photos, categorie, stock, region d'origine)
+   - price_tiers (grille tarifaire 3 niveaux par produit)
+   - delivery_zones (zones de livraison par ferme avec frais)
+   - orders (commandes avec statut, paiement, livraison)
+   - order_items (lignes de commande avec snapshot prix)
+   - reviews (avis clients note 1-5 + commentaire)
+2. Generer et appliquer la migration : pnpm db:generate && pnpm db:migrate
+
+ROUTERS tRPC :
+3. Creer src/server/routers/storefront.router.ts — procedures PUBLIQUES (pas de auth) :
+   - listProducts : pagination, filtres (categorie, region, prix min/max, bio, recherche texte), tri (prix, date, note)
+   - getProduct : detail avec photos, prix par profil, avis, ferme vendeur
+   - listCategories : categories distinctes
+   - listRegions : regions d'origine distinctes
+4. Creer src/server/routers/order.router.ts — procedures AUTHENTIFIEES (acheteur) :
+   - createOrder : valider panier, calculer prix selon profil acheteur, verifier stock, creer commande + order_items, decrementer stock
+   - getMyOrders : liste commandes de l'acheteur connecte, pagination + filtres statut
+   - getOrder : detail commande avec items et tracking
+   - cancelOrder : annuler si statut = pending (dans les 30 min)
+   - reorder : re-creer une commande a partir d'une commande passee
+5. Creer src/server/routers/seller-orders.router.ts — procedures AUTHENTIFIEES (producteur) :
+   - getReceivedOrders : commandes recues pour ma ferme, filtres statut/date
+   - confirmOrder : passer de pending → confirmed
+   - prepareOrder : confirmed → preparing
+   - shipOrder : preparing → shipped
+   - deliverOrder : shipped → delivered
+   - stats : CA total, commandes en cours, taux completion
+6. Creer src/server/routers/payment.router.ts :
+   - initiateWave : appel API Wave (sandbox d'abord), retourne URL de paiement
+   - initiateOrangeMoney : appel API Orange Money, retourne URL
+   - webhookWave : endpoint POST /api/webhooks/wave pour callback de confirmation
+   - webhookOM : endpoint POST /api/webhooks/orange-money pour callback
+   - getPaymentStatus : verifier statut paiement
+7. Creer src/server/routers/review.router.ts :
+   - create : noter un produit (seulement apres livraison)
+   - listByProduct : avis d'un produit, pagination, tri par date/note
+   - respondAsseller : reponse du producteur
+   - getStats : note moyenne, nombre d'avis, distribution des notes
+
+PAGES PUBLIQUES (layout sans sidebar, header simple avec logo + panier + connexion) :
+8. Creer src/app/(storefront)/layout.tsx — layout public :
+   - Header : logo SenagrOS, barre de recherche, lien "Se connecter", icone panier avec badge compteur
+   - Footer : liens utiles, contact, reseaux sociaux
+   - PAS de sidebar, PAS de BottomNav fermier
+9. Page d'accueil / — src/app/(storefront)/page.tsx :
+   - Hero banner : "Produits frais du champ a votre table" + CTA "Decouvrir"
+   - Section categories : cards visuelles (Cereales, Legumes, Fruits, Tubercules...)
+   - Section "Produits populaires" : grille 4-8 produits les plus commandes
+   - Section "Producteurs" : carte des fermes ou liste
+   - Section "Comment ca marche" : 3 etapes (Choisissez, Commandez, Recevez)
+10. Page catalogue — /catalogue :
+    - Sidebar filtres : categorie, region, prix, bio, note minimum
+    - Grille produits : photo, nom, prix (selon profil si connecte), note, producteur, badge bio
+    - Recherche texte
+    - Pagination ou infinite scroll
+    - Tri : pertinence, prix croissant/decroissant, note, recent
+11. Fiche produit — /catalogue/[id] :
+    - Galerie photos (carousel)
+    - Nom, description, categorie, region d'origine
+    - Prix : afficher le prix selon le profil acheteur connecte (ou prix detail si non connecte)
+    - Grille tarifaire visible : "Particulier: 500 FCFA/kg | Superette: 400 FCFA/kg | Gros: 350 FCFA/kg"
+    - Stock disponible, date de recolte, duree de conservation
+    - Bouton "Ajouter au panier" avec selecteur quantite
+    - Infos producteur : nom ferme, region, note moyenne, nombre de ventes
+    - Section avis clients : note moyenne, distribution, liste des avis avec reponses producteur
+12. Page panier — /panier :
+    - Liste des articles : photo, nom, quantite (modifiable), prix unitaire, total ligne
+    - Boutons +/- et supprimer
+    - Sous-total, frais de livraison (selon zone), total
+    - Bouton "Valider la commande"
+    - Panier persiste en localStorage (non connecte) et en DB (connecte)
+
+PAGES CHECKOUT (authentifie acheteur) :
+13. Inscription acheteur — /inscription-acheteur :
+    - Formulaire simplifie : nom, telephone, email, mot de passe
+    - Selection type : Particulier / Superette / Grande surface
+    - Si superette/grande_surface : nom de l'enseigne, NINEA
+    - Adresse de livraison
+14. Page checkout — /checkout :
+    - Step 1 : Recapitulatif commande (articles, quantites, prix)
+    - Step 2 : Adresse de livraison (pre-remplie depuis profil, modifiable)
+    - Step 3 : Zone de livraison (Select) → frais affiches
+    - Step 4 : Moyen de paiement (radio) :
+      * Paiement a la livraison (COD) — icone especes
+      * Wave — logo Wave, redirect vers page Wave
+      * Orange Money — logo OM, redirect vers page OM
+    - Step 5 : Confirmation → bouton "Confirmer la commande"
+    - Apres confirmation : page succes avec numero de commande + instructions
+
+PAGES DASHBOARD ACHETEUR (authentifie acheteur) :
+15. /mes-commandes — liste des commandes :
+    - Filtres : statut (En attente, Confirmee, En preparation, Expediee, Livree, Annulee)
+    - Chaque ligne : numero, date, producteur, total, statut badge colore
+    - Bouton "Re-commander"
+16. /mes-commandes/[id] — detail commande :
+    - Timeline de suivi : En attente → Confirmee → En preparation → Expediee → Livree
+    - Articles, quantites, prix
+    - Infos livraison, paiement
+    - Bouton "Annuler" si pending et < 30min
+    - Bouton "Laisser un avis" si delivered
+
+PAGES DASHBOARD PRODUCTEUR (dans le dashboard existant, authentifie producteur) :
+17. /dashboard/storefront — page producteur pour gerer sa vitrine :
+    - KPI cards : CA storefront, Commandes en cours, Produits publies, Note moyenne
+    - Onglets : Commandes recues | Mes produits | Zones de livraison | Avis clients
+18. /dashboard/storefront/commandes — commandes recues :
+    - DataTable avec filtres statut/date
+    - Boutons d'action : Confirmer, Preparer, Expedier, Livrer
+    - Notifications en temps reel (nouvelle commande)
+19. /dashboard/storefront/produits — gestion catalogue :
+    - DataTable des product_listings
+    - Bouton "Publier un produit" → formulaire avec grille tarifaire 3 prix
+    - Bouton "Modifier" / "Depublier"
+20. /dashboard/storefront/zones — zones de livraison :
+    - DataTable des delivery_zones
+    - Formulaire : nom zone, region, departement, frais, commande minimum, delai
+21. /dashboard/storefront/avis — avis clients :
+    - Liste des avis avec note, commentaire, produit
+    - Bouton "Repondre" pour chaque avis
+
+INTEGRATION PAIEMENT :
+22. Wave (sandbox puis prod) :
+    - API : POST https://api.wave.com/v1/checkout/sessions
+    - Parametres : amount (FCFA), currency (XOF), success_url, error_url, client_reference
+    - Webhook callback : POST /api/webhooks/wave → mettre a jour payment_status = paid
+    - Variables d'env : WAVE_API_KEY, WAVE_WEBHOOK_SECRET
+23. Orange Money (sandbox puis prod) :
+    - API : POST https://api.orange.com/orange-money-webpay/dev/v1/webpayment
+    - Parametres : merchant_key, amount, currency (OUV), order_id, return_url, cancel_url, notif_url
+    - Webhook callback : POST /api/webhooks/orange-money → mettre a jour payment_status
+    - Variables d'env : ORANGE_MONEY_MERCHANT_KEY, ORANGE_MONEY_CLIENT_ID, ORANGE_MONEY_CLIENT_SECRET
+24. COD (paiement a la livraison) : pas d'API — le producteur marque le paiement recu manuellement quand il livre
+
+NOTIFICATIONS :
+25. Notification producteur quand nouvelle commande recue (table notifications, type = new_order)
+26. Notification acheteur quand statut commande change (type = order_status_change)
+27. Badge compteur dans le header (Topbar producteur) et header storefront (acheteur)
+
+SEED :
+28. Enrichir le seed avec :
+    - 3 buyer_profiles de demo (un par type)
+    - 10 product_listings (tomates, oignons, mil, mais...) avec photos placeholder et prix 3 niveaux
+    - 5 delivery_zones (Dakar, Thies, Saint-Louis, Kaolack, Ziguinchor)
+
+TESTS :
+29. Tests unitaires : validators order, payment, review
+30. Tests E2E Playwright :
+    - Parcours acheteur : homepage → catalogue → fiche produit → panier → inscription → checkout COD → confirmation → mes commandes
+    - Parcours producteur : publier produit → recevoir commande → confirmer → expedier → livrer
+    - Verifier prix differencies : connecte en tant que superette → voir prix semi-gros
+31. Verifier : pnpm typecheck, pnpm lint, pnpm test, pnpm test:e2e
+
 A la fin, mets a jour 11_rebuild_plan.md et 16_decisions.md. Projet COMPLET — recapitulatif final.
 ```
 
