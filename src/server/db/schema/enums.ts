@@ -41,6 +41,7 @@ export const userRoleEnum = pgEnum('user_role', [
   'manager',
   'worker',
   'viewer',
+  'buyer',
 ]);
 
 export const seasonTypeEnum = pgEnum('season_type', [
