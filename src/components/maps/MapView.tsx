@@ -48,6 +48,8 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map | null>(null);
   const markersRef = useRef<maplibregl.Marker[]>([]);
+  const parcelBoundsRef = useRef<maplibregl.LngLatBounds | null>(null);
+  const hasAutoFittedRef = useRef(false);
   const [activeLayer, setActiveLayer] = useState<TileKey>('osm');
   const [mapReady, setMapReady] = useState(false);
 
@@ -267,10 +269,19 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
       }
     }
 
-    if (hasBounds) {
-      map.fitBounds(bounds, { padding: 60, maxZoom: 16, animate: false });
-    } else if (farmBoundary?.geojson) {
-      // No parcel geometry — center on farm boundary if available
+    parcelBoundsRef.current = hasBounds ? bounds : null;
+  }, [parcels, mapReady, center, farmBoundary]);
+
+  // ── Auto-fit camera on the farm ───────────────────────────────────────────
+  // Runs once per mount. The farm takes priority over parcel bounds: stray
+  // parcels far from the farm would otherwise widen the box and zoom out past
+  // the point where the farm boundary is legible.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !mapReady || hasAutoFittedRef.current) return;
+    if (!farmBoundary && !parcels) return;
+
+    if (farmBoundary?.geojson) {
       try {
         const geom = JSON.parse(farmBoundary.geojson) as GeoJSON.Geometry;
         if (geom.type === 'Polygon') {
@@ -278,14 +289,28 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
           for (const ring of (geom as GeoJSON.Polygon).coordinates) {
             for (const c of ring) fb.extend([c[0], c[1]]);
           }
-          map.fitBounds(fb, { padding: 80, maxZoom: 15, animate: false });
+          map.fitBounds(fb, { padding: 80, maxZoom: 16, animate: false });
+          hasAutoFittedRef.current = true;
+          return;
         }
-      } catch { /* ignore */ }
-    } else if (farmBoundary?.latitude && farmBoundary?.longitude) {
-      // Center on farm lat/lng
-      map.jumpTo({ center: [parseFloat(farmBoundary.longitude), parseFloat(farmBoundary.latitude)], zoom: 14 });
+      } catch { /* fall through to the next strategy */ }
     }
-  }, [parcels, mapReady, center, farmBoundary]);
+
+    if (farmBoundary?.latitude && farmBoundary?.longitude) {
+      const lat = parseFloat(farmBoundary.latitude);
+      const lng = parseFloat(farmBoundary.longitude);
+      if (!Number.isNaN(lat) && !Number.isNaN(lng)) {
+        map.jumpTo({ center: [lng, lat], zoom: 15 });
+        hasAutoFittedRef.current = true;
+        return;
+      }
+    }
+
+    if (parcelBoundsRef.current) {
+      map.fitBounds(parcelBoundsRef.current, { padding: 60, maxZoom: 16, animate: false });
+      hasAutoFittedRef.current = true;
+    }
+  }, [mapReady, farmBoundary, parcels]);
 
   // ── Farm boundary ─────────────────────────────────────────────────────────
   useEffect(() => {
@@ -313,14 +338,14 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
           id: `${FARM_BOUNDARY_LAYER}-fill`,
           type: 'fill',
           source: FARM_BOUNDARY_SOURCE,
-          paint: { 'fill-color': '#3b82f6', 'fill-opacity': 0.18 },
+          paint: { 'fill-color': '#3b82f6', 'fill-opacity': 0.15 },
         });
         // Solid blue outline
         map.addLayer({
           id: FARM_BOUNDARY_LAYER,
           type: 'line',
           source: FARM_BOUNDARY_SOURCE,
-          paint: { 'line-color': '#1d4ed8', 'line-width': 3, 'line-dasharray': [6, 3], 'line-opacity': 1 },
+          paint: { 'line-color': '#1d4ed8', 'line-width': 4, 'line-opacity': 1 },
         });
       } catch { /* ignore */ }
     } else if (farmBoundary.latitude && farmBoundary.longitude) {
