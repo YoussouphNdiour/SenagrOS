@@ -1,6 +1,7 @@
 /**
  * Sentinel Hub client for Copernicus Data Space Ecosystem (free tier)
- * Fetches NDVI time series using the Statistical API with Sentinel-2 L2A data.
+ * Fetches spectral index time series using the Statistical API with
+ * Sentinel-2 L2A data.
  *
  * Required env vars:
  *   SENTINEL_HUB_CLIENT_ID
@@ -12,25 +13,45 @@ const TOKEN_URL =
 const STATISTICS_URL =
   'https://sh.dataspace.copernicus.eu/api/v1/statistics';
 
-// Evalscript: compute NDVI while masking clouds & invalid pixels via SCL band.
-// Statistics API v3 requires a dataMask output to know which pixels to exclude.
-const NDVI_EVALSCRIPT = `//VERSION=3
+/**
+ * Indices normalises supportes, tous de la forme (a - b) / (a + b).
+ *
+ * - ndvi : vigueur de la vegetation (B08 proche infrarouge, B04 rouge, 10 m).
+ * - ndmi : teneur en eau de la vegetation, donc stress hydrique (B08, B11
+ *   moyen infrarouge a 20 m). A ne pas confondre avec le NDWI de McFeeters
+ *   (B03/B08), qui detecte les plans d'eau libre et non l'etat des cultures.
+ */
+export const SPECTRAL_INDICES = {
+  ndvi: { numerator: 'B08', denominator: 'B04' },
+  ndmi: { numerator: 'B08', denominator: 'B11' },
+} as const;
+
+export type SpectralIndex = keyof typeof SPECTRAL_INDICES;
+
+// Masque les nuages et pixels invalides via la bande SCL. La Statistical API
+// exige une sortie dataMask pour savoir quels pixels exclure de l'agregation.
+function buildEvalscript(index: SpectralIndex): string {
+  const { numerator, denominator } = SPECTRAL_INDICES[index];
+  return `//VERSION=3
 function setup() {
   return {
-    input: [{ bands: ["B04", "B08", "SCL"], units: "DN" }],
+    input: [{ bands: ["${numerator}", "${denominator}", "SCL"], units: "DN" }],
     output: [
-      { id: "ndvi", bands: 1, sampleType: "FLOAT32" },
+      { id: "${index}", bands: 1, sampleType: "FLOAT32" },
       { id: "dataMask", bands: 1, sampleType: "UINT8" }
     ]
   };
 }
 function evaluatePixel(sample) {
-  // SCL classes to exclude: 0=no data, 1=saturated, 3=cloud shadow,
-  // 8=cloud medium, 9=cloud high, 10=cirrus
+  // Classes SCL exclues : 0=no data, 1=sature, 3=ombre de nuage,
+  // 8=nuage probable, 9=nuage tres probable, 10=cirrus
   const isInvalid = [0, 1, 3, 8, 9, 10].includes(sample.SCL);
-  const ndvi = isInvalid ? 0 : (sample.B08 - sample.B04) / (sample.B08 + sample.B04);
-  return { ndvi: [ndvi], dataMask: [isInvalid ? 0 : 1] };
+  const value = isInvalid
+    ? 0
+    : (sample.${numerator} - sample.${denominator}) / (sample.${numerator} + sample.${denominator});
+  return { ${index}: [value], dataMask: [isInvalid ? 0 : 1] };
 }`;
+}
 
 // ---------------------------------------------------------------------------
 // OAuth2 token cache
@@ -81,26 +102,29 @@ async function getAccessToken(): Promise<string> {
 }
 
 // ---------------------------------------------------------------------------
-// NDVI time series
+// Series temporelles d'indices
 // ---------------------------------------------------------------------------
-export interface NdviDataPoint {
+export interface IndexDataPoint {
   date: string;
-  ndvi: number;
+  value: number;
 }
 
 /**
- * Fetch NDVI mean values per 2-week interval for a given polygon.
+ * Moyenne d'un indice spectral par intervalle de 14 jours sur un polygone.
  *
- * @param polygon  GeoJSON polygon coordinates (number[][][])
- * @param fromDate ISO date string (e.g. "2025-09-01T00:00:00Z")
- * @param toDate   ISO date string
- * @returns Array of { date, ndvi } sorted chronologically
+ * @param index    Indice a calculer ('ndvi' ou 'ndmi')
+ * @param polygon  Coordonnees du polygone GeoJSON (number[][][]), en EPSG:4326
+ * @param fromDate Date ISO (ex. "2025-09-01T00:00:00Z")
+ * @param toDate   Date ISO
+ * @returns Points { date, value } tries chronologiquement, intervalles sans
+ *          pixel valide exclus. Tableau vide en cas d'echec reseau ou API.
  */
-export async function fetchNdviTimeSeries(
+export async function fetchIndexTimeSeries(
+  index: SpectralIndex,
   polygon: number[][][],
   fromDate: string,
   toDate: string,
-): Promise<NdviDataPoint[]> {
+): Promise<IndexDataPoint[]> {
   try {
     const token = await getAccessToken();
 
@@ -124,7 +148,7 @@ export async function fetchNdviTimeSeries(
       aggregation: {
         timeRange: { from: fromDate, to: toDate },
         aggregationInterval: { of: 'P14D' },
-        evalscript: NDVI_EVALSCRIPT,
+        evalscript: buildEvalscript(index),
       },
     };
 
@@ -144,10 +168,11 @@ export async function fetchNdviTimeSeries(
     }
 
     const json = (await res.json()) as {
-      data: Array<{
+      data?: Array<{
         interval: { from: string; to: string };
-        outputs: {
-          ndvi: {
+        outputs: Record<
+          string,
+          {
             bands: {
               B0: {
                 stats: {
@@ -157,8 +182,8 @@ export async function fetchNdviTimeSeries(
                 };
               };
             };
-          };
-        };
+          }
+        >;
       }>;
     };
 
@@ -166,21 +191,20 @@ export async function fetchNdviTimeSeries(
 
     return json.data
       .map((interval) => {
-        const stats = interval.outputs?.ndvi?.bands?.B0?.stats;
+        const stats = interval.outputs?.[index]?.bands?.B0?.stats;
         if (!stats) return null;
         const { mean, sampleCount, noDataCount } = stats;
-        // Skip intervals with no valid pixels (all masked by dataMask)
+        // Intervalle sans aucun pixel valide (tout masque par dataMask)
         if (noDataCount === sampleCount) return null;
-        // Skip undefined / NaN means
         if (mean == null || Number.isNaN(mean)) return null;
         return {
           date: interval.interval.from.split('T')[0],
-          ndvi: Math.round(mean * 1000) / 1000,
+          value: Math.round(mean * 1000) / 1000,
         };
       })
-      .filter((d): d is NdviDataPoint => d !== null);
+      .filter((d): d is IndexDataPoint => d !== null);
   } catch (error) {
-    console.error('Failed to fetch NDVI time series:', error);
+    console.error(`Failed to fetch ${index} time series:`, error);
     return [];
   }
 }

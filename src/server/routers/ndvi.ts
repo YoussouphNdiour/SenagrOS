@@ -2,8 +2,12 @@ import { z } from 'zod';
 import { TRPCError } from '@trpc/server';
 import { and, eq, isNull } from 'drizzle-orm';
 import { protectedProcedure, router } from '../trpc';
-import { fetchNdviTimeSeries } from '@/lib/sentinel-hub';
+import { SPECTRAL_INDICES, fetchIndexTimeSeries } from '@/lib/sentinel-hub';
 import { assets } from '../db/schema';
+
+const indexEnum = z.enum(
+  Object.keys(SPECTRAL_INDICES) as [keyof typeof SPECTRAL_INDICES, ...(keyof typeof SPECTRAL_INDICES)[]],
+);
 
 export const ndviRouter = router({
   getTimeSeries: protectedProcedure
@@ -11,6 +15,7 @@ export const ndviRouter = router({
       z.object({
         assetId: z.string().uuid(),
         months: z.number().min(1).max(24).default(12),
+        index: indexEnum.default('ndvi'),
       }),
     )
     .query(async ({ ctx, input }) => {
@@ -66,7 +71,7 @@ export const ndviRouter = router({
       const fromISO = fromDate.toISOString();
       const toISO = toDate.toISOString();
 
-      const data = await fetchNdviTimeSeries(coordinates, fromISO, toISO);
+      const data = await fetchIndexTimeSeries(input.index, coordinates, fromISO, toISO);
 
       return { data, hasGeometry: true };
     }),
