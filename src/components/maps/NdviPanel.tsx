@@ -107,6 +107,10 @@ export function NdviPanel({ selectedParcel, onClose }: NdviPanelProps) {
   const hasRealData =
     realData && realData.hasGeometry && realData.data.length > 0;
 
+  // La dependance sert d'invalidation volontaire : elle regenere la courbe
+  // simulee quand on change de parcelle. generateMockNdviData() ne la lit pas,
+  // d'ou le signalement de Biome.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: invalidation volontaire par parcelle
   const mockData = useMemo(() => generateMockNdviData(), [selectedParcel?.id]);
 
   // Build chart data: real data mapped to { month, ndvi } or mock fallback

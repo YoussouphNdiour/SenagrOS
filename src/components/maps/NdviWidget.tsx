@@ -50,6 +50,9 @@ export function NdviWidget({ assetId, parcelName }: NdviWidgetProps) {
 
   const hasReal = ndviData?.hasGeometry && (ndviData.data.length ?? 0) > 0;
 
+  // Invalidation volontaire : regenere la courbe simulee quand la parcelle
+  // change. generateMockNdviData() ne lit pas assetId, d'ou le signalement.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: invalidation volontaire par parcelle
   const mockData = useMemo(() => generateMockNdviData(), [assetId]);
 
   const chartData = useMemo(() => {
