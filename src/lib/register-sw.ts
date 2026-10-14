@@ -7,6 +7,13 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
     return undefined;
   }
 
+  // In dev, public/sw.js is a stale build artifact whose cache-first strategy
+  // serves outdated /_next/static chunks: remove it and its caches instead.
+  if (process.env.NODE_ENV === 'development') {
+    await unregisterServiceWorkers();
+    return undefined;
+  }
+
   try {
     const registration = await navigator.serviceWorker.register('/sw.js', {
       scope: '/',
@@ -29,5 +36,16 @@ export async function registerServiceWorker(): Promise<ServiceWorkerRegistration
   } catch (error) {
     console.error('[SW] Echec de l\'enregistrement du Service Worker:', error);
     return undefined;
+  }
+}
+
+/** Removes every registered service worker and Cache Storage entry for this origin. */
+export async function unregisterServiceWorkers(): Promise<void> {
+  if (typeof window === 'undefined' || !('serviceWorker' in navigator)) return;
+  const registrations = await navigator.serviceWorker.getRegistrations();
+  await Promise.all(registrations.map((r) => r.unregister()));
+  if ('caches' in window) {
+    const keys = await caches.keys();
+    await Promise.all(keys.map((key) => caches.delete(key)));
   }
 }

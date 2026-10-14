@@ -385,7 +385,7 @@ Chaque session ajoute ses decisions ici. Ne pas supprimer les entrees precedente
 ### SESSION-012 — 2026-10-14 — Phase 13 : implementation du Storefront public B2B/B2C
 
 **Decisions prises :**
-1. Nouveau role `buyer` dans l'enum `user_role` — Les acheteurs sont des `users` sans ferme (`farm_id` NULL) + une ligne `buyer_profiles`. Le layout `(dashboard)` redirige un `buyer` vers `/mes-commandes` ; la page d'accueil redirige un producteur connecte vers `/dashboard` (layout conditionnel)
+1. Nouveau role `buyer` dans l'enum `user_role` — Les acheteurs sont des `users` sans ferme (`farm_id` NULL) + une ligne `buyer_profiles`. Le layout `(dashboard)` redirige un `buyer` vers `/mes-commandes`. Un producteur arrive sur `/dashboard` apres connexion, mais la page d'accueil `/` reste accessible a tous (lien « Tableau de bord » dans le header) : la redirection initiale empechait les producteurs de voir la vitrine
 2. Une commande par ferme — Un panier multi-producteurs cree N `orders` (une par `seller_farm_id`, chaque ferme ayant ses propres zones). Les commandes d'un meme checkout partagent `orders.data.checkout_ref`, utilise comme `client_reference` Wave / `order_id` Orange Money : un seul paiement mobile couvre tout le panier, et le webhook marque exactement ces commandes payees
 3. Logique tarifaire avec repli — `resolveUnitPrice()` : grande_surface sous son minimum → tarif superette si la quantite le permet → prix detail. Les visiteurs anonymes voient le prix detail. Les prix sont toujours recalcules cote serveur (`storefront.quote`, `createOrder`), jamais pris du client
 4. Stock decremente atomiquement — `UPDATE ... SET stock = stock - q WHERE stock >= q` dans la transaction de commande ; restaure a l'annulation. Numeros `CMD-YYYY-NNNNNN` alloues sous `pg_advisory_xact_lock`
@@ -397,7 +397,8 @@ Chaque session ajoute ses decisions ici. Ne pas supprimer les entrees precedente
 10. Routers supplementaires — `sellerCatalog` (CRUD produits + grille 3 prix, zones) separe de `sellerOrders` ; `buyerProcedure` / `sellerProcedure` ajoutes dans `trpc.ts`
 11. Notifications acheteur rattachees a la ferme vendeuse — `notifications.farm_id` etant NOT NULL, les notifications `order_status_change` d'un acheteur portent le `farm_id` de la commande. Badge « Mes commandes » dans le header vitrine
 12. Textes vitrine en francais en dur (pas encore de cles next-intl) — Le storefront n'utilise pas le provider next-intl du dashboard ; a traduire EN/WO dans une passe i18n ulterieure
-13. Photos produits — URLs dans `product_listings.photos` ; placeholders SVG locaux dans `public/storefront/products/` (pas d'upload de fichiers dans cette phase)
+13. Service worker desactive en dev — `public/sw.js` (artefact de build perime, cache-first sur `/_next/static/`) servait du JS obsolete apres un changement de branche ; en developpement il est desinscrit et Cache Storage vide (`unregisterServiceWorkers`)
+14. Photos produits — URLs dans `product_listings.photos` ; placeholders SVG locaux dans `public/storefront/products/` (pas d'upload de fichiers dans cette phase)
 
 **Problemes rencontres :**
 1. `migrations/meta/0003_snapshot.json` etait un stub vide (0 table) qui bloquait `drizzle-kit generate` (« data is malformed ») — supprime ; le snapshot 0008 reflete desormais le schema complet. La migration generee contenait aussi les objets des migrations manuelles 0003-0007 deja appliques : `0008_storefront.sql` a ete reduite aux seules 7 tables storefront + `ALTER TYPE user_role ADD VALUE 'buyer'`

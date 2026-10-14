@@ -9,6 +9,7 @@ import {
   useRef,
   useState,
 } from 'react';
+import { unregisterServiceWorkers } from '@/lib/register-sw';
 import { trpc } from '@/lib/trpc';
 
 export interface CartLine {
@@ -82,6 +83,10 @@ export function CartProvider({
   const saveCart = trpc.order.saveCart.useMutation();
   const saveRef = useRef(saveCart.mutate);
   saveRef.current = saveCart.mutate;
+
+  useEffect(() => {
+    if (process.env.NODE_ENV === 'development') void unregisterServiceWorkers();
+  }, []);
 
   useEffect(() => {
     setItems(readStorage<CartLine[]>(CART_KEY, []));

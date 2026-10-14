@@ -1,7 +1,6 @@
 import { ArrowRight, MapPin, MousePointerClick, ShoppingBasket, Star, Truck } from 'lucide-react';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 import { CATEGORY_VISUALS } from '@/components/storefront/categories';
 import { ProductCard } from '@/components/storefront/ProductCard';
 import { type ListingCategory, listingCategoryLabels } from '@/lib/validators/storefront.validator';
@@ -40,8 +39,6 @@ const STEPS = [
 
 export default async function StorefrontHomePage() {
   const session = await auth();
-  // Conditional home: producers land on their farm dashboard, visitors and buyers on the storefront
-  if (session?.user && session.user.role !== 'buyer') redirect('/dashboard');
 
   const buyerType = await buyerTypeForUser(db, session?.user?.id);
   const [categories, popular, producers] = await Promise.all([
