@@ -118,7 +118,7 @@ export function NdviPanel({ selectedParcel, onClose }: NdviPanelProps) {
     if (hasRealData) {
       return realData.data.map((point) => ({
         month: formatDateToMonth(point.date),
-        ndvi: point.ndvi,
+        ndvi: point.value,
       }));
     }
     return mockData;
