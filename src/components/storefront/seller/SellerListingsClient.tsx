@@ -179,7 +179,7 @@ export function SellerListingsClient() {
       </div>
 
       {isLoading ? (
-        <p className="py-12 text-center text-sm text-gray-400">Chargement…</p>
+        <p className="py-12 text-center text-sm text-gray-500">Chargement…</p>
       ) : !listings?.length ? (
         <p className="rounded-lg border border-dashed border-gray-300 py-12 text-center text-sm text-gray-500">
           Aucun produit. Publiez votre premier produit avec sa grille tarifaire.

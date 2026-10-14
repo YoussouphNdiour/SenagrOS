@@ -84,7 +84,7 @@ export function SellerZonesClient() {
         </Button>
       </div>
       {isLoading ? (
-        <p className="py-12 text-center text-sm text-gray-400">Chargement…</p>
+        <p className="py-12 text-center text-sm text-gray-500">Chargement…</p>
       ) : (
         <DataTable<Row>
           data={zones ?? []}

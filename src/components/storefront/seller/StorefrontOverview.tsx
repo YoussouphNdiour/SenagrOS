@@ -83,7 +83,7 @@ export function StorefrontOverview() {
               ))}
             </ul>
           ) : (
-            <p className="py-8 text-center text-sm text-gray-400">Aucune commande pour le moment</p>
+            <p className="py-8 text-center text-sm text-gray-500">Aucune commande pour le moment</p>
           )}
         </Card>
         <Card>

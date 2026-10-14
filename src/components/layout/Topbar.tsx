@@ -65,7 +65,11 @@ export function Topbar({ user, onMenuClick }: TopbarProps) {
         </div>
 
         <button
-          onClick={() => signOut({ callbackUrl: '/login' })}
+          onClick={async () => {
+            // Relative redirect: stay on the host the user is browsing (localhost or LAN IP)
+            await signOut({ redirect: false });
+            window.location.href = '/login';
+          }}
           className="rounded-lg p-2 text-gray-500 hover:bg-gray-100"
           title="Déconnexion"
         >

@@ -160,7 +160,7 @@ export function CartPageClient() {
                           type="button"
                           aria-label={`Retirer ${line.name}`}
                           onClick={() => cart.remove(line.id)}
-                          className="rounded-lg p-2 text-gray-400 hover:bg-red-50 hover:text-red-600"
+                          className="rounded-lg p-2 text-gray-500 hover:bg-red-50 hover:text-red-600"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>

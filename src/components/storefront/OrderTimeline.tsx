@@ -55,7 +55,7 @@ export function OrderTimeline(props: OrderTimelineProps) {
                 <Circle className="h-5 w-5 text-gray-300" />
               )}
             </span>
-            <p className={`font-medium ${done ? 'text-gray-800' : 'text-gray-400'}`}>
+            <p className={`font-medium ${done ? 'text-gray-800' : 'text-gray-500'}`}>
               {orderStatusLabels[status]}
             </p>
             {done && dates[status] && <p className="text-xs text-gray-500">{dates[status]}</p>}

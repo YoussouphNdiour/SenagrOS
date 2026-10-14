@@ -54,7 +54,7 @@ export function SimulatedPaymentClient({ provider, checkoutRef }: Props) {
           >
             Simuler un échec
           </button>
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-gray-500">
             Configurez {provider === 'wave' ? 'WAVE_API_KEY' : 'ORANGE_MONEY_*'} pour utiliser l'API
             réelle.
           </p>

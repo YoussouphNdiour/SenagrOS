@@ -42,7 +42,7 @@ export function StorefrontHeader({ user }: StorefrontHeaderProps) {
 
         <search className="flex-1">
           <form onSubmit={onSearch} className="relative">
-            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500" />
             <input
               type="search"
               value={query}
@@ -93,7 +93,11 @@ export function StorefrontHeader({ user }: StorefrontHeaderProps) {
               </span>
               <button
                 type="button"
-                onClick={() => signOut({ callbackUrl: '/' })}
+                onClick={async () => {
+                  // Relative redirect: stay on the host the user is browsing (localhost or LAN IP)
+                  await signOut({ redirect: false });
+                  window.location.href = '/';
+                }}
                 className="rounded-lg p-2 text-gray-500 hover:bg-gray-100"
                 title="Se déconnecter"
                 aria-label="Se déconnecter"

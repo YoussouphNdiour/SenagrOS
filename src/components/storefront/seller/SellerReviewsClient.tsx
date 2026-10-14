@@ -26,9 +26,9 @@ export function SellerReviewsClient() {
         Sans réponse uniquement
       </label>
       {isLoading ? (
-        <p className="py-12 text-center text-sm text-gray-400">Chargement…</p>
+        <p className="py-12 text-center text-sm text-gray-500">Chargement…</p>
       ) : !data?.items.length ? (
-        <p className="py-12 text-center text-sm text-gray-400">Aucun avis</p>
+        <p className="py-12 text-center text-sm text-gray-500">Aucun avis</p>
       ) : (
         <ul className="space-y-4">
           {data.items.map((r) => (
