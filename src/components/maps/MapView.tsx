@@ -80,6 +80,10 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
   );
 
   // ── Initialize map ────────────────────────────────────────────────────────
+  // `center` est volontairement hors dependances : il ne sert que de position
+  // initiale. L'ajouter detruirait et recreerait la carte a chaque changement
+  // de ferme. Le recadrage ulterieur est gere par l'effet d'auto-fit.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: initialisation au montage uniquement
   useEffect(() => {
     if (!mapContainer.current) return;
 
@@ -121,7 +125,6 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
       mapRef.current = null;
       setMapReady(false);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ── Switch tile layer ─────────────────────────────────────────────────────
@@ -395,6 +398,19 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
     }
   }, [farmBoundary, mapReady]);
 
+  // ── Draw helpers ──────────────────────────────────────────────────────────
+  // Defini avant l'effet qui l'utilise : le referencer dans un tableau de
+  // dependances plus haut leverait une ReferenceError (zone morte temporelle).
+  const finishDrawFromVertices = useCallback((vertices: [number, number][]) => {
+    if (vertices.length < 3) return;
+    const closed: [number, number][] = [...vertices, vertices[0]];
+    setDrawnPolygon({ coordinates: [closed] });
+    setIsDrawing(false);
+    isDrawingRef.current = false;
+    const map = mapRef.current;
+    if (map) map.getCanvas().style.cursor = '';
+  }, []);
+
   // ── Draw mode — map click handler ─────────────────────────────────────────
   useEffect(() => {
     const map = mapRef.current;
@@ -421,8 +437,7 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
       map.off('click', handleClick);
       map.off('dblclick', handleDblClick);
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mapReady]);
+  }, [mapReady, finishDrawFromVertices]);
 
   // ── Draw preview layers ───────────────────────────────────────────────────
   useEffect(() => {
@@ -511,17 +526,6 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
       });
     }
   }, [drawVertices, mapReady]);
-
-  // ── Draw helpers ──────────────────────────────────────────────────────────
-  const finishDrawFromVertices = useCallback((vertices: [number, number][]) => {
-    if (vertices.length < 3) return;
-    const closed: [number, number][] = [...vertices, vertices[0]];
-    setDrawnPolygon({ coordinates: [closed] });
-    setIsDrawing(false);
-    isDrawingRef.current = false;
-    const map = mapRef.current;
-    if (map) map.getCanvas().style.cursor = '';
-  }, []);
 
   const clearDrawPreview = useCallback(() => {
     const map = mapRef.current;

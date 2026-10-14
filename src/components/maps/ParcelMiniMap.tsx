@@ -158,7 +158,7 @@ export function ParcelMiniMap({ parcelId, parcelName, parcelGeojson }: ParcelMin
     };
     // farmBoundary loaded async — re-run effect when it arrives
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [parcelGeojson, farmBoundary]);
+  }, [parcelGeojson, farmBoundary, parcelName]);
 
   return (
     <div className="relative overflow-hidden rounded-xl border border-gray-200">
