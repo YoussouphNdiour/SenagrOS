@@ -12,11 +12,10 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* No dark theme yet: pages use light surfaces (bg-white cards), so the OS dark
+   preference must not switch the inherited text color to light gray. */
+:root {
+  color-scheme: light;
 }
 
 body {

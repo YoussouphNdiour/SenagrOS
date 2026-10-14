@@ -11,6 +11,10 @@ export default async function DashboardLayout({ children }: { children: React.Re
   if (!session?.user) {
     redirect('/login');
   }
+  // Storefront buyers have no farm dashboard
+  if (session.user.role === 'buyer') {
+    redirect('/mes-commandes');
+  }
 
   const messages = await getMessages();
 

@@ -10,7 +10,12 @@ env:
   IMAGE_NAME: youssouphndiour/senagros
 
 jobs:
+  # Barriere qualite : aucun deploiement si typecheck, tests ou build echouent.
+  quality:
+    uses: ./.github/workflows/ci.yml
+
   build-and-push:
+    needs: quality
     runs-on: ubuntu-latest
     permissions:
       contents: read

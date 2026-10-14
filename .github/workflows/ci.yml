@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  pull_request:
+  workflow_call:
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Unit tests
+        run: pnpm test
+
+      # Non bloquant : le lint n'avait jamais tourne et la base compte ~170
+      # erreurs preexistantes (dont 114 `any`). A passer bloquant une fois la
+      # dette resorbee.
+      - name: Lint
+        run: pnpm lint
+        continue-on-error: true
+
+      - name: Build
+        run: pnpm build
+        env:
+          DATABASE_URL: postgresql://dummy:dummy@localhost:5432/dummy
+          NEXTAUTH_SECRET: build-placeholder
+          NEXTAUTH_URL: http://localhost:3000
+          AUTH_TRUST_HOST: 'true'
+          NEXT_TELEMETRY_DISABLED: '1'

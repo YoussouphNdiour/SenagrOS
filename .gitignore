@@ -47,3 +47,10 @@ next-env.d.ts
 public/sw.js
 public/sw.js.map
 public/serwist-precache-manifest.*.js
+
+# agent worktrees & test artifacts
+.claude/
+.playwright-mcp/
+/playwright-report/
+/test-results/
+/debug-screenshots/

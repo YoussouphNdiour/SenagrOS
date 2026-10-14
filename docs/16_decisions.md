@@ -354,4 +354,76 @@ Chaque session ajoute ses decisions ici. Ne pas supprimer les entrees precedente
 
 ---
 
+### SESSION-011 — 2026-10-14 — Phase 13 (Storefront public)
+
+**Decisions prises :**
+1. Ajout Phase 13 : Storefront public B2B/B2C — Les clients finaux (particuliers, superettes, grandes surfaces) peuvent commander depuis la page d'accueil du site, differente de la Phase 12 (marketplace interne entre producteurs)
+2. Architecture integree (pas de sous-domaine separe) — Layout conditionnel dans la meme app Next.js : non connecte = vitrine publique, connecte producteur = dashboard fermier. Un seul deploiement, SEO integre
+3. 3 profils acheteur avec prix differencies — Particulier (prix detail), Superette (prix semi-gros), Grande surface (prix gros). Table `price_tiers` avec prix par profil par produit
+4. 3 moyens de paiement : COD + Wave + Orange Money — COD (indispensable au debut, pas d'API), Wave (API checkout sessions), Orange Money (API webpayment). Sandbox d'abord, prod ensuite
+5. Systeme d'avis/reviews clients — Note 1-5 + commentaire, seulement apres livraison. Reponse producteur possible. Renforce la confiance
+6. 7 nouvelles tables Drizzle dans storefront.ts — buyer_profiles, product_listings, price_tiers, delivery_zones, orders, order_items, reviews
+7. Pages publiques dans route group (storefront) — Layout sans sidebar, header simple logo + recherche + panier + connexion. Separe du layout dashboard (dashboard)
+8. Panier persistent — localStorage si non connecte, DB si connecte. Merge au login
+9. Commandes avec workflow statut — pending → confirmed → preparing → shipped → delivered (+ cancelled/refunded). Le producteur gere le cycle depuis son dashboard
+
+**Problemes rencontres :**
+- Aucun (session de specification)
+
+**Livrables completes :**
+1. 03_data_model.md : ajout 7 tables storefront (buyer_profiles, product_listings, price_tiers, delivery_zones, orders, order_items, reviews) avec structures JSONB, index et relations
+2. 11_rebuild_plan.md : ajout Phase 13 avec 20+ livrables et validation
+3. 15_orchestration.md : ajout prompt Phase 13 complet (31 actions detaillees)
+4. 16_decisions.md : SESSION-011
+
+**Prochaines etapes :**
+1. Continuer Phase 9 : Offline / PWA
+2. Puis Phase 10, 11, 12, et enfin Phase 13
+
+---
+
+### SESSION-012 — 2026-10-14 — Phase 13 : implementation du Storefront public B2B/B2C
+
+**Decisions prises :**
+1. Nouveau role `buyer` dans l'enum `user_role` — Les acheteurs sont des `users` sans ferme (`farm_id` NULL) + une ligne `buyer_profiles`. Le layout `(dashboard)` redirige un `buyer` vers `/mes-commandes`. Un producteur arrive sur `/dashboard` apres connexion, mais la page d'accueil `/` reste accessible a tous (lien « Tableau de bord » dans le header) : la redirection initiale empechait les producteurs de voir la vitrine
+2. Une commande par ferme — Un panier multi-producteurs cree N `orders` (une par `seller_farm_id`, chaque ferme ayant ses propres zones). Les commandes d'un meme checkout partagent `orders.data.checkout_ref`, utilise comme `client_reference` Wave / `order_id` Orange Money : un seul paiement mobile couvre tout le panier, et le webhook marque exactement ces commandes payees
+3. Logique tarifaire avec repli — `resolveUnitPrice()` : grande_surface sous son minimum → tarif superette si la quantite le permet → prix detail. Les visiteurs anonymes voient le prix detail. Les prix sont toujours recalcules cote serveur (`storefront.quote`, `createOrder`), jamais pris du client
+4. Stock decremente atomiquement — `UPDATE ... SET stock = stock - q WHERE stock >= q` dans la transaction de commande ; restaure a l'annulation. Numeros `CMD-YYYY-NNNNNN` alloues sous `pg_advisory_xact_lock`
+5. Webhooks en route handlers Next, pas en tRPC — `POST /api/webhooks/wave` (verification HMAC-SHA256 `Wave-Signature`, tolerance 5 min, comparaison temps constant) et `POST /api/webhooks/orange-money` (authentifie par le `notif_token` stocke a l'initiation, OM ne signant pas ses callbacks). La verification de signature exige le corps brut
+6. Mode simulation des paiements — Sans `WAVE_API_KEY` / `ORANGE_MONEY_*` et hors production, l'initiation renvoie vers `/checkout/paiement-simule` (succes/echec simules). Desactive automatiquement en production ou des que les cles sont presentes
+7. COD — Pas d'API. A l'etape « Livrer » le producteur indique si l'argent a ete encaisse ; sinon bouton « Paiement recu » (`sellerOrders.markPaid`)
+8. Panier — `localStorage` pour tous ; pour un acheteur connecte, copie en DB dans `buyer_profiles.data.cart` (pas de table dediee), fusion au login (quantite max par produit)
+9. Catalogue rendu cote serveur, filtres dans l'URL (`?q=&categorie=&region=&prix_min=&prix_max=&bio=1&note_min=&tri=&page=`) — SEO et liens partageables ; pagination plutot qu'infinite scroll
+10. Routers supplementaires — `sellerCatalog` (CRUD produits + grille 3 prix, zones) separe de `sellerOrders` ; `buyerProcedure` / `sellerProcedure` ajoutes dans `trpc.ts`
+11. Notifications acheteur rattachees a la ferme vendeuse — `notifications.farm_id` etant NOT NULL, les notifications `order_status_change` d'un acheteur portent le `farm_id` de la commande. Badge « Mes commandes » dans le header vitrine
+12. Textes vitrine en francais en dur (pas encore de cles next-intl) — Le storefront n'utilise pas le provider next-intl du dashboard ; a traduire EN/WO dans une passe i18n ulterieure
+13. Service worker desactive en dev — `public/sw.js` (artefact de build perime, cache-first sur `/_next/static/`) servait du JS obsolete apres un changement de branche ; en developpement il est desinscrit et Cache Storage vide (`unregisterServiceWorkers`)
+14. Photos produits — URLs dans `product_listings.photos` ; placeholders SVG locaux dans `public/storefront/products/` (pas d'upload de fichiers dans cette phase)
+
+**Problemes rencontres :**
+1. `migrations/meta/0003_snapshot.json` etait un stub vide (0 table) qui bloquait `drizzle-kit generate` (« data is malformed ») — supprime ; le snapshot 0008 reflete desormais le schema complet. La migration generee contenait aussi les objets des migrations manuelles 0003-0007 deja appliques : `0008_storefront.sql` a ete reduite aux seules 7 tables storefront + `ALTER TYPE user_role ADD VALUE 'buyer'`
+2. Nom de FK genere > 63 caracteres (tronque par Postgres) — FK `product_listings_marketplace_product_fk` nommee explicitement
+3. `pnpm lint` echoue a cause de `biome.json` imbriques dans `.claude/worktrees/` (non versionnes, preexistant) — lint verifie fichier par fichier sur le perimetre Phase 13
+4. Echecs preexistants (identiques sur `main`) : test unitaire `plan.validator.test.ts > has labels for all plan types` ; E2E `logs.spec.ts`, `parametres.spec.ts`, `plans.spec.ts` (selecteurs ambigus en strict mode). `calendar`, `reports`, `stocks` echouent de facon intermittente sous charge du serveur dev (tests differents d'un run a l'autre, verts sur `main`)
+5. Lucide v1 n'a plus d'icones de marques (Facebook/Instagram) — remplacees par Globe/Camera dans le footer
+
+**Livrables completes :**
+1. `src/server/db/schema/storefront.ts` — 7 tables (buyer_profiles, product_listings, price_tiers, delivery_zones, orders, order_items, reviews) + relations + index + CHECK note 1-5 ; migration `0008_storefront.sql`
+2. Validators : `storefront.validator.ts` (catalogue, grille tarifaire, zones, inscription acheteur, `parseCatalogueParams`), `order.validator.ts` (workflow statuts, `resolveUnitPrice`, `computeOrderTotals`, `canCancelOrder` 30 min), `payment.validator.ts` (Wave / OM), `review.validator.ts` (`computeReviewStats`)
+3. Services : `storefront.service.ts` (catalogue, produit, quote, producteurs, avis), `order.service.ts` (creation transactionnelle, transitions, notifications), `payment.service.ts` (Wave, OM, signature, application du resultat), `buyer-session.ts`
+4. Routers : `storefront` (public), `order` (acheteur), `sellerOrders`, `sellerCatalog`, `payment`, `review` ; webhooks `/api/webhooks/wave` et `/api/webhooks/orange-money`
+5. Pages publiques `(storefront)` : accueil, `/catalogue`, `/catalogue/[id]`, `/panier`, `/inscription-acheteur` (Server Action), `/checkout` (5 etapes), `/checkout/succes`, `/checkout/paiement-simule`, `/mes-commandes`, `/mes-commandes/[id]` (timeline, annuler, payer, re-commander, avis)
+6. Dashboard producteur `/dashboard/storefront` : KPI + onglets Commandes / Produits / Zones / Avis ; lien « Boutique en ligne » dans la Sidebar
+7. Login : respect de `callbackUrl` (anti open-redirect) et redirection des acheteurs vers la vitrine
+8. Seed : 3 acheteurs demo (`particulier@`, `superette@`, `grande-surface@senagros.local` / `buyer123`), 10 produits SCL Diama + 3 produits d'une 2e ferme (Ferme Bio de Casamance), 5 zones (Dakar, Thies, Saint-Louis, Kaolack, Ziguinchor) ; script `pnpm db:seed:storefront` idempotent pour une base deja seedee
+9. Tests : 44 tests unitaires (order, payment dont signature Wave, review) ; E2E `e2e/storefront.spec.ts` (3 parcours) ; `e2e/app.spec.ts` mis a jour (la page d'accueil est la vitrine)
+
+**Prochaines etapes :**
+1. Configurer les comptes marchands Wave / Orange Money (sandbox puis prod) et enregistrer les URLs de webhook
+2. Upload de photos produits (stockage fichiers) a la place des URLs
+3. Traduction EN/WO du storefront
+4. Corriger les tests preexistants en echec (plan.validator, E2E logs/plans/parametres) et le `biome.json` des worktrees
+
+---
+
 *Ajouter une entree ci-dessus a chaque session. Ne jamais supprimer.*

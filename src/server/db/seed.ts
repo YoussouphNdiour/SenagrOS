@@ -6,6 +6,7 @@ import { sql } from 'drizzle-orm';
 import postgres from 'postgres';
 import { v4 as uuidv4 } from 'uuid';
 import * as schema from './schema';
+import { seedStorefront } from './seed/storefront-seed';
 
 const client = postgres(process.env.DATABASE_URL!, { max: 1 });
 const db = drizzle(client, { schema });
@@ -126,9 +127,13 @@ async function seed() {
     });
   }
 
+  // Phase 13 — storefront: demo buyers, listings with 3-level prices, delivery zones
+  await seedStorefront(db, farmId, userId);
+
   console.log('Seed complete!');
   console.log(`Farm: ${farmId}`);
   console.log('Admin: admin@senagros.local / admin123');
+  console.log('Buyers: particulier@ / superette@ / grande-surface@senagros.local / buyer123');
   await client.end();
 }
 

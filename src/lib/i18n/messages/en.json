@@ -94,7 +94,9 @@
     "noNotifications": "No notifications",
     "stockLow": "Low stock",
     "stageDelayed": "Stage delayed",
-    "taskAssigned": "Task assigned"
+    "taskAssigned": "Task assigned",
+    "newOrder": "New order",
+    "orderStatusChange": "Order status"
   },
   "quick": {
     "title": "Quick Actions",

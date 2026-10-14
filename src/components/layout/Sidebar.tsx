@@ -22,6 +22,7 @@ import {
   Eye,
   Scissors,
   ShoppingCart,
+  Store,
   Wallet,
   Receipt,
   BookOpen,
@@ -87,6 +88,7 @@ function useNavItems(): NavItem[] {
       section: 'Ventes & Finances',
       items: [
         { label: 'Ventes', href: '/ventes', icon: ShoppingCart },
+        { label: 'Boutique en ligne', href: '/dashboard/storefront', icon: Store },
         { label: 'Finances', href: '/finances', icon: Wallet },
         { label: 'Facturation', href: '/facturation', icon: Receipt },
         { label: 'Comptabilité', href: '/comptabilite', icon: BookOpen },
@@ -146,7 +148,9 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             if ('href' in item) {
               const link = item as NavLink;
               const Icon = link.icon;
-              const isActive = pathname === link.href || pathname.startsWith(link.href + '/');
+              const isActive =
+                pathname === link.href ||
+                (link.href !== '/dashboard' && pathname.startsWith(`${link.href}/`));
               return (
                 <Link
                   key={link.href}

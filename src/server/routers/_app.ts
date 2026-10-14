@@ -20,6 +20,12 @@ import { plannedTaskRouter } from './planned-task';
 import { notificationRouter } from './notification';
 import { farmKpiRouter } from './farm-kpi';
 import { parcelRouter } from './parcel';
+import { storefrontRouter } from './storefront.router';
+import { orderRouter } from './order.router';
+import { sellerOrdersRouter } from './seller-orders.router';
+import { sellerCatalogRouter } from './seller-catalog.router';
+import { paymentRouter } from './payment.router';
+import { reviewRouter } from './review.router';
 
 export const appRouter = router({
   health: publicProcedure.query(() => ({ status: 'ok' })),
@@ -44,6 +50,12 @@ export const appRouter = router({
   notification: notificationRouter,
   farmKpi: farmKpiRouter,
   parcel: parcelRouter,
+  storefront: storefrontRouter,
+  order: orderRouter,
+  sellerOrders: sellerOrdersRouter,
+  sellerCatalog: sellerCatalogRouter,
+  payment: paymentRouter,
+  review: reviewRouter,
 });
 
 export type AppRouter = typeof appRouter;

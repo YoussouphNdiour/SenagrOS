@@ -1007,7 +1007,192 @@ invoices ──1:N── journal_entries
 
 farms ──1:N── notifications (📋 a implementer)
 users ──1:N── notifications (📋 a implementer)
+
+buyer_profiles ──1:N── orders (buyer_profile_id)
+product_listings ──1:N── order_items (listing_id)
+product_listings ──1:N── price_tiers (listing_id)
+product_listings ──1:N── reviews (listing_id)
+orders ──1:N── order_items
+delivery_zones ──1:N── orders (delivery_zone_id)
+farms ──1:N── product_listings (farm_id)
+farms ──1:N── delivery_zones (farm_id)
 ```
+
+---
+
+## TABLES STOREFRONT (Phase 13 — Marketplace public B2B/B2C)
+
+> A implementer dans `src/server/db/schema/storefront.ts`.
+
+### 28. `buyer_profiles` (profils acheteurs publics)
+
+```
+buyer_profiles
+├── id              UUID PK
+├── user_id         UUID FK → users.id NOT NULL UNIQUE
+├── buyer_type      VARCHAR(30) NOT NULL  -- particulier|superette|grande_surface
+├── company_name    VARCHAR(255)          -- nom boutique/enseigne (si superette ou grande surface)
+├── contact_name    VARCHAR(255) NOT NULL
+├── phone           VARCHAR(30) NOT NULL
+├── email           VARCHAR(255)
+├── address         TEXT NOT NULL
+├── city            VARCHAR(100)
+├── region          VARCHAR(100)          -- region du Senegal (Dakar, Thies, Saint-Louis...)
+├── ninea           VARCHAR(20)           -- numero fiscal senegalais (grandes surfaces)
+├── payment_preference  VARCHAR(30) DEFAULT 'cod'  -- cod|wave|orange_money|bank_transfer
+├── data            JSONB DEFAULT {}
+├── is_verified     BOOLEAN DEFAULT false  -- valide par un admin/producteur
+├── created_at      TIMESTAMP DEFAULT NOW()
+└── updated_at      TIMESTAMP DEFAULT NOW()
+```
+
+**INDEX** : `buyer_profiles_user_id_idx`, `buyer_profiles_buyer_type_idx`, `buyer_profiles_region_idx`
+
+### 29. `product_listings` (catalogue produits publics)
+
+```
+product_listings
+├── id                  UUID PK
+├── farm_id             UUID FK → farms.id NOT NULL
+├── seller_id           UUID FK → users.id NOT NULL
+├── asset_id            UUID FK → assets.id           -- lien vers asset type product (optionnel)
+├── marketplace_product_id  UUID FK → marketplace_products.id  -- lien vers Phase 12 (optionnel)
+├── name                VARCHAR(255) NOT NULL
+├── description         TEXT
+├── category            VARCHAR(50) NOT NULL  -- cereales|legumes|fruits|tubercules|oleagineux|produits_transformes|autres
+├── subcategory         VARCHAR(100)          -- ex: tomate_cerise, oignon_violet
+├── photos              JSONB DEFAULT []      -- [{url, alt, order}]
+├── base_price          DECIMAL(15,2) NOT NULL  -- prix de base (detail, FCFA/unite)
+├── unit                VARCHAR(20) DEFAULT 'kg'  -- kg|tonne|piece|botte|caisse|sac
+├── min_order_quantity  DECIMAL(15,2) DEFAULT 1
+├── stock_available     DECIMAL(15,2) NOT NULL
+├── origin_region       VARCHAR(100)          -- Niayes, Casamance, Vallee du fleuve...
+├── is_bio              BOOLEAN DEFAULT false
+├── certifications      JSONB DEFAULT []      -- ['bio', 'commerce_equitable', 'label_rouge']
+├── harvest_date        DATE                  -- date de recolte (fraicheur)
+├── shelf_life_days     INTEGER               -- duree de conservation
+├── is_published        BOOLEAN DEFAULT true
+├── data                JSONB DEFAULT {}
+├── created_at          TIMESTAMP DEFAULT NOW()
+├── updated_at          TIMESTAMP DEFAULT NOW()
+└── archived_at         TIMESTAMP
+```
+
+**INDEX** : `product_listings_farm_id_idx`, `product_listings_category_idx`, `product_listings_is_published_idx`, `product_listings_origin_region_idx`
+
+### 30. `price_tiers` (grilles tarifaires par type d'acheteur)
+
+```
+price_tiers
+├── id              UUID PK
+├── listing_id      UUID FK → product_listings.id (CASCADE) NOT NULL
+├── buyer_type      VARCHAR(30) NOT NULL  -- particulier|superette|grande_surface
+├── price           DECIMAL(15,2) NOT NULL  -- prix FCFA/unite pour ce profil
+├── min_quantity    DECIMAL(15,2) DEFAULT 1  -- quantite minimum pour ce tarif
+├── max_quantity    DECIMAL(15,2)            -- quantite max (NULL = illimite)
+├── created_at      TIMESTAMP DEFAULT NOW()
+└── updated_at      TIMESTAMP DEFAULT NOW()
+└── UNIQUE (listing_id, buyer_type)
+```
+
+**Logique tarifaire** :
+- Chaque produit a un `base_price` (prix detail/particulier)
+- Les `price_tiers` definissent des prix reduits pour superettes et grandes surfaces
+- Exemple : Tomate 500 FCFA/kg (particulier), 400 FCFA/kg (superette, min 10kg), 350 FCFA/kg (grande_surface, min 100kg)
+
+### 31. `delivery_zones` (zones de livraison)
+
+```
+delivery_zones
+├── id              UUID PK
+├── farm_id         UUID FK → farms.id NOT NULL   -- chaque ferme definit ses zones
+├── name            VARCHAR(100) NOT NULL          -- ex: "Dakar Centre", "Thies", "Saint-Louis"
+├── region          VARCHAR(100) NOT NULL          -- region administrative
+├── department      VARCHAR(100)                   -- departement
+├── delivery_fee    DECIMAL(15,2) NOT NULL DEFAULT 0  -- frais de livraison FCFA
+├── min_order_amount DECIMAL(15,2) DEFAULT 0       -- commande minimum pour cette zone
+├── estimated_days  INTEGER DEFAULT 1              -- delai estime en jours
+├── is_active       BOOLEAN DEFAULT true
+├── data            JSONB DEFAULT {}
+├── created_at      TIMESTAMP DEFAULT NOW()
+└── updated_at      TIMESTAMP DEFAULT NOW()
+```
+
+**INDEX** : `delivery_zones_farm_id_idx`, `delivery_zones_region_idx`
+
+### 32. `orders` (commandes storefront)
+
+```
+orders
+├── id                  UUID PK
+├── order_number        VARCHAR(20) NOT NULL UNIQUE   -- ex: CMD-2026-001234
+├── buyer_profile_id    UUID FK → buyer_profiles.id NOT NULL
+├── seller_farm_id      UUID FK → farms.id NOT NULL
+├── delivery_zone_id    UUID FK → delivery_zones.id
+├── status              VARCHAR(30) DEFAULT 'pending' NOT NULL
+│                       -- pending|confirmed|preparing|shipped|delivered|cancelled|refunded
+├── subtotal            DECIMAL(15,2) NOT NULL        -- total articles
+├── delivery_fee        DECIMAL(15,2) DEFAULT 0       -- frais livraison
+├── total_amount        DECIMAL(15,2) NOT NULL        -- subtotal + delivery_fee
+├── payment_method      VARCHAR(30) NOT NULL          -- cod|wave|orange_money
+├── payment_status      VARCHAR(20) DEFAULT 'pending' -- pending|paid|failed|refunded
+├── payment_reference   VARCHAR(255)                  -- reference transaction Wave/OM
+├── delivery_address    TEXT NOT NULL
+├── delivery_city       VARCHAR(100)
+├── delivery_region     VARCHAR(100)
+├── delivery_phone      VARCHAR(30)
+├── delivery_notes      TEXT                          -- instructions livraison
+├── estimated_delivery  DATE
+├── delivered_at        TIMESTAMP
+├── confirmed_at        TIMESTAMP
+├── shipped_at          TIMESTAMP
+├── cancelled_at        TIMESTAMP
+├── cancellation_reason TEXT
+├── notes               TEXT
+├── data                JSONB DEFAULT {}
+├── created_at          TIMESTAMP DEFAULT NOW()
+└── updated_at          TIMESTAMP DEFAULT NOW()
+```
+
+**INDEX** : `orders_buyer_profile_id_idx`, `orders_seller_farm_id_idx`, `orders_status_idx`, `orders_payment_status_idx`, `orders_order_number_idx`
+
+### 33. `order_items` (lignes de commande)
+
+```
+order_items
+├── id              UUID PK
+├── order_id        UUID FK → orders.id (CASCADE) NOT NULL
+├── listing_id      UUID FK → product_listings.id NOT NULL
+├── product_name    VARCHAR(255) NOT NULL          -- snapshot du nom au moment de la commande
+├── quantity        DECIMAL(15,2) NOT NULL
+├── unit            VARCHAR(20) NOT NULL
+├── unit_price      DECIMAL(15,2) NOT NULL         -- prix unitaire applique (selon profil acheteur)
+├── total_price     DECIMAL(15,2) NOT NULL         -- quantity × unit_price
+├── data            JSONB DEFAULT {}
+├── created_at      TIMESTAMP DEFAULT NOW()
+└── updated_at      TIMESTAMP DEFAULT NOW()
+```
+
+**INDEX** : `order_items_order_id_idx`, `order_items_listing_id_idx`
+
+### 34. `reviews` (avis clients)
+
+```
+reviews
+├── id              UUID PK
+├── listing_id      UUID FK → product_listings.id (CASCADE) NOT NULL
+├── order_id        UUID FK → orders.id NOT NULL   -- doit avoir commande livree
+├── buyer_profile_id UUID FK → buyer_profiles.id NOT NULL
+├── rating          INTEGER NOT NULL CHECK (1-5)   -- note 1 a 5
+├── comment         TEXT
+├── seller_response TEXT                           -- reponse du producteur
+├── is_visible      BOOLEAN DEFAULT true
+├── created_at      TIMESTAMP DEFAULT NOW()
+└── updated_at      TIMESTAMP DEFAULT NOW()
+└── UNIQUE (order_id, listing_id)                  -- un seul avis par produit par commande
+```
+
+**INDEX** : `reviews_listing_id_idx`, `reviews_buyer_profile_id_idx`, `reviews_rating_idx`
 
 ---
 

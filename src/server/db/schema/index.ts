@@ -25,3 +25,4 @@ export * from './crop-rotation-rules';
 export * from './planned-tasks';
 export * from './notifications';
 export * from './farm-kpis';
+export * from './storefront';

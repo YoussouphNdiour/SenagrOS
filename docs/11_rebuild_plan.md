@@ -180,12 +180,43 @@ Montrer : creer un calendrier haricot vert, l'assigner a P-06, voir la timeline
 
 ---
 
-## Phase 12 : Marketplace (P2)
+## Phase 12 : Marketplace interne (P2)
 
 ### Livrables
-- [ ] Vitrine produits
+- [ ] Vitrine produits entre producteurs/cooperatives
 - [ ] Mode acheteur/producteur
-- [ ] Commandes
+- [ ] Commandes internes
+
+---
+
+## Phase 13 : Storefront public & Commandes B2B/B2C (2-3 sessions) — ✅ TERMINEE (SESSION-012, 2026-10-14)
+
+### Livrables
+- [x] Page d'accueil publique (vitrine catalogue, accessible sans login)
+- [x] Layout conditionnel : vitrine publique (non connecte) vs dashboard (producteur connecte)
+- [x] Inscription acheteur simplifiee (3 profils : particulier, superette, grande_surface)
+- [x] Catalogue produits avec recherche, filtres categorie/region/producteur, photos
+- [x] Fiche produit detaillee : description, photos, prix par profil, stock dispo, producteur, avis
+- [x] Grille tarifaire 3 niveaux (detail / semi-gros / gros) par produit
+- [x] Panier d'achat persistent (localStorage + DB si connecte)
+- [x] Checkout complet : recapitulatif, adresse livraison, choix zone, frais calcules
+- [x] 3 moyens de paiement : Paiement a la livraison (COD), Wave, Orange Money
+- [x] Integration API Wave pour paiement mobile
+- [x] Integration API Orange Money pour paiement mobile
+- [x] Commandes : creation, suivi statut (En attente → Confirmee → En preparation → Expediee → Livree)
+- [x] Dashboard acheteur : mes commandes, historique, re-commander
+- [x] Dashboard producteur : commandes recues, confirmer/expedier, notifications
+- [x] Zones de livraison configurables par region/departement + frais
+- [x] Systeme d'avis/reviews clients (note 1-5 + commentaire apres reception)
+- [x] Notifications : nouvelle commande (producteur), changement statut (acheteur)
+- [x] Schema Drizzle : buyer_profiles, product_listings, price_tiers, orders, order_items, delivery_zones, reviews
+- [x] Tests E2E : parcours complet acheteur (catalogue → panier → checkout COD → suivi)
+- [x] Tests E2E : parcours producteur (publier produit → recevoir commande → confirmer → expedier)
+
+### Validation
+Montrer : un acheteur "superette" voit les prix semi-gros, ajoute 50kg de tomates au panier, passe commande COD, le producteur recoit la notification et confirme
+
+**Valide** par `e2e/storefront.spec.ts` (3 parcours : acheteur complet, prix differencies superette 400 FCFA/kg, producteur publier → livrer + avis). Paiements Wave / Orange Money en mode simulation tant que les cles API ne sont pas configurees (voir 16_decisions.md SESSION-012).
 
 ---
 
@@ -206,6 +237,7 @@ Montrer : creer un calendrier haricot vert, l'assigner a P-06, voir la timeline
 | 10 | 02 (F15.2 a F15.6), 05 (responsive, quick actions) |
 | 11 | 02 (F2.2), 03 (cooperatives, cooperative_members, cooperative_invitations), 04 (cooperativeRouter) |
 | 12 | 02 (Module 14), 05 (pages marketplace, produits), 12 (screenshots farmos-marketplace.png) |
+| 13 | 02 (Module 15), 03 (buyer_profiles, product_listings, price_tiers, orders, order_items, delivery_zones, reviews), 04 (storefrontRouter, orderRouter, paymentRouter), 05 (pages storefront, catalogue, checkout) |
 
 ---
 
