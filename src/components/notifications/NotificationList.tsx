@@ -1,6 +1,6 @@
 'use client';
 
-import { Bell, Package, Calendar, CheckSquare, CheckCheck } from 'lucide-react';
+import { Bell, Package, Calendar, CheckSquare, CheckCheck, ShoppingBag, Truck } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { Button } from '@/components/ui/Button';
 import { useTranslations } from 'next-intl';
@@ -9,6 +9,8 @@ const typeIcon: Record<string, React.ElementType> = {
   stock_low: Package,
   stage_delayed: Calendar,
   task_assigned: CheckSquare,
+  new_order: ShoppingBag,
+  order_status_change: Truck,
 };
 
 export function NotificationList() {
@@ -20,6 +22,8 @@ export function NotificationList() {
     stock_low: t('stockLow'),
     stage_delayed: t('stageDelayed'),
     task_assigned: t('taskAssigned'),
+    new_order: t('newOrder'),
+    order_status_change: t('orderStatusChange'),
   };
 
   const markRead = trpc.notification.markRead.useMutation({

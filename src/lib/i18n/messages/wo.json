@@ -94,7 +94,9 @@
     "noNotifications": "Amul xam-xam",
     "stockLow": "Tontaan dafa tànn",
     "stageDelayed": "Jukki dafa yàkk",
-    "taskAssigned": "Liggéey yongël"
+    "taskAssigned": "Liggéey yongël",
+    "newOrder": "Komand bu bees",
+    "orderStatusChange": "Xibaaru komand"
   },
   "quick": {
     "title": "Sàmm-sàmm",

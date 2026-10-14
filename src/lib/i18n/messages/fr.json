@@ -94,7 +94,9 @@
     "noNotifications": "Aucune notification",
     "stockLow": "Stock bas",
     "stageDelayed": "Stade en retard",
-    "taskAssigned": "Tâche assignée"
+    "taskAssigned": "Tâche assignée",
+    "newOrder": "Nouvelle commande",
+    "orderStatusChange": "Statut de commande"
   },
   "quick": {
     "title": "Actions rapides",

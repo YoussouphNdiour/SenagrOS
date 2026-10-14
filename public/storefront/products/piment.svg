@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" role="img" aria-label="Piment">
+  <rect width="800" height="600" fill="#fee2e2"/>
+  <circle cx="400" cy="260" r="150" fill="#b91c1c" opacity="0.12"/>
+  <text x="400" y="320" font-size="180" text-anchor="middle" font-family="Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, sans-serif">🌶️</text>
+  <text x="400" y="500" font-size="48" font-weight="700" text-anchor="middle" fill="#b91c1c" font-family="Inter, Arial, sans-serif">Piment</text>
+</svg>

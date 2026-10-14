@@ -1,12 +1,13 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { signIn } from 'next-auth/react';
+import { getSession, signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod/v4';
+import { safeCallbackUrl } from '@/lib/utils/callback-url';
 
 const loginSchema = z.object({
   email: z.email('Email invalide'),
@@ -37,7 +38,12 @@ export default function LoginPage() {
     if (result?.error) {
       setError('Email ou mot de passe incorrect');
     } else {
-      router.push('/dashboard');
+      // Buyers go back to the storefront (or where they came from), producers to their dashboard
+      const session = await getSession();
+      const fallback = session?.user?.role === 'buyer' ? '/' : '/dashboard';
+      const callbackUrl = new URLSearchParams(window.location.search).get('callbackUrl');
+      router.push(safeCallbackUrl(callbackUrl, fallback));
+      router.refresh();
     }
   };
 
@@ -101,6 +107,19 @@ export default function LoginPage() {
           Pas encore de compte ?{' '}
           <Link href="/register" className="font-medium text-green-600 hover:text-green-700">
             Créer un compte
+          </Link>
+        </p>
+        <p className="mt-2 text-center text-sm text-gray-500">
+          Vous souhaitez acheter ?{' '}
+          <Link
+            href="/inscription-acheteur"
+            className="font-medium text-green-600 hover:text-green-700"
+          >
+            Créer un compte acheteur
+          </Link>
+          {' · '}
+          <Link href="/" className="font-medium text-green-600 hover:text-green-700">
+            Boutique
           </Link>
         </p>
       </div>
