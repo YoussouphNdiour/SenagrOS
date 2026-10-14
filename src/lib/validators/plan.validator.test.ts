@@ -167,7 +167,7 @@ describe('listPlansSchema', () => {
 
 describe('labels', () => {
   it('has labels for all plan types', () => {
-    expect(Object.keys(planTypeLabels)).toEqual(['crop', 'grazing', 'harvest']);
+    expect(Object.keys(planTypeLabels).sort()).toEqual([...planTypeEnum.options].sort());
   });
 
   it('has labels for all plan statuses', () => {
