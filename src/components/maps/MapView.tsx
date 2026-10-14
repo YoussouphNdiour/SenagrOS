@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback, useMemo } from 'react';
 import * as maplibregl from 'maplibre-gl';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import { trpc } from '@/lib/trpc';
@@ -70,7 +70,12 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
   const { data: landParcels } = trpc.asset.listLandParcels.useQuery();
   const saveFarmBoundary = trpc.map.saveFarmBoundary.useMutation();
 
-  const center: [number, number] = farmLng && farmLat ? [farmLng, farmLat] : SENEGAL_CENTER;
+  // Stable reference — prevents parcel useEffect from re-running on every render
+  const center = useMemo<[number, number]>(
+    () => (farmLng && farmLat ? [farmLng, farmLat] : SENEGAL_CENTER),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [farmLat, farmLng],
+  );
 
   // ── Initialize map ────────────────────────────────────────────────────────
   useEffect(() => {
@@ -263,7 +268,7 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
     }
 
     if (hasBounds) {
-      map.fitBounds(bounds, { padding: 60, maxZoom: 16 });
+      map.fitBounds(bounds, { padding: 60, maxZoom: 16, animate: false });
     } else if (farmBoundary?.geojson) {
       // No parcel geometry — center on farm boundary if available
       try {
@@ -273,12 +278,12 @@ export function MapView({ farmLat, farmLng }: MapViewProps) {
           for (const ring of (geom as GeoJSON.Polygon).coordinates) {
             for (const c of ring) fb.extend([c[0], c[1]]);
           }
-          map.fitBounds(fb, { padding: 80, maxZoom: 15 });
+          map.fitBounds(fb, { padding: 80, maxZoom: 15, animate: false });
         }
       } catch { /* ignore */ }
     } else if (farmBoundary?.latitude && farmBoundary?.longitude) {
       // Center on farm lat/lng
-      map.flyTo({ center: [parseFloat(farmBoundary.longitude), parseFloat(farmBoundary.latitude)], zoom: 14 });
+      map.jumpTo({ center: [parseFloat(farmBoundary.longitude), parseFloat(farmBoundary.latitude)], zoom: 14 });
     }
   }, [parcels, mapReady, center, farmBoundary]);
 
