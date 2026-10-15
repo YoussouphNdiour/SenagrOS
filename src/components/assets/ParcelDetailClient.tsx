@@ -5,6 +5,7 @@ import { trpc } from '@/lib/trpc';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { NdviWidget } from '@/components/maps/NdviWidget';
+import { RainfallWidget } from '@/components/maps/RainfallWidget';
 import dynamic from 'next/dynamic';
 
 const ParcelMiniMap = dynamic(
@@ -202,6 +203,11 @@ export function ParcelDetailClient({ parcelId }: { parcelId: string }) {
                 </p>
               </div>
             )}
+          </Card>
+
+          {/* Pluviometrie : lit le meme contexte que le NDVI, en regard */}
+          <Card>
+            <RainfallWidget assetId={parcelId} />
           </Card>
         </div>
       )}
