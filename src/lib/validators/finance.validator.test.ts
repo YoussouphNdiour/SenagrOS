@@ -1,14 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
   transactionTypeEnum,
-  transactionStatusEnum,
   paymentMethodEnum,
   transactionCategoryEnum,
   invoiceTypeEnum,
   invoiceStatusEnum,
   createTransactionSchema,
   createSaleSchema,
-  updateTransactionSchema,
   createInvoiceSchema,
   listTransactionsSchema,
   listInvoicesSchema,

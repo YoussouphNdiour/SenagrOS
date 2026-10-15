@@ -99,7 +99,7 @@ export function IntrantDetailClient({ id }: IntrantDetailClientProps) {
   }
 
   const formatXof = (value: number) =>
-    new Intl.NumberFormat('fr-SN', { style: 'decimal', maximumFractionDigits: 0 }).format(value) + ' FCFA';
+    `${new Intl.NumberFormat('fr-SN', { style: 'decimal', maximumFractionDigits: 0 }).format(value)} FCFA`;
 
   const movementColumns = [
     {

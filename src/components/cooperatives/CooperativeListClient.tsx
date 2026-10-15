@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Building2, Users, MapPin, ChevronRight } from 'lucide-react';
+import { Building2, MapPin, ChevronRight } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { Badge } from '@/components/ui/Badge';
 import { Modal } from '@/components/ui/Modal';

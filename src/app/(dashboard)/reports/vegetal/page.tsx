@@ -30,7 +30,7 @@ export default function VegetalTdbPage() {
 
   const summary = data?.summary;
   const parcels = data?.parcels ?? [];
-  const activeParcels = parcels.filter((p) => p.status === 'active');
+  const _activeParcels = parcels.filter((p) => p.status === 'active');
 
   return (
     <div className="space-y-6">

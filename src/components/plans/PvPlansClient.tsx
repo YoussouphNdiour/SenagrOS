@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/Badge';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Select } from '@/components/ui/Select';
-import { Sprout, Plus, Trash2, ChevronDown, ChevronUp, Pencil } from 'lucide-react';
+import { Sprout, Plus, Trash2, ChevronDown, ChevronUp, } from 'lucide-react';
 import { planStatusLabels, seasonLabels } from '@/lib/validators/plan.validator';
 import type { PlanStatus } from '@/lib/validators/plan.validator';
 

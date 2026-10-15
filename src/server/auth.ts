@@ -45,7 +45,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           .where(eq(users.email, credentials.email as string))
           .limit(1);
 
-        if (!user || !user.passwordHash) return null;
+        if (!user?.passwordHash) return null;
 
         const isValid = await bcrypt.compare(
           credentials.password as string,

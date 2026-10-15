@@ -9,7 +9,7 @@ interface CooperativeKpisProps {
 }
 
 function formatFCFA(value: number): string {
-  return new Intl.NumberFormat('fr-FR').format(Math.round(value)) + ' FCFA';
+  return `${new Intl.NumberFormat('fr-FR').format(Math.round(value))} FCFA`;
 }
 
 export function CooperativeKpis({ cooperativeId }: CooperativeKpisProps) {

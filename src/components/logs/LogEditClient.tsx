@@ -51,7 +51,7 @@ interface UserItem {
 export function LogEditClient({ logId }: LogEditClientProps) {
   const router = useRouter();
   const { data: session } = useSession();
-  const farmId = (session?.user as { farmId?: string } | undefined)?.farmId ?? '';
+  const _farmId = (session?.user as { farmId?: string } | undefined)?.farmId ?? '';
   const { data: log, isLoading } = trpc.log.getById.useQuery({ id: logId });
   const [assigneeId, setAssigneeId] = useState<string | null>(null);
 

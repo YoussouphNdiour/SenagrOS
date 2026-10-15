@@ -31,7 +31,7 @@ export const observationRouter = router({
       const { formType, assetId, dateFrom, dateTo, page, limit } = input;
       const offset = (page - 1) * limit;
 
-      const conditions = [
+      const _conditions = [
         eq(logs.farmId, farmId),
         eq(logs.type, 'observation'),
       ];

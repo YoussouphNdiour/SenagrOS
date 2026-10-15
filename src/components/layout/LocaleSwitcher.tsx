@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { locales, localeNames, type Locale } from '@/lib/i18n/config';
+import { locales, type Locale } from '@/lib/i18n/config';
 
 export function LocaleSwitcher() {
   const router = useRouter();

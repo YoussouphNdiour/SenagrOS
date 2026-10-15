@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Users, UserPlus, Shield, Trash2 } from 'lucide-react';
+import { Users, UserPlus, Trash2 } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';

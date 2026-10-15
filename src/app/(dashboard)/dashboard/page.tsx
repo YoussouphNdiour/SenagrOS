@@ -1,7 +1,6 @@
 'use client';
 
 import { trpc } from '@/lib/trpc';
-import { KpiCard } from '@/components/ui/KpiCard';
 import { RevenueExpenseChart } from '@/components/charts/RevenueExpenseChart';
 import { WeatherWidget } from '@/components/charts/WeatherWidget';
 import {
@@ -19,7 +18,7 @@ import {
 import Link from 'next/link';
 
 function formatFCFA(value: number) {
-  return new Intl.NumberFormat('fr-FR').format(value) + ' FCFA';
+  return `${new Intl.NumberFormat('fr-FR').format(value)} FCFA`;
 }
 
 const MODULE_SHORTCUTS = [

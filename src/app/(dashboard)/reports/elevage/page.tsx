@@ -5,7 +5,6 @@ import { trpc } from '@/lib/trpc';
 import { KpiCard } from '@/components/ui/KpiCard';
 import { Card } from '@/components/ui/Card';
 import {
-  HeartPulse,
   TrendingDown,
   Coins,
   Baby,

@@ -18,7 +18,7 @@ interface CropData {
   count: number;
 }
 
-function formatKg(value: number) {
+function _formatKg(value: number) {
   return `${new Intl.NumberFormat('fr-FR').format(value)} kg`;
 }
 

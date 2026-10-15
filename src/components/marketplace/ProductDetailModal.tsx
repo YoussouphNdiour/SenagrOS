@@ -1,6 +1,6 @@
 'use client';
 
-import { X, MapPin, Leaf, ShoppingCart } from 'lucide-react';
+import { X, MapPin, ShoppingCart } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { Badge } from '@/components/ui/Badge';
 import {

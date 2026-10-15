@@ -176,7 +176,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
                 </p>
                 {group.items.map((subItem) => {
                   const SubIcon = subItem.icon;
-                  const isActive = pathname === subItem.href || pathname.startsWith(subItem.href + '/');
+                  const isActive = pathname === subItem.href || pathname.startsWith(`${subItem.href}/`);
                   return (
                     <Link
                       key={subItem.href}
