@@ -32,12 +32,16 @@ jobs:
       - name: Unit tests
         run: pnpm test
 
-      # Non bloquant : le lint n'avait jamais tourne et la base compte ~170
-      # erreurs preexistantes (dont 114 `any`). A passer bloquant une fois la
-      # dette resorbee.
-      - name: Lint
-        run: pnpm lint
-        continue-on-error: true
+      # Bloquant, mais sur la variation et non sur le total : la base compte
+      # une dette heritee que le lint, jamais execute avant la CI, avait
+      # laissee s'accumuler. Le cliquet echoue des que le nombre d'erreurs
+      # augmente, donc aucune nouvelle ne passe, sans exiger de solder la
+      # dette d'un coup.
+      #
+      # L'etape precedente etait `continue-on-error`, donc affichee verte
+      # alors que la commande echouait : la dette restait invisible.
+      - name: Lint (cliquet)
+        run: ./scripts/lint-ratchet.sh
 
       - name: Build
         run: pnpm build
