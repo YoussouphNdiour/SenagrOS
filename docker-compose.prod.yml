@@ -13,6 +13,10 @@ services:
       NODE_ENV: production
       SENTINEL_HUB_CLIENT_ID: ${SENTINEL_HUB_CLIENT_ID}
       SENTINEL_HUB_CLIENT_SECRET: ${SENTINEL_HUB_CLIENT_SECRET}
+      # Verification periodique des chutes de NDVI, dans le processus
+      # applicatif. Mettre "off" pour la desactiver.
+      NDVI_ALERT_SCHEDULE: "on"
+      NDVI_ALERT_INTERVAL_HOURS: "24"
     depends_on:
       db:
         condition: service_healthy
