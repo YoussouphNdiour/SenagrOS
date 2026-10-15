@@ -3,6 +3,7 @@ import { db } from '@/server/db';
 import { farms } from '@/server/db/schema';
 import { eq } from 'drizzle-orm';
 import { MapClient } from '@/components/maps/MapClient';
+import { NdviDropCheckButton } from '@/components/maps/NdviDropCheckButton';
 
 export default async function MapPage() {
   const session = await auth();
@@ -22,9 +23,10 @@ export default async function MapPage() {
 
   return (
     <div>
-      <h1 className="mb-4 text-2xl font-bold text-gray-800">
-        Carte des parcelles
-      </h1>
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-2xl font-bold text-gray-800">Carte des parcelles</h1>
+        <NdviDropCheckButton />
+      </div>
       <div className="h-[calc(100vh-12rem)] overflow-hidden rounded-xl border border-gray-200">
         <MapClient farmLat={farmLat} farmLng={farmLng} />
       </div>

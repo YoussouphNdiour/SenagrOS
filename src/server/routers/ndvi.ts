@@ -3,6 +3,7 @@ import { TRPCError } from '@trpc/server';
 import { and, eq, isNull } from 'drizzle-orm';
 import { protectedProcedure, router } from '../trpc';
 import { SPECTRAL_INDICES, fetchIndexTimeSeries } from '@/lib/sentinel-hub';
+import { checkNdviDrops } from '../services/ndvi-alert.service';
 import { assets } from '../db/schema';
 
 const indexEnum = z.enum(
@@ -75,4 +76,22 @@ export const ndviRouter = router({
 
       return { data, hasGeometry: true };
     }),
+
+  /**
+   * Parcourt les parcelles de la ferme et notifie les chutes de NDVI.
+   *
+   * Reexecutable sans risque : une parcelle deja signalee depuis moins de
+   * 14 jours est ecartee avant tout appel satellite.
+   */
+  checkDrops: protectedProcedure.mutation(async ({ ctx }) => {
+    const farmId = ctx.session.user.farmId;
+    if (!farmId) {
+      throw new TRPCError({
+        code: 'FORBIDDEN',
+        message: 'No farm associated with this account',
+      });
+    }
+
+    return checkNdviDrops(ctx.db, farmId, ctx.session.user.id);
+  }),
 });
