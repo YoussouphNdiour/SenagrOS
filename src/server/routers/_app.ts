@@ -16,6 +16,7 @@ import { cropRouter } from './crop';
 import { searchRouter } from './search';
 import { mapRouter } from './map';
 import { ndviRouter } from './ndvi';
+import { weatherRouter } from './weather';
 import { plannedTaskRouter } from './planned-task';
 import { notificationRouter } from './notification';
 import { farmKpiRouter } from './farm-kpi';
@@ -46,6 +47,7 @@ export const appRouter = router({
   crop: cropRouter,
   map: mapRouter,
   ndvi: ndviRouter,
+  weather: weatherRouter,
   plannedTask: plannedTaskRouter,
   notification: notificationRouter,
   farmKpi: farmKpiRouter,
