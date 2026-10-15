@@ -22,7 +22,7 @@ export function ProductDetailModal({ productId, onClose, onOrder }: ProductDetai
       <div className="w-full max-w-lg rounded-xl bg-white shadow-xl">
         <div className="flex items-center justify-between border-b p-4">
           <h2 className="text-lg font-semibold">Détail du produit</h2>
-          <button onClick={onClose} className="rounded-lg p-1 hover:bg-gray-100">
+          <button type="button" onClick={onClose} className="rounded-lg p-1 hover:bg-gray-100">
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -90,7 +90,7 @@ export function ProductDetailModal({ productId, onClose, onOrder }: ProductDetai
               )}
             </div>
 
-            <button
+            <button type="button"
               onClick={() => onOrder(product.id)}
               className="flex w-full items-center justify-center gap-2 rounded-lg bg-green-700 px-4 py-3 font-medium text-white transition hover:bg-green-800"
             >

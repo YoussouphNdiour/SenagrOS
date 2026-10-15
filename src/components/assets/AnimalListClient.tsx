@@ -177,7 +177,7 @@ export function AnimalListClient({ farmId }: AnimalListClientProps) {
       key: 'actions',
       header: '',
       render: (row: AnimalAsset) => (
-        <button
+        <button type="button"
           onClick={(e) => {
             e.stopPropagation();
             if (confirm('Archiver cet animal ?')) {

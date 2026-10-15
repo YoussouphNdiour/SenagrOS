@@ -53,7 +53,7 @@ export function ProductCreateForm({ onClose }: ProductCreateFormProps) {
       <div className="w-full max-w-lg rounded-xl bg-white shadow-xl">
         <div className="flex items-center justify-between border-b p-4">
           <h2 className="text-lg font-semibold">Publier un produit</h2>
-          <button onClick={onClose} className="rounded-lg p-1 hover:bg-gray-100">
+          <button type="button" onClick={onClose} className="rounded-lg p-1 hover:bg-gray-100">
             <X className="h-5 w-5" />
           </button>
         </div>

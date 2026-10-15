@@ -143,7 +143,7 @@ export function AssetListClient({ farmId, filterType }: AssetListClientProps) {
       key: 'actions',
       header: '',
       render: (row: Asset) => (
-        <button
+        <button type="button"
           onClick={(e) => {
             e.stopPropagation();
             if (confirm('Archiver cet asset ?')) {

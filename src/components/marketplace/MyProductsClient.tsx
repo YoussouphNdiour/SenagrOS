@@ -47,7 +47,7 @@ export function MyProductsClient() {
             Gérez vos produits publiés sur le marketplace.
           </p>
         </div>
-        <button
+        <button type="button"
           onClick={() => setShowCreate(true)}
           className="flex items-center gap-2 rounded-lg bg-green-700 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-green-800"
         >
@@ -79,7 +79,7 @@ export function MyProductsClient() {
         ) : !data?.items.length ? (
           <div className="py-16 text-center">
             <p className="text-gray-500">Aucun produit publié.</p>
-            <button
+            <button type="button"
               onClick={() => setShowCreate(true)}
               className="mt-4 text-sm font-medium text-green-700 hover:underline"
             >
@@ -142,7 +142,7 @@ export function MyProductsClient() {
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex items-center justify-end gap-1">
-                      <button
+                      <button type="button"
                         onClick={() =>
                           togglePublish.mutate({
                             id: product.id,
@@ -158,7 +158,7 @@ export function MyProductsClient() {
                           <Eye className="h-4 w-4" />
                         )}
                       </button>
-                      <button
+                      <button type="button"
                         onClick={() => deleteProduct.mutate({ productId: product.id })}
                         className="rounded-lg p-2 text-gray-400 hover:bg-red-50 hover:text-red-600"
                         title="Supprimer"
@@ -177,7 +177,7 @@ export function MyProductsClient() {
       {/* Pagination */}
       {data && data.total > 25 && (
         <div className="flex justify-center gap-2">
-          <button
+          <button type="button"
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
             className="rounded-lg border px-4 py-2 text-sm disabled:opacity-50"
@@ -187,7 +187,7 @@ export function MyProductsClient() {
           <span className="flex items-center px-3 text-sm text-gray-600">
             Page {page} / {Math.ceil(data.total / 25)}
           </span>
-          <button
+          <button type="button"
             onClick={() => setPage((p) => p + 1)}
             disabled={page * 25 >= data.total}
             className="rounded-lg border px-4 py-2 text-sm disabled:opacity-50"

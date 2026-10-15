@@ -29,6 +29,7 @@ import {
   Zap,
 } from 'lucide-react';
 import Link from 'next/link';
+import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
@@ -113,11 +114,27 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
   const pathname = usePathname();
   const navItems = useNavItems();
 
+  // Le voile ne se fermait qu'au clic : au clavier, le menu mobile restait
+  // ouvert sans aucun moyen de le refermer.
+  useEffect(() => {
+    if (!isOpen) return;
+    const onEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    document.addEventListener('keydown', onEscape);
+    return () => document.removeEventListener('keydown', onEscape);
+  }, [isOpen, onClose]);
+
   return (
     <>
       {/* Overlay */}
       {isOpen && (
+        // Voile purement decoratif : la fermeture au clavier passe par la
+        // touche Echap ci-dessus, pas par ce div.
+        // biome-ignore lint/a11y/useKeyWithClickEvents: fermeture clavier geree par Echap
+        // biome-ignore lint/a11y/noStaticElementInteractions: voile de fond, non focalisable a dessein
         <div
+          aria-hidden="true"
           className="fixed inset-0 z-40 bg-black/50 md:hidden"
           onClick={onClose}
         />
@@ -137,7 +154,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
             </div>
             <span className="text-xl font-bold text-green-700">SenagrOS</span>
           </Link>
-          <button onClick={onClose} className="md:hidden">
+          <button type="button" onClick={onClose} className="md:hidden">
             <X className="h-5 w-5 text-gray-500" />
           </button>
         </div>

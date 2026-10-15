@@ -12,14 +12,14 @@ interface ExportBarProps {
 export function ExportBar({ data, filename, pdfElementId }: ExportBarProps) {
   return (
     <div className="flex gap-2">
-      <button
+      <button type="button"
         onClick={() => exportToExcel(data, filename)}
         className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
       >
         <FileSpreadsheet className="h-4 w-4 text-green-600" />
         Excel
       </button>
-      <button
+      <button type="button"
         onClick={() => exportToPdf(pdfElementId, filename)}
         className="inline-flex items-center gap-1.5 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50"
       >
