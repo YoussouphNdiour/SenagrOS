@@ -208,3 +208,176 @@ export async function fetchIndexTimeSeries(
     return [];
   }
 }
+
+// ---------------------------------------------------------------------------
+// Zonage intra-parcellaire
+// ---------------------------------------------------------------------------
+
+const PROCESS_URL = 'https://sh.dataspace.copernicus.eu/api/v1/process';
+
+/** Resolution native des bandes rouge et proche infrarouge. */
+const NATIVE_RESOLUTION_M = 10;
+const MIN_IMAGE_SIDE = 64;
+const MAX_IMAGE_SIDE = 1024;
+
+/** Bornes geographiques, en degres : [ouest, sud, est, nord]. */
+export type BoundingBox = [number, number, number, number];
+
+export interface IndexImage {
+  /** PNG RGBA, transparent hors de la parcelle et sur les pixels masques. */
+  png: Buffer;
+  bbox: BoundingBox;
+}
+
+export function polygonBoundingBox(polygon: number[][][]): BoundingBox {
+  let west = Number.POSITIVE_INFINITY;
+  let south = Number.POSITIVE_INFINITY;
+  let east = Number.NEGATIVE_INFINITY;
+  let north = Number.NEGATIVE_INFINITY;
+
+  for (const ring of polygon) {
+    for (const [lng, lat] of ring) {
+      if (lng < west) west = lng;
+      if (lng > east) east = lng;
+      if (lat < south) south = lat;
+      if (lat > north) north = lat;
+    }
+  }
+  return [west, south, east, north];
+}
+
+/**
+ * Dimensions de l'image en pixels, a la resolution native.
+ *
+ * Le rapport largeur/hauteur doit suivre celui de la boite englobante :
+ * l'image est ensuite plaquee sur ses quatre coins, donc tout ecart
+ * deformerait le zonage a l'ecran.
+ */
+function imageSize(bbox: BoundingBox): { width: number; height: number } {
+  const [west, south, east, north] = bbox;
+  const midLat = (south + north) / 2;
+  const widthM = (east - west) * 111_320 * Math.cos((midLat * Math.PI) / 180);
+  const heightM = (north - south) * 110_540;
+
+  const clamp = (n: number) =>
+    Math.max(MIN_IMAGE_SIDE, Math.min(MAX_IMAGE_SIDE, Math.round(n)));
+
+  let width = clamp(widthM / NATIVE_RESOLUTION_M);
+  let height = clamp(heightM / NATIVE_RESOLUTION_M);
+
+  // Le bornage ci-dessus peut casser le rapport : on le retablit a partir du
+  // cote le plus contraint.
+  const ratio = widthM / heightM;
+  if (width / height > ratio) width = clamp(height * ratio);
+  else height = clamp(width / ratio);
+
+  return { width, height };
+}
+
+/** Palette appliquee cote serveur, alignee sur la legende de l'interface. */
+const ZONING_BANDS: Record<SpectralIndex, { min: number; rgb: [number, number, number] }[]> = {
+  ndvi: [
+    { min: 0.6, rgb: [34, 197, 94] },
+    { min: 0.4, rgb: [234, 179, 8] },
+    { min: 0.2, rgb: [249, 115, 22] },
+    { min: Number.NEGATIVE_INFINITY, rgb: [239, 68, 68] },
+  ],
+  ndmi: [
+    { min: 0.4, rgb: [2, 132, 199] },
+    { min: 0.2, rgb: [56, 189, 248] },
+    { min: 0, rgb: [249, 115, 22] },
+    { min: Number.NEGATIVE_INFINITY, rgb: [239, 68, 68] },
+  ],
+};
+
+function buildZoningEvalscript(index: SpectralIndex): string {
+  const { numerator, denominator } = SPECTRAL_INDICES[index];
+  const bands = ZONING_BANDS[index];
+  // Du seuil le plus haut au plus bas : le premier atteint l'emporte.
+  const branches = bands
+    .slice(0, -1)
+    .map((b) => `  if (v >= ${b.min}) return [${b.rgb.join(',')}, 255];`)
+    .join('\n');
+  const fallback = bands[bands.length - 1].rgb.join(',');
+
+  return `//VERSION=3
+function setup() {
+  return {
+    input: [{ bands: ["${numerator}", "${denominator}", "SCL", "dataMask"] }],
+    output: { bands: 4, sampleType: "UINT8" }
+  };
+}
+function evaluatePixel(s) {
+  // Hors parcelle, ou pixel nuageux : totalement transparent.
+  const invalid = [0, 1, 3, 8, 9, 10].includes(s.SCL);
+  if (s.dataMask === 0 || invalid) return [0, 0, 0, 0];
+  const v = (s.${numerator} - s.${denominator}) / (s.${numerator} + s.${denominator});
+${branches}
+  return [${fallback}, 255];
+}`;
+}
+
+/**
+ * Image de zonage d'une parcelle : l'indice calcule pixel par pixel, et non
+ * moyenne sur toute la surface.
+ *
+ * La composition retient la scene la moins nuageuse de la periode plutot
+ * qu'une moyenne temporelle : un zonage doit representer un etat date, pas un
+ * melange de dates.
+ *
+ * @returns null en cas d'echec, la carte restant utilisable sans le calque.
+ */
+export async function fetchIndexImage(
+  index: SpectralIndex,
+  polygon: number[][][],
+  fromDate: string,
+  toDate: string,
+): Promise<IndexImage | null> {
+  try {
+    const token = await getAccessToken();
+    const bbox = polygonBoundingBox(polygon);
+    const { width, height } = imageSize(bbox);
+
+    const res = await fetch(PROCESS_URL, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        input: {
+          bounds: {
+            bbox,
+            geometry: { type: 'Polygon', coordinates: polygon },
+            properties: { crs: 'http://www.opengis.net/def/crs/EPSG/0/4326' },
+          },
+          data: [
+            {
+              type: 'sentinel-2-l2a',
+              dataFilter: {
+                timeRange: { from: fromDate, to: toDate },
+                mosaickingOrder: 'leastCC',
+              },
+            },
+          ],
+        },
+        output: {
+          width,
+          height,
+          responses: [{ identifier: 'default', format: { type: 'image/png' } }],
+        },
+        evalscript: buildZoningEvalscript(index),
+      }),
+    });
+
+    if (!res.ok) {
+      console.error(`Sentinel Hub Process API error (${res.status}): ${await res.text()}`);
+      return null;
+    }
+
+    return { png: Buffer.from(await res.arrayBuffer()), bbox };
+  } catch (error) {
+    console.error(`Failed to fetch ${index} zoning image:`, error);
+    return null;
+  }
+}
