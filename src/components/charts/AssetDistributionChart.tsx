@@ -54,8 +54,8 @@ export function AssetDistributionChart({ data }: { data: AssetTypeData[] }) {
             dataKey="value"
             label={({ name, value }) => `${name}: ${value}`}
           >
-            {chartData.map((_, index) => (
-              <Cell key={index} fill={COLORS[index % COLORS.length]} />
+            {chartData.map((part, index) => (
+              <Cell key={part.name} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
           <Tooltip />

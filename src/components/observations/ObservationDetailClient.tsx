@@ -212,6 +212,7 @@ export function ObservationDetailClient({ id }: ObservationDetailClientProps) {
                 <tr className="border-b border-gray-200 bg-gray-50">
                   <th className="px-3 py-2 text-left font-medium text-gray-600">Ravageur/Maladie</th>
                   {Array.from({ length: (formData.num_targets as number) ?? 10 }).map((_, i) => (
+                    // biome-ignore lint/suspicious/noArrayIndexKey: grille a positions fixes, l'index est l'identite de la cellule
                     <th key={i} className="px-2 py-2 text-center font-medium text-gray-600">
                       B{i + 1}
                     </th>
@@ -228,10 +229,11 @@ export function ObservationDetailClient({ id }: ObservationDetailClientProps) {
                     total: number;
                     pct_infested: number;
                   }[]
-                ).map((obs, idx) => (
-                  <tr key={idx} className="border-b border-gray-100">
+                ).map((obs) => (
+                  <tr key={obs.pest_or_disease} className="border-b border-gray-100">
                     <td className="px-3 py-1.5 font-medium whitespace-nowrap">{obs.pest_or_disease}</td>
                     {obs.targets.map((t, ti) => (
+                      // biome-ignore lint/suspicious/noArrayIndexKey: grille a positions fixes, l'index est l'identite de la cellule
                       <td key={ti} className="px-2 py-1.5 text-center">
                         {t > 0 ? <span className="font-bold text-red-600">{t}</span> : '·'}
                       </td>
@@ -340,6 +342,7 @@ function PestResults({ formData }: { formData: FormData }) {
           </p>
           <ul className="space-y-1">
             {alerts.map((a, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: grille a positions fixes, l'index est l'identite de la cellule
               <li key={i} className="text-sm text-red-600">
                 • {a.pest_or_disease} — {a.pct_infested}%
               </li>

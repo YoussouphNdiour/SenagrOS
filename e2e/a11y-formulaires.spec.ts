@@ -28,6 +28,11 @@ const PAGES_FORMULAIRES = [
 ];
 
 test.describe('accessibilité des formulaires', () => {
+  // Chaque test se reconnecte et attend networkidle. En parallele, quatre
+  // ouvertures de session simultanees saturent le serveur local et font
+  // expirer les attentes, alors que les memes tests passent isolement.
+  test.describe.configure({ mode: 'serial' });
+
   test.beforeEach(async ({ page }) => {
     await login(page);
   });

@@ -1,4 +1,4 @@
-import { forwardRef, type InputHTMLAttributes } from 'react';
+import { forwardRef, useId, type InputHTMLAttributes } from 'react';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -8,16 +8,22 @@ interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
 
 export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, helperText, id, className = '', ...props }, ref) => {
+    // Sans id fourni, htmlFor valait undefined : le libelle s'affichait sans
+    // etre associe au champ. Un lecteur d'ecran n'annoncait donc rien, et un
+    // clic sur le libelle ne donnait pas le focus.
+    const generatedId = useId();
+    const inputId = id ?? generatedId;
+
     return (
       <div>
         {label && (
-          <label htmlFor={id} className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor={inputId} className="mb-1 block text-sm font-medium text-gray-700">
             {label}
           </label>
         )}
         <input
           ref={ref}
-          id={id}
+          id={inputId}
           className={`w-full rounded-lg border px-4 py-2.5 text-sm text-gray-900 transition focus:outline-none focus:ring-2 ${
             error
               ? 'border-red-300 focus:border-red-500 focus:ring-red-200'

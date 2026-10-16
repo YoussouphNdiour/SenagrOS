@@ -187,7 +187,7 @@ export function Sidebar({ isOpen, onClose }: SidebarProps) {
 
             const group = item as NavSection;
             return (
-              <div key={idx}>
+              <div key={group.section}>
                 <p className="mb-1 mt-4 px-3 text-xs font-semibold uppercase tracking-wider text-gray-400">
                   {group.section}
                 </p>
