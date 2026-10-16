@@ -120,6 +120,7 @@ export async function listProducts(
         photos: productListings.photos,
         basePrice: productListings.basePrice,
         unit: productListings.unit,
+        minOrderQuantity: productListings.minOrderQuantity,
         stockAvailable: productListings.stockAvailable,
         originRegion: productListings.originRegion,
         isBio: productListings.isBio,

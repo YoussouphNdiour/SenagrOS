@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import { and, eq } from 'drizzle-orm';
+import { and, eq, sql } from 'drizzle-orm';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import type * as schema from '../schema';
 import {
@@ -15,7 +15,7 @@ import {
 type Db = PostgresJsDatabase<typeof schema>;
 
 const photo = (slug: string, alt: string) => [
-  { url: `/storefront/products/${slug}.svg`, alt, order: 0 },
+  { url: `/storefront/photos/${slug}.jpg`, alt, order: 0 },
 ];
 
 function daysAgo(n: number): string {
@@ -420,6 +420,16 @@ export async function seedStorefront(db: Db, mainFarmId: string, mainSellerId: s
       isVerified: b.buyerType !== 'particulier',
     });
   }
+
+  // Earlier seeds used SVG placeholders: point them to the photos (same slugs)
+  await db
+    .update(productListings)
+    .set({
+      photos: sql`replace(replace(${productListings.photos}::text, '/storefront/products/', '/storefront/photos/'), '.svg', '.jpg')::jsonb`,
+    })
+    .where(
+      sql`${productListings.photos}::text like '%/storefront/products/%' and ${productListings.photos}::text not like '%placeholder.svg%'`,
+    );
 
   await seedListings(db, mainFarmId, mainSellerId, MAIN_LISTINGS);
   await seedZones(db, mainFarmId, MAIN_ZONES);

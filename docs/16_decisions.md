@@ -426,4 +426,17 @@ Chaque session ajoute ses decisions ici. Ne pas supprimer les entrees precedente
 
 ---
 
+### SESSION-013 — 2026-10-16 — Refonte visuelle du storefront (style FreshCart)
+
+**Decisions prises :**
+1. Reference visuelle FreshCart (codescandy) choisie par l'utilisateur, plutot que Grabit : fond blanc, cartes a bordure fine, police Inter, header en deux rangees (recherche + « Tous les rayons »), grand bandeau photo, bouton « + Ajouter » sur chaque carte
+2. Palette en tokens Tailwind dans `globals.css` (`brand`, `ink`, `muted`, `line`, `surface`, `accent`), reservee au storefront ; le dashboard garde ses couleurs. Vert principal `#088a08` au lieu du `#0aad0a` de FreshCart, qui n'offre que 3:1 de contraste avec du texte blanc (WCAG AA exige 4,5:1)
+3. Vraies photos au lieu des SVG emoji : 17 photos CC0 / domaine public via Openverse (sources StockSnap, Rawpixel, Wikimedia, Flickr), redimensionnees (900 px, bandeau 1440 px) dans `public/storefront/photos/`, credits dans `CREDITS.md`. Unsplash, demande au depart, bloque les acces automatises (protection anti-robot) : non contourne
+4. Ajout rapide depuis les cartes : « + Ajouter » met la quantite minimum du produit au panier ; les acheteurs pro voient leur prix avec le prix detail barre et le pourcentage
+5. Carte produit en container query : prix et bouton s'empilent quand la carte est etroite (2 colonnes sur mobile)
+6. Le seed remplace les anciens chemins `/storefront/products/*.svg` par les photos (idempotent) ; le test E2E producteur archive le produit qu'il cree, pour ne plus polluer la vitrine
+7. Biome : `css.parser.tailwindDirectives` active, `@theme` n'est plus une erreur d'analyse ; plafond de lint abaisse de 29 a 28
+
+---
+
 *Ajouter une entree ci-dessus a chaque session. Ne jamais supprimer.*

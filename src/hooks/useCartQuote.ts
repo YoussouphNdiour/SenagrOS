@@ -60,6 +60,7 @@ export function useCartQuote() {
     deliveryFee,
     total: subtotal + deliveryFee,
     allZonesChosen: groups.every((g) => g.zone !== null),
+    hasInvalidQuantities: issues.length > 0,
     hasIssues: issues.length > 0 || groups.some((g) => g.belowMinimum),
   };
 }

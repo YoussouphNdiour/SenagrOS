@@ -10,19 +10,19 @@ export default function StorefrontError({
 }) {
   return (
     <div className="mx-auto flex max-w-md flex-col items-center gap-4 px-4 py-24 text-center">
-      <p className="text-lg font-semibold text-gray-800">Une erreur est survenue</p>
-      <p className="text-sm text-gray-500">Le service est momentanément indisponible.</p>
+      <p className="text-lg font-semibold text-ink">Une erreur est survenue</p>
+      <p className="text-sm text-muted">Le service est momentanément indisponible.</p>
       <div className="flex gap-3">
         <button
           type="button"
           onClick={reset}
-          className="rounded-lg bg-green-600 px-4 py-2 text-sm text-white hover:bg-green-700"
+          className="rounded-md bg-brand px-4 py-2 text-sm text-white hover:bg-brand-dark"
         >
           Réessayer
         </button>
         <Link
           href="/"
-          className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-700"
+          className="rounded-md border border-line px-4 py-2 text-sm text-ink"
         >
           Accueil
         </Link>
