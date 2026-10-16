@@ -105,7 +105,7 @@ export function NdviPanel({ selectedParcel, onClose }: NdviPanelProps) {
   const isLoading = ndviQuery.isLoading && !!selectedParcel;
   const realData = ndviQuery.data;
   const hasRealData =
-    realData && realData.hasGeometry && realData.data.length > 0;
+    realData?.hasGeometry && realData.data.length > 0;
 
   // La dependance sert d'invalidation volontaire : elle regenere la courbe
   // simulee quand on change de parcelle. generateMockNdviData() ne la lit pas,

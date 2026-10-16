@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { useForm, useFieldArray, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Plus, Trash2, AlertTriangle } from 'lucide-react';
+import { Plus, Trash2, } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { createLogSchema } from '@/lib/validators/log.validator';
 import type { logTypeValues } from '@/lib/validators/log.validator';
@@ -103,6 +103,7 @@ export function LogCreateForm({ defaultType }: LogCreateFormProps) {
     handleSubmit,
     watch,
     control,
+    setValue,
     formState: { errors },
   } = useForm<CreateLogInput>({
     resolver: zodResolver(createLogSchema),
@@ -198,17 +199,17 @@ export function LogCreateForm({ defaultType }: LogCreateFormProps) {
     return json?.result?.data?.json?.items ?? [];
   };
 
-  // Auto-calculate spray_volume_total = spray_volume_per_ha * treated_surface_ha
+  // Volume total de bouillie = volume par hectare x surface traitee.
+  // Passe par setValue plutot que par control._formValues : muter l'etat
+  // interne de react-hook-form ne declenche ni re-rendu ni validation, et le
+  // champ restait desynchronise de ce que voyait l'utilisateur.
   useEffect(() => {
     if (selectedType !== 'input') return;
     if (sprayVolumePerHa && treatedSurfaceHa && sprayVolumePerHa > 0 && treatedSurfaceHa > 0) {
       const total = Math.round(sprayVolumePerHa * treatedSurfaceHa * 100) / 100;
-      const currentTotal = watch('data.spray_volume_total' as any);
-      if (currentTotal !== total) {
-        control._formValues.data = { ...control._formValues.data, spray_volume_total: total };
-      }
+      setValue('data.spray_volume_total' as never, total as never, { shouldDirty: true });
     }
-  }, [sprayVolumePerHa, treatedSurfaceHa, selectedType]);
+  }, [sprayVolumePerHa, treatedSurfaceHa, selectedType, setValue]);
 
   const onSubmit = (values: CreateLogInput) => {
     const enrichedData = selectedType === 'input'

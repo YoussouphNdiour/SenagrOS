@@ -2,7 +2,6 @@ import { auth } from '@/server/auth';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { IntrantsKpis } from '@/components/intrants/IntrantsKpis';
-import { IntrantListClient } from '@/components/intrants/IntrantListClient';
 
 export default async function IntrantsPage() {
   const session = await auth();

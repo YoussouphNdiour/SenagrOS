@@ -138,7 +138,7 @@ export function ParcelDetailClient({ parcelId }: { parcelId: string }) {
 
           <Card>
             <h2 className="mb-3 text-sm font-semibold text-gray-600">Culture en cours</h2>
-            {cropHistory && cropHistory[0] && cropHistory[0].status === 'active' ? (
+            {cropHistory?.[0] && cropHistory[0].status === 'active' ? (
               <div className="space-y-2 text-sm">
                 <p className="font-semibold text-green-700 text-base">{cropHistory[0].cropType}</p>
                 {cropHistory[0].variety && <p className="text-gray-500">Variété : {cropHistory[0].variety}</p>}
@@ -231,7 +231,7 @@ export function ParcelDetailClient({ parcelId }: { parcelId: string }) {
               {/* Timeline */}
               <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-gray-200" />
               <div className="space-y-4 pl-10">
-                {cropHistory.map((c, i) => (
+                {cropHistory.map((c, _i) => (
                   <div key={c.id} className="relative">
                     <div className={`absolute -left-6.5 top-2 h-4 w-4 rounded-full border-2 border-white shadow ${
                       c.status === 'active' ? 'bg-green-500' : c.status === 'completed' ? 'bg-blue-400' : 'bg-gray-300'
@@ -278,7 +278,7 @@ export function ParcelDetailClient({ parcelId }: { parcelId: string }) {
             </Card>
           ) : (
             relatedLogs.map((log) => {
-              const logData = (log.data ?? {}) as Record<string, unknown>;
+              const _logData = (log.data ?? {}) as Record<string, unknown>;
               return (
                 <div key={log.id} className="flex items-start gap-3 rounded-xl border border-gray-100 bg-white p-3">
                   <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-green-50 text-green-600 text-xs font-bold">

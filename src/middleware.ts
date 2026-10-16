@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 import { defaultLocale, locales } from '@/lib/i18n/config';
 
 export function middleware(request: NextRequest) {

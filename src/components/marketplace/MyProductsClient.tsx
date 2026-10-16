@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, Search, Eye, EyeOff, Trash2, Pencil } from 'lucide-react';
+import { Plus, Search, Eye, EyeOff, Trash2, } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { Badge } from '@/components/ui/Badge';
 import { SellerKpis } from './SellerKpis';

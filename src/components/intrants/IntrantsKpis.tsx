@@ -8,7 +8,7 @@ export function IntrantsKpis() {
   const { data } = trpc.inventory.kpis.useQuery();
 
   const formatXof = (value: number) =>
-    new Intl.NumberFormat('fr-SN', { style: 'decimal', maximumFractionDigits: 0 }).format(value) + ' FCFA';
+    `${new Intl.NumberFormat('fr-SN', { style: 'decimal', maximumFractionDigits: 0 }).format(value)} FCFA`;
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">

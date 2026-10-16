@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Users, Copy, Check, Send, Trash2 } from 'lucide-react';
+import { Users, Copy, Check, Send, } from 'lucide-react';
 import { trpc } from '@/lib/trpc';
 import { Badge } from '@/components/ui/Badge';
 import { Modal } from '@/components/ui/Modal';

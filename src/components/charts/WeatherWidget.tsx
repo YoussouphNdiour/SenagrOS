@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Cloud, Sun, CloudRain, CloudSnow, CloudDrizzle, Thermometer } from 'lucide-react';
+import { Cloud, Sun, CloudRain, CloudSnow, CloudDrizzle, } from 'lucide-react';
 
 interface WeatherData {
   temperature: number;
