@@ -13,6 +13,15 @@ interface DataTableProps<T> {
   emptyMessage?: string;
   onRowClick?: (row: T) => void;
   mobileRender?: (row: T) => React.ReactNode;
+  /**
+   * Cle stable d'une ligne. Par defaut `row.id` quand il existe.
+   *
+   * Les lignes etaient indexees par leur position : apres un tri, un filtre
+   * ou une suppression, React reutilisait l'etat d'une ligne pour une autre
+   * — champ de saisie garni de la mauvaise valeur, case cochee qui se
+   * deplace.
+   */
+  rowKey?: (row: T, index: number) => string | number;
 }
 
 export function DataTable<T extends Record<string, unknown>>({
@@ -21,7 +30,16 @@ export function DataTable<T extends Record<string, unknown>>({
   emptyMessage = 'Aucune donnée',
   onRowClick,
   mobileRender,
+  rowKey,
 }: DataTableProps<T>) {
+  const keyOf = (row: T, index: number): string | number => {
+    if (rowKey) return rowKey(row, index);
+    const id = row.id;
+    if (typeof id === 'string' || typeof id === 'number') return id;
+    // Jeu de donnees sans identifiant : la position reste le seul repere.
+    return index;
+  };
+
   if (data.length === 0) {
     return (
       <div className="rounded-lg border border-gray-200 py-12 text-center text-sm text-gray-400">
@@ -50,7 +68,7 @@ export function DataTable<T extends Record<string, unknown>>({
           <tbody>
             {data.map((row, idx) => (
               <tr
-                key={idx}
+                key={keyOf(row, idx)}
                 className={`border-b border-gray-100 last:border-0 ${
                   onRowClick ? 'cursor-pointer hover:bg-gray-50' : ''
                 }`}
@@ -75,7 +93,7 @@ export function DataTable<T extends Record<string, unknown>>({
         {data.map((row, idx) =>
           mobileRender ? (
             <div
-              key={idx}
+              key={keyOf(row, idx)}
               onClick={() => onRowClick?.(row)}
               className={onRowClick ? 'cursor-pointer' : ''}
             >
@@ -83,7 +101,7 @@ export function DataTable<T extends Record<string, unknown>>({
             </div>
           ) : (
             <div
-              key={idx}
+              key={keyOf(row, idx)}
               className={`rounded-xl border border-gray-200 bg-white p-4 ${
                 onRowClick ? 'cursor-pointer hover:bg-gray-50' : ''
               }`}

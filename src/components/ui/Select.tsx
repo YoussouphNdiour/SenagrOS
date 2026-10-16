@@ -1,4 +1,4 @@
-import { forwardRef, type SelectHTMLAttributes } from 'react';
+import { forwardRef, useId, type SelectHTMLAttributes } from 'react';
 
 interface SelectOption {
   value: string;
@@ -14,16 +14,21 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement> {
 
 export const Select = forwardRef<HTMLSelectElement, SelectProps>(
   ({ label, error, options, placeholder, id, className = '', ...props }, ref) => {
+    // Meme defaut que Input : sans id fourni, le libelle n'etait associe a
+    // aucun champ.
+    const generatedId = useId();
+    const selectId = id ?? generatedId;
+
     return (
       <div>
         {label && (
-          <label htmlFor={id} className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor={selectId} className="mb-1 block text-sm font-medium text-gray-700">
             {label}
           </label>
         )}
         <select
           ref={ref}
-          id={id}
+          id={selectId}
           className={`w-full rounded-lg border px-4 py-2.5 text-sm text-gray-900 transition focus:outline-none focus:ring-2 ${
             error
               ? 'border-red-300 focus:border-red-500 focus:ring-red-200'

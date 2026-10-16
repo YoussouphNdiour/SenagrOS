@@ -144,6 +144,7 @@ export function PestDiseaseForm() {
           {row.name}
         </td>
         {row.targets.map((val, ti) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: grille a positions fixes, l'index est l'identite de la cellule
           <td key={ti} className="px-0.5 py-1">
             <input
               type="number"
@@ -254,6 +255,7 @@ export function PestDiseaseForm() {
                 </th>
                 {Array.from({ length: numTargets }, (_, i) => (
                   <th
+                    // biome-ignore lint/suspicious/noArrayIndexKey: grille a positions fixes, l'index est l'identite de la cellule
                     key={i}
                     className="px-1 py-2 text-center text-xs font-semibold text-gray-600"
                   >
