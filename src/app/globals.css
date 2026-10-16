@@ -12,6 +12,20 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* Storefront palette (FreshCart-inspired): bg-brand, text-ink, border-line… */
+@theme {
+  /* #088a08 keeps white text ≥ 4.5:1 (FreshCart's #0aad0a is only 3:1) */
+  --color-brand: #088a08;
+  --color-brand-dark: #067306;
+  --color-brand-bright: #0aad0a; /* decorative only (icons, dots), never text */
+  --color-brand-soft: #e6f6e6;
+  --color-ink: #21313c;
+  --color-muted: #5c6c75;
+  --color-line: #dfe2e1;
+  --color-surface: #f0f3f2;
+  --color-accent: #ffc107;
+}
+
 /* No dark theme yet: pages use light surfaces (bg-white cards), so the OS dark
    preference must not switch the inherited text color to light gray. */
 :root {

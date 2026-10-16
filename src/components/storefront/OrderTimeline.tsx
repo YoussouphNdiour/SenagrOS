@@ -24,7 +24,7 @@ const fmt = (d: Date | string | null | undefined) =>
 export function OrderTimeline(props: OrderTimelineProps) {
   if (props.status === 'cancelled' || props.status === 'refunded') {
     return (
-      <div className="flex items-center gap-3 rounded-lg bg-red-50 p-4 text-red-700">
+      <div className="flex items-center gap-3 rounded-md bg-red-50 p-4 text-red-700">
         <XCircle className="h-6 w-6" />
         <div>
           <p className="font-semibold">Commande {orderStatusLabels[props.status]?.toLowerCase()}</p>
@@ -43,22 +43,22 @@ export function OrderTimeline(props: OrderTimelineProps) {
   const currentIndex = ORDER_FLOW.indexOf(props.status as (typeof ORDER_FLOW)[number]);
 
   return (
-    <ol className="relative space-y-6 border-l-2 border-gray-200 pl-6" data-testid="order-timeline">
+    <ol className="relative space-y-6 border-l-2 border-line pl-6" data-testid="order-timeline">
       {ORDER_FLOW.map((status, i) => {
         const done = i <= currentIndex;
         return (
           <li key={status} className="relative">
             <span className="absolute -left-[33px] top-0 bg-white">
               {done ? (
-                <CheckCircle2 className="h-5 w-5 text-green-600" />
+                <CheckCircle2 className="h-5 w-5 text-brand" />
               ) : (
                 <Circle className="h-5 w-5 text-gray-300" />
               )}
             </span>
-            <p className={`font-medium ${done ? 'text-gray-800' : 'text-gray-500'}`}>
+            <p className={`font-medium ${done ? 'text-ink' : 'text-muted'}`}>
               {orderStatusLabels[status]}
             </p>
-            {done && dates[status] && <p className="text-xs text-gray-500">{dates[status]}</p>}
+            {done && dates[status] && <p className="text-xs text-muted">{dates[status]}</p>}
           </li>
         );
       })}

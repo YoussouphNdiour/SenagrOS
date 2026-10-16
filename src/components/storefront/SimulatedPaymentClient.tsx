@@ -29,20 +29,20 @@ export function SimulatedPaymentClient({ provider, checkoutRef }: Props) {
 
   return (
     <div className="mx-auto max-w-sm px-4 py-16">
-      <div className="overflow-hidden rounded-2xl bg-white shadow-lg">
+      <div className="overflow-hidden rounded-md border border-line bg-white shadow-lg">
         <div className={`${brand.className} p-6 text-center text-white`}>
           <Smartphone className="mx-auto h-10 w-10" />
           <p className="mt-2 text-lg font-bold">{brand.name}</p>
           <p className="text-xs opacity-90">Mode sandbox — paiement simulé</p>
         </div>
         <div className="space-y-4 p-6 text-center">
-          <p className="text-sm text-gray-500">Montant à payer</p>
-          <p className="text-3xl font-extrabold text-gray-900">{formatXof(amount)}</p>
+          <p className="text-sm text-muted">Montant à payer</p>
+          <p className="text-3xl font-extrabold text-ink">{formatXof(amount)}</p>
           <button
             type="button"
             disabled={simulate.isPending || amount === 0}
             onClick={() => simulate.mutate({ checkoutRef, outcome: 'paid' })}
-            className="w-full rounded-lg bg-green-600 py-3 font-semibold text-white hover:bg-green-700 disabled:opacity-50"
+            className="w-full rounded-md bg-brand py-3 font-semibold text-white hover:bg-brand-dark disabled:opacity-50"
           >
             Simuler un paiement réussi
           </button>
@@ -50,11 +50,11 @@ export function SimulatedPaymentClient({ provider, checkoutRef }: Props) {
             type="button"
             disabled={simulate.isPending}
             onClick={() => simulate.mutate({ checkoutRef, outcome: 'failed' })}
-            className="w-full rounded-lg border border-gray-300 py-3 text-gray-700 hover:bg-gray-50"
+            className="w-full rounded-md border border-line py-3 text-ink hover:bg-surface"
           >
             Simuler un échec
           </button>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-muted">
             Configurez {provider === 'wave' ? 'WAVE_API_KEY' : 'ORANGE_MONEY_*'} pour utiliser l'API
             réelle.
           </p>

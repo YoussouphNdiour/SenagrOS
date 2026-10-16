@@ -250,7 +250,7 @@ export function SellerListingsClient() {
                     onClick={() => {
                       if (window.confirm(`Archiver « ${l.name} » ?`)) archive.mutate({ id: l.id });
                     }}
-                    className="rounded-lg p-2 text-gray-500 hover:bg-red-50 hover:text-red-600"
+                    className="rounded-lg p-2 text-gray-500 hover:bg-red-50 hover:text-red-700"
                   >
                     <Archive className="h-4 w-4" />
                   </button>
@@ -411,7 +411,7 @@ export function SellerListingsClient() {
           </div>
 
           {serverError && (
-            <p className="rounded-lg bg-red-50 p-3 text-sm text-red-600">{serverError}</p>
+            <p className="rounded-lg bg-red-50 p-3 text-sm text-red-700">{serverError}</p>
           )}
           <div className="flex justify-end gap-3">
             <Button type="button" variant="outline" onClick={() => setEditing(null)}>

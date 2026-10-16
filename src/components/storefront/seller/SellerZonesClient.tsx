@@ -136,7 +136,7 @@ export function SellerZonesClient() {
                       if (window.confirm(`Supprimer la zone « ${z.name} » ?`))
                         remove.mutate({ id: z.id });
                     }}
-                    className="rounded-lg p-2 text-gray-500 hover:bg-red-50 hover:text-red-600"
+                    className="rounded-lg p-2 text-gray-500 hover:bg-red-50 hover:text-red-700"
                   >
                     <Trash2 className="h-4 w-4" />
                   </button>
@@ -161,7 +161,7 @@ export function SellerZonesClient() {
         />
       )}
       {remove.data?.deactivated && (
-        <p className="mt-3 text-sm text-orange-600">
+        <p className="mt-3 text-sm text-orange-700">
           Zone utilisée par des commandes : elle a été désactivée.
         </p>
       )}
@@ -207,7 +207,7 @@ export function SellerZonesClient() {
             <input type="checkbox" className="accent-green-600" {...register('isActive')} /> Zone
             active
           </label>
-          {upsert.error && <p className="text-sm text-red-600">{upsert.error.message}</p>}
+          {upsert.error && <p className="text-sm text-red-700">{upsert.error.message}</p>}
           <div className="flex justify-end gap-3">
             <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Annuler

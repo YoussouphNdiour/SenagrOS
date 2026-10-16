@@ -45,6 +45,10 @@ COPY --from=build /app/drizzle.config.ts ./drizzle.config.ts
 COPY --from=build /app/package.json ./package.json
 COPY --from=deps /app/node_modules ./node_modules
 
+# Storefront catalogue import (run manually: node scripts/import-catalogue.mjs)
+COPY --from=build /app/scripts/import-catalogue.mjs ./scripts/import-catalogue.mjs
+COPY --from=build /app/src/server/db/seed/storefront-catalogue.json ./src/server/db/seed/storefront-catalogue.json
+
 COPY --from=build /app/docker-entrypoint.sh ./docker-entrypoint.sh
 
 USER nextjs
