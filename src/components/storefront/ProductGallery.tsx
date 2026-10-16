@@ -18,7 +18,7 @@ export function ProductGallery({
 
   return (
     <div>
-      <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-gray-100">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-lg bg-surface">
         {/* biome-ignore lint/performance/noImgElement: local SVG placeholders and seller URLs */}
         <img src={current.url} alt={current.alt ?? name} className="h-full w-full object-cover" />
         {list.length > 1 && (
@@ -50,8 +50,8 @@ export function ProductGallery({
               type="button"
               onClick={() => setIndex(i)}
               aria-label={`Photo ${i + 1}`}
-              className={`h-16 w-20 shrink-0 overflow-hidden rounded-lg ring-2 ${
-                i === index ? 'ring-green-600' : 'ring-transparent'
+              className={`h-20 w-24 shrink-0 overflow-hidden rounded-md ring-2 ${
+                i === index ? 'ring-brand' : 'ring-line'
               }`}
             >
               {/* biome-ignore lint/performance/noImgElement: thumbnails */}

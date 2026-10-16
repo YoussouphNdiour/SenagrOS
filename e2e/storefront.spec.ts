@@ -173,7 +173,7 @@ test.describe('Storefront — parcours producteur', () => {
     await seller.locator('#category').selectOption('legumes');
     await seller.locator('#stockAvailable').fill('100');
     await seller.locator('#minOrderQuantity').fill('1');
-    await seller.locator('#photoUrl').fill('/storefront/products/carottes.svg');
+    await seller.locator('#photoUrl').fill('/storefront/photos/carottes.jpg');
     await seller.locator('#priceDetail').fill('1000');
     await seller.locator('#priceSemiGros').fill('900');
     await seller.locator('#minSemiGros').fill('5');
@@ -226,5 +226,15 @@ test.describe('Storefront — parcours producteur', () => {
     await buyer.getByLabel('Commentaire').fill('Carottes très fraîches');
     await buyer.getByRole('button', { name: 'Publier mon avis' }).click();
     await expect(buyer.getByText('Carottes très fraîches')).toBeVisible();
+
+    // Clean up: archive the test product so it doesn't pollute the storefront
+    await seller.goto('/dashboard/storefront/produits');
+    seller.once('dialog', (d) => d.accept());
+    await seller
+      .getByTestId('seller-listing')
+      .filter({ hasText: productName })
+      .getByRole('button', { name: 'Archiver' })
+      .click();
+    await expect(seller.getByTestId('seller-listing').filter({ hasText: productName })).toHaveCount(0);
   });
 });

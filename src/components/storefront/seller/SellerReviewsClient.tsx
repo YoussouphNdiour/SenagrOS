@@ -88,7 +88,7 @@ function RespondForm({ id, onDone }: { id: string; onDone: () => void }) {
         aria-label="Votre réponse"
         className="w-full rounded-lg border border-gray-300 p-2 text-sm"
       />
-      {respond.error && <p className="text-sm text-red-600">{respond.error.message}</p>}
+      {respond.error && <p className="text-sm text-red-700">{respond.error.message}</p>}
       <button
         type="submit"
         disabled={respond.isPending}

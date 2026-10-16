@@ -11,8 +11,8 @@ export default async function StorefrontLayout({ children }: { children: React.R
 
   return (
     <CartProvider isBuyer={user?.role === 'buyer'}>
-      <div className="flex min-h-screen flex-col bg-gray-50">
-        <Suspense fallback={<div className="h-[61px] border-b border-gray-100 bg-white" />}>
+      <div className="flex min-h-screen flex-col bg-white">
+        <Suspense fallback={<div className="h-[150px] border-b border-line bg-white" />}>
           <StorefrontHeader user={user} />
         </Suspense>
         <main className="flex-1">{children}</main>

@@ -46,9 +46,9 @@ export function OrderDetailClient({ id }: { id: string }) {
     },
   });
 
-  if (isLoading) return <p className="py-24 text-center text-gray-500">Chargement…</p>;
+  if (isLoading) return <p className="py-24 text-center text-muted">Chargement…</p>;
   if (error || !order) {
-    return <p className="py-24 text-center text-gray-600">Commande introuvable.</p>;
+    return <p className="py-24 text-center text-muted">Commande introuvable.</p>;
   }
 
   const unpaidMobile =
@@ -58,11 +58,11 @@ export function OrderDetailClient({ id }: { id: string }) {
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
       <div className="space-y-6">
-        <section className="rounded-xl bg-white p-5 shadow-sm">
+        <section className="rounded-lg border border-line bg-white p-5">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <h1 className="text-2xl font-bold text-gray-800">{order.orderNumber}</h1>
-              <p className="text-sm text-gray-500">
+              <h1 className="text-2xl font-bold text-ink">{order.orderNumber}</h1>
+              <p className="text-sm text-muted">
                 {order.farmName} · passée le{' '}
                 {order.createdAt ? new Date(order.createdAt).toLocaleString('fr-FR') : ''}
               </p>
@@ -75,7 +75,7 @@ export function OrderDetailClient({ id }: { id: string }) {
           </div>
 
           {actionError && (
-            <p className="mt-4 rounded-lg bg-red-50 p-3 text-sm text-red-600">
+            <p className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-700">
               {actionError.message}
             </p>
           )}
@@ -88,7 +88,7 @@ export function OrderDetailClient({ id }: { id: string }) {
                 onClick={() => {
                   if (window.confirm('Annuler cette commande ?')) cancel.mutate({ id });
                 }}
-                className="rounded-lg border border-red-300 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
+                className="rounded-md border border-red-300 px-4 py-2 text-sm font-medium text-red-700 hover:bg-red-50"
               >
                 Annuler la commande
               </button>
@@ -102,7 +102,7 @@ export function OrderDetailClient({ id }: { id: string }) {
                     ? payWave.mutate({ orderIds: [order.id] })
                     : payOm.mutate({ orderIds: [order.id] })
                 }
-                className="rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700"
+                className="rounded-md bg-brand px-4 py-2 text-sm font-semibold text-white hover:bg-brand-dark"
               >
                 Payer avec {paymentMethodLabels[order.paymentMethod as PaymentMethod]}
               </button>
@@ -111,22 +111,22 @@ export function OrderDetailClient({ id }: { id: string }) {
               type="button"
               disabled={reorder.isPending}
               onClick={() => reorder.mutate({ id })}
-              className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+              className="rounded-md border border-line px-4 py-2 text-sm font-medium text-ink hover:bg-surface"
             >
               Re-commander
             </button>
           </div>
           {order.status === 'pending' && !order.canCancel && (
-            <p className="mt-2 text-xs text-gray-500">
+            <p className="mt-2 text-xs text-muted">
               L'annulation n'est possible que dans les {order.cancelWindowMinutes} minutes suivant
               la commande.
             </p>
           )}
         </section>
 
-        <section className="rounded-xl bg-white p-5 shadow-sm">
-          <h2 className="mb-3 font-semibold text-gray-800">Articles</h2>
-          <ul className="divide-y divide-gray-100">
+        <section className="rounded-lg border border-line bg-white p-5">
+          <h2 className="mb-3 font-semibold text-ink">Articles</h2>
+          <ul className="divide-y divide-line">
             {order.items.map((item) => {
               const review = order.reviews.find((r) => r.listingId === item.listingId);
               const unit = listingUnitLabels[item.unit as ListingUnit] ?? item.unit;
@@ -137,26 +137,26 @@ export function OrderDetailClient({ id }: { id: string }) {
                     <img
                       src={item.photo ?? PLACEHOLDER_PHOTO}
                       alt=""
-                      className="h-16 w-16 rounded-lg object-cover"
+                      className="h-16 w-16 rounded-md object-cover"
                     />
                     <div className="flex-1">
                       <Link
                         href={`/catalogue/${item.listingId}`}
-                        className="font-medium text-gray-800 hover:underline"
+                        className="font-medium text-ink hover:underline"
                       >
                         {item.productName}
                       </Link>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm text-muted">
                         {formatQuantity(item.quantity)} {unit} × {formatXof(item.unitPrice)}
                       </p>
                     </div>
-                    <p className="font-semibold text-gray-800">{formatXof(item.totalPrice)}</p>
+                    <p className="font-semibold text-ink">{formatXof(item.totalPrice)}</p>
                   </div>
                   {order.status === 'delivered' &&
                     (review ? (
-                      <div className="mt-2 rounded-lg bg-gray-50 p-3 text-sm">
+                      <div className="mt-2 rounded-md bg-surface p-3 text-sm">
                         <StarRating value={review.rating} size="sm" />{' '}
-                        {review.comment && <span className="text-gray-600">{review.comment}</span>}
+                        {review.comment && <span className="text-muted">{review.comment}</span>}
                       </div>
                     ) : (
                       <ReviewForm
@@ -173,8 +173,8 @@ export function OrderDetailClient({ id }: { id: string }) {
       </div>
 
       <aside className="space-y-6">
-        <section className="rounded-xl bg-white p-5 shadow-sm">
-          <h2 className="mb-4 font-semibold text-gray-800">Suivi</h2>
+        <section className="rounded-lg border border-line bg-white p-5">
+          <h2 className="mb-4 font-semibold text-ink">Suivi</h2>
           <OrderTimeline
             status={order.status}
             createdAt={order.createdAt}
@@ -187,37 +187,37 @@ export function OrderDetailClient({ id }: { id: string }) {
           {order.estimatedDelivery &&
             order.status !== 'delivered' &&
             order.status !== 'cancelled' && (
-              <p className="mt-4 text-sm text-gray-600">
+              <p className="mt-4 text-sm text-muted">
                 Livraison estimée : {new Date(order.estimatedDelivery).toLocaleDateString('fr-FR')}
               </p>
             )}
         </section>
 
-        <section className="rounded-xl bg-white p-5 text-sm shadow-sm">
-          <h2 className="mb-3 font-semibold text-gray-800">Paiement & livraison</h2>
+        <section className="rounded-lg border border-line bg-white p-5 text-sm">
+          <h2 className="mb-3 font-semibold text-ink">Paiement & livraison</h2>
           <dl className="space-y-2">
             <div className="flex justify-between">
-              <dt className="text-gray-600">Sous-total</dt>
+              <dt className="text-muted">Sous-total</dt>
               <dd>{formatXof(order.subtotal)}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-gray-600">Livraison ({order.zoneName})</dt>
+              <dt className="text-muted">Livraison ({order.zoneName})</dt>
               <dd>{formatXof(order.deliveryFee)}</dd>
             </div>
-            <div className="flex justify-between border-t border-gray-100 pt-2 font-bold">
+            <div className="flex justify-between border-t border-line pt-2 font-bold">
               <dt>Total</dt>
               <dd>{formatXof(order.totalAmount)}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-gray-600">Mode</dt>
+              <dt className="text-muted">Mode</dt>
               <dd>{paymentMethodLabels[order.paymentMethod as PaymentMethod]}</dd>
             </div>
             <div className="flex justify-between">
-              <dt className="text-gray-600">Statut</dt>
+              <dt className="text-muted">Statut</dt>
               <dd>{paymentStatusLabels[(order.paymentStatus ?? 'pending') as PaymentStatus]}</dd>
             </div>
           </dl>
-          <p className="mt-4 text-gray-700">
+          <p className="mt-4 text-ink">
             {order.deliveryAddress}
             {order.deliveryCity && `, ${order.deliveryCity}`}
             <br />
@@ -248,7 +248,7 @@ function ReviewForm({
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="mt-2 text-sm font-medium text-green-700 hover:underline"
+        className="mt-2 text-sm font-medium text-brand-dark hover:underline"
       >
         Laisser un avis
       </button>
@@ -256,7 +256,7 @@ function ReviewForm({
   }
   return (
     <form
-      className="mt-3 space-y-2 rounded-lg bg-gray-50 p-3"
+      className="mt-3 space-y-2 rounded-md bg-surface p-3"
       onSubmit={(e) => {
         e.preventDefault();
         if (rating) create.mutate({ orderId, listingId, rating, comment: comment || undefined });
@@ -287,13 +287,13 @@ function ReviewForm({
         placeholder="Votre avis sur ce produit (facultatif)"
         aria-label="Commentaire"
         rows={2}
-        className="w-full rounded-lg border border-gray-300 p-2 text-sm"
+        className="w-full rounded-md border border-line p-2 text-sm"
       />
-      {create.error && <p className="text-sm text-red-600">{create.error.message}</p>}
+      {create.error && <p className="text-sm text-red-700">{create.error.message}</p>}
       <button
         type="submit"
         disabled={!rating || create.isPending}
-        className="rounded-lg bg-green-600 px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
+        className="rounded-md bg-brand px-4 py-1.5 text-sm font-semibold text-white disabled:opacity-50"
       >
         Publier mon avis
       </button>

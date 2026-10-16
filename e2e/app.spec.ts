@@ -27,6 +27,9 @@ test('a logged-in producer can still open the storefront home', async ({ page })
 
 test('a stale service worker is removed in development', async ({ page }) => {
   test.skip(!!process.env.CI, 'dev-server behaviour only');
+  // public/sw.js is a gitignored build artifact: nothing to clean up without it
+  const sw = await page.request.get('/sw.js');
+  test.skip(!sw.ok(), 'no public/sw.js in this checkout');
   await page.goto('/offline');
   await page.evaluate(() => navigator.serviceWorker.register('/sw.js'));
   await page.goto('/');

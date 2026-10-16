@@ -152,7 +152,7 @@ export function SellerOrdersClient() {
       </div>
 
       {error && (
-        <p className="mb-3 rounded-lg bg-red-50 p-3 text-sm text-red-600">{error.message}</p>
+        <p className="mb-3 rounded-lg bg-red-50 p-3 text-sm text-red-700">{error.message}</p>
       )}
 
       {isLoading ? (
