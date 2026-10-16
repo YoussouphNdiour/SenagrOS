@@ -151,10 +151,10 @@ export function StageForm() {
       {/* Remarks */}
       <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="stage-form-champ-2" className="mb-1 block text-sm font-medium text-gray-700">
             Remarques observateur
           </label>
-          <textarea
+          <textarea id="stage-form-champ-2"
             className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
             rows={4}
             value={observerRemarks}
@@ -162,10 +162,10 @@ export function StageForm() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="stage-form-champ" className="mb-1 block text-sm font-medium text-gray-700">
             Remarques chef de ferme
           </label>
-          <textarea
+          <textarea id="stage-form-champ"
             className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
             rows={4}
             value={supervisorRemarks}

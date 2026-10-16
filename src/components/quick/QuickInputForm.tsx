@@ -65,8 +65,8 @@ export function QuickInputForm() {
       </div>
       <form onSubmit={handleSubmit} className="space-y-4 rounded-xl bg-white p-6 shadow-sm">
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Parcelle *</label>
-          <select
+          <label htmlFor="parcelle" className="mb-1 block text-sm font-medium text-gray-700">Parcelle *</label>
+          <select id="parcelle"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
             value={parcelId}
             onChange={(e) => setParcelId(e.target.value)}
@@ -81,8 +81,8 @@ export function QuickInputForm() {
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Catégorie</label>
-          <select
+          <label htmlFor="categorie" className="mb-1 block text-sm font-medium text-gray-700">Catégorie</label>
+          <select id="categorie"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
             value={inputType}
             onChange={(e) => setInputType(e.target.value as InputType)}
@@ -93,8 +93,8 @@ export function QuickInputForm() {
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Produit *</label>
-          <input
+          <label htmlFor="produit" className="mb-1 block text-sm font-medium text-gray-700">Produit *</label>
+          <input id="produit"
             type="text"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
             value={productName}
@@ -105,8 +105,8 @@ export function QuickInputForm() {
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Dose</label>
-            <input
+            <label htmlFor="dose" className="mb-1 block text-sm font-medium text-gray-700">Dose</label>
+            <input id="dose"
               type="number"
               step="0.01"
               min="0"
@@ -117,8 +117,8 @@ export function QuickInputForm() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Unité</label>
-            <select
+            <label htmlFor="unite" className="mb-1 block text-sm font-medium text-gray-700">Unité</label>
+            <select id="unite"
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
               value={unit}
               onChange={(e) => setUnit(e.target.value)}
@@ -131,8 +131,8 @@ export function QuickInputForm() {
           </div>
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Notes</label>
-          <textarea
+          <label htmlFor="notes" className="mb-1 block text-sm font-medium text-gray-700">Notes</label>
+          <textarea id="notes"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
             rows={2}
             value={notes}

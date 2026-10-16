@@ -56,10 +56,10 @@ export function QuickHarvestForm() {
 
       <form onSubmit={handleSubmit} className="space-y-4 rounded-xl bg-white p-6 shadow-sm">
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="quick-harvest-form-champ-4" className="mb-1 block text-sm font-medium text-gray-700">
             Parcelle *
           </label>
-          <select
+          <select id="quick-harvest-form-champ-4"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
             value={parcelId}
             onChange={(e) => setParcelId(e.target.value)}
@@ -75,10 +75,10 @@ export function QuickHarvestForm() {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="quick-harvest-form-champ-3" className="mb-1 block text-sm font-medium text-gray-700">
             Quantité récoltée (kg) *
           </label>
-          <input
+          <input id="quick-harvest-form-champ-3"
             type="number"
             step="0.1"
             min="0"
@@ -91,10 +91,10 @@ export function QuickHarvestForm() {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="quick-harvest-form-champ-2" className="mb-1 block text-sm font-medium text-gray-700">
             Grade qualité
           </label>
-          <select
+          <select id="quick-harvest-form-champ-2"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
             value={qualityGrade}
             onChange={(e) => setQualityGrade(e.target.value)}
@@ -106,10 +106,10 @@ export function QuickHarvestForm() {
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="quick-harvest-form-champ" className="mb-1 block text-sm font-medium text-gray-700">
             Notes
           </label>
-          <textarea
+          <textarea id="quick-harvest-form-champ"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
             rows={2}
             value={notes}

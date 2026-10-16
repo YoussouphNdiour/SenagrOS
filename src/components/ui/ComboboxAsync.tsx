@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { ChevronDown, Search, X, Loader2 } from 'lucide-react';
 
 interface ComboboxAsyncProps<T> {
@@ -109,6 +109,10 @@ export function ComboboxAsync<T>({
     };
   }, []);
 
+  // useId plutot qu'un identifiant fixe : le composant est reutilisable, et
+  // deux instances sur une meme page produiraient des id dupliques.
+  const inputId = useId();
+
   const borderClass = error
     ? 'border-red-300 focus-within:border-red-500 focus-within:ring-red-200'
     : 'border-gray-300 focus-within:border-green-500 focus-within:ring-green-200';
@@ -116,13 +120,14 @@ export function ComboboxAsync<T>({
   return (
     <div ref={containerRef} className="relative">
       {label && (
-        <label className="mb-1 block text-sm font-medium text-gray-700">{label}</label>
+        <label htmlFor={inputId} className="mb-1 block text-sm font-medium text-gray-700">{label}</label>
       )}
       <div
         className={`flex w-full items-center rounded-lg border text-sm transition focus-within:outline-none focus-within:ring-2 ${borderClass} ${className}`}
       >
         <Search className="ml-3 h-4 w-4 shrink-0 text-gray-400" />
         <input
+          id={inputId}
           type="text"
           value={selectedLabel || query}
           onChange={handleInputChange}
@@ -305,10 +310,14 @@ export function ComboboxAsyncMulti<T>({
     ? 'border-red-300 focus-within:border-red-500 focus-within:ring-red-200'
     : 'border-gray-300 focus-within:border-green-500 focus-within:ring-green-200';
 
+  const inputId = useId();
+
   return (
     <div ref={containerRef} className="relative">
       {label && (
-        <label className="mb-1 block text-sm font-medium text-gray-700">{label}</label>
+        <label htmlFor={inputId} className="mb-1 block text-sm font-medium text-gray-700">
+          {label}
+        </label>
       )}
 
       {value.length > 0 && (
@@ -337,6 +346,7 @@ export function ComboboxAsyncMulti<T>({
       >
         <Search className="ml-3 h-4 w-4 shrink-0 text-gray-400" />
         <input
+          id={inputId}
           type="text"
           value={query}
           onChange={handleInputChange}

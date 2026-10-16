@@ -283,10 +283,10 @@ export function LogCreateForm({ defaultType }: LogCreateFormProps) {
           <div className="grid gap-4 sm:grid-cols-2">
             {/* Type de semis */}
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Type de semis</label>
+              <label htmlFor="type-de-semis" className="mb-1 block text-sm font-medium text-gray-700">Type de semis</label>
               <div className="flex gap-4">
                 <label className="flex items-center gap-2 text-sm text-gray-700">
-                  <input
+                  <input id="type-de-semis"
                     type="radio"
                     value="manual"
                     {...register('data.sowing_type' as any)}

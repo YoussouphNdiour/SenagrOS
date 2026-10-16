@@ -340,10 +340,10 @@ export function GradingForm() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="grading-form-champ-2" className="mb-1 block text-sm font-medium text-gray-700">
               Remarques observateur
             </label>
-            <textarea
+            <textarea id="grading-form-champ-2"
               value={observerRemarks}
               onChange={(e) => setObserverRemarks(e.target.value)}
               rows={3}
@@ -351,10 +351,10 @@ export function GradingForm() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="grading-form-champ" className="mb-1 block text-sm font-medium text-gray-700">
               Remarques chef de ferme
             </label>
-            <textarea
+            <textarea id="grading-form-champ"
               value={supervisorRemarks}
               onChange={(e) => setSupervisorRemarks(e.target.value)}
               rows={3}

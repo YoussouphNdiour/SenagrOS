@@ -65,8 +65,8 @@ export function QuickIrrigationForm() {
       </div>
       <form onSubmit={handleSubmit} className="space-y-4 rounded-xl bg-white p-6 shadow-sm">
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Parcelle *</label>
-          <select
+          <label htmlFor="parcelle" className="mb-1 block text-sm font-medium text-gray-700">Parcelle *</label>
+          <select id="parcelle"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
             value={parcelId}
             onChange={(e) => setParcelId(e.target.value)}
@@ -81,8 +81,8 @@ export function QuickIrrigationForm() {
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Méthode</label>
-          <select
+          <label htmlFor="methode" className="mb-1 block text-sm font-medium text-gray-700">Méthode</label>
+          <select id="methode"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
             value={method}
             onChange={(e) => setMethod(e.target.value)}
@@ -96,8 +96,8 @@ export function QuickIrrigationForm() {
         </div>
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Durée (min)</label>
-            <input
+            <label htmlFor="duree-min" className="mb-1 block text-sm font-medium text-gray-700">Durée (min)</label>
+            <input id="duree-min"
               type="number"
               min="0"
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
@@ -107,8 +107,8 @@ export function QuickIrrigationForm() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Volume (L)</label>
-            <input
+            <label htmlFor="volume-l" className="mb-1 block text-sm font-medium text-gray-700">Volume (L)</label>
+            <input id="volume-l"
               type="number"
               min="0"
               step="0.1"
@@ -120,8 +120,8 @@ export function QuickIrrigationForm() {
           </div>
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Notes</label>
-          <textarea
+          <label htmlFor="notes" className="mb-1 block text-sm font-medium text-gray-700">Notes</label>
+          <textarea id="notes"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
             rows={2}
             value={notes}

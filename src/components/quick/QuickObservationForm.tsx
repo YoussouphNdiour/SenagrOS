@@ -60,8 +60,8 @@ export function QuickObservationForm() {
       </div>
       <form onSubmit={handleSubmit} className="space-y-4 rounded-xl bg-white p-6 shadow-sm">
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Parcelle *</label>
-          <select
+          <label htmlFor="parcelle" className="mb-1 block text-sm font-medium text-gray-700">Parcelle *</label>
+          <select id="parcelle"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
             value={parcelId}
             onChange={(e) => setParcelId(e.target.value)}
@@ -76,10 +76,10 @@ export function QuickObservationForm() {
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="quick-observation-form-champ" className="mb-1 block text-sm font-medium text-gray-700">
             {"Type d'observation"}
           </label>
-          <select
+          <select id="quick-observation-form-champ"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
             value={obsType}
             onChange={(e) => setObsType(e.target.value as ObsType)}
@@ -92,8 +92,8 @@ export function QuickObservationForm() {
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Notes</label>
-          <textarea
+          <label htmlFor="notes" className="mb-1 block text-sm font-medium text-gray-700">Notes</label>
+          <textarea id="notes"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
             rows={3}
             value={notes}

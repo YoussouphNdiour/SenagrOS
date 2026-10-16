@@ -53,8 +53,8 @@ export default function VegetalTdbPage() {
       <Card>
         <div className="flex flex-wrap gap-4">
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-500">Période du</label>
-            <input
+            <label htmlFor="periode-du" className="mb-1 block text-xs font-medium text-gray-500">Période du</label>
+            <input id="periode-du"
               type="date"
               value={dateFrom}
               onChange={(e) => setDateFrom(e.target.value)}
@@ -62,8 +62,8 @@ export default function VegetalTdbPage() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-gray-500">Au</label>
-            <input
+            <label htmlFor="au" className="mb-1 block text-xs font-medium text-gray-500">Au</label>
+            <input id="au"
               type="date"
               value={dateTo}
               onChange={(e) => setDateTo(e.target.value)}
