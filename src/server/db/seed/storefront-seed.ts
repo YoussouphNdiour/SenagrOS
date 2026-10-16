@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import { and, eq, sql } from 'drizzle-orm';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import type * as schema from '../schema';
+import catalogue from './storefront-catalogue.json';
 import {
   buyerProfiles,
   deliveryZones,
@@ -42,152 +43,11 @@ interface ListingSeed {
   mins: [number, number];
 }
 
-/** 10 listings for the demo farm (SCL Diama) — Niayes vegetables, cereals, fruits. */
-const MAIN_LISTINGS: ListingSeed[] = [
-  {
-    name: 'Tomates fraîches',
-    slug: 'tomates',
-    category: 'legumes',
-    description:
-      'Tomates rondes des Niayes, récoltées à maturité. Idéales pour le thiéboudienne et les sauces.',
-    unit: 'kg',
-    stock: 800,
-    minOrder: 1,
-    region: 'Niayes',
-    shelfLife: 7,
-    harvestedDaysAgo: 2,
-    prices: [500, 400, 350],
-    mins: [10, 100],
-  },
-  {
-    name: 'Oignons violets de Galmi',
-    slug: 'oignons',
-    category: 'legumes',
-    description: 'Oignons violets bien secs, longue conservation.',
-    unit: 'kg',
-    stock: 2000,
-    minOrder: 1,
-    region: 'Niayes',
-    shelfLife: 90,
-    harvestedDaysAgo: 10,
-    prices: [450, 380, 330],
-    mins: [25, 250],
-  },
-  {
-    name: 'Mil souna',
-    slug: 'mil',
-    category: 'cereales',
-    description: 'Mil souna décortiqué, parfait pour le thiakry et le lakh.',
-    unit: 'kg',
-    stock: 1500,
-    minOrder: 1,
-    region: 'Kaolack',
-    shelfLife: 180,
-    harvestedDaysAgo: 30,
-    prices: [400, 350, 300],
-    mins: [50, 500],
-  },
-  {
-    name: 'Maïs grain',
-    slug: 'mais',
-    category: 'cereales',
-    description: 'Maïs jaune séché, pour la consommation et l’alimentation animale.',
-    unit: 'kg',
-    stock: 3000,
-    minOrder: 5,
-    region: 'Kolda',
-    shelfLife: 180,
-    harvestedDaysAgo: 25,
-    prices: [300, 260, 230],
-    mins: [50, 500],
-  },
-  {
-    name: 'Arachide décortiquée',
-    slug: 'arachide',
-    category: 'oleagineux',
-    description: 'Arachide du bassin arachidier, triée à la main.',
-    unit: 'kg',
-    stock: 1200,
-    minOrder: 1,
-    region: 'Kaffrine',
-    shelfLife: 120,
-    harvestedDaysAgo: 20,
-    prices: [900, 800, 720],
-    mins: [25, 250],
-  },
-  {
-    name: 'Pommes de terre',
-    slug: 'pommes-de-terre',
-    category: 'tubercules',
-    description: 'Pommes de terre de contre-saison froide, calibre moyen.',
-    unit: 'kg',
-    stock: 1000,
-    minOrder: 1,
-    region: 'Niayes',
-    shelfLife: 45,
-    harvestedDaysAgo: 5,
-    prices: [550, 470, 420],
-    mins: [20, 200],
-  },
-  {
-    name: 'Mangues Kent',
-    slug: 'mangues',
-    category: 'fruits',
-    description: 'Mangues Kent juteuses, cueillies à maturité.',
-    unit: 'kg',
-    stock: 600,
-    minOrder: 1,
-    region: 'Thiès',
-    bio: true,
-    shelfLife: 10,
-    harvestedDaysAgo: 1,
-    prices: [700, 600, 520],
-    mins: [20, 150],
-  },
-  {
-    name: 'Gombo frais',
-    slug: 'gombo',
-    category: 'legumes',
-    description: 'Gombo tendre pour soupou kandja.',
-    unit: 'kg',
-    stock: 300,
-    minOrder: 1,
-    region: 'Niayes',
-    bio: true,
-    shelfLife: 5,
-    harvestedDaysAgo: 1,
-    prices: [800, 700, 650],
-    mins: [10, 50],
-  },
-  {
-    name: 'Piment antillais',
-    slug: 'piment',
-    category: 'legumes',
-    description: 'Piment fort et parfumé.',
-    unit: 'kg',
-    stock: 150,
-    minOrder: 0.5,
-    region: 'Niayes',
-    shelfLife: 10,
-    harvestedDaysAgo: 2,
-    prices: [1500, 1300, 1150],
-    mins: [5, 30],
-  },
-  {
-    name: 'Patates douces',
-    slug: 'patates-douces',
-    category: 'tubercules',
-    description: 'Patates douces à chair orange, riches en vitamine A.',
-    unit: 'kg',
-    stock: 700,
-    minOrder: 1,
-    region: 'Thiès',
-    shelfLife: 30,
-    harvestedDaysAgo: 6,
-    prices: [450, 380, 340],
-    mins: [20, 200],
-  },
-];
+/**
+ * SCL Diama catalogue (10 listings, 5 zones). Shared with
+ * scripts/import-catalogue.mjs, which loads it into production without demo accounts.
+ */
+const MAIN_LISTINGS = catalogue.listings as ListingSeed[];
 
 /** A second producer so the storefront shows several farms. */
 const CASAMANCE_LISTINGS: ListingSeed[] = [
@@ -237,27 +97,7 @@ const CASAMANCE_LISTINGS: ListingSeed[] = [
   },
 ];
 
-const MAIN_ZONES = [
-  { name: 'Dakar', region: 'Dakar', department: 'Dakar', fee: 2000, min: 5000, days: 1 },
-  { name: 'Thiès', region: 'Thiès', department: 'Thiès', fee: 1500, min: 5000, days: 1 },
-  {
-    name: 'Saint-Louis',
-    region: 'Saint-Louis',
-    department: 'Saint-Louis',
-    fee: 2500,
-    min: 10000,
-    days: 2,
-  },
-  { name: 'Kaolack', region: 'Kaolack', department: 'Kaolack', fee: 3000, min: 15000, days: 2 },
-  {
-    name: 'Ziguinchor',
-    region: 'Ziguinchor',
-    department: 'Ziguinchor',
-    fee: 5000,
-    min: 25000,
-    days: 4,
-  },
-];
+const MAIN_ZONES = catalogue.zones;
 
 const CASAMANCE_ZONES = [
   {
