@@ -57,7 +57,7 @@ export function OrderModal({ productId, onClose }: OrderModalProps) {
             Votre commande a été transmise au producteur. Vous pouvez suivre son statut
             dans vos commandes.
           </p>
-          <button
+          <button type="button"
             onClick={onClose}
             className="mt-6 rounded-lg bg-green-700 px-6 py-2.5 font-medium text-white hover:bg-green-800"
           >
@@ -73,7 +73,7 @@ export function OrderModal({ productId, onClose }: OrderModalProps) {
       <div className="w-full max-w-md rounded-xl bg-white shadow-xl">
         <div className="flex items-center justify-between border-b p-4">
           <h2 className="text-lg font-semibold">Passer une commande</h2>
-          <button onClick={onClose} className="rounded-lg p-1 hover:bg-gray-100">
+          <button type="button" onClick={onClose} className="rounded-lg p-1 hover:bg-gray-100">
             <X className="h-5 w-5" />
           </button>
         </div>

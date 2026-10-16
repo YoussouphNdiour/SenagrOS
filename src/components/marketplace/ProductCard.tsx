@@ -88,7 +88,7 @@ export function ProductCard({ product, onView, onOrder }: ProductCardProps) {
 
         {/* Actions */}
         <div className="mt-4 flex gap-2">
-          <button
+          <button type="button"
             onClick={() => onView(product.id)}
             className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
           >
@@ -96,7 +96,7 @@ export function ProductCard({ product, onView, onOrder }: ProductCardProps) {
             Voir le produit
           </button>
           {onOrder && (
-            <button
+            <button type="button"
               onClick={() => onOrder(product.id)}
               className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-green-700 px-3 py-2 text-sm font-medium text-white transition hover:bg-green-800"
             >

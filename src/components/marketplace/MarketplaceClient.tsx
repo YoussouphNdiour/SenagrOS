@@ -120,7 +120,7 @@ export function MarketplaceClient() {
 
           <div className="ml-auto flex items-center gap-2 text-sm text-gray-500">
             <span>{data?.total ?? 0} produit{(data?.total ?? 0) > 1 ? 's' : ''}</span>
-            <button
+            <button type="button"
               onClick={resetFilters}
               className="flex items-center gap-1 text-gray-400 hover:text-gray-600"
             >
@@ -156,7 +156,7 @@ export function MarketplaceClient() {
           {/* Pagination */}
           {data.total > 25 && (
             <div className="flex justify-center gap-2">
-              <button
+              <button type="button"
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1}
                 className="rounded-lg border px-4 py-2 text-sm disabled:opacity-50"
@@ -166,7 +166,7 @@ export function MarketplaceClient() {
               <span className="flex items-center px-3 text-sm text-gray-600">
                 Page {page} / {Math.ceil(data.total / 25)}
               </span>
-              <button
+              <button type="button"
                 onClick={() => setPage((p) => p + 1)}
                 disabled={page * 25 >= data.total}
                 className="rounded-lg border px-4 py-2 text-sm disabled:opacity-50"

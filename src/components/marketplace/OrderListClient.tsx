@@ -126,13 +126,13 @@ export function OrderListClient({ mode }: OrderListClientProps) {
                       <td className="px-4 py-3 text-right">
                         {order.status === 'pending' && (
                           <div className="flex justify-end gap-1">
-                            <button
+                            <button type="button"
                               onClick={() => updateStatus.mutate({ orderId: order.id, status: 'confirmed' })}
                               className="rounded-md bg-green-100 px-2.5 py-1 text-xs font-medium text-green-700 hover:bg-green-200"
                             >
                               Confirmer
                             </button>
-                            <button
+                            <button type="button"
                               onClick={() => updateStatus.mutate({ orderId: order.id, status: 'cancelled' })}
                               className="rounded-md bg-red-100 px-2.5 py-1 text-xs font-medium text-red-700 hover:bg-red-200"
                             >
@@ -141,7 +141,7 @@ export function OrderListClient({ mode }: OrderListClientProps) {
                           </div>
                         )}
                         {order.status === 'confirmed' && (
-                          <button
+                          <button type="button"
                             onClick={() => updateStatus.mutate({ orderId: order.id, status: 'shipped' })}
                             className="rounded-md bg-blue-100 px-2.5 py-1 text-xs font-medium text-blue-700 hover:bg-blue-200"
                           >
@@ -149,7 +149,7 @@ export function OrderListClient({ mode }: OrderListClientProps) {
                           </button>
                         )}
                         {order.status === 'shipped' && (
-                          <button
+                          <button type="button"
                             onClick={() => updateStatus.mutate({ orderId: order.id, status: 'delivered' })}
                             className="rounded-md bg-green-100 px-2.5 py-1 text-xs font-medium text-green-700 hover:bg-green-200"
                           >
@@ -169,7 +169,7 @@ export function OrderListClient({ mode }: OrderListClientProps) {
       {/* Pagination */}
       {data && data.total > 25 && (
         <div className="flex justify-center gap-2">
-          <button
+          <button type="button"
             onClick={() => setPage((p) => Math.max(1, p - 1))}
             disabled={page === 1}
             className="rounded-lg border px-4 py-2 text-sm disabled:opacity-50"
@@ -179,7 +179,7 @@ export function OrderListClient({ mode }: OrderListClientProps) {
           <span className="flex items-center px-3 text-sm text-gray-600">
             Page {page} / {Math.ceil(data.total / 25)}
           </span>
-          <button
+          <button type="button"
             onClick={() => setPage((p) => p + 1)}
             disabled={page * 25 >= data.total}
             className="rounded-lg border px-4 py-2 text-sm disabled:opacity-50"

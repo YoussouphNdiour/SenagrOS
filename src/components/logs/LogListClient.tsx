@@ -131,7 +131,7 @@ export function LogListClient({ filterType }: LogListClientProps) {
       key: 'actions',
       header: '',
       render: (row: Log) => (
-        <button
+        <button type="button"
           onClick={(e) => {
             e.stopPropagation();
             if (confirm('Supprimer ce log ?')) {

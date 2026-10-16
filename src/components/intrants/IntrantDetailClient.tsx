@@ -135,7 +135,7 @@ export function IntrantDetailClient({ id }: IntrantDetailClientProps) {
       header: 'Log lie',
       render: (row: MovementRow) =>
         row.logId ? (
-          <button
+          <button type="button"
             className="text-green-600 underline hover:text-green-800"
             onClick={(e) => {
               e.stopPropagation();

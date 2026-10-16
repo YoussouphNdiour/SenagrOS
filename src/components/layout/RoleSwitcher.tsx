@@ -21,7 +21,7 @@ export function RoleSwitcher() {
 
   return (
     <div className="flex items-center rounded-lg border border-gray-200 bg-gray-50 p-0.5">
-      <button
+      <button type="button"
         onClick={() => switchRole('acheteur')}
         className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition ${
           current === 'acheteur'
@@ -32,7 +32,7 @@ export function RoleSwitcher() {
         <ShoppingBag className="h-4 w-4" />
         Acheteur
       </button>
-      <button
+      <button type="button"
         onClick={() => switchRole('producteur')}
         className={`flex items-center gap-1.5 rounded-md px-3 py-1.5 text-sm font-medium transition ${
           current === 'producteur'

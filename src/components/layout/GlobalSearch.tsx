@@ -118,7 +118,7 @@ export function GlobalSearch() {
         />
         <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-1">
           {query ? (
-            <button
+            <button type="button"
               onClick={() => {
                 setQuery('');
                 setIsOpen(false);
@@ -167,7 +167,7 @@ export function GlobalSearch() {
                     </span>
                   </div>
                   {items.map((item) => (
-                    <button
+                    <button type="button"
                       key={item.id}
                       onClick={() => handleSelect(config.getHref(item.id))}
                       className="flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm text-gray-700 transition hover:bg-green-50"

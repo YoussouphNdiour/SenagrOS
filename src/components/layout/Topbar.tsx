@@ -24,7 +24,7 @@ export function Topbar({ user, onMenuClick }: TopbarProps) {
 
   return (
     <header className="flex h-16 items-center justify-between gap-4 border-b border-gray-200 bg-white px-4 md:px-6">
-      <button
+      <button type="button"
         onClick={onMenuClick}
         className="shrink-0 rounded-lg p-2 text-gray-500 hover:bg-gray-100 md:hidden"
       >
@@ -64,7 +64,7 @@ export function Topbar({ user, onMenuClick }: TopbarProps) {
           </div>
         </div>
 
-        <button
+        <button type="button"
           onClick={async () => {
             // Relative redirect: stay on the host the user is browsing (localhost or LAN IP)
             await signOut({ redirect: false });

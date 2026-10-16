@@ -38,6 +38,10 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
   if (!isOpen) return null;
 
   return (
+    // Le clic sur le voile n'est qu'un confort : la fermeture au clavier est
+    // assuree par le gestionnaire Echap installe plus haut.
+    // biome-ignore lint/a11y/useKeyWithClickEvents: fermeture clavier geree par Echap
+    // biome-ignore lint/a11y/noStaticElementInteractions: voile de fond, non focalisable a dessein
     <div
       ref={overlayRef}
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
@@ -54,7 +58,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
       >
         <div className="flex items-center justify-between border-b border-gray-200 px-6 py-4">
           <h2 className="text-lg font-semibold text-gray-800">{title}</h2>
-          <button
+          <button type="button"
             onClick={onClose}
             className="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
           >

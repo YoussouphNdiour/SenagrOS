@@ -27,7 +27,7 @@ export function FarmSwitcher() {
 
   return (
     <div ref={containerRef} className="relative">
-      <button
+      <button type="button"
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
       >
@@ -54,7 +54,7 @@ export function FarmSwitcher() {
           </div>
 
           <div className="border-t border-gray-100 p-1">
-            <button
+            <button type="button"
               onClick={() => setIsOpen(false)}
               className="flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-500 transition hover:bg-gray-50 hover:text-gray-700"
             >
