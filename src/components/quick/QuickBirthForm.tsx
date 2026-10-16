@@ -56,8 +56,8 @@ export function QuickBirthForm() {
       </div>
       <form onSubmit={handleSubmit} className="space-y-4 rounded-xl bg-white p-6 shadow-sm">
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Animal mère *</label>
-          <select
+          <label htmlFor="animal-mere" className="mb-1 block text-sm font-medium text-gray-700">Animal mère *</label>
+          <select id="animal-mere"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
             value={animalId}
             onChange={(e) => setAnimalId(e.target.value)}
@@ -71,8 +71,13 @@ export function QuickBirthForm() {
             ))}
           </select>
         </div>
-        <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Sexe du nouveau-né</label>
+        {/* Groupe de boutons radio : fieldset/legend, et non un label, qui
+            n'aurait aucun controle unique a designer. Chaque radio tient son
+            nom accessible du label qui l'enveloppe. */}
+        <fieldset className="min-w-0 border-0 p-0">
+          <legend className="mb-1 block text-sm font-medium text-gray-700">
+            Sexe du nouveau-né
+          </legend>
           <div className="flex gap-3">
             {(['male', 'female'] as const).map((s) => (
               <label key={s} className="flex cursor-pointer items-center gap-2">
@@ -88,12 +93,12 @@ export function QuickBirthForm() {
               </label>
             ))}
           </div>
-        </div>
+        </fieldset>
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="poids-a-la-naissance-kg" className="mb-1 block text-sm font-medium text-gray-700">
             Poids à la naissance (kg)
           </label>
-          <input
+          <input id="poids-a-la-naissance-kg"
             type="number"
             step="0.1"
             min="0"
@@ -104,8 +109,8 @@ export function QuickBirthForm() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">Notes</label>
-          <textarea
+          <label htmlFor="notes" className="mb-1 block text-sm font-medium text-gray-700">Notes</label>
+          <textarea id="notes"
             className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:border-green-500 focus:outline-none"
             rows={2}
             value={notes}

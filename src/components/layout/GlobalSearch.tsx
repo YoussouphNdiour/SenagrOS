@@ -114,6 +114,9 @@ export function GlobalSearch() {
           }}
           onFocus={() => setIsOpen(true)}
           placeholder="Rechercher..."
+          // Le champ n'a pas de libelle visible, le placeholder n'en tenant
+          // pas lieu : il disparait des la saisie et n'est pas annonce.
+          aria-label="Rechercher dans l'exploitation"
           className="w-full rounded-lg border border-gray-300 bg-gray-50 py-2 pl-10 pr-20 text-sm text-gray-900 transition focus:border-green-500 focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-200"
         />
         <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-1">

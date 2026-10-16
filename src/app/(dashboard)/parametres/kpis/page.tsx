@@ -51,25 +51,25 @@ function CreateKpiModal({ onClose, onCreated }: { onClose: () => void; onCreated
         <h2 className="mb-4 text-lg font-bold text-gray-800">Nouvel indicateur</h2>
         <div className="space-y-3">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Nom *</label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex: Taux de mise bas 2026" />
+            <label htmlFor="nom" className="mb-1 block text-sm font-medium text-gray-700">Nom *</label>
+            <Input id="nom" value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex: Taux de mise bas 2026" />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Description</label>
-            <Input value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Explication de cet indicateur" />
+            <label htmlFor="description" className="mb-1 block text-sm font-medium text-gray-700">Description</label>
+            <Input id="description" value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Explication de cet indicateur" />
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Catégorie</label>
-              <Select
+              <label htmlFor="categorie" className="mb-1 block text-sm font-medium text-gray-700">Catégorie</label>
+              <Select id="categorie"
                 options={CATEGORY_OPTIONS}
                 value={category}
                 onChange={(e) => setCategory(e.target.value as typeof category)}
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Type de valeur</label>
-              <Select
+              <label htmlFor="type-de-valeur" className="mb-1 block text-sm font-medium text-gray-700">Type de valeur</label>
+              <Select id="type-de-valeur"
                 options={VALUE_TYPE_OPTIONS}
                 value={valueType}
                 onChange={(e) => setValueType(e.target.value as typeof valueType)}
@@ -78,12 +78,12 @@ function CreateKpiModal({ onClose, onCreated }: { onClose: () => void; onCreated
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Unité</label>
-              <Input value={unit} onChange={(e) => setUnit(e.target.value)} placeholder="%, kg/ha, FCFA..." />
+              <label htmlFor="unite" className="mb-1 block text-sm font-medium text-gray-700">Unité</label>
+              <Input id="unite" value={unit} onChange={(e) => setUnit(e.target.value)} placeholder="%, kg/ha, FCFA..." />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Valeur cible</label>
-              <Input type="number" value={targetValue} onChange={(e) => setTargetValue(e.target.value)} placeholder="Objectif" />
+              <label htmlFor="valeur-cible" className="mb-1 block text-sm font-medium text-gray-700">Valeur cible</label>
+              <Input id="valeur-cible" type="number" value={targetValue} onChange={(e) => setTargetValue(e.target.value)} placeholder="Objectif" />
             </div>
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
@@ -138,18 +138,18 @@ function AddValueModal({ kpiId, kpiName, unit, onClose, onCreated }: {
         <p className="mb-4 text-sm text-gray-500">{kpiName}</p>
         <div className="space-y-3">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="kpis-champ" className="mb-1 block text-sm font-medium text-gray-700">
               Valeur {unit && `(${unit})`} *
             </label>
-            <Input type="number" value={value} onChange={(e) => setValue(e.target.value)} placeholder="0" />
+            <Input id="kpis-champ" type="number" value={value} onChange={(e) => setValue(e.target.value)} placeholder="0" />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Date de mesure</label>
-            <Input type="date" value={measuredAt} onChange={(e) => setMeasuredAt(e.target.value)} />
+            <label htmlFor="date-de-mesure" className="mb-1 block text-sm font-medium text-gray-700">Date de mesure</label>
+            <Input id="date-de-mesure" type="date" value={measuredAt} onChange={(e) => setMeasuredAt(e.target.value)} />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Notes</label>
-            <Input value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Contexte, source..." />
+            <label htmlFor="notes" className="mb-1 block text-sm font-medium text-gray-700">Notes</label>
+            <Input id="notes" value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Contexte, source..." />
           </div>
           {error && <p className="text-sm text-red-600">{error}</p>}
         </div>

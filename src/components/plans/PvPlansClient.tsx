@@ -65,16 +65,16 @@ function CreatePlanModal({ onClose, onCreated }: { onClose: () => void; onCreate
         <h2 className="mb-4 text-lg font-bold text-gray-800">Nouveau plan d&apos;entretien PV</h2>
         <div className="space-y-3">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Nom du plan *</label>
-            <Input
+            <label htmlFor="nom-du-plan" className="mb-1 block text-sm font-medium text-gray-700">Nom du plan *</label>
+            <Input id="nom-du-plan"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Ex: Entretien Maïs Hivernage 2026"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Saison</label>
-            <Select
+            <label htmlFor="saison" className="mb-1 block text-sm font-medium text-gray-700">Saison</label>
+            <Select id="saison"
               options={SEASONS}
               value={season}
               onChange={(e) => setSeason(e.target.value)}
@@ -82,17 +82,17 @@ function CreatePlanModal({ onClose, onCreated }: { onClose: () => void; onCreate
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Début</label>
-              <Input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
+              <label htmlFor="debut" className="mb-1 block text-sm font-medium text-gray-700">Début</label>
+              <Input id="debut" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} />
             </div>
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Fin</label>
-              <Input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
+              <label htmlFor="fin" className="mb-1 block text-sm font-medium text-gray-700">Fin</label>
+              <Input id="fin" type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} />
             </div>
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Notes</label>
-            <textarea
+            <label htmlFor="notes-2" className="mb-1 block text-sm font-medium text-gray-700">Notes</label>
+            <textarea id="notes-2"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={3}
@@ -148,32 +148,32 @@ function AddTaskModal({ planId, onClose, onCreated }: { planId: string; onClose:
         <h2 className="mb-4 text-lg font-bold text-gray-800">Ajouter une intervention</h2>
         <div className="space-y-3">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Nom *</label>
-            <Input value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex: 1er désherbage" />
+            <label htmlFor="nom" className="mb-1 block text-sm font-medium text-gray-700">Nom *</label>
+            <Input id="nom" value={name} onChange={(e) => setName(e.target.value)} placeholder="Ex: 1er désherbage" />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Type d&apos;intervention</label>
-            <Select
+            <label htmlFor="type-d-apos-intervention" className="mb-1 block text-sm font-medium text-gray-700">Type d&apos;intervention</label>
+            <Select id="type-d-apos-intervention"
               options={PV_TASK_TYPES}
               value={type}
               onChange={(e) => setType(e.target.value)}
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Stade cultural</label>
-            <Input
+            <label htmlFor="stade-cultural" className="mb-1 block text-sm font-medium text-gray-700">Stade cultural</label>
+            <Input id="stade-cultural"
               value={growthStage}
               onChange={(e) => setGrowthStage(e.target.value)}
               placeholder="Ex: tallage, floraison, post-levée..."
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Date prévue</label>
-            <Input type="date" value={plannedDate} onChange={(e) => setPlannedDate(e.target.value)} />
+            <label htmlFor="date-prevue" className="mb-1 block text-sm font-medium text-gray-700">Date prévue</label>
+            <Input id="date-prevue" type="date" value={plannedDate} onChange={(e) => setPlannedDate(e.target.value)} />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Récurrence</label>
-            <Select
+            <label htmlFor="recurrence" className="mb-1 block text-sm font-medium text-gray-700">Récurrence</label>
+            <Select id="recurrence"
               options={RECURRENCE_TYPES}
               value={recurrenceType}
               onChange={(e) => setRecurrenceType(e.target.value)}
@@ -181,8 +181,8 @@ function AddTaskModal({ planId, onClose, onCreated }: { planId: string; onClose:
           </div>
           {recurrenceType === 'custom' && (
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700">Intervalle (jours)</label>
-              <Input
+              <label htmlFor="intervalle-jours" className="mb-1 block text-sm font-medium text-gray-700">Intervalle (jours)</label>
+              <Input id="intervalle-jours"
                 type="number"
                 min="1"
                 value={recurrenceIntervalDays}
@@ -192,8 +192,8 @@ function AddTaskModal({ planId, onClose, onCreated }: { planId: string; onClose:
             </div>
           )}
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">Notes</label>
-            <textarea
+            <label htmlFor="notes" className="mb-1 block text-sm font-medium text-gray-700">Notes</label>
+            <textarea id="notes"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               rows={2}

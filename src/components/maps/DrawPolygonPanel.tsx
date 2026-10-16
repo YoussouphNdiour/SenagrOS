@@ -148,10 +148,10 @@ export function DrawPolygonPanel({
           Polygone dessiné · {ringLen - 1} points
         </p>
 
-        <label className="block text-xs font-medium text-gray-700 mb-1">
+        <label htmlFor="draw-polygon-panel-champ" className="block text-xs font-medium text-gray-700 mb-1">
           Parcelle à mettre à jour
         </label>
-        <select
+        <select id="draw-polygon-panel-champ"
           className="w-full rounded border border-gray-300 px-2 py-1.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 mb-3"
           value={selectedParcelId}
           onChange={(e) => setSelectedParcelId(e.target.value)}

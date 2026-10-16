@@ -304,10 +304,10 @@ export function PestDiseaseForm() {
       {/* Remarks */}
       <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="pest-disease-form-champ-2" className="mb-1 block text-sm font-medium text-gray-700">
             Pr\u00e9conisation traitement
           </label>
-          <textarea
+          <textarea id="pest-disease-form-champ-2"
             className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
             rows={3}
             value={supervisorRemarks}
@@ -316,10 +316,10 @@ export function PestDiseaseForm() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-sm font-medium text-gray-700">
+          <label htmlFor="pest-disease-form-champ" className="mb-1 block text-sm font-medium text-gray-700">
             Remarques observateur
           </label>
-          <textarea
+          <textarea id="pest-disease-form-champ"
             className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm transition focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-200"
             rows={3}
             value={observerRemarks}

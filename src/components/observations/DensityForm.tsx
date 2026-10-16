@@ -177,8 +177,8 @@ export function DensityForm() {
       {/* Repetitions configuration */}
       <Card>
         <div className="mb-4 flex items-center gap-4">
-          <label className="text-sm font-medium text-gray-700">Nombre de répétitions</label>
-          <input
+          <label htmlFor="nombre-de-repetitions" className="text-sm font-medium text-gray-700">Nombre de répétitions</label>
+          <input id="nombre-de-repetitions"
             type="number"
             min={1}
             max={50}
@@ -283,10 +283,10 @@ export function DensityForm() {
         <h3 className="mb-3 text-base font-semibold text-gray-800">Remarques</h3>
         <div className="space-y-4">
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="density-form-champ-2" className="mb-1 block text-sm font-medium text-gray-700">
               Remarques observateur
             </label>
-            <textarea
+            <textarea id="density-form-champ-2"
               value={observerRemarks}
               onChange={(e) => setObserverRemarks(e.target.value)}
               rows={3}
@@ -294,10 +294,10 @@ export function DensityForm() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-gray-700">
+            <label htmlFor="density-form-champ" className="mb-1 block text-sm font-medium text-gray-700">
               Remarques chef de ferme
             </label>
-            <textarea
+            <textarea id="density-form-champ"
               value={supervisorRemarks}
               onChange={(e) => setSupervisorRemarks(e.target.value)}
               rows={3}

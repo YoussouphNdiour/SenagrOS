@@ -66,8 +66,8 @@ export default function LogsReportPage() {
       {/* Filters */}
       <div className="flex flex-wrap gap-4">
         <div>
-          <label className="mb-1 block text-xs text-gray-500">Type</label>
-          <select
+          <label htmlFor="type" className="mb-1 block text-xs text-gray-500">Type</label>
+          <select id="type"
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
             className="rounded-lg border border-gray-200 px-3 py-2 text-sm"
@@ -79,8 +79,8 @@ export default function LogsReportPage() {
           </select>
         </div>
         <div>
-          <label className="mb-1 block text-xs text-gray-500">Du</label>
-          <input
+          <label htmlFor="du" className="mb-1 block text-xs text-gray-500">Du</label>
+          <input id="du"
             type="date"
             value={dateFrom}
             onChange={(e) => setDateFrom(e.target.value)}
@@ -88,8 +88,8 @@ export default function LogsReportPage() {
           />
         </div>
         <div>
-          <label className="mb-1 block text-xs text-gray-500">Au</label>
-          <input
+          <label htmlFor="au" className="mb-1 block text-xs text-gray-500">Au</label>
+          <input id="au"
             type="date"
             value={dateTo}
             onChange={(e) => setDateTo(e.target.value)}

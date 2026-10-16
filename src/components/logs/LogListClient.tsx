@@ -190,8 +190,8 @@ export function LogListClient({ filterType }: LogListClientProps) {
 
         <div className="flex items-end gap-2">
           <div>
-            <label className="mb-1 block text-xs text-gray-500">Du</label>
-            <input
+            <label htmlFor="du" className="mb-1 block text-xs text-gray-500">Du</label>
+            <input id="du"
               type="date"
               value={dateFrom}
               onChange={(e) => {
@@ -202,8 +202,8 @@ export function LogListClient({ filterType }: LogListClientProps) {
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs text-gray-500">Au</label>
-            <input
+            <label htmlFor="au" className="mb-1 block text-xs text-gray-500">Au</label>
+            <input id="au"
               type="date"
               value={dateTo}
               onChange={(e) => {
